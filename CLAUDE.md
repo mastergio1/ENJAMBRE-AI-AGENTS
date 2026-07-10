@@ -206,7 +206,7 @@ Si un test falla, ajustar proporciones/parámetros de la sección 4, **no** hard
 | 4 | Integración total + deploy | Un link público funciona end-to-end |
 | 5 | Demo vendible | 3 escenarios precargados + reporte exportable |
 
-**Estado actual: Etapa 3 completada** — enjambre 3D con instanced rendering (3 draw calls para 5.100 objetos), líderes con halo y frase al hover, ola de rumor visible, gobernador de fps que degrada elegante y modo estático con gráfico 2D para prefers-reduced-motion. Datos falsos en el navegador. Sigue: Etapa 4 (integración motor ↔ frontend + deploy).
+**Estado actual: Etapa 4 completada (integración)** — el motor transmite la simulación real por WebSocket (frame binario por tick: precio + sentimiento de los 5.000 agentes) y el enjambre 3D la renderiza en vivo, con reporte final (dirección, volatilidad, desglose, voces). Si el motor no responde, la web degrada sola a demo local. Deploy documentado en docs/despliegue.md (Render + Vercel); falta ejecutarlo con las cuentas de Giorgio. Sigue: deploy real + Etapa 5 (demo vendible).
 
 ## 10. GLOSARIO PARA GIORGIO
 

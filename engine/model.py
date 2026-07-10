@@ -73,6 +73,9 @@ class MercadoEnjambre(mesa.Model):
         self._crear_agentes(ruta_config)
         self._agentes_por_id = {a.unique_id: a for a in self.agents}
         self._lideres = [a for a in self.agents if isinstance(a, LiderOpinion)]
+        # orden estable de creación (tipos 1-12 y al final los 100 líderes):
+        # es el contrato con el frontend para el streaming por WebSocket
+        self.agentes_ordenados = sorted(self.agents, key=lambda a: a.unique_id)
 
         from network.red import construir_red
 
@@ -104,13 +107,15 @@ class MercadoEnjambre(mesa.Model):
             lider.recibir_noticia(sentimiento)
         self._propagar_desde_lideres()
 
-    def aplicar_titular(self, titular: str) -> list[dict]:
+    def aplicar_titular(self, titular: str, respuestas: list[dict] | None = None) -> list[dict]:
         """Inyecta una noticia REAL: los 100 líderes la leen (LLM con
-        fallback léxico), forman su señal y la propagan por la red."""
-        from brains.cerebro import analizar_titular
+        fallback léxico), forman su señal y la propagan por la red.
+        El servidor puede pasar `respuestas` ya calculadas (vía async)."""
+        if respuestas is None:
+            from brains.cerebro import analizar_titular
 
-        consultas = [(lider.unique_id, lider.arquetipo) for lider in self._lideres]
-        respuestas = analizar_titular(titular, consultas)
+            consultas = [(lider.unique_id, lider.arquetipo) for lider in self._lideres]
+            respuestas = analizar_titular(titular, consultas)
         for lider, respuesta in zip(self._lideres, respuestas):
             lider.senal = respuesta["senal"]
             lider.confianza = respuesta["confianza"]

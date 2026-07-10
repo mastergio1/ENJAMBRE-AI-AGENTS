@@ -33,6 +33,7 @@ export function crearPanel(alEnviarTitular) {
     </div>
 
     <div id="tooltip" class="tooltip" hidden></div>
+    <aside id="reporte" class="reporte" hidden></aside>
   `
 
   const campo = raiz.querySelector('#campo-titular')
@@ -66,10 +67,32 @@ export function crearPanel(alEnviarTitular) {
     ocultarTooltip() {
       tooltip.hidden = true
     },
-    actualizarHUD(precio, fps, particulas) {
+    actualizarHUD(precio, fps, particulas, modo = '') {
       precioEl.textContent = precio.toFixed(2)
-      precioEl.style.color = 'var(--marfil)'
-      detalleEl.textContent = `${particulas.toLocaleString('es-CL')} inversionistas · ${Math.round(fps)} fps`
+      detalleEl.textContent =
+        `${particulas.toLocaleString('es-CL')} inversionistas · ${Math.round(fps)} fps${modo ? ` · ${modo}` : ''}`
+    },
+    mostrarReporte(reporte) {
+      const panelReporte = raiz.querySelector('#reporte')
+      const desglose = Object.entries(reporte.desglose).slice(0, 6)
+      panelReporte.innerHTML = `
+        <button class="cerrar" aria-label="cerrar">×</button>
+        <h2>Reporte del enjambre</h2>
+        <div class="cifras">
+          <div><span>${reporte.direccion_pct > 0 ? '+' : ''}${reporte.direccion_pct}%</span><label>dirección</label></div>
+          <div><span>${reporte.minimo_pct}%</span><label>mínimo</label></div>
+          <div><span>${reporte.volatilidad_pct}%</span><label>volatilidad/tick</label></div>
+        </div>
+        <table>${desglose.map(([tipo, d]) =>
+          `<tr><td>${tipo}</td><td>${d.compras} compras</td><td>${d.ventas} ventas</td></tr>`).join('')}
+        </table>
+        <div class="voces">${reporte.frases.map((f) => `<p>«${f.frase}»</p>`).join('')}</div>
+        <p class="descargo">${reporte.descargo}</p>
+      `
+      panelReporte.hidden = false
+      panelReporte.querySelector('.cerrar').addEventListener('click', () => {
+        panelReporte.hidden = true
+      })
     },
     // sparkline del precio: una serie, línea 2px, sin adornos —
     // el texto va en tinta, nunca en el color de la serie

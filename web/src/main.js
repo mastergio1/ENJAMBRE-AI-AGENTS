@@ -3,6 +3,7 @@
 
 import * as THREE from 'three'
 import { Enjambre } from './swarm/enjambre.js'
+import { MotorRemoto } from './ui/conexion.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
 
 const canvas = document.getElementById('escena')
@@ -24,16 +25,40 @@ escena.add(enjambre.grupo)
 // ---------- interacción ----------
 
 const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-let tiempoNoticia = -1
 
-const panel = crearPanel((titular) => {
+// el motor real (WebSocket): configurable por entorno; en localhost se
+// asume el uvicorn de desarrollo; si no responde, demo local en el navegador
+const urlMotor =
+  import.meta.env.VITE_WS_URL ||
+  (['localhost', '127.0.0.1'].includes(location.hostname) ? 'ws://localhost:8000/ws' : null)
+let motor = urlMotor ? new MotorRemoto(urlMotor) : null
+let modo = 'demo local'
+
+async function soltarTitular(titular) {
   if (reducirMovimiento) {
     correrEstatico(titular)
-  } else {
-    enjambre.aplicarTitular(titular, reloj.getElapsedTime())
-    tiempoNoticia = reloj.getElapsedTime()
+    return
   }
-})
+  if (motor) {
+    try {
+      await motor.simular(titular, {
+        alInicio: (mensaje) => enjambre.fijarLideresRemotos(mensaje.lideres),
+        alTick: (precio, _tick, sentimientos) => enjambre.aplicarEstadoRemoto(precio, sentimientos),
+        alFin: (reporte) => panel.mostrarReporte(reporte),
+      })
+      enjambre.modoRemoto = true
+      modo = 'motor real'
+      return
+    } catch {
+      motor = null // el motor no está: de aquí en adelante, demo local
+    }
+  }
+  enjambre.modoRemoto = false
+  modo = 'demo local'
+  enjambre.aplicarTitular(titular, reloj.getElapsedTime())
+}
+
+const panel = crearPanel(soltarTitular)
 
 // parallax sutil con el puntero (vectores reutilizados, nada nuevo por frame)
 const punteroMeta = new THREE.Vector2()
@@ -106,7 +131,7 @@ function cuadro() {
 
   if (t - ultimoHud > 0.25) {
     ultimoHud = t
-    panel.actualizarHUD(enjambre.precio, fpsSuavizado, enjambre.malla.count + enjambre.lideres.length)
+    panel.actualizarHUD(enjambre.precio, fpsSuavizado, enjambre.malla.count + enjambre.lideres.length, modo)
     panel.dibujarSparkline(enjambre.seriePrecio)
   }
   renderer.render(escena, camara)

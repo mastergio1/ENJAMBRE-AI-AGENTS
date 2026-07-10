@@ -94,7 +94,7 @@ async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, s
     return respuesta_fallback(titular, arquetipo_id, semilla)
 
 
-async def _analizar_async(titular: str, lideres: list[tuple[int, str]]) -> list[dict]:
+async def analizar_titular_async(titular: str, lideres: list[tuple[int, str]]) -> list[dict]:
     """lideres: lista de (semilla, arquetipo_id). Devuelve una respuesta por líder."""
     cache = _cargar_cache()
     respuestas: dict[int, dict] = {}
@@ -138,4 +138,4 @@ def analizar_titular(titular: str, lideres: list[tuple[int, str]]) -> list[dict]
     lideres: lista de (semilla, arquetipo_id), una entrada por líder.
     Devuelve, en el mismo orden, dicts {senal, confianza, frase, fuente}.
     """
-    return asyncio.run(_analizar_async(titular, lideres))
+    return asyncio.run(analizar_titular_async(titular, lideres))

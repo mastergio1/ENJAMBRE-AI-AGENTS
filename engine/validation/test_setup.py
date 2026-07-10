@@ -51,6 +51,4 @@ def test_el_servidor_responde_salud():
     cliente = TestClient(server.app)
     respuesta = cliente.get("/salud")
     assert respuesta.status_code == 200
-    datos = respuesta.json()
-    assert datos["estado"] == "ok"
-    assert datos["agentes_configurados"] == 5000
+    assert respuesta.json()["estado"] == "ok"

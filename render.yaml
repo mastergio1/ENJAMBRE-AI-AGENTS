@@ -1,0 +1,13 @@
+# Blueprint de Render para el motor de El Enjambre.
+# En render.com: New → Blueprint → apuntar a este repositorio.
+services:
+  - type: web
+    name: enjambre-motor
+    runtime: docker
+    rootDir: engine
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /salud
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false # se pega a mano en el panel de Render (nunca al repo)

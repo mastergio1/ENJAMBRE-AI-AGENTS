@@ -26,6 +26,7 @@ export class Enjambre {
     this.seriePrecio = [100]
     this._ultimaMuestra = 0
     this.sentimientoGlobal = 0
+    this.modoRemoto = false  // true: el motor real manda por WebSocket
 
     this._construirClusters()
     this._construirParticulas()
@@ -163,6 +164,30 @@ export class Enjambre {
     return sentimiento
   }
 
+  /** El motor real dicta el estado: sentimiento por agente + precio. */
+  aplicarEstadoRemoto(precio, sentimientos) {
+    const nReglas = this.agentes.length
+    for (let i = 0; i < nReglas; i++) {
+      const agente = this.agentes[i]
+      agente.sentObjetivo = sentimientos[i] / 127
+      agente.tLlegada = -1 // ya llegó: el retardo lo puso el motor
+    }
+    for (let l = 0; l < this.lideres.length; l++) {
+      this.lideres[l].senal = sentimientos[nReglas + l] / 127
+    }
+    this.precio = precio
+  }
+
+  /** Las opiniones de los líderes reales (para el hover). */
+  fijarLideresRemotos(lideres) {
+    lideres.forEach((datos, i) => {
+      if (i >= this.lideres.length) return
+      this.lideres[i].senal = datos.senal
+      this.lideres[i].confianza = datos.confianza
+      this.lideres[i].frase = datos.frase
+    })
+  }
+
   // ---------- animación ----------
 
   actualizar(t, dt) {
@@ -176,7 +201,8 @@ export class Enjambre {
       // el rumor llega, el sentimiento se acerca a su objetivo y luego se agota
       if (t >= agente.tLlegada) {
         agente.sent += (agente.sentObjetivo - agente.sent) * Math.min(1, dt * 2.5)
-        agente.sentObjetivo *= Math.exp(-dt / 9)
+        // en modo remoto el motor refresca el objetivo; aquí no se decae
+        if (!this.modoRemoto) agente.sentObjetivo *= Math.exp(-dt / 9)
       }
       const s = agente.sent
       const intensidad = Math.abs(s)
@@ -207,7 +233,7 @@ export class Enjambre {
     // líderes: flotan y pulsan según su convicción
     for (let i = 0; i < this.lideres.length; i++) {
       const lider = this.lideres[i]
-      lider.senal *= Math.exp(-dt / 14) // su opinión también se apaga
+      if (!this.modoRemoto) lider.senal *= Math.exp(-dt / 14) // su opinión se apaga
       const o = i * 3
       const bob = Math.sin(t * this.pl.velocidad[i] + this.pl.fase[i]) * 0.25
       _dummy.position.set(this.pl.centro[o], this.pl.centro[o + 1] + bob + lider.senal * 1.2, this.pl.centro[o + 2])
@@ -227,11 +253,14 @@ export class Enjambre {
     this.mallaHalos.instanceMatrix.needsUpdate = true
     this.mallaLideres.instanceColor.needsUpdate = true
 
-    // precio falso: emerge del sentimiento promedio del enjambre
+    // precio: en modo remoto lo dicta el motor; en local emerge del
+    // sentimiento promedio del enjambre (demo sin backend)
     let suma = 0
     for (const a of this.agentes) suma += a.sent
     const sentMedio = suma / this.agentes.length
-    this.precio *= 1 + sentMedio * dt * 0.09 + (this.rng() - 0.5) * dt * 0.004
+    if (!this.modoRemoto) {
+      this.precio *= 1 + sentMedio * dt * 0.09 + (this.rng() - 0.5) * dt * 0.004
+    }
     if (t - this._ultimaMuestra > 0.15) {
       this._ultimaMuestra = t
       this.seriePrecio.push(this.precio)

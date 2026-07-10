@@ -39,7 +39,7 @@ npm run dev
 
 ## Estado del proyecto
 
-**Etapa 2 completada** — los 100 líderes de opinión leen titulares reales (API de Anthropic con fallback léxico: la simulación nunca se cae), su señal se propaga por la red de influencia y el enjambre reacciona. Ver el roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
+**Etapa 3 completada** — el enjambre 3D vive: 5.000 inversionistas + 100 líderes con halo en 3 draw calls, la ola del rumor se ve propagarse, y el gobernador de fps recorta partículas automáticamente si el dispositivo no da el ancho. Escribe un titular (o usa los 3 escenarios precargados) y suéltalo al enjambre. Ver el roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
 
 Para explorar el mercado simulado:
 

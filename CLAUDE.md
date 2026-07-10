@@ -206,7 +206,7 @@ Si un test falla, ajustar proporciones/parámetros de la sección 4, **no** hard
 | 4 | Integración total + deploy | Un link público funciona end-to-end |
 | 5 | Demo vendible | 3 escenarios precargados + reporte exportable |
 
-**Estado actual: Etapa 2 completada** — los 100 líderes leen titulares reales (LLM con fallback léxico obligatorio), la señal se propaga por la red de influencia scale-free con retardo y atenuación, y un titular cambia el comportamiento del enjambre. Sigue: Etapa 3 (enjambre 3D).
+**Estado actual: Etapa 3 completada** — enjambre 3D con instanced rendering (3 draw calls para 5.100 objetos), líderes con halo y frase al hover, ola de rumor visible, gobernador de fps que degrada elegante y modo estático con gráfico 2D para prefers-reduced-motion. Datos falsos en el navegador. Sigue: Etapa 4 (integración motor ↔ frontend + deploy).
 
 ## 10. GLOSARIO PARA GIORGIO
 

@@ -13,14 +13,12 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <main id="app">
-      <canvas id="escena"></canvas>
-      <section id="portada">
-        <h1 class="titulo">El Enjambre</h1>
-        <p class="subtitulo">El focus group sintético del mercado</p>
-        <p class="etapa">Etapa 0 — entorno configurado</p>
-      </section>
-    </main>
+    <canvas id="escena"></canvas>
+    <div id="ui"></div>
+    <canvas id="grafico-estatico" hidden></canvas>
+    <p id="aviso-estatico" hidden>
+      Modo estático (movimiento reducido): la imagen muestra al enjambre tras leer la noticia.
+    </p>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

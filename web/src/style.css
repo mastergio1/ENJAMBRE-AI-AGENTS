@@ -5,6 +5,7 @@
   --tinta: #0b0e14;
   --dorado: #c9a227;
   --marfil: #f4efe6;
+  --marfil-suave: rgba(244, 239, 230, 0.65);
 }
 
 html,
@@ -23,36 +24,194 @@ body {
   display: block;
 }
 
-#portada {
-  position: relative;
-  z-index: 1;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+/* ---------- marca ---------- */
+
+.marca {
+  position: fixed;
+  top: 22px;
+  left: 28px;
   pointer-events: none;
 }
-
-.titulo {
+.marca h1 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: 1.9rem;
   font-weight: 600;
   color: var(--dorado);
   margin: 0;
+  letter-spacing: 0.02em;
 }
-
-.subtitulo {
-  font-size: clamp(1rem, 2.5vw, 1.4rem);
+.marca p {
+  margin: 0;
+  font-size: 0.72rem;
   font-weight: 300;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin: 0.5rem 0 0;
+  color: var(--marfil-suave);
 }
 
-.etapa {
-  font-size: 0.85rem;
-  opacity: 0.5;
-  margin-top: 2rem;
+/* ---------- HUD ---------- */
+
+.hud {
+  position: fixed;
+  left: 28px;
+  bottom: 24px;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+#sparkline {
+  opacity: 0.9;
+}
+.hud-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+#hud-precio {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+#hud-detalle {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--marfil-suave);
+}
+
+/* ---------- panel de noticia ---------- */
+
+.panel-noticia {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(620px, calc(100vw - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+#form-noticia {
+  display: flex;
+  width: 100%;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  background: rgba(11, 14, 20, 0.72);
+  backdrop-filter: blur(8px);
+}
+#campo-titular {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--marfil);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  padding: 13px 16px;
+}
+#campo-titular::placeholder {
+  color: rgba(244, 239, 230, 0.35);
+}
+#form-noticia button {
+  background: var(--dorado);
+  color: var(--tinta);
+  border: 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 22px;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+#form-noticia button:hover {
+  filter: brightness(1.15);
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.chip {
+  background: transparent;
+  border: 1px solid rgba(244, 239, 230, 0.25);
+  color: var(--marfil-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.chip:hover {
+  border-color: var(--dorado);
+  color: var(--dorado);
+}
+.descargo {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(244, 239, 230, 0.3);
+}
+
+/* ---------- tooltip de líder ---------- */
+
+.tooltip {
+  position: fixed;
+  max-width: 260px;
+  background: rgba(11, 14, 20, 0.92);
+  border: 1px solid rgba(201, 162, 39, 0.6);
+  padding: 10px 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+.tooltip strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--dorado);
+  margin-bottom: 3px;
+}
+.tooltip em {
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--marfil);
+  line-height: 1.35;
+}
+
+/* ---------- modo estático (prefers-reduced-motion) ---------- */
+
+#grafico-estatico {
+  position: fixed;
+  left: 50%;
+  top: 96px;
+  transform: translateX(-50%);
+  background: rgba(11, 14, 20, 0.85);
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 8px;
+}
+#aviso-estatico {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--marfil-suave);
+  margin: 0;
+}
+
+/* móvil: el HUD no choca con el panel */
+@media (max-width: 700px) {
+  .hud {
+    bottom: 150px;
+  }
+  .marca h1 {
+    font-size: 1.4rem;
+  }
 }

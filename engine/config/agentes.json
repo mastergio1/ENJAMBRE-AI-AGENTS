@@ -1,0 +1,174 @@
+{
+  "descripcion": "La mezcla de 5.000 agentes de El Enjambre. Cantidad = personas; capital relativo = poder de mercado. Ver CLAUDE.md sección 4.",
+  "total_agentes": 5000,
+  "ruido_parametros_sigma": 0.15,
+  "tipos": [
+    {
+      "id": "fundamentalista",
+      "nombre": "Fundamentalista / value institucional",
+      "cantidad": 200,
+      "capital_relativo": 50,
+      "en_red_social": false,
+      "rol": "Ancla el precio al valor justo",
+      "parametros": {
+        "umbral_compra": 0.95,
+        "umbral_venta": 1.05,
+        "ponderacion_noticia_en_valor": 0.3,
+        "ticks_entre_operaciones": [10, 20]
+      }
+    },
+    {
+      "id": "quant_momentum",
+      "nombre": "Quant / momentum institucional",
+      "cantidad": 120,
+      "capital_relativo": 40,
+      "en_red_social": false,
+      "rol": "Sigue tendencias con disciplina",
+      "parametros": {
+        "ventana_media_corta": 5,
+        "ventana_media_larga": 20,
+        "stop_loss": -0.03
+      }
+    },
+    {
+      "id": "fondo_pasivo",
+      "nombre": "Fondo pasivo / index",
+      "cantidad": 80,
+      "capital_relativo": 60,
+      "en_red_social": false,
+      "rol": "Compra constante, insensible a noticias",
+      "parametros": {
+        "ticks_entre_compras": 10,
+        "sensibilidad_noticias": 0
+      }
+    },
+    {
+      "id": "market_maker",
+      "nombre": "Market maker",
+      "cantidad": 5,
+      "capital_relativo": 100,
+      "en_red_social": false,
+      "rol": "Liquidez: cotiza compra y venta siempre",
+      "parametros": {
+        "multiplicador_spread_panico": 3,
+        "umbral_volatilidad_panico": 0.05
+      }
+    },
+    {
+      "id": "ejecutor_twap",
+      "nombre": "Ejecutor TWAP/VWAP",
+      "cantidad": 15,
+      "capital_relativo": 30,
+      "en_red_social": false,
+      "rol": "Ejecuta órdenes grandes en rebanadas",
+      "parametros": {}
+    },
+    {
+      "id": "arbitrajista",
+      "nombre": "Arbitrajista",
+      "cantidad": 30,
+      "capital_relativo": 20,
+      "en_red_social": false,
+      "rol": "Corrige ineficiencias rápido",
+      "parametros": {
+        "umbral_desviacion": 0.02
+      }
+    },
+    {
+      "id": "noise_trader",
+      "nombre": "Noise trader retail",
+      "cantidad": 2000,
+      "capital_relativo": 1,
+      "en_red_social": true,
+      "rol": "Ruido browniano de fondo",
+      "parametros": {
+        "probabilidad_operar": 0.05,
+        "fraccion_sensible_noticias": 0.2,
+        "desplazamiento_sentimiento": 0.1
+      }
+    },
+    {
+      "id": "manada",
+      "nombre": "Manada / imitador",
+      "cantidad": 900,
+      "capital_relativo": 1,
+      "en_red_social": true,
+      "rol": "Copia lo que hace su red",
+      "parametros": {
+        "umbral_activacion_rango": [0.4, 0.8],
+        "ventana_observacion_ticks": 3
+      }
+    },
+    {
+      "id": "fomo",
+      "nombre": "FOMO / momentum retail",
+      "cantidad": 600,
+      "capital_relativo": 1,
+      "en_red_social": true,
+      "rol": "Persigue subidas, entra tarde",
+      "parametros": {
+        "umbral_subida": 0.02,
+        "ventana_ticks": 5,
+        "vecinos_minimos_activos": 2,
+        "fraccion_capital_maxima": 0.4,
+        "stop_panico": -0.04
+      }
+    },
+    {
+      "id": "miedoso",
+      "nombre": "Miedoso / aversión a pérdida",
+      "cantidad": 500,
+      "capital_relativo": 1,
+      "en_red_social": true,
+      "rol": "Vende rápido ante caídas",
+      "parametros": {
+        "asimetria_kahneman": 2.5,
+        "fraccion_venta_rango": [0.5, 1.0],
+        "ticks_calma_para_recomprar": 10
+      }
+    },
+    {
+      "id": "contrarian",
+      "nombre": "Contrarian retail",
+      "cantidad": 250,
+      "capital_relativo": 1.5,
+      "en_red_social": true,
+      "rol": "Va contra la corriente",
+      "parametros": {
+        "umbral_consenso": 0.7,
+        "ventana_sentimiento_ticks": 5,
+        "ticks_entre_operaciones": [5, 10]
+      }
+    },
+    {
+      "id": "buy_and_hold",
+      "nombre": "Buy & hold pasivo",
+      "cantidad": 200,
+      "capital_relativo": 2,
+      "en_red_social": false,
+      "rol": "Casi nunca opera",
+      "parametros": {
+        "umbral_caida_oportunidad": -0.15,
+        "probabilidad_liquidez": 0.001
+      }
+    },
+    {
+      "id": "lider_opinion",
+      "nombre": "Líder de opinión (LLM)",
+      "cantidad": 100,
+      "capital_relativo": 5,
+      "en_red_social": true,
+      "rol": "Lee la noticia; su señal se propaga",
+      "arquetipos": [
+        { "id": "institucional_frio", "nombre": "El Institucional Frío", "cantidad": 15, "seguidores_rango": [20, 60] },
+        { "id": "quant_esceptico", "nombre": "El Quant Escéptico", "cantidad": 10, "seguidores_rango": [20, 50] },
+        { "id": "fomo_evangelista", "nombre": "El FOMO Evangelista", "cantidad": 15, "seguidores_rango": [80, 150] },
+        { "id": "doomer", "nombre": "El Doomer", "cantidad": 15, "seguidores_rango": [40, 100] },
+        { "id": "contrarian_sabio", "nombre": "El Contrarian Sabio", "cantidad": 10, "seguidores_rango": [20, 60] },
+        { "id": "macro_trader", "nombre": "El Macro Trader", "cantidad": 10, "seguidores_rango": [30, 80] },
+        { "id": "influencer_optimista", "nombre": "El Influencer Retail Optimista", "cantidad": 15, "seguidores_rango": [80, 150] },
+        { "id": "value_paciente", "nombre": "El Value Paciente", "cantidad": 10, "seguidores_rango": [20, 50] }
+      ]
+    }
+  ]
+}

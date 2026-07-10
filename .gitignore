@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Entorno y secretos (la clave de Anthropic NUNCA se sube)
+.env
+.env.*
+!.env.example
+
+# Sistema
+.DS_Store
+
+# Caché de respuestas LLM (se regenera)
+engine/brains/cache/

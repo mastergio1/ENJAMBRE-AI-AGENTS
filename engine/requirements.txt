@@ -1,0 +1,13 @@
+# Motor de simulación de El Enjambre — Python 3.11+
+mesa>=3.0            # framework de simulación basada en agentes
+fastapi>=0.115       # servidor API
+uvicorn[standard]>=0.30  # servidor ASGI (incluye soporte WebSocket)
+websockets>=13.0     # transmisión de ticks al frontend
+anthropic>=0.40      # cerebros LLM (líderes de opinión)
+numpy>=1.26          # cálculo numérico
+scipy>=1.13          # estadísticas para tests de hechos estilizados
+networkx>=3.3        # red de influencia (grafo Barabási-Albert)
+
+# Desarrollo y tests
+pytest>=8.0
+httpx>=0.27          # cliente para probar la API

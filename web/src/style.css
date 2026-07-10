@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+/* Estética Rubicón Lab: editorial, fondo tinta profunda, dorado como acento */
+:root {
+  --tinta: #0b0e14;
+  --dorado: #c9a227;
+  --marfil: #f4efe6;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--tinta);
+  color: var(--marfil);
+  font-family: 'Jost', sans-serif;
+  overflow: hidden;
+}
+
+#escena {
+  position: fixed;
+  inset: 0;
+  display: block;
+}
+
+#portada {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 600;
+  color: var(--dorado);
+  margin: 0;
+}
+
+.subtitulo {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0.5rem 0 0;
+}
+
+.etapa {
+  font-size: 0.85rem;
+  opacity: 0.5;
+  margin-top: 2rem;
+}

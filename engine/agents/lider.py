@@ -14,9 +14,10 @@ class LiderOpinion(AgenteBase):
     def __init__(self, model, capital, arquetipo: str):
         super().__init__(model, capital)
         self.arquetipo = arquetipo
-        self.senal = 0.0       # ∈ [-1, +1], la fija aplicar_noticia()
+        self.senal = 0.0       # ∈ [-1, +1], la fija el LLM o el fallback
         self.confianza = 0.7   # ∈ [0, 1], modula cuánto arrastra
-        self.frase = ""        # la escribirá el LLM en la Etapa 2
+        self.frase = ""        # una línea en su voz (hover en la UI)
+        self.seguidores: list = []  # a quiénes arrastra (los teje la red)
         self.desfase = self.model.random.randint(0, 2)
 
     def recibir_noticia(self, sentimiento: float) -> None:
@@ -32,9 +33,11 @@ class LiderOpinion(AgenteBase):
     def step(self):
         if abs(self.senal) < 0.05:
             return
-        cantidad = abs(self.senal) * self.confianza * 0.25 * self.capital_inicial / self.precio
+        cantidad = abs(self.senal) * self.confianza * 0.4 * self.capital_inicial / self.precio
+        # convicción alta = urgencia alta: cruza el libro sin regatear
+        urgencia = 0.005 + 0.04 * abs(self.senal)
         if self.senal > 0:
-            self.comprar_mercado(cantidad)
+            self.comprar_mercado(cantidad, urgencia=urgencia)
         else:
-            self.vender_mercado(cantidad)
+            self.vender_mercado(cantidad, urgencia=urgencia)
         self.senal *= 0.6  # actúa fuerte y rápido; la opinión se agota pronto

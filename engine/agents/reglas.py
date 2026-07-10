@@ -18,9 +18,10 @@ class Fundamentalista(AgenteBase):
         self.proximo_tick = self.model.random.randint(0, self.periodo)
 
     def step(self):
-        # la noticia actualiza el valor fundamental lentamente (ponderación 0.3)
+        # la noticia actualiza el valor fundamental lentamente (ponderación 0.3):
+        # una noticia grave no solo asusta — cambia cuánto valen los negocios
         if abs(self.model.sentimiento) > 0.01:
-            self.valor *= 1 + 0.3 * self.model.sentimiento * 0.01
+            self.valor *= 1 + 0.3 * self.model.sentimiento * 0.02
         if self.model.tick < self.proximo_tick:
             return
         self.proximo_tick = self.model.tick + self.periodo
@@ -141,7 +142,7 @@ class Arbitrajista(AgenteBase):
         desviacion = (self.precio - referencia) / referencia
         if abs(desviacion) < self.umbral:
             return
-        cantidad = min(abs(desviacion) * 5, 0.2) * self.capital_inicial / self.precio
+        cantidad = min(abs(desviacion) * 5, 0.25) * self.capital_inicial / self.precio
         if desviacion > 0:
             self.vender_mercado(cantidad)
         else:
@@ -162,7 +163,7 @@ class NoiseTrader(AgenteBase):
             return
         prob_compra = 0.5
         if self.sensible:
-            prob_compra += 0.1 * self.model.sentimiento
+            prob_compra += 0.1 * (self.model.sentimiento + self.senal_social)
         cantidad = 0.04 * self.capital_inicial / self.precio
         if self.model.random.random() < prob_compra:
             self.comprar_mercado(cantidad)
@@ -180,16 +181,26 @@ class Manada(AgenteBase):
         self.espera_hasta = 0
 
     def step(self):
-        if self.model.tick < self.espera_hasta:
+        if self.model.tick < self.espera_hasta or not self.vecinos:
             return
-        # Etapa 1: observa el flujo agregado reciente como proxy de su red.
-        # En la Etapa 2 esto se reemplaza por sus vecinos reales del grafo.
-        frac_compras = self.model.fraccion_compras(3)
-        if frac_compras is None:
-            return
-        if frac_compras > self.umbral:
+        # observa a SUS vecinos de red (pares + 1-2 líderes): si una mayoría
+        # operó hacia el mismo lado en los últimos 3 ticks, los copia
+        desde = self.model.tick - 3
+        compraron = vendieron = 0
+        for vecino in self.vecinos:
+            if vecino.tick_ultima_accion >= desde:
+                if vecino.ultima_accion == "compra":
+                    compraron += 1
+                elif vecino.ultima_accion == "venta":
+                    vendieron += 1
+        total = len(self.vecinos)
+        # el rumor que le llegó de sus líderes corre su umbral: si su red
+        # habla de comprar, se convence con menos evidencia (y viceversa)
+        umbral_compra = self.umbral - 0.3 * max(0.0, self.senal_social)
+        umbral_venta = self.umbral - 0.3 * max(0.0, -self.senal_social)
+        if compraron / total > umbral_compra:
             self.comprar_mercado(0.05 * self.efectivo / self.precio)
-        elif (1 - frac_compras) > self.umbral:
+        elif vendieron / total > umbral_venta:
             # vende más pesado de lo que compra: el miedo corre más que la codicia
             self.vender_mercado(0.15 * self.acciones)
         else:
@@ -214,11 +225,17 @@ class FomoRetail(AgenteBase):
                 self.precio_entrada = None
             return
         retorno_5 = self.model.retorno_acumulado(5)
-        frac_compras = self.model.fraccion_compras(3)
-        if retorno_5 is None or frac_compras is None:
+        if retorno_5 is None:
             return
-        # sube > 2% en 5 ticks Y su red habla de ello
-        if retorno_5 > self.umbral_subida and frac_compras > 0.55:
+        # sube > 2% en 5 ticks Y su red habla de ello (≥ 2 vecinos compraron
+        # hace poco, o le llegó un rumor comprador fuerte de sus líderes)
+        desde = self.model.tick - 3
+        vecinos_compraron = sum(
+            1 for v in self.vecinos
+            if v.tick_ultima_accion >= desde and v.ultima_accion == "compra"
+        )
+        red_habla = vecinos_compraron >= 2 or self.senal_social > 0.25
+        if retorno_5 > self.umbral_subida and red_habla:
             self.comprar_mercado(0.2 * self.efectivo / self.precio)
             self.precio_entrada = self.precio
 
@@ -235,7 +252,10 @@ class Miedoso(AgenteBase):
         retorno_5 = self.model.retorno_acumulado(5)
         # el dolor de perder pesa 2.5x: reacciona a caídas 2.5 veces menores
         panico_precio = retorno_5 is not None and retorno_5 < -0.03 / 2.5
-        panico_noticia = self.model.sentimiento < -self.umbral_miedo
+        # su miedo se alimenta del tono general Y del rumor de su red
+        # (los Doomers que sigue le susurran directo al oído)
+        sentimiento_percibido = self.model.sentimiento + self.senal_social
+        panico_noticia = sentimiento_percibido < -self.umbral_miedo
         if self.acciones > 1e-9 and (panico_precio or panico_noticia):
             fraccion = self.model.random.uniform(0.7, 1.0)
             # vende ya, al precio que sea: el dolor de perder manda

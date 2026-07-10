@@ -39,13 +39,16 @@ npm run dev
 
 ## Estado del proyecto
 
-**Etapa 1 completada** — el motor simula los 5.000 agentes sobre un libro de órdenes real y reproduce los 5 hechos estilizados de mercados reales (tests en `engine/validation/`). Ver el roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
+**Etapa 2 completada** — los 100 líderes de opinión leen titulares reales (API de Anthropic con fallback léxico: la simulación nunca se cae), su señal se propaga por la red de influencia y el enjambre reacciona. Ver el roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
 
 Para explorar el mercado simulado:
 
 ```bash
 cd engine && source .venv/bin/activate
-python simular.py 42   # corre una sesión y reporta los hechos estilizados
+python simular.py 42        # una sesión con los hechos estilizados
+python demo_titular.py "La Fed sube las tasas 50 puntos base"
+# con ANTHROPIC_API_KEY en el entorno usa los cerebros LLM reales;
+# sin clave usa el fallback léxico por arquetipo
 ```
 
 ---

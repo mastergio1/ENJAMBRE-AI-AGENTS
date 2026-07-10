@@ -12,6 +12,12 @@ class AgenteBase(mesa.Agent):
         self.efectivo = capital * 0.5
         self.acciones = (capital * 0.5) / model.libro.ultimo_precio
         self.ultima_accion = None  # "compra" | "venta" | None (para la visual)
+        self.tick_ultima_accion = -99  # cuándo fue (los vecinos miran esto)
+        # red de influencia (la teje network/red.py)
+        self.pares: list = []             # vecinos horizontales
+        self.lideres_seguidos: list = []  # líderes cuya señal recibe
+        self.vecinos: list = []           # pares + líderes
+        self.senal_social = 0.0           # el rumor acumulado que le llegó
 
     # ---------- utilidades ----------
 
@@ -48,6 +54,7 @@ class AgenteBase(mesa.Agent):
             self.aplicar_ejecucion(lado, ejecutado, dinero / ejecutado)
         else:
             self.ultima_accion = lado
+            self.tick_ultima_accion = self.model.tick
 
     def _urgencia_aleatoria(self) -> float:
         """Urgencia con cola larga: la mayoría es paciente, unos pocos cruzan
@@ -76,3 +83,4 @@ class AgenteBase(mesa.Agent):
             self.efectivo += cantidad * precio
             self.acciones -= cantidad
         self.ultima_accion = lado
+        self.tick_ultima_accion = self.model.tick

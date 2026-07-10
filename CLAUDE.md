@@ -206,7 +206,7 @@ Si un test falla, ajustar proporciones/parámetros de la sección 4, **no** hard
 | 4 | Integración total + deploy | Un link público funciona end-to-end |
 | 5 | Demo vendible | 3 escenarios precargados + reporte exportable |
 
-**Estado actual: Etapa 1 completada** — motor de simulación funcionando con los 5.000 agentes y los 5 tests de hechos estilizados pasando. Sigue: Etapa 2 (cerebros LLM + red de influencia).
+**Estado actual: Etapa 2 completada** — los 100 líderes leen titulares reales (LLM con fallback léxico obligatorio), la señal se propaga por la red de influencia scale-free con retardo y atenuación, y un titular cambia el comportamiento del enjambre. Sigue: Etapa 3 (enjambre 3D).
 
 ## 10. GLOSARIO PARA GIORGIO
 

@@ -67,9 +67,16 @@ class MercadoEnjambre(mesa.Model):
         self.retornos: list[float] = []
         self.flujo_compras: list[float] = []  # volumen agresor comprador por tick
         self.flujo_ventas: list[float] = []
+        # cola del rumor: (tick_entrega, agente, valor, salto)
+        self.cola_senales: list[tuple[int, AgenteBase, float, int]] = []
 
         self._crear_agentes(ruta_config)
         self._agentes_por_id = {a.unique_id: a for a in self.agents}
+        self._lideres = [a for a in self.agents if isinstance(a, LiderOpinion)]
+
+        from network.red import construir_red
+
+        construir_red(self)
 
     # ---------- construcción ----------
 
@@ -90,19 +97,73 @@ class MercadoEnjambre(mesa.Model):
     # ---------- noticia ----------
 
     def aplicar_noticia(self, sentimiento: float) -> None:
-        """Inyecta una noticia. En la Etapa 2, el sentimiento por líder
-        vendrá del LLM; aquí usamos la señal precomputada de cada líder."""
+        """Inyecta una noticia como número (para tests y calibración).
+        Cada líder forma su señal y la propaga por la red de influencia."""
         self.sentimiento = max(-1.0, min(1.0, self.sentimiento + sentimiento))
-        for agente in self.agents:
-            if isinstance(agente, LiderOpinion):
-                agente.recibir_noticia(sentimiento)
+        for lider in self._lideres:
+            lider.recibir_noticia(sentimiento)
+        self._propagar_desde_lideres()
+
+    def aplicar_titular(self, titular: str) -> list[dict]:
+        """Inyecta una noticia REAL: los 100 líderes la leen (LLM con
+        fallback léxico), forman su señal y la propagan por la red."""
+        from brains.cerebro import analizar_titular
+
+        consultas = [(lider.unique_id, lider.arquetipo) for lider in self._lideres]
+        respuestas = analizar_titular(titular, consultas)
+        for lider, respuesta in zip(self._lideres, respuestas):
+            lider.senal = respuesta["senal"]
+            lider.confianza = respuesta["confianza"]
+            lider.frase = respuesta["frase"]
+        # el "tono de la prensa": el titular crudo marca el ambiente del
+        # mercado (todos leen la misma noticia); las opiniones expertas
+        # de los líderes viajan aparte, por la red de influencia
+        from brains.fallback import sentimiento_lexico
+
+        tono = sentimiento_lexico(titular)
+        self.sentimiento = max(-1.0, min(1.0, self.sentimiento + tono))
+        self._propagar_desde_lideres()
+        return respuestas
+
+    def _propagar_desde_lideres(self) -> None:
+        """La señal de cada líder viaja a sus seguidores con retardo de
+        1-4 ticks y atenuación 0.7 por salto — esto crea la ola visual."""
+        for lider in self._lideres:
+            if abs(lider.senal) < 0.05:
+                continue
+            valor = lider.senal * lider.confianza * 0.7
+            for seguidor in lider.seguidores:
+                retardo = self.random.randint(1, 4)
+                self.cola_senales.append((self.tick + retardo, seguidor, valor, 1))
+
+    def _entregar_senales(self) -> None:
+        """Entrega el rumor que vence este tick y lo reenvía a los pares
+        (segundo salto, atenuado otra vez; ahí muere la cadena)."""
+        pendientes = []
+        for tick_entrega, agente, valor, salto in self.cola_senales:
+            if tick_entrega > self.tick:
+                pendientes.append((tick_entrega, agente, valor, salto))
+                continue
+            agente.senal_social = max(-1.0, min(1.0, agente.senal_social + valor))
+            if salto == 1:
+                for par in agente.pares:
+                    retardo = self.random.randint(1, 4)
+                    pendientes.append((self.tick + retardo, par, valor * 0.7, 2))
+        self.cola_senales = pendientes
 
     # ---------- ciclo ----------
 
     def step(self) -> None:
-        self.libro.reiniciar_tick(self.tick)
-        self.agents.shuffle_do("step")
         self.tick += 1
+        self.libro.reiniciar_tick(self.tick)
+        self._entregar_senales()  # el rumor de hoy llega antes de operar
+        self.agents.shuffle_do("step")
+        # el rumor recibido se desvanece rápido (lo fresco es lo que arrastra)
+        for agente in self.agents:
+            if agente.senal_social != 0.0:
+                agente.senal_social *= 0.75
+                if abs(agente.senal_social) < 0.01:
+                    agente.senal_social = 0.0
         # el cierre del tick es la última transacción real: una foto
         # puntual de dónde se cruzó de verdad la oferta con la demanda
         precio = self.libro.ultimo_precio if self.libro.volumen_tick > 0 else self.historial_precios[-1]

@@ -39,7 +39,14 @@ npm run dev
 
 ## Estado del proyecto
 
-**Etapa 0 completada** — repo y entornos configurados. Ver el roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
+**Etapa 1 completada** — el motor simula los 5.000 agentes sobre un libro de órdenes real y reproduce los 5 hechos estilizados de mercados reales (tests en `engine/validation/`). Ver el roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
+
+Para explorar el mercado simulado:
+
+```bash
+cd engine && source .venv/bin/activate
+python simular.py 42   # corre una sesión y reporta los hechos estilizados
+```
 
 ---
 *Rubicón Lab · Julio 2026*

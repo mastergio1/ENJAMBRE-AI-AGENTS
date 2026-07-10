@@ -206,7 +206,7 @@ Si un test falla, ajustar proporciones/parámetros de la sección 4, **no** hard
 | 4 | Integración total + deploy | Un link público funciona end-to-end |
 | 5 | Demo vendible | 3 escenarios precargados + reporte exportable |
 
-**Estado actual: Etapa 0.**
+**Estado actual: Etapa 1 completada** — motor de simulación funcionando con los 5.000 agentes y los 5 tests de hechos estilizados pasando. Sigue: Etapa 2 (cerebros LLM + red de influencia).
 
 ## 10. GLOSARIO PARA GIORGIO
 

@@ -57,9 +57,9 @@ const PERSONALIDADES = {
   fomo_evangelista: {
     senal: (s) => clip(1.6 * s),
     frases: [
-      '🚨 ESTO SE DERRUMBA. Vendan TODO antes de que sea tarde.',
+      '🚨 ESTO SE DERRUMBA. El que no salió ayer ya llegó tarde.',
       'Atentos: algo grande se cocina. No se duerman.',
-      '🚀 LA OPORTUNIDAD DE LA DÉCADA. El que no entra hoy, llora mañana.',
+      '🚀 EL MOMENTO DE LA DÉCADA. El que no está adentro, llora mañana.',
     ],
   },
   doomer: {
@@ -73,9 +73,9 @@ const PERSONALIDADES = {
   contrarian_sabio: {
     senal: (s) => clip(-0.7 * s, -0.8, 0.8),
     frases: [
-      'Sangre en las calles: exactamente cuando hay que comprar.',
+      'Sangre en las calles: el momento favorito de los pacientes.',
       'La masa aún no decide; yo tampoco. Paciencia.',
-      'Todos codiciosos a la vez: hora de tomar utilidades.',
+      'Todos codiciosos a la vez: mi señal favorita para retirarme.',
     ],
   },
   macro_trader: {

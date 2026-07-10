@@ -21,3 +21,6 @@ dist/
 
 # Caché de respuestas LLM (se regenera)
 engine/brains/cache/
+
+# Base de datos local (en Render vive en el disco persistente)
+engine/datos/

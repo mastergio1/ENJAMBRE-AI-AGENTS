@@ -397,4 +397,4 @@ El comparador con export vertical, y el build embebible con lista blanca.
 - Medios con el widget instalado (la métrica B2B que paga las demás).
 
 ---
-*Rubicón Lab · El Enjambre · CONTENIDO.md v1 · Julio 2026*
+*Rubicón Lab · El Enjambre · CONTENIDO.md v1 · Julio 2026 · Compañero de CLAUDE.md*

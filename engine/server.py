@@ -22,6 +22,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from agents.lider import LiderOpinion
 from brains.cerebro import analizar_titular_async
+from contenido import persistencia
+from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
 
 TICKS_CALENTAMIENTO = 60  # el mercado encuentra su ritmo (no se transmite)
@@ -115,10 +117,42 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
     for _ in range(TICKS_POSTERIORES):
         await transmitir_tick()
 
+    reporte = _generar_reporte(modelo, precio_previo, respuestas, lideres, contador_acciones)
+
+    # persistencia primero (CONTENIDO.md): TODA simulación se guarda
+    sim_id = None
+    try:
+        sim_id = await asyncio.to_thread(
+            _guardar_simulacion, titular, semilla, reporte, respuestas, lideres, modelo,
+        )
+    except Exception:
+        pass  # la persistencia nunca tumba la simulación en curso
+
     await ws.send_text(json.dumps({
         "tipo": "fin",
-        "reporte": _generar_reporte(modelo, precio_previo, respuestas, lideres, contador_acciones),
+        "sim_id": sim_id,
+        "reporte": reporte,
     }, ensure_ascii=False))
+
+
+def _guardar_simulacion(titular, semilla, reporte, respuestas, lideres, modelo) -> str:
+    conexion = persistencia.conectar()
+    try:
+        return persistencia.guardar_simulacion(
+            conexion,
+            titular=titular,
+            fuente="manual",
+            seed=semilla,
+            resumen=reporte,
+            lideres=[
+                {"arquetipo": lider.arquetipo,
+                 **{k: r[k] for k in ("senal", "confianza", "frase")}}
+                for lider, r in zip(lideres, respuestas)
+            ],
+            serie_precios=modelo.historial_precios[-(TICKS_PREVIOS + TICKS_POSTERIORES + 1):],
+        )
+    finally:
+        conexion.close()
 
 
 def _crear_mercado(semilla: int) -> MercadoEnjambre:
@@ -179,5 +213,5 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
             for clase, (c, v) in sorted(contador.items(), key=lambda kv: -sum(kv[1]))
         },
         "frases": frases,
-        "descargo": "Simulación educativa. No constituye asesoría financiera.",
+        "descargo": DISCLAIMER,
     }

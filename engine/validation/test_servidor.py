@@ -17,6 +17,7 @@ import server
 def entorno(monkeypatch, tmp_path):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.setattr(cerebro, "RUTA_CACHE", tmp_path / "cache.json")
+    monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
 
 
 def test_salud():
@@ -68,4 +69,16 @@ def test_flujo_completo_por_websocket():
         assert reporte["volatilidad_pct"] > 0
         assert len(reporte["frases"]) == 3
         assert reporte["desglose"]  # hay actividad por tipo
-        assert "asesoría financiera" in reporte["descargo"]
+
+        from contenido.vocabulario import DISCLAIMER
+        assert reporte["descargo"] == DISCLAIMER
+
+        # 4) persistencia primero: la simulación quedó guardada
+        from contenido import persistencia
+        conexion = persistencia.conectar()
+        guardada = persistencia.obtener_simulacion(conexion, fin["sim_id"])
+        conexion.close()
+        assert guardada is not None
+        assert guardada["titular"].startswith("Quiebra el segundo banco")
+        assert len(guardada["lideres"]) == 100
+        assert len(guardada["serie_precios"]) >= total_ticks

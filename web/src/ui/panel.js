@@ -29,7 +29,7 @@ export function crearPanel(alEnviarTitular) {
       <div class="chips">
         ${ESCENARIOS.map((e, i) => `<button class="chip" data-i="${i}">${e.etiqueta}</button>`).join('')}
       </div>
-      <p class="descargo">Simulación educativa. No constituye asesoría financiera.</p>
+      <p class="descargo">Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.</p>
     </div>
 
     <div id="tooltip" class="tooltip" hidden></div>

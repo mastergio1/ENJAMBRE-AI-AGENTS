@@ -2,6 +2,7 @@
 // Un solo loop, tres draw calls, gobernador de fps para móvil.
 
 import * as THREE from 'three'
+import { inicializarMuro } from './muro/muro.js'
 import { Enjambre } from './swarm/enjambre.js'
 import { MotorRemoto } from './ui/conexion.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
@@ -34,18 +35,25 @@ const urlMotor =
 let motor = urlMotor ? new MotorRemoto(urlMotor) : null
 let modo = 'demo local'
 
-async function soltarTitular(titular) {
+let muroCtl = { recargar: async () => {}, detenerReplay: () => {} }
+
+async function soltarTitular(titular, titularId = null) {
   if (reducirMovimiento) {
     correrEstatico(titular)
     return
   }
+  muroCtl.detenerReplay() // la portada cede el escenario a la simulación en vivo
   if (motor) {
     try {
       await motor.simular(titular, {
         alInicio: (mensaje) => enjambre.fijarLideresRemotos(mensaje.lideres),
         alTick: (precio, _tick, sentimientos) => enjambre.aplicarEstadoRemoto(precio, sentimientos),
-        alFin: (reporte) => panel.mostrarReporte(reporte),
-      })
+        alFin: (reporte) => {
+          panel.mostrarReporte(reporte)
+          muroCtl.recargar() // la tarjeta recién simulada pasa a Estado A
+        },
+        alLimite: (mensaje) => panel.avisar(mensaje),
+      }, titularId ? { titular_id: titularId } : {})
       enjambre.modoRemoto = true
       modo = 'motor real'
       return
@@ -59,6 +67,17 @@ async function soltarTitular(titular) {
 }
 
 const panel = crearPanel(soltarTitular)
+
+// el muro de noticias: la nueva portada (carga en paralelo, nunca bloquea)
+inicializarMuro({
+  enjambre,
+  panel,
+  correrTitular: soltarTitular,
+  reducirMovimiento,
+  fijarModo: (nuevo) => { modo = nuevo },
+})
+  .then((control) => { muroCtl = control })
+  .catch(() => {})
 
 // parallax sutil con el puntero (vectores reutilizados, nada nuevo por frame)
 const punteroMeta = new THREE.Vector2()

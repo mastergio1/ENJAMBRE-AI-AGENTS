@@ -206,7 +206,7 @@ Si un test falla, ajustar proporciones/parámetros de la sección 4, **no** hard
 | 4 | Integración total + deploy | Un link público funciona end-to-end |
 | 5 | Demo vendible | 3 escenarios precargados + reporte exportable |
 
-**Estado actual: Etapa 4 completada (integración) + Etapa 6 completada (capa de contenido: persistencia + fuentes + portero, ver CONTENIDO.md)** — el motor transmite la simulación real por WebSocket y el enjambre 3D la renderiza en vivo; toda simulación queda guardada en SQLite; el portero de dos pisos elige los titulares del día (Alpaca con degradación a demo) y el filtro de vocabulario CMF es código con tests. Deploy documentado en docs/despliegue.md; falta ejecutarlo con las cuentas de Giorgio. Sigue: Etapa 7 (el muro) según CONTENIDO.md; la Etapa 5 (reporte exportable) se recoge dentro de la capa de contenido.
+**Estado actual: Etapas 0-4 + 6-7 completadas** — el motor transmite la simulación real por WebSocket y el enjambre 3D la renderiza en vivo; toda simulación queda en SQLite; el portero de dos pisos elige los titulares del día (Alpaca con degradación a demo); el filtro CMF es código con tests; y **el muro es la nueva portada**: las 3 destacadas del día ya simuladas con replay 3D, simulación on-demand con frenos de presupuesto (5/hora/IP + tope global diario), y degradación elegante si el motor duerme. Deploy documentado en docs/despliegue.md; falta ejecutarlo con las cuentas de Giorgio. Sigue: Etapa 8 (El Pulso) según CONTENIDO.md; la Etapa 5 (reporte exportable) se recoge dentro de la capa de contenido.
 
 ## 10. GLOSARIO PARA GIORGIO
 

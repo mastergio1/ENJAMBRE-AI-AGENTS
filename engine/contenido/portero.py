@@ -213,6 +213,7 @@ def procesar_dia(conexion, candidatos: list[dict], maximo: int = 3) -> dict:
             simbolos=entrada.get("simbolos", ""),
             veredicto=entrada["veredicto"],
             motivo=entrada["motivo"],
+            impacto=entrada["impacto"],
         )
 
     return {"elegidos": elegidos, "log": log}

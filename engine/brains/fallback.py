@@ -11,6 +11,7 @@ def _clip(x: float, lo: float = -1.0, hi: float = 1.0) -> float:
 
 
 # frases compuestas primero (dominan sobre las palabras sueltas)
+# bilingüe: el producto habla español, pero los cables llegan en inglés
 FRASES_CLAVE = {
     "sube las tasas": -0.7,
     "alza de tasas": -0.7,
@@ -22,6 +23,17 @@ FRASES_CLAVE = {
     "supera expectativas": 0.7,
     "peor de lo esperado": -0.6,
     "mejor de lo esperado": 0.6,
+    "raises rates": -0.7,
+    "rate hike": -0.7,
+    "more hikes": -0.6,
+    "cuts rates": 0.6,
+    "rate cut": 0.6,
+    "trade war": -0.7,
+    "beats expectations": 0.7,
+    "beats earnings": 0.7,
+    "misses expectations": -0.6,
+    "all-time high": 0.8,
+    "record high": 0.7,
 }
 
 PALABRAS = {
@@ -32,17 +44,29 @@ PALABRAS = {
     "inflación": -0.5, "despidos": -0.6, "pérdidas": -0.6, "sanciones": -0.5,
     "demanda judicial": -0.4, "renuncia": -0.4, "incumple": -0.6, "riesgo": -0.4,
     "crash": -0.9, "burbuja": -0.5, "contagio": -0.7, "corralito": -0.9,
+    # negativas (inglés de los cables)
+    "collapse": -0.9, "bankruptcy": -0.9, "plunge": -0.8, "recession": -0.8,
+    "layoffs": -0.6, "fraud": -0.8, "lawsuit": -0.4, "tariff": -0.6,
+    "sanctions": -0.5, "war": -0.6, "escalate": -0.5, "resigns": -0.4,
+    "investigation": -0.4, "recall": -0.4, "cyberattack": -0.7, "falls": -0.5,
+    "drops": -0.5, "sinks": -0.6, "fdic": -0.6, "bailout": -0.7, "misses": -0.5,
     # positivas
     "sube": 0.6, "alza": 0.6, "récord": 0.7, "gana": 0.5, "ganancias": 0.6,
     "crece": 0.5, "crecimiento": 0.5, "acuerdo": 0.4, "aprueba": 0.4,
     "beneficios": 0.5, "expansión": 0.5, "estímulo": 0.6, "recuperación": 0.6,
     "innovación": 0.4, "compra": 0.3, "inversión": 0.3, "máximo histórico": 0.8,
+    # positivas (inglés de los cables)
+    "surges": 0.6, "soars": 0.7, "rallies": 0.6, "jumps": 0.5, "beats": 0.5,
+    "stimulus": 0.6, "approval": 0.4, "breakthrough": 0.5, "expands": 0.4,
+    "profit": 0.4, "growth": 0.4, "deal": 0.3, "acquisition": 0.3,
 }
 
 PALABRAS_MACRO = [
     "fed", "banco central", "tasas", "tasa de interés", "inflación", "ipc",
     "empleo", "desempleo", "dólar", "pib", "recesión", "estímulo", "liquidez",
     "banco", "sistema financiero", "default", "deuda soberana", "guerra",
+    "central bank", "rates", "inflation", "unemployment", "jobs", "gdp",
+    "treasury", "recession", "bank", "tariff", "war", "stimulus",
 ]
 
 

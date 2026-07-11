@@ -34,6 +34,7 @@ export function crearPanel(alEnviarTitular) {
 
     <div id="tooltip" class="tooltip" hidden></div>
     <aside id="reporte" class="reporte" hidden></aside>
+    <div id="aviso" class="aviso" hidden></div>
   `
 
   const campo = raiz.querySelector('#campo-titular')
@@ -71,6 +72,13 @@ export function crearPanel(alEnviarTitular) {
       precioEl.textContent = precio.toFixed(2)
       detalleEl.textContent =
         `${particulas.toLocaleString('es-CL')} inversionistas · ${Math.round(fps)} fps${modo ? ` · ${modo}` : ''}`
+    },
+    avisar(mensaje) {
+      const aviso = raiz.querySelector('#aviso')
+      aviso.textContent = mensaje
+      aviso.hidden = false
+      clearTimeout(aviso._temporizador)
+      aviso._temporizador = setTimeout(() => { aviso.hidden = true }, 6000)
     },
     mostrarReporte(reporte) {
       const panelReporte = raiz.querySelector('#reporte')

@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS titulares (
   simbolos   TEXT,
   veredicto  TEXT NOT NULL,
   motivo     TEXT,
+  impacto    INTEGER DEFAULT 0,
   sim_id     TEXT REFERENCES simulaciones(id)
 );
 CREATE TABLE IF NOT EXISTS suscriptores (
@@ -60,6 +61,11 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
     conexion = sqlite3.connect(ruta)
     conexion.row_factory = sqlite3.Row
     conexion.executescript(ESQUEMA)
+    # migración suave para bases creadas antes de la columna `impacto`
+    try:
+        conexion.execute("ALTER TABLE titulares ADD COLUMN impacto INTEGER DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass
     return conexion
 
 
@@ -128,19 +134,53 @@ def marcar_destacada(conexion, sim_id: str) -> None:
 
 # ---------- titulares (el log del portero) ----------
 
+def id_titular(titular: str) -> str:
+    return hashlib.sha256(titular.encode()).hexdigest()[:16]
+
+
 def registrar_titular(
     conexion, *, titular: str, fuente: str, veredicto: str,
-    motivo: str = "", simbolos: str = "", sim_id: str | None = None,
+    motivo: str = "", simbolos: str = "", impacto: int = 0, sim_id: str | None = None,
 ) -> str:
-    titular_id = hashlib.sha256(titular.encode()).hexdigest()[:16]
+    titular_id = id_titular(titular)
     conexion.execute(
         """INSERT OR REPLACE INTO titulares
-           (id, titular, fuente, fecha, simbolos, veredicto, motivo, sim_id)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (titular_id, titular, fuente, ahora_iso(), simbolos, veredicto, motivo, sim_id),
+           (id, titular, fuente, fecha, simbolos, veredicto, motivo, impacto, sim_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (titular_id, titular, fuente, ahora_iso(), simbolos, veredicto, motivo, impacto, sim_id),
     )
     conexion.commit()
     return titular_id
+
+
+def obtener_titular(conexion, titular_id: str) -> dict | None:
+    fila = conexion.execute("SELECT * FROM titulares WHERE id = ?", (titular_id,)).fetchone()
+    return dict(fila) if fila else None
+
+
+def vincular_simulacion(conexion, titular_id: str, sim_id: str) -> None:
+    """Un titular del muro quedó simulado: la tarjeta pasa a Estado A."""
+    conexion.execute(
+        "UPDATE titulares SET sim_id = ?, veredicto = 'simular' WHERE id = ?",
+        (sim_id, titular_id),
+    )
+    conexion.commit()
+
+
+def titulares_del_muro(conexion, umbral_impacto: int, limite: int = 30) -> list[dict]:
+    """Las tarjetas del muro: lo que amerita, destacadas primero.
+
+    Estado C (descartadas del piso léxico o de impacto bajo) no aparece.
+    """
+    filas = conexion.execute(
+        """SELECT t.*, s.resumen_json, COALESCE(s.destacada, 0) AS sim_destacada
+           FROM titulares t LEFT JOIN simulaciones s ON s.id = t.sim_id
+           WHERE t.sim_id IS NOT NULL OR t.veredicto = 'simular' OR t.impacto >= ?
+           ORDER BY sim_destacada DESC, t.fecha DESC
+           LIMIT ?""",
+        (umbral_impacto, limite),
+    ).fetchall()
+    return [dict(f) for f in filas]
 
 
 def titulares_recientes(conexion, horas: int = 48) -> list[dict]:
@@ -150,6 +190,28 @@ def titulares_recientes(conexion, horas: int = 48) -> list[dict]:
         "SELECT titular, veredicto, fecha FROM titulares WHERE fecha >= ?", (desde,)
     ).fetchall()
     return [dict(f) for f in filas]
+
+
+# ---------- frames del replay 3D (solo las destacadas los conservan) ----------
+
+def ruta_frames(sim_id: str) -> Path:
+    base = Path(os.environ.get("ENJAMBRE_DB", RUTA_DEFECTO)).parent / "frames"
+    return base / f"{sim_id}.bin"
+
+
+def guardar_frames(sim_id: str, frames: list[bytes]) -> str:
+    """Concatena y guarda los frames binarios del replay. Devuelve la ruta."""
+    ruta = ruta_frames(sim_id)
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    with open(ruta, "wb") as archivo:
+        for frame in frames:
+            archivo.write(frame)
+    return str(ruta)
+
+
+def leer_frames(sim_id: str) -> bytes | None:
+    ruta = ruta_frames(sim_id)
+    return ruta.read_bytes() if ruta.exists() else None
 
 
 # ---------- suscriptores (la tabla nace ahora; el boletín llega en la Etapa 8) ----------

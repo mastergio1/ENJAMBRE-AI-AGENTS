@@ -17,12 +17,14 @@ import json
 import struct
 from collections import defaultdict
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from agents.lider import LiderOpinion
+from brains.arquetipos import POR_ID
 from brains.cerebro import analizar_titular_async
-from contenido import persistencia
+from contenido import limites, persistencia, portero
 from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
 
@@ -58,16 +60,23 @@ NOMBRES_TIPO = {
 
 @app.get("/salud")
 def salud() -> dict:
-    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 4}
+    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 7}
 
 
 @app.websocket("/ws")
 async def canal(ws: WebSocket) -> None:
     await ws.accept()
+    ip = ws.client.host if ws.client else "desconocida"
     try:
         while True:
             mensaje = json.loads(await ws.receive_text())
             if mensaje.get("tipo") == "simular":
+                # toda simulación pública gasta ~100 llamadas LLM:
+                # frenos por IP (5/hora) y global (tope diario)
+                permitido, motivo = limites.permitir(ip)
+                if not permitido:
+                    await ws.send_text(json.dumps({"tipo": "limite", "mensaje": motivo}, ensure_ascii=False))
+                    continue
                 await _correr_simulacion(ws, mensaje)
     except WebSocketDisconnect:
         pass
@@ -125,6 +134,10 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
         sim_id = await asyncio.to_thread(
             _guardar_simulacion, titular, semilla, reporte, respuestas, lideres, modelo,
         )
+        # si vino desde una tarjeta del muro, la tarjeta pasa a Estado A
+        titular_id = mensaje.get("titular_id")
+        if sim_id and titular_id:
+            await asyncio.to_thread(_vincular_titular, str(titular_id), sim_id)
     except Exception:
         pass  # la persistencia nunca tumba la simulación en curso
 
@@ -133,6 +146,14 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
         "sim_id": sim_id,
         "reporte": reporte,
     }, ensure_ascii=False))
+
+
+def _vincular_titular(titular_id: str, sim_id: str) -> None:
+    conexion = persistencia.conectar()
+    try:
+        persistencia.vincular_simulacion(conexion, titular_id, sim_id)
+    finally:
+        conexion.close()
 
 
 def _guardar_simulacion(titular, semilla, reporte, respuestas, lideres, modelo) -> str:
@@ -215,3 +236,121 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
         "frases": frases,
         "descargo": DISCLAIMER,
     }
+
+
+# ---------- los endpoints del muro (CONTENIDO.md sección 3.2) ----------
+
+def _nivel_agitacion(volatilidad_pct: float) -> str:
+    """Traducción editorial de la volatilidad."""
+    if volatilidad_pct < 1.0:
+        return "bajo"
+    if volatilidad_pct < 2.0:
+        return "medio"
+    return "alto"
+
+
+def _direccion_editorial(direccion_pct: float) -> str:
+    if direccion_pct > 1.0:
+        return "▲"
+    if direccion_pct < -1.0:
+        return "▼"
+    return "◆"
+
+
+def _resumen_tarjeta(resumen: dict) -> dict:
+    """Lo que la tarjeta del muro necesita del reporte completo."""
+    frases = resumen.get("frases", [])
+    jugosa = max(frases, key=lambda f: abs(f.get("senal", 0)), default=None)
+    if jugosa is not None:
+        arquetipo = POR_ID.get(jugosa["arquetipo"], {})
+        jugosa = {"arquetipo": arquetipo.get("nombre", jugosa["arquetipo"]), "frase": jugosa["frase"]}
+    return {
+        "direccion_pct": resumen.get("direccion_pct"),
+        "direccion": _direccion_editorial(resumen.get("direccion_pct", 0)),
+        "agitacion": _nivel_agitacion(resumen.get("volatilidad_pct", 0)),
+        "frase": jugosa,
+    }
+
+
+@app.get("/api/muro")
+def muro() -> dict:
+    """Las tarjetas del día: destacadas primero, luego cronológico."""
+    conexion = persistencia.conectar()
+    try:
+        filas = persistencia.titulares_del_muro(conexion, portero.UMBRAL_IMPACTO, limite=30)
+    finally:
+        conexion.close()
+    tarjetas = []
+    for fila in filas:
+        tarjeta = {
+            "id": fila["id"],
+            "titular": fila["titular"],
+            "fuente": fila["fuente"],
+            "simbolos": fila["simbolos"],
+            "fecha": fila["fecha"],
+            "estado": "simulada" if fila["sim_id"] else "pendiente",
+            "sim_id": fila["sim_id"],
+            "destacada": bool(fila["sim_destacada"]),
+        }
+        if fila["resumen_json"]:
+            tarjeta["resumen"] = _resumen_tarjeta(json.loads(fila["resumen_json"]))
+        tarjetas.append(tarjeta)
+    return {"tarjetas": tarjetas, "descargo": DISCLAIMER}
+
+
+@app.get("/api/simulacion/{sim_id}")
+def simulacion(sim_id: str) -> dict:
+    conexion = persistencia.conectar()
+    try:
+        datos = persistencia.obtener_simulacion(conexion, sim_id)
+    finally:
+        conexion.close()
+    if datos is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    return {
+        "id": datos["id"],
+        "titular": datos["titular"],
+        "fuente": datos["fuente"],
+        "fecha": datos["fecha"],
+        "destacada": bool(datos["destacada"]),
+        "resumen": datos["resumen"],
+        "tarjeta": _resumen_tarjeta(datos["resumen"]),
+        "lideres": datos["lideres"],
+        "serie_precios": datos["serie_precios"],
+        "tiene_replay": persistencia.leer_frames(sim_id) is not None,
+    }
+
+
+@app.get("/api/simulacion/{sim_id}/replay")
+def replay(sim_id: str) -> Response:
+    """Los frames binarios del replay 3D (solo destacadas los conservan)."""
+    frames = persistencia.leer_frames(sim_id)
+    if frames is None:
+        return Response(status_code=404)
+    return Response(content=frames, media_type="application/octet-stream")
+
+
+class PeticionSimular(BaseModel):
+    id: str  # el id del titular en el muro
+
+
+@app.post("/api/simular-titular")
+def simular_titular(peticion: PeticionSimular) -> dict:
+    """Chequeo previo de la simulación on-demand desde una tarjeta.
+
+    No consume el cupo (eso pasa al correr de verdad por el WebSocket);
+    responde si hay presupuesto y devuelve el titular a simular.
+    """
+    conexion = persistencia.conectar()
+    try:
+        titular = persistencia.obtener_titular(conexion, peticion.id)
+    finally:
+        conexion.close()
+    if titular is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    if titular["sim_id"]:
+        return {"estado": "simulada", "sim_id": titular["sim_id"]}
+    permitido, motivo = limites.permitir("verificacion-previa", consumir=False)
+    if not permitido and motivo == limites.MENSAJE_GLOBAL:
+        return {"estado": "limite", "mensaje": motivo}
+    return {"estado": "adelante", "titular": titular["titular"], "titular_id": titular["id"]}

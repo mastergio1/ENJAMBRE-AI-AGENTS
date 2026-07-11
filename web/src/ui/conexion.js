@@ -1,6 +1,15 @@
 // Conexión con el motor real (engine/server.py) por WebSocket.
 // Si el motor no está disponible, main.js degrada al modo demo local.
 
+/** La base HTTP del motor (para los endpoints /api del muro). */
+export function urlApi() {
+  const ws =
+    import.meta.env.VITE_WS_URL ||
+    (['localhost', '127.0.0.1'].includes(location.hostname) ? 'ws://localhost:8000/ws' : null)
+  if (!ws) return null
+  return ws.replace(/^ws/, 'http').replace(/\/ws$/, '')
+}
+
 export class MotorRemoto {
   constructor(url) {
     this.url = url
@@ -26,8 +35,8 @@ export class MotorRemoto {
     })
   }
 
-  /** Envía el titular y entrega los eventos: alInicio, alTick, alFin. */
-  async simular(titular, { alInicio, alTick, alFin }) {
+  /** Envía el titular y entrega los eventos: alInicio, alTick, alFin, alLimite. */
+  async simular(titular, { alInicio, alTick, alFin, alLimite }, extras = {}) {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.ws = await this._conectar()
     }
@@ -35,7 +44,8 @@ export class MotorRemoto {
       if (typeof evento.data === 'string') {
         const mensaje = JSON.parse(evento.data)
         if (mensaje.tipo === 'inicio') alInicio(mensaje)
-        else if (mensaje.tipo === 'fin') alFin(mensaje.reporte)
+        else if (mensaje.tipo === 'fin') alFin(mensaje.reporte, mensaje.sim_id)
+        else if (mensaje.tipo === 'limite') alLimite?.(mensaje.mensaje)
       } else {
         const vista = new DataView(evento.data)
         alTick(
@@ -45,6 +55,6 @@ export class MotorRemoto {
         )
       }
     }
-    this.ws.send(JSON.stringify({ tipo: 'simular', titular }))
+    this.ws.send(JSON.stringify({ tipo: 'simular', titular, ...extras }))
   }
 }

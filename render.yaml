@@ -27,3 +27,38 @@ services:
       # plan y montar un disco en /app/datos (ver docs/despliegue.md).
       - key: ENJAMBRE_DB
         value: "/app/datos/enjambre.db"
+      # El Pulso (Etapa 8) — se pegan a mano cuando el dominio esté verificado:
+      - key: RESEND_API_KEY
+        sync: false
+      - key: PULSO_REMITENTE
+        value: "El Enjambre <pulso@tudominio.cl>"
+      - key: ENJAMBRE_WEB_URL
+        value: "https://enjambre.vercel.app"
+      - key: ENJAMBRE_API_URL
+        value: "https://enjambre-motor.onrender.com"
+      # aviso a Giorgio por Telegram (opcional):
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      # token que autoriza al cron a disparar el ritual (mismo valor en ambos)
+      - key: ENJAMBRE_PIPELINE_TOKEN
+        generateValue: true
+
+  # El ritual de la madrugada: 6:30 AM Chile = 10:30 UTC (11:30 en invierno).
+  # El cron NO simula (no comparte disco con la web): solo golpea el endpoint
+  # protegido y el ritual corre dentro del proceso web, sobre la misma base.
+  - type: cron
+    name: enjambre-pulso
+    runtime: docker
+    rootDir: engine
+    dockerfilePath: ./Dockerfile
+    plan: free
+    schedule: "30 10 * * 1-5"  # lunes a viernes
+    dockerCommand: python -m contenido.disparar_pulso
+    envVars:
+      - key: ENJAMBRE_API_URL
+        value: "https://enjambre-motor.onrender.com"
+      # mismo valor que el token del servicio web (pegar a mano el generado)
+      - key: ENJAMBRE_PIPELINE_TOKEN
+        sync: false

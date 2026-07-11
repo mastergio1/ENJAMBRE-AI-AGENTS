@@ -133,12 +133,45 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
       <div class="muro-lista">${tarjetas.map(plantillaTarjeta).join('')}</div>
       ${datos.tarjetas.length > visibles
         ? '<button class="accion ver-mas">Ver más titulares</button>' : ''}
+      <section class="pulso">
+        <h2>El Pulso del Enjambre</h2>
+        <p>Cada mañana, la reacción del enjambre a los titulares del día. Un correo, sin ruido.</p>
+        <form class="pulso-form">
+          <input type="email" name="email" placeholder="tu@correo.cl" autocomplete="email" required />
+          <button type="submit" class="accion">Suscribirme</button>
+        </form>
+        <p class="pulso-estado" hidden></p>
+      </section>
       <p class="muro-descargo">${esc(datos.descargo)}</p>`
     document.body.classList.add('con-muro')
     conectarEventos(datos)
   }
 
+  function conectarPulso() {
+    const form = contenedor.querySelector('.pulso-form')
+    const estado = contenedor.querySelector('.pulso-estado')
+    if (!form) return
+    form.addEventListener('submit', async (evento) => {
+      evento.preventDefault()
+      const email = form.email.value.trim()
+      estado.hidden = false
+      estado.textContent = 'Enviando…'
+      try {
+        const r = await (await fetch(`${api}/api/suscribir`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, origen: 'web' }),
+        })).json()
+        estado.textContent = r.mensaje || 'Listo.'
+        if (r.estado === 'pendiente' || r.estado === 'ya_suscrito') form.reset()
+      } catch {
+        estado.textContent = 'No se pudo completar. Intenta más tarde.'
+      }
+    })
+  }
+
   function conectarEventos(datos) {
+    conectarPulso()
     contenedor.querySelector('.plegar')?.addEventListener('click', () => {
       document.body.classList.toggle('muro-plegado')
       contenedor.querySelector('.plegar').textContent =

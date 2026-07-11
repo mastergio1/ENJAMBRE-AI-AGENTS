@@ -110,10 +110,85 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
             conexion.close()
 
 
+def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int | None = None,
+                    enviar: bool = True) -> dict:
+    """El ritual completo (CONTENIDO.md sección 6.1): prepara el día
+    (pasos 1-3, 7) y luego redacta y envía El Pulso (pasos 5-6) y avisa a
+    Giorgio (paso 8). El paso 4 (imagen) se sirve on-the-fly desde el
+    endpoint /api/simulacion/{id}/imagen — no hace falta pre-renderizar.
+
+    `enviar=False` arma todo pero no manda correos (para pruebas/preview).
+    """
+    from datetime import datetime, timezone
+
+    from contenido import boletin, notificar
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        preparado = preparar_dia(conexion, maximo=maximo, semilla_base=semilla_base)
+
+        # reúne las destacadas de hoy con sus voces (para el correo)
+        destacadas = _destacadas_de_hoy(conexion)
+        envio = None
+        html = None
+        if destacadas:
+            fecha = _fecha_es(datetime.now(timezone.utc))
+            html = boletin.construir_html(destacadas, fecha)  # preview (token genérico)
+            if enviar:
+                envio = boletin.enviar_pulso(conexion, destacadas, fecha)
+
+        # paso 8: avisar a Giorgio
+        notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], envio))
+
+        return {**preparado, "destacadas": len(destacadas), "envio": envio, "html_preview": html}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def _destacadas_de_hoy(conexion) -> list[dict]:
+    """Las destacadas de hoy con resumen + voces, listas para el boletín."""
+    hoy = persistencia.ahora_iso()[:10]
+    resultado = []
+    for fila in persistencia.listar_simulaciones(conexion, solo_destacadas=True, limite=10):
+        if fila["fecha"][:10] != hoy:
+            continue
+        datos = persistencia.obtener_simulacion(conexion, fila["id"])
+        if datos:
+            resultado.append({
+                "sim_id": datos["id"],
+                "titular": datos["titular"],
+                "resumen": {**datos["resumen"], "agitacion": _agitacion(datos["resumen"])},
+                "lideres_frases": datos["lideres"],
+            })
+    return resultado
+
+
+def _agitacion(resumen: dict) -> str:
+    vol = resumen.get("volatilidad_pct", 0)
+    return "bajo" if vol < 1.0 else "medio" if vol < 2.0 else "alto"
+
+
+def _fecha_es(dt) -> str:
+    dias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+    meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+             "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+    return f"{dias[dt.weekday()]} {dt.day} de {meses[dt.month - 1]}"
+
+
 if __name__ == "__main__":
-    resultado = preparar_dia()
+    import sys
+
+    enviar = "--enviar" in sys.argv
+    resultado = ritual_matutino(enviar=enviar)
     print(f"fuente: {resultado['origen']}")
     for publicada in resultado.get("publicadas", []):
         print(f"  ★ [{publicada['impacto']}/10] {publicada['titular']}  → sim {publicada['sim_id']}")
+    if resultado.get("envio"):
+        e = resultado["envio"]
+        print(f"correos: {e['enviados']}/{e['suscriptores']} enviados")
+    elif resultado.get("destacadas"):
+        print(f"boletín armado ({resultado['destacadas']} destacadas); envío desactivado (usa --enviar)")
     if not resultado.get("publicadas"):
         print(f"  ({resultado.get('motivo', 'sin titulares elegibles')})")

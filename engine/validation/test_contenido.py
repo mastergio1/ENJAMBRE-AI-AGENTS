@@ -98,13 +98,23 @@ def test_listar_por_mes_y_destacadas(conexion):
     assert persistencia.listar_simulaciones(conexion, mes="1999-01") == []
 
 
-def test_suscriptores_alta_y_baja(conexion):
-    token = persistencia.agregar_suscriptor(conexion, "Giorgio@Rubicon.cl", origen="web")
-    fila = conexion.execute("SELECT * FROM suscriptores").fetchone()
-    assert fila["email"] == "giorgio@rubicon.cl"  # normalizado
-    assert fila["activo"] == 1
-    assert persistencia.dar_de_baja(conexion, token) is True
+def test_suscriptores_double_opt_in(conexion):
+    # alta: nace PENDIENTE (activo=0) hasta confirmar
+    alta = persistencia.agregar_suscriptor(conexion, "Giorgio@Rubicon.cl", origen="web")
+    assert alta["email"] == "giorgio@rubicon.cl"  # normalizado
+    assert alta["ya_activo"] is False
     assert conexion.execute("SELECT activo FROM suscriptores").fetchone()[0] == 0
+    assert persistencia.suscriptores_activos(conexion) == []
+
+    # confirmar: ahora sí queda activo
+    assert persistencia.confirmar_suscriptor(conexion, alta["token_confirma"]) == "giorgio@rubicon.cl"
+    assert len(persistencia.suscriptores_activos(conexion)) == 1
+    # el token de confirmación no sirve dos veces
+    assert persistencia.confirmar_suscriptor(conexion, alta["token_confirma"]) is None
+
+    # baja de un clic
+    assert persistencia.dar_de_baja(conexion, alta["token_baja"]) is True
+    assert persistencia.suscriptores_activos(conexion) == []
     assert persistencia.dar_de_baja(conexion, "token-falso") is False
 
 

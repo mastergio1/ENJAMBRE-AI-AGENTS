@@ -19,7 +19,7 @@ from collections import defaultdict
 
 import os
 
-from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect
+from fastapi import BackgroundTasks, FastAPI, Header, Request, Response, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -95,7 +95,7 @@ NOMBRES_TIPO = {
 
 @app.get("/salud")
 def salud() -> dict:
-    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 7}
+    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 8}
 
 
 def _responder(ws: WebSocket, **campos) -> str:
@@ -398,6 +398,29 @@ def simulacion(sim_id: str, respuesta: Response) -> dict:
     }
 
 
+@app.get("/api/simulacion/{sim_id}/imagen")
+def imagen(sim_id: str) -> Response:
+    """El 'momento dramático' como PNG 1200×630 (correo + Open Graph)."""
+    if not seguridad.sim_id_valido(sim_id):
+        return Response(status_code=404)
+    conexion = persistencia.conectar()
+    try:
+        datos = persistencia.obtener_simulacion(conexion, sim_id)
+    finally:
+        conexion.close()
+    if datos is None:
+        return Response(status_code=404)
+    from contenido import captura
+
+    resumen = {**datos["resumen"], "agitacion": _nivel_agitacion(datos["resumen"].get("volatilidad_pct", 0))}
+    png = captura.generar_png(datos["titular"], resumen, datos["serie_precios"])
+    return Response(
+        content=png,
+        media_type="image/png",
+        headers={"Cache-Control": "public, max-age=86400, immutable"},
+    )
+
+
 @app.get("/api/simulacion/{sim_id}/replay")
 def replay(sim_id: str) -> Response:
     """Los frames binarios del replay 3D (solo destacadas los conservan).
@@ -443,3 +466,111 @@ def simular_titular(peticion: PeticionSimular) -> dict:
     if not permitido and motivo == limites.MENSAJE_GLOBAL:
         return {"estado": "limite", "mensaje": motivo}
     return {"estado": "adelante", "titular": titular["titular"], "titular_id": titular["id"]}
+
+
+# ---------- El Pulso: suscripción con double opt-in (CONTENIDO.md sección 6) ----------
+
+import re as _re  # noqa: E402
+
+from fastapi.responses import HTMLResponse  # noqa: E402
+
+_EMAIL = _re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+class PeticionSuscribir(BaseModel):
+    email: str
+    origen: str = "web"
+
+
+def _pagina(titulo: str, mensaje: str) -> HTMLResponse:
+    """Una página mínima con la estética Rubicón para confirmar/baja."""
+    html = f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>{titulo}</title>
+<style>body{{margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;
+justify-content:center;background:#0b0e14;color:#f4efe6;font-family:system-ui,sans-serif;text-align:center;padding:24px;}}
+h1{{color:#c9a227;font-family:Georgia,serif;font-weight:600;}} a{{color:#c9a227;}}
+p{{max-width:420px;line-height:1.5;color:#a8a291;}}</style></head>
+<body><h1>{titulo}</h1><p>{mensaje}</p><a href="{boletin_base_web()}">Ir a El Enjambre →</a></body></html>"""
+    # estas páginas sí llevan estilo inline: CSP propia que lo permite
+    return HTMLResponse(content=html, headers={
+        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'",
+    })
+
+
+def boletin_base_web() -> str:
+    return os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre.vercel.app")
+
+
+@app.post("/api/suscribir")
+def suscribir(peticion: PeticionSuscribir) -> dict:
+    """Alta pendiente + correo de confirmación (double opt-in)."""
+    email = peticion.email.strip().lower()
+    if not _EMAIL.match(email) or len(email) > 200:
+        return JSONResponse({"error": "correo inválido"}, status_code=400)
+    origen = peticion.origen if peticion.origen in ("web", "widget", "manual") else "web"
+
+    conexion = persistencia.conectar()
+    try:
+        alta = persistencia.agregar_suscriptor(conexion, email, origen=origen)
+    finally:
+        conexion.close()
+
+    if alta["ya_activo"]:
+        return {"estado": "ya_suscrito", "mensaje": "Ya estabas suscrito al Pulso. ¡Gracias!"}
+
+    from contenido import boletin
+
+    boletin.enviar_confirmacion(email, alta["token_confirma"])  # sin Resend, no envía (dev)
+    return {"estado": "pendiente",
+            "mensaje": "Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja."}
+
+
+@app.get("/api/confirmar/{token}")
+def confirmar(token: str) -> HTMLResponse:
+    conexion = persistencia.conectar()
+    try:
+        email = persistencia.confirmar_suscriptor(conexion, token)
+    finally:
+        conexion.close()
+    if email is None:
+        return _pagina("Enlace no válido", "Este enlace de confirmación ya se usó o expiró.")
+    return _pagina("¡Suscripción confirmada! 🐝",
+                   "Desde mañana recibirás El Pulso cada mañana. Bienvenido al enjambre.")
+
+
+@app.get("/api/baja/{token}")
+def baja(token: str) -> HTMLResponse:
+    conexion = persistencia.conectar()
+    try:
+        exito = persistencia.dar_de_baja(conexion, token)
+    finally:
+        conexion.close()
+    if not exito:
+        return _pagina("Enlace no válido", "No encontramos esa suscripción.")
+    return _pagina("Te desuscribiste", "Ya no recibirás El Pulso. Puedes volver cuando quieras.")
+
+
+# ---------- disparador del ritual de la madrugada (protegido por token) ----------
+
+def _correr_ritual() -> None:
+    """Corre el ritual completo en el MISMO proceso web → misma base que
+    sirve el muro. Cualquier fallo se traga (no debe tumbar el servidor)."""
+    try:
+        from contenido import pipeline
+        pipeline.ritual_matutino(enviar=True)
+    except Exception:
+        pass
+
+
+@app.post("/api/pipeline")
+def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+    """Lo llama el cron de Render (o Giorgio a mano) para preparar el día.
+
+    Protegido por token (ENJAMBRE_PIPELINE_TOKEN). Corre en segundo plano
+    y responde al instante: el ritual toma minutos.
+    """
+    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
+    if not esperado or x_pipeline_token != esperado:
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    tareas.add_task(_correr_ritual)
+    return {"estado": "iniciado"}

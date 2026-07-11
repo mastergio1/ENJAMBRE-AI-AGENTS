@@ -7,6 +7,7 @@ anthropic>=0.40      # cerebros LLM (líderes de opinión)
 numpy>=1.26          # cálculo numérico
 scipy>=1.13          # estadísticas para tests de hechos estilizados
 networkx>=3.3        # red de influencia (grafo Barabási-Albert)
+Pillow>=10.0         # imagen del "momento dramático" (correo + Open Graph)
 
 # Desarrollo y tests
 pytest>=8.0

@@ -3,7 +3,7 @@
 > Para Giorgio. Qué existe de la capa de contenido, cómo se opera y qué
 > falta. Se actualiza al cierre de cada etapa (6-10 de `CONTENIDO.md`).
 
-## Qué existe hoy (Etapas 6 y 7 completadas)
+## Qué existe hoy (Etapas 6, 7 y 8 completadas)
 
 | Pieza | Qué hace |
 |---|---|
@@ -13,7 +13,11 @@
 | **El filtro CMF** (`contenido/vocabulario.py`) | La lista de términos prohibidos y el disclaimer oficial, como código con tests. Nada se publica sin pasar por aquí. Ya pescó y corrigió dos frases del propio producto. |
 | **El muro** (`web/src/muro/` + endpoints `/api/*`) | La nueva portada: tarjetas del día con las 3 destacadas ya simuladas (replay 3D en loop detrás), botón "Ver reacción del enjambre" para las pendientes (corre en vivo y queda cacheada para todos), y las descartadas no aparecen. |
 | **Los frenos** (`contenido/limites.py`) | 5 simulaciones/hora por visitante y tope global diario (`ENJAMBRE_MAX_SIM_DIA`, defecto 20). Al agotarse, el muro invita a suscribirse al Pulso. |
-| **El ritual (parcial)** (`contenido/pipeline.py`) | Los pasos 1-3 y 7 de la madrugada: recolectar → portero → simular las 3 con seeds del día → publicar como destacadas con su replay. Correr a mano: `python -m contenido.pipeline`. Los pasos de correo llegan en la Etapa 8. |
+| **El ritual completo** (`contenido/pipeline.py`) | Los 8 pasos de la madrugada: recolectar → portero → simular las 3 → capturar imagen → redactar correo → enviar → publicar → avisar a Giorgio. `python -m contenido.pipeline` arma todo; `--enviar` manda los correos. |
+| **El Pulso** (`contenido/boletin.py`) | El correo diario (HTML de tablas inline, oscuro con dorado) por Resend. Todos los textos variables pasan por el filtro CMF; lleva el disclaimer y el link de baja de un clic. Sin `RESEND_API_KEY`, arma el HTML pero no envía. |
+| **La imagen** (`contenido/captura.py`) | El "momento dramático" 1200×630 (Pillow): titular, dirección, agitación, la curva con el tick de máxima caída marcado, disclaimer y marca de agua. Sirve de portada del correo y de Open Graph. Endpoint: `/api/simulacion/{id}/imagen`. |
+| **Suscripción double opt-in** | Formulario en el muro → `/api/suscribir` (nace pendiente) → correo de confirmación → `/api/confirmar/{token}` (activo) → `/api/baja/{token}` (un clic). La lista vive en SQLite: los leads son del negocio. |
+| **El cron** (`contenido/disparar_pulso.py`) | El cron de Render (6:30 AM Chile, L-V) golpea `/api/pipeline` (protegido por token) y el ritual corre dentro del proceso web, sobre la misma base que sirve el muro. |
 
 ## Cómo revisar el log de veredictos del portero
 
@@ -36,10 +40,20 @@ En local: archivo `engine/.env` (ver `.env.example`). En Render: panel →
 Environment. **Importante para Render:** agregar un disco persistente
 montado en `/app/datos` para que la base sobreviva a los reinicios.
 
+## Para encender El Pulso (Etapa 8) en producción
+
+1. Cuenta en **resend.com** + verificar un **dominio** (SPF/DKIM) — sin
+   dominio propio el correo cae a spam. Pegar `RESEND_API_KEY` y ajustar
+   `PULSO_REMITENTE` en Render.
+2. El cron `enjambre-pulso` ya está en `render.yaml` (6:30 AM Chile, L-V).
+   Copiar el `ENJAMBRE_PIPELINE_TOKEN` que Render genera en el servicio web
+   y pegarlo igual en el cron.
+3. (Opcional) Bot de Telegram: `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`
+   para recibir el resumen de cada corrida.
+
+Probar sin enviar: `python -m contenido.pipeline` (arma el correo y lo deja
+en `html_preview`). Con `--enviar` manda de verdad.
+
 ## Qué sigue (en orden)
 
-- **Etapa 8 — El Pulso:** completar el pipeline (captura del momento
-  dramático, plantilla de correo, Resend, double opt-in, aviso a Telegram)
-  + el cron (ahí se decide worker de Render vs GitHub Action; se necesita
-  cuenta de Resend + dominio verificado).
-- **Etapa 9 — El archivo** · **Etapa 10 — Duelo + widget.**
+- **Etapa 9 — El archivo** (la hemeroteca navegable) · **Etapa 10 — Duelo + widget.**

@@ -334,6 +334,49 @@ body.con-muro .marca {
   margin-top: 14px;
   width: 100%;
 }
+/* bloque de suscripción al Pulso (la máquina de leads) */
+.pulso {
+  margin-top: 22px;
+  padding: 18px 0 8px;
+  border-top: 1px solid rgba(201, 162, 39, 0.3);
+}
+.pulso h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--dorado);
+  margin: 0 0 4px;
+}
+.pulso p {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--marfil-suave);
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+.pulso-form {
+  display: flex;
+  gap: 8px;
+}
+.pulso-form input {
+  flex: 1;
+  background: rgba(11, 14, 20, 0.6);
+  border: 1px solid rgba(244, 239, 230, 0.25);
+  color: var(--marfil);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  padding: 9px 12px;
+  outline: none;
+}
+.pulso-form input:focus {
+  border-color: var(--dorado);
+}
+.pulso-estado {
+  margin-top: 8px !important;
+  color: var(--dorado) !important;
+  font-size: 0.78rem !important;
+}
+
 .muro-descargo,
 .muro-aviso {
   font-size: 0.62rem;

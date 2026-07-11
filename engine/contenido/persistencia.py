@@ -41,11 +41,12 @@ CREATE TABLE IF NOT EXISTS titulares (
   sim_id     TEXT REFERENCES simulaciones(id)
 );
 CREATE TABLE IF NOT EXISTS suscriptores (
-  email      TEXT PRIMARY KEY,
-  fecha_alta TEXT NOT NULL,
-  origen     TEXT,
-  activo     INTEGER DEFAULT 1,
-  token_baja TEXT NOT NULL
+  email          TEXT PRIMARY KEY,
+  fecha_alta     TEXT NOT NULL,
+  origen         TEXT,
+  activo         INTEGER DEFAULT 0,   -- 0 hasta confirmar (double opt-in)
+  token_baja     TEXT NOT NULL,
+  token_confirma TEXT
 );
 """
 
@@ -74,11 +75,15 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
     clave = str(ruta)
     if clave not in _inicializadas:
         conexion.executescript(ESQUEMA)
-        # migración suave para bases creadas antes de la columna `impacto`
-        try:
-            conexion.execute("ALTER TABLE titulares ADD COLUMN impacto INTEGER DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass
+        # migraciones suaves para bases creadas antes de estas columnas
+        for tabla, columna, tipo in [
+            ("titulares", "impacto", "INTEGER DEFAULT 0"),
+            ("suscriptores", "token_confirma", "TEXT"),
+        ]:
+            try:
+                conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
+            except sqlite3.OperationalError:
+                pass
         conexion.commit()
         _inicializadas.add(clave)
     return conexion
@@ -233,20 +238,46 @@ def leer_frames(sim_id: str) -> bytes | None:
     return ruta.read_bytes() if ruta.exists() else None
 
 
-# ---------- suscriptores (la tabla nace ahora; el boletín llega en la Etapa 8) ----------
+# ---------- suscriptores del boletín (double opt-in) ----------
 
-def agregar_suscriptor(conexion, email: str, origen: str = "web") -> str:
-    """Alta de suscriptor. Devuelve su token de baja de un clic."""
-    token = secrets.token_urlsafe(24)
+def agregar_suscriptor(conexion, email: str, origen: str = "web") -> dict:
+    """Alta PENDIENTE de suscriptor (double opt-in): nace inactivo hasta
+    confirmar. Devuelve {email, token_confirma, token_baja, ya_activo}.
+    Reenviar un alta de alguien pendiente renueva su token de confirmación;
+    de alguien ya activo, no lo molesta."""
+    email = email.strip().lower()
+    fila = conexion.execute(
+        "SELECT activo, token_confirma, token_baja FROM suscriptores WHERE email = ?", (email,)
+    ).fetchone()
+    if fila and fila["activo"]:
+        return {"email": email, "token_confirma": fila["token_confirma"],
+                "token_baja": fila["token_baja"], "ya_activo": True}
+
+    token_confirma = secrets.token_urlsafe(24)
+    token_baja = fila["token_baja"] if fila else secrets.token_urlsafe(24)
     conexion.execute(
-        """INSERT INTO suscriptores (email, fecha_alta, origen, activo, token_baja)
-           VALUES (?, ?, ?, 1, ?)
-           ON CONFLICT(email) DO UPDATE SET activo = 1""",
-        (email.strip().lower(), ahora_iso(), origen, token),
+        """INSERT INTO suscriptores (email, fecha_alta, origen, activo, token_baja, token_confirma)
+           VALUES (?, ?, ?, 0, ?, ?)
+           ON CONFLICT(email) DO UPDATE SET token_confirma = excluded.token_confirma""",
+        (email, ahora_iso(), origen, token_baja, token_confirma),
     )
     conexion.commit()
-    fila = conexion.execute("SELECT token_baja FROM suscriptores WHERE email = ?", (email.strip().lower(),)).fetchone()
-    return fila["token_baja"]
+    return {"email": email, "token_confirma": token_confirma,
+            "token_baja": token_baja, "ya_activo": False}
+
+
+def confirmar_suscriptor(conexion, token: str) -> str | None:
+    """Segundo paso del opt-in: activa al suscriptor. Devuelve su email o None."""
+    fila = conexion.execute(
+        "SELECT email FROM suscriptores WHERE token_confirma = ?", (token,)
+    ).fetchone()
+    if not fila:
+        return None
+    conexion.execute(
+        "UPDATE suscriptores SET activo = 1, token_confirma = NULL WHERE token_confirma = ?", (token,)
+    )
+    conexion.commit()
+    return fila["email"]
 
 
 def dar_de_baja(conexion, token: str) -> bool:
@@ -254,3 +285,11 @@ def dar_de_baja(conexion, token: str) -> bool:
     cursor = conexion.execute("UPDATE suscriptores SET activo = 0 WHERE token_baja = ?", (token,))
     conexion.commit()
     return cursor.rowcount > 0
+
+
+def suscriptores_activos(conexion) -> list[dict]:
+    """Los que confirmaron: a quienes se envía el Pulso."""
+    filas = conexion.execute(
+        "SELECT email, token_baja FROM suscriptores WHERE activo = 1"
+    ).fetchall()
+    return [dict(f) for f in filas]

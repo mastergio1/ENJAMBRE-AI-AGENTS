@@ -56,30 +56,41 @@ export class ReproductorReplay {
 
 const HORA = new Intl.DateTimeFormat('es-CL', { hour: '2-digit', minute: '2-digit' })
 
+// Escapa todo lo que provenga de datos (titulares de Alpaca, frases del
+// LLM, tickers): estos textos NO son de confianza y se pintan con
+// innerHTML. Sin esto, un titular con <img onerror> sería XSS almacenado.
+const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+function esc(valor) {
+  return String(valor ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
+}
+// para atributos que además usamos como selectores: solo hex del id
+const idSeguro = (valor) => String(valor ?? '').replace(/[^0-9a-f]/g, '')
+
 function plantillaTarjeta(tarjeta) {
   const hora = tarjeta.fecha ? HORA.format(new Date(tarjeta.fecha)) : ''
   const simbolos = (tarjeta.simbolos || '').split(',').filter(Boolean).slice(0, 3).join(' · ')
-  const meta = [hora, tarjeta.fuente, simbolos].filter(Boolean).join(' · ')
+  const meta = [hora, tarjeta.fuente, simbolos].filter(Boolean).map(esc).join(' · ')
 
   let cuerpo
   if (tarjeta.estado === 'simulada' && tarjeta.resumen) {
     const r = tarjeta.resumen
     const clase = r.direccion === '▲' ? 'sube' : r.direccion === '▼' ? 'baja' : 'plana'
+    const pct = Number(r.direccion_pct) || 0
     cuerpo = `
       <div class="resultado">
-        <span class="flecha ${clase}">${r.direccion} ${r.direccion_pct > 0 ? '+' : ''}${r.direccion_pct}%</span>
-        <span class="agitacion">agitación ${r.agitacion}</span>
+        <span class="flecha ${clase}">${esc(r.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="agitacion">agitación ${esc(r.agitacion)}</span>
       </div>
-      ${r.frase ? `<p class="voz">«${r.frase.frase}» — <span>${r.frase.arquetipo}</span></p>` : ''}
-      <button class="accion ver-simulacion" data-sim="${tarjeta.sim_id}">Ver la simulación</button>`
+      ${r.frase ? `<p class="voz">«${esc(r.frase.frase)}» — <span>${esc(r.frase.arquetipo)}</span></p>` : ''}
+      <button class="accion ver-simulacion" data-sim="${idSeguro(tarjeta.sim_id)}">Ver la simulación</button>`
   } else {
-    cuerpo = `<button class="accion ver-reaccion" data-id="${tarjeta.id}">Ver reacción del enjambre</button>`
+    cuerpo = `<button class="accion ver-reaccion" data-id="${idSeguro(tarjeta.id)}">Ver reacción del enjambre</button>`
   }
 
   return `
-    <article class="tarjeta ${tarjeta.destacada ? 'portada' : ''}" data-id="${tarjeta.id}">
+    <article class="tarjeta ${tarjeta.destacada ? 'portada' : ''}" data-id="${idSeguro(tarjeta.id)}">
       <div class="meta">${meta}${tarjeta.destacada ? ' · <strong>destacada del día</strong>' : ''}</div>
-      <h3>${tarjeta.titular}</h3>
+      <h3>${esc(tarjeta.titular)}</h3>
       ${cuerpo}
     </article>`
 }
@@ -122,7 +133,7 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
       <div class="muro-lista">${tarjetas.map(plantillaTarjeta).join('')}</div>
       ${datos.tarjetas.length > visibles
         ? '<button class="accion ver-mas">Ver más titulares</button>' : ''}
-      <p class="muro-descargo">${datos.descargo}</p>`
+      <p class="muro-descargo">${esc(datos.descargo)}</p>`
     document.body.classList.add('con-muro')
     conectarEventos(datos)
   }

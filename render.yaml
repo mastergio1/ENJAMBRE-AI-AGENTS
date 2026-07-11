@@ -10,4 +10,20 @@ services:
     healthCheckPath: /salud
     envVars:
       - key: ANTHROPIC_API_KEY
-        sync: false # se pega a mano en el panel de Render (nunca al repo)
+        sync: false # se pega a mano en el panel (nunca al repo)
+      - key: ALPACA_API_KEY_ID
+        sync: false
+      - key: ALPACA_API_SECRET_KEY
+        sync: false
+      # tope de simulaciones on-demand gratis por día (el on-demand es un lujo)
+      - key: ENJAMBRE_MAX_SIM_DIA
+        value: "5"
+      # orígenes permitidos por CORS: el dominio de Vercel de producción.
+      # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
+      - key: ENJAMBRE_ORIGENES
+        value: "https://enjambre.vercel.app"
+      # la base vive en el disco del contenedor (efímera en el plan free;
+      # el pipeline la regenera). Para persistir entre reinicios, subir de
+      # plan y montar un disco en /app/datos (ver docs/despliegue.md).
+      - key: ENJAMBRE_DB
+        value: "/app/datos/enjambre.db"

@@ -54,18 +54,33 @@ def ahora_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+_inicializadas: set[str] = set()
+
+
 def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
-    """Abre (y crea si no existe) la base con su esquema."""
+    """Abre (y crea si no existe) la base con su esquema.
+
+    Modo WAL + busy_timeout: lecturas concurrentes no bloquean la
+    escritura de una simulación en curso (evita 'database is locked'
+    bajo carga). El esquema se crea UNA vez por archivo y proceso —
+    no en cada request, que era caro y contendía.
+    """
     ruta = Path(ruta or os.environ.get("ENJAMBRE_DB", RUTA_DEFECTO))
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    conexion = sqlite3.connect(ruta)
+    conexion = sqlite3.connect(ruta, timeout=10)
     conexion.row_factory = sqlite3.Row
-    conexion.executescript(ESQUEMA)
-    # migración suave para bases creadas antes de la columna `impacto`
-    try:
-        conexion.execute("ALTER TABLE titulares ADD COLUMN impacto INTEGER DEFAULT 0")
-    except sqlite3.OperationalError:
-        pass
+    conexion.execute("PRAGMA journal_mode=WAL")
+    conexion.execute("PRAGMA busy_timeout=5000")
+    clave = str(ruta)
+    if clave not in _inicializadas:
+        conexion.executescript(ESQUEMA)
+        # migración suave para bases creadas antes de la columna `impacto`
+        try:
+            conexion.execute("ALTER TABLE titulares ADD COLUMN impacto INTEGER DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass
+        conexion.commit()
+        _inicializadas.add(clave)
     return conexion
 
 
@@ -195,8 +210,12 @@ def titulares_recientes(conexion, horas: int = 48) -> list[dict]:
 # ---------- frames del replay 3D (solo las destacadas los conservan) ----------
 
 def ruta_frames(sim_id: str) -> Path:
-    base = Path(os.environ.get("ENJAMBRE_DB", RUTA_DEFECTO)).parent / "frames"
-    return base / f"{sim_id}.bin"
+    base = (Path(os.environ.get("ENJAMBRE_DB", RUTA_DEFECTO)).parent / "frames").resolve()
+    destino = (base / f"{sim_id}.bin").resolve()
+    # defensa en profundidad: la ruta jamás debe salirse de base/
+    if base not in destino.parents:
+        raise ValueError("sim_id inválido")
+    return destino
 
 
 def guardar_frames(sim_id: str, frames: list[bytes]) -> str:

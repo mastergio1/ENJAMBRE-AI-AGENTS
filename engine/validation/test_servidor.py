@@ -18,6 +18,10 @@ def entorno(monkeypatch, tmp_path):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.setattr(cerebro, "RUTA_CACHE", tmp_path / "cache.json")
     monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
+    from contenido import limites, seguridad
+
+    limites.reiniciar()
+    seguridad.reiniciar()
 
 
 def test_salud():

@@ -3,6 +3,10 @@
 
 import { ESCENARIOS } from '../swarm/escenario.js'
 
+// escape para todo texto de datos (LLM/Alpaca) que va a innerHTML
+const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+const esc = (valor) => String(valor ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
+
 export function crearPanel(alEnviarTitular) {
   const raiz = document.getElementById('ui')
 
@@ -83,19 +87,22 @@ export function crearPanel(alEnviarTitular) {
     mostrarReporte(reporte) {
       const panelReporte = raiz.querySelector('#reporte')
       const desglose = Object.entries(reporte.desglose).slice(0, 6)
+      // los % son números nuestros; tipos, frases y descargo pueden venir
+      // de datos (LLM/Alpaca) → se escapan antes de ir a innerHTML
+      const num = (v) => Number(v) || 0
       panelReporte.innerHTML = `
         <button class="cerrar" aria-label="cerrar">×</button>
         <h2>Reporte del enjambre</h2>
         <div class="cifras">
-          <div><span>${reporte.direccion_pct > 0 ? '+' : ''}${reporte.direccion_pct}%</span><label>dirección</label></div>
-          <div><span>${reporte.minimo_pct}%</span><label>mínimo</label></div>
-          <div><span>${reporte.volatilidad_pct}%</span><label>volatilidad/tick</label></div>
+          <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
+          <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>
+          <div><span>${num(reporte.volatilidad_pct)}%</span><label>volatilidad/tick</label></div>
         </div>
         <table>${desglose.map(([tipo, d]) =>
-          `<tr><td>${tipo}</td><td>${d.compras} compras</td><td>${d.ventas} ventas</td></tr>`).join('')}
+          `<tr><td>${esc(tipo)}</td><td>${num(d.compras)} compras</td><td>${num(d.ventas)} ventas</td></tr>`).join('')}
         </table>
-        <div class="voces">${reporte.frases.map((f) => `<p>«${f.frase}»</p>`).join('')}</div>
-        <p class="descargo">${reporte.descargo}</p>
+        <div class="voces">${reporte.frases.map((f) => `<p>«${esc(f.frase)}»</p>`).join('')}</div>
+        <p class="descargo">${esc(reporte.descargo)}</p>
       `
       panelReporte.hidden = false
       panelReporte.querySelector('.cerrar').addEventListener('click', () => {

@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 import brains.cerebro as cerebro
 import server
-from contenido import limites, persistencia, pipeline
+from contenido import limites, persistencia, pipeline, seguridad
 
 
 @pytest.fixture(autouse=True)
@@ -16,8 +16,10 @@ def entorno(monkeypatch, tmp_path):
     monkeypatch.delenv("ALPACA_API_KEY_ID", raising=False)
     monkeypatch.setattr(cerebro, "RUTA_CACHE", tmp_path / "cache.json")
     monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
-    monkeypatch.delenv("ENJAMBRE_MAX_SIM_DIA", raising=False)
+    # tope holgado para los tests del muro (el de 5 se prueba aparte)
+    monkeypatch.setenv("ENJAMBRE_MAX_SIM_DIA", "50")
     limites.reiniciar()
+    seguridad.reiniciar()
 
 
 @pytest.fixture(scope="function")
@@ -108,7 +110,7 @@ def test_api_simular_titular_pendiente(dia_preparado):
 
 
 def test_limite_por_ip():
-    for _ in range(5):
+    for _ in range(limites.LIMITE_IP_HORA):
         permitido, _ = limites.permitir("1.2.3.4")
         assert permitido
     permitido, motivo = limites.permitir("1.2.3.4")

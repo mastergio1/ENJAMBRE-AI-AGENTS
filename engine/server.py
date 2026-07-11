@@ -17,14 +17,17 @@ import json
 import struct
 from collections import defaultdict
 
-from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
+import os
+
+from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from agents.lider import LiderOpinion
 from brains.arquetipos import POR_ID
 from brains.cerebro import analizar_titular_async
-from contenido import limites, persistencia, portero
+from contenido import limites, persistencia, portero, seguridad
 from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
 
@@ -32,14 +35,46 @@ TICKS_CALENTAMIENTO = 60  # el mercado encuentra su ritmo (no se transmite)
 TICKS_PREVIOS = 10        # calma visible antes de la noticia
 TICKS_POSTERIORES = 140   # la reacción completa
 RITMO_DEFECTO = 0.08      # segundos entre ticks transmitidos
+RITMO_MINIMO = 0.02       # piso: nadie pide ticks sin pausa (protege la CPU)
+MAX_MENSAJE_WS = 4000     # bytes de texto por mensaje del cliente
+MAX_SIM_CONCURRENTES = 2  # simulaciones pesadas en vuelo a la vez
 
-app = FastAPI(title="El Enjambre", version="0.4.0")
+# orígenes permitidos: la web de producción + localhost de desarrollo.
+# Configurable por entorno (ENJAMBRE_ORIGENES, separado por comas).
+_origenes_env = os.environ.get("ENJAMBRE_ORIGENES", "").strip()
+ORIGENES = [o.strip() for o in _origenes_env.split(",") if o.strip()] or [
+    "http://localhost:5173",
+    "http://localhost:4173",
+]
+
+app = FastAPI(title="El Enjambre", version="0.7.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # demo pública; restringir por dominio en producción
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ORIGENES,
+    allow_origin_regex=r"https://.*\.vercel\.app",  # previews de Vercel
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
+
+# semáforo global: ninguna avalancha de conexiones dispara más de N
+# simulaciones pesadas al mismo tiempo (protege CPU y memoria)
+import asyncio as _asyncio  # noqa: E402
+
+_semaforo_sim = _asyncio.Semaphore(MAX_SIM_CONCURRENTES)
+
+
+@app.middleware("http")
+async def blindaje(request: Request, call_next):
+    """Rate-limit por IP en /api/* y cabeceras de seguridad en todo."""
+    ruta = request.url.path
+    if ruta.startswith("/api/"):
+        ip = seguridad.ip_cliente(request.headers, request.client.host if request.client else None)
+        if not seguridad.permitir_http(ip, ruta):
+            return JSONResponse({"error": "Demasiadas solicitudes. Espera un momento."}, status_code=429)
+    respuesta = await call_next(request)
+    for clave, valor in seguridad.CABECERAS_SEGURIDAD.items():
+        respuesta.headers.setdefault(clave, valor)
+    return respuesta
 
 NOMBRES_TIPO = {
     "Fundamentalista": "Fundamentalistas",
@@ -63,31 +98,69 @@ def salud() -> dict:
     return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 7}
 
 
+def _responder(ws: WebSocket, **campos) -> str:
+    return json.dumps(campos, ensure_ascii=False)
+
+
 @app.websocket("/ws")
 async def canal(ws: WebSocket) -> None:
     await ws.accept()
-    ip = ws.client.host if ws.client else "desconocida"
+    ip = seguridad.ip_cliente(ws.headers, ws.client.host if ws.client else None)
     try:
         while True:
-            mensaje = json.loads(await ws.receive_text())
-            if mensaje.get("tipo") == "simular":
+            texto = await ws.receive_text()
+            # entrada malformada nunca tumba la conexión: se responde y sigue
+            if len(texto) > MAX_MENSAJE_WS:
+                await ws.send_text(_responder(ws, tipo="error", mensaje="mensaje demasiado grande"))
+                continue
+            try:
+                mensaje = json.loads(texto)
+            except (ValueError, TypeError):
+                await ws.send_text(_responder(ws, tipo="error", mensaje="formato inválido"))
+                continue
+            if not isinstance(mensaje, dict) or mensaje.get("tipo") != "simular":
+                continue
+
+            # tope de simulaciones pesadas simultáneas (antes de gastar cupo)
+            try:
+                await _asyncio.wait_for(_semaforo_sim.acquire(), timeout=0.01)
+            except _asyncio.TimeoutError:
+                await ws.send_text(_responder(
+                    ws, tipo="ocupado",
+                    mensaje="El enjambre está ocupado con otra simulación. Intenta en unos segundos."))
+                continue
+            try:
                 # toda simulación pública gasta ~100 llamadas LLM:
-                # frenos por IP (5/hora) y global (tope diario)
+                # frenos por IP y global (tope diario)
                 permitido, motivo = limites.permitir(ip)
                 if not permitido:
-                    await ws.send_text(json.dumps({"tipo": "limite", "mensaje": motivo}, ensure_ascii=False))
+                    await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
                     continue
                 await _correr_simulacion(ws, mensaje)
+            finally:
+                _semaforo_sim.release()
     except WebSocketDisconnect:
         pass
+    except Exception:
+        # cualquier fallo inesperado cierra ESTA conexión, no el servidor
+        try:
+            await ws.close()
+        except Exception:
+            pass
 
 
 # ---------- la simulación transmitida ----------
 
 async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
     titular = str(mensaje.get("titular", ""))[:300].strip() or "Sin novedades en los mercados"
-    semilla = int(mensaje.get("seed", 42))
-    ritmo = max(0.0, float(mensaje.get("ritmo", RITMO_DEFECTO)))
+    try:
+        semilla = int(mensaje.get("seed", 42)) % 2_147_483_647
+    except (TypeError, ValueError):
+        semilla = 42
+    try:
+        ritmo = max(RITMO_MINIMO, float(mensaje.get("ritmo", RITMO_DEFECTO)))
+    except (TypeError, ValueError):
+        ritmo = RITMO_DEFECTO
 
     # crear y calentar el mercado sin bloquear el loop del servidor
     modelo = await asyncio.to_thread(_crear_mercado, semilla)
@@ -136,7 +209,7 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
         )
         # si vino desde una tarjeta del muro, la tarjeta pasa a Estado A
         titular_id = mensaje.get("titular_id")
-        if sim_id and titular_id:
+        if sim_id and seguridad.sim_id_valido(str(titular_id) if titular_id else None):
             await asyncio.to_thread(_vincular_titular, str(titular_id), sim_id)
     except Exception:
         pass  # la persistencia nunca tumba la simulación en curso
@@ -273,8 +346,9 @@ def _resumen_tarjeta(resumen: dict) -> dict:
 
 
 @app.get("/api/muro")
-def muro() -> dict:
+def muro(respuesta: Response) -> dict:
     """Las tarjetas del día: destacadas primero, luego cronológico."""
+    respuesta.headers["Cache-Control"] = "public, max-age=60"
     conexion = persistencia.conectar()
     try:
         filas = persistencia.titulares_del_muro(conexion, portero.UMBRAL_IMPACTO, limite=30)
@@ -299,7 +373,9 @@ def muro() -> dict:
 
 
 @app.get("/api/simulacion/{sim_id}")
-def simulacion(sim_id: str) -> dict:
+def simulacion(sim_id: str, respuesta: Response) -> dict:
+    if not seguridad.sim_id_valido(sim_id):
+        return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
     try:
         datos = persistencia.obtener_simulacion(conexion, sim_id)
@@ -307,6 +383,7 @@ def simulacion(sim_id: str) -> dict:
         conexion.close()
     if datos is None:
         return Response(status_code=404)  # type: ignore[return-value]
+    respuesta.headers["Cache-Control"] = "public, max-age=300"
     return {
         "id": datos["id"],
         "titular": datos["titular"],
@@ -323,11 +400,21 @@ def simulacion(sim_id: str) -> dict:
 
 @app.get("/api/simulacion/{sim_id}/replay")
 def replay(sim_id: str) -> Response:
-    """Los frames binarios del replay 3D (solo destacadas los conservan)."""
+    """Los frames binarios del replay 3D (solo destacadas los conservan).
+
+    El sim_id se valida como hash hex de 16 (nada de path traversal); el
+    replay es inmutable, así que se puede cachear con fuerza.
+    """
+    if not seguridad.sim_id_valido(sim_id):
+        return Response(status_code=404)
     frames = persistencia.leer_frames(sim_id)
     if frames is None:
         return Response(status_code=404)
-    return Response(content=frames, media_type="application/octet-stream")
+    return Response(
+        content=frames,
+        media_type="application/octet-stream",
+        headers={"Cache-Control": "public, max-age=86400, immutable"},
+    )
 
 
 class PeticionSimular(BaseModel):
@@ -341,6 +428,8 @@ def simular_titular(peticion: PeticionSimular) -> dict:
     No consume el cupo (eso pasa al correr de verdad por el WebSocket);
     responde si hay presupuesto y devuelve el titular a simular.
     """
+    if not seguridad.sim_id_valido(peticion.id):
+        return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
     try:
         titular = persistencia.obtener_titular(conexion, peticion.id)

@@ -6,12 +6,15 @@ import * as THREE from 'three'
 import { TIPOS, generarEnjambre } from './datos.js'
 import { analizarTitular } from './escenario.js'
 
-// paleta Rubicón Lab (editorial, nada de colores puros saturados):
-// reposo en taupe cálido, compra salvia, venta rosa, líderes teal — "el río"
-const NEUTRO = new THREE.Color('#6b6660')   // taupe cálido en calma
-const COMPRA = new THREE.Color('#8fbfa6')   // salvia (compra/asciende)
-const VENTA = new THREE.Color('#d99a9a')    // rosa (venta/se hunde)
-const LIDER = new THREE.Color('#6fa89e')    // teal claro — el acento, el río
+// paleta Rubicón Lab aplicada al enjambre (versión "seria" para público B2B,
+// nada de colores puros saturados): reposo en grafito cálido, compra en verde
+// viridiano, venta en rosa-arcilla; los líderes conservan su DORADO como faros
+// —el único acento cálido, se distingue del teal de la interfaz (la fachada) y
+// deja claro quién guía a la manada.
+const NEUTRO = new THREE.Color('#5c574f')   // grafito cálido en calma
+const COMPRA = new THREE.Color('#4f9e86')   // verde viridiano (compra/asciende)
+const VENTA = new THREE.Color('#c47b7b')    // rosa-arcilla (venta/se hunde)
+const LIDER = new THREE.Color('#e3c565')    // dorado — los líderes como faros
 
 const _dummy = new THREE.Object3D()
 const _color = new THREE.Color()

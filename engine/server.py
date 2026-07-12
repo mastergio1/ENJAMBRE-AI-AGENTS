@@ -14,6 +14,7 @@ solo necesita saber cuánto pánico o codicia siente cada partícula.
 
 import asyncio
 import contextlib as _contextlib
+import hmac
 import json
 import struct
 from collections import defaultdict
@@ -102,6 +103,17 @@ NOMBRES_TIPO = {
     "BuyAndHold": "Buy & hold",
     "LiderOpinion": "Líderes de opinión",
 }
+
+
+def _token_admin_ok(recibido: str) -> bool:
+    """Compara el token de admin en tiempo constante (evita timing attacks).
+
+    Falla cerrado: si no hay ENJAMBRE_PIPELINE_TOKEN configurado, nadie pasa.
+    """
+    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
+    if not esperado:
+        return False
+    return hmac.compare_digest(recibido or "", esperado)
 
 
 @app.get("/salud")
@@ -727,8 +739,7 @@ def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(de
     Protegido por token (ENJAMBRE_PIPELINE_TOKEN). Corre en segundo plano
     y responde al instante: el ritual toma minutos.
     """
-    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
-    if not esperado or x_pipeline_token != esperado:
+    if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     tareas.add_task(_correr_ritual)
     return {"estado": "iniciado"}
@@ -782,8 +793,7 @@ def api_epilogo(sim_id: str, peticion: PeticionEpilogo, x_pipeline_token: str = 
 
     Se muestra SIEMPRE bajo 'comparación educativa', nunca como acierto ni
     predicción (vocabulario CMF)."""
-    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
-    if not esperado or x_pipeline_token != esperado:
+    if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     if not seguridad.sim_id_valido(sim_id):
         return Response(status_code=404)  # type: ignore[return-value]
@@ -808,8 +818,7 @@ def api_epilogo(sim_id: str, peticion: PeticionEpilogo, x_pipeline_token: str = 
 def api_brief(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
     """El análisis de mercado de un día, para que Giorgio lo revise antes de
     enviarlo. Protegido (es material sin publicar aún)."""
-    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
-    if not esperado or x_pipeline_token != esperado:
+    if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     if not _re.match(r"^\d{4}-\d{2}-\d{2}$", fecha):
         return Response(status_code=404)  # type: ignore[return-value]
@@ -826,8 +835,7 @@ def api_brief(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
 @app.post("/api/brief/{fecha}/aprobar")
 def api_aprobar_brief(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
     """El visto bueno de Giorgio: marca el brief como aprobado."""
-    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
-    if not esperado or x_pipeline_token != esperado:
+    if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     if not _re.match(r"^\d{4}-\d{2}-\d{2}$", fecha):
         return Response(status_code=404)  # type: ignore[return-value]

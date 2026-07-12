@@ -114,6 +114,32 @@ def test_el_muro_escapa_datos_antes_de_innerhtml():
     panel = (Path(__file__).parent.parent.parent / "web" / "src" / "ui" / "panel.js").read_text(encoding="utf-8")
     assert "${esc(f.frase)}" in panel
     assert re.search(r"\$\{f\.frase\}", panel) is None  # nunca crudo
+    # el tooltip del líder también escapa la frase del LLM (defensa en profundidad)
+    assert "${esc(lider.frase)}" in panel
+    assert re.search(r"\$\{lider\.frase\}", panel) is None
+    assert re.search(r"\$\{lider\.nombre\}", panel) is None
+
+
+# ---------- el token de admin se compara en tiempo constante ----------
+
+def test_token_admin_usa_comparacion_constante():
+    """Los endpoints protegidos comparan el token con hmac.compare_digest
+    (no con !=), para no filtrar el token por timing."""
+    servidor = (Path(__file__).parent.parent / "server.py").read_text(encoding="utf-8")
+    assert "hmac.compare_digest" in servidor
+    # ya no debe quedar la comparación directa del token
+    assert "!= esperado" not in servidor
+
+
+def test_endpoint_protegido_rechaza_token_incorrecto(monkeypatch):
+    from fastapi.testclient import TestClient
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto-de-prueba")
+    import server
+    cliente = TestClient(server.app)
+    # sin token → 403
+    assert cliente.post("/api/pipeline").status_code == 403
+    # token equivocado → 403
+    assert cliente.post("/api/pipeline", headers={"X-Pipeline-Token": "malo"}).status_code == 403
 
 
 # ---------- el tope diario ahora es 5 ----------

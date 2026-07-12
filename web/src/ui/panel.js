@@ -71,8 +71,9 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
       btnSoltar.textContent = activo ? 'Soltar noticia encima' : 'Soltar al enjambre'
     },
     mostrarTooltip(lider, x, y) {
-      tooltip.innerHTML = `<strong>${lider.nombre}</strong>${
-        lider.frase ? `<em>«${lider.frase}»</em>` : '<em>aún no opina</em>'
+      // nombre y frase provienen del LLM/datos: se escapan antes de innerHTML
+      tooltip.innerHTML = `<strong>${esc(lider.nombre)}</strong>${
+        lider.frase ? `<em>«${esc(lider.frase)}»</em>` : '<em>aún no opina</em>'
       }`
       tooltip.style.left = `${Math.min(x + 14, window.innerWidth - 280)}px`
       tooltip.style.top = `${y + 14}px`

@@ -1,7 +1,7 @@
 """El Pulso del Enjambre — la newsletter (CONTENIDO.md sección 6).
 
 Arma el correo diario desde plantilla (HTML de correo: tablas + estilos
-inline, ancho 600px, oscuro con acento dorado) y lo envía por Resend.
+inline, ancho 600px, tinta cálida con el teal como acento) y lo envía por Resend.
 Todos los textos variables pasan por el filtro de vocabulario CMF antes
 de salir. Degradación elegante: sin RESEND_API_KEY, genera el HTML pero
 no envía (útil para pruebas y para revisar antes de conectar el dominio).
@@ -22,10 +22,11 @@ REMITENTE = os.environ.get("PULSO_REMITENTE", "El Enjambre <pulso@rubiconlab.cl>
 BASE_WEB = os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre.vercel.app")
 BASE_API = os.environ.get("ENJAMBRE_API_URL", "https://enjambre-motor.onrender.com")
 
-TINTA = "#0b0e14"
-DORADO = "#c9a227"
-MARFIL = "#f4efe6"
-MARFIL_SUAVE = "#a8a291"
+# paleta oficial del manual de marca (§05)
+TINTA = "#1b1916"          # tinta cálida — fondo
+TEAL = "#6fa89e"           # el río — acento
+CREMA = "#f3eee8"          # crema — texto
+CREMA_SUAVE = "#8a867e"    # suave — texto secundario
 
 
 def _flecha(direccion_pct: float) -> str:
@@ -54,15 +55,15 @@ def asunto_del_dia(destacada: dict) -> str:
 
 
 def _fila_mercado(m: dict) -> str:
-    fuente = (f'<a href="{_esc(m["url"])}" style="color:{MARFIL_SUAVE};font-size:12px;">·&nbsp;fuente</a>'
+    fuente = (f'<a href="{_esc(m["url"])}" style="color:{CREMA_SUAVE};font-size:12px;">·&nbsp;fuente</a>'
               if m.get("url") else "")
     if m.get("tipo") == "evento":
-        marca = f'<span style="color:{DORADO};font-weight:bold;">◆</span>'
+        marca = f'<span style="color:{TEAL};font-weight:bold;">◆</span>'
         cuerpo = _esc(m["titular"])
     else:  # movimiento de precio
         marca = f'<span style="color:{COLOR_DIR(m["variacion_pct"])};font-weight:bold;">{_flecha(m["variacion_pct"])}</span>'
         cuerpo = _esc(m["frase"])
-    return f"""<tr><td style="padding:5px 0;color:{MARFIL};font-size:14px;line-height:1.45;">
+    return f"""<tr><td style="padding:5px 0;color:{CREMA};font-size:14px;line-height:1.45;">
         {marca} {cuerpo} {fuente}</td></tr>"""
 
 
@@ -74,7 +75,7 @@ def _bloque_mercado(brief: dict | None) -> str:
     filas = "".join(_fila_mercado(m) for m in brief["mercado"][:5])
     return f"""
   <tr><td style="padding:16px 32px 2px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">Lo que pasó en el mercado</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{CREMA_SUAVE};text-transform:uppercase;">Lo que pasó en el mercado</div>
   </td></tr>
   <tr><td style="padding:4px 32px;"><table role="presentation" width="100%">{filas}</table></td></tr>"""
 
@@ -84,17 +85,17 @@ def _bloque_observa(brief: dict | None) -> str:
     if not brief or not brief.get("observa"):
         return ""
     filas = "".join(
-        f"""<p style="margin:4px 0;color:{MARFIL_SUAVE};font-size:14px;">· {_esc(t)}</p>"""
+        f"""<p style="margin:4px 0;color:{CREMA_SUAVE};font-size:14px;">· {_esc(t)}</p>"""
         for t in brief["observa"][:3]
     )
     return f"""
-  <tr><td style="padding:14px 32px 4px;border-top:1px solid rgba(244,239,230,0.1);">
-    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">Qué observa el enjambre hoy</div>
+  <tr><td style="padding:14px 32px 4px;border-top:1px solid rgba(243,238,232,0.1);">
+    <div style="font-size:11px;letter-spacing:2px;color:{CREMA_SUAVE};text-transform:uppercase;">Qué observa el enjambre hoy</div>
     {filas}</td></tr>"""
 
 
 def COLOR_DIR(pct: float) -> str:
-    return "#4fae7f" if pct > 0.15 else "#c4472a" if pct < -0.15 else DORADO
+    return "#8fbfa6" if pct > 0.15 else "#d99a9a" if pct < -0.15 else TEAL
 
 
 def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN",
@@ -120,15 +121,15 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     url_baja = f"{BASE_API}/api/baja/{token_baja}"
 
     otras = "".join(
-        f"""<tr><td style="padding:6px 0;color:{MARFIL_SUAVE};font-size:14px;">
+        f"""<tr><td style="padding:6px 0;color:{CREMA_SUAVE};font-size:14px;">
         · {_limpiar(d['titular'])} &nbsp;{_flecha(d['resumen'].get('direccion_pct', 0) or 0)}
-        &nbsp;<a href="{BASE_WEB}/?sim={d['sim_id']}" style="color:{DORADO};text-decoration:none;">ver</a>
+        &nbsp;<a href="{BASE_WEB}/?sim={d['sim_id']}" style="color:{TEAL};text-decoration:none;">ver</a>
         </td></tr>"""
         for d in destacadas[1:3]
     )
 
     voces_html = "".join(
-        f"""<p style="margin:8px 0;color:{MARFIL};font-size:15px;font-style:italic;line-height:1.4;">
+        f"""<p style="margin:8px 0;color:{CREMA};font-size:15px;font-style:italic;line-height:1.4;">
         {_voz(v)}</p>"""
         for v in voces
     )
@@ -140,54 +141,54 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{TINTA};">
 <tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0"
-  style="max-width:600px;width:100%;background:{TINTA};border:1px solid rgba(201,162,39,0.3);">
+  style="max-width:600px;width:100%;background:{TINTA};border:1px solid rgba(111,168,158,0.3);">
 
   <tr><td style="padding:28px 32px 8px;">
-    <div style="font-family:Georgia,serif;font-size:26px;font-weight:bold;color:{DORADO};">El Enjambre</div>
-    <div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:{MARFIL_SUAVE};">{fecha}</div>
+    <div style="font-family:Georgia,serif;font-size:26px;font-weight:bold;color:{TEAL};">El Enjambre</div>
+    <div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:{CREMA_SUAVE};">{fecha}</div>
   </td></tr>
   {_bloque_mercado(brief)}
 
   <tr><td style="padding:16px 32px 4px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">La reacción del día</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{CREMA_SUAVE};text-transform:uppercase;">La reacción del día</div>
   </td></tr>
 
   <tr><td style="padding:8px 32px;">
     <a href="{url_sim}"><img src="{url_img}" width="536" alt="El enjambre reaccionando"
-      style="width:100%;max-width:536px;display:block;border:1px solid rgba(201,162,39,0.25);"></a>
+      style="width:100%;max-width:536px;display:block;border:1px solid rgba(111,168,158,0.25);"></a>
   </td></tr>
 
   <tr><td style="padding:8px 32px;">
-    <div style="font-family:Georgia,serif;font-size:21px;font-weight:bold;color:{MARFIL};line-height:1.25;">
+    <div style="font-family:Georgia,serif;font-size:21px;font-weight:bold;color:{CREMA};line-height:1.25;">
       {_limpiar(principal['titular'])}</div>
-    <div style="padding:8px 0;color:{MARFIL_SUAVE};font-size:14px;">
+    <div style="padding:8px 0;color:{CREMA_SUAVE};font-size:14px;">
       {_flecha(direccion)} {'+' if direccion > 0 else ''}{direccion}% &nbsp;·&nbsp; agitación {agitacion}</div>
-    <div style="color:{MARFIL};font-size:15px;line-height:1.5;">
+    <div style="color:{CREMA};font-size:15px;line-height:1.5;">
       En esta simulación educativa, el enjambre de agentes reaccionó al titular con el
       comportamiento de masas que ves arriba.</div>
   </td></tr>
 
   <tr><td style="padding:12px 32px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">Las voces</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{CREMA_SUAVE};text-transform:uppercase;">Las voces</div>
     {voces_html}
   </td></tr>
 
   {f'''<tr><td style="padding:8px 32px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">También reaccionó a</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{CREMA_SUAVE};text-transform:uppercase;">También reaccionó a</div>
     <table role="presentation" width="100%">{otras}</table>
   </td></tr>''' if otras else ''}
   {_bloque_observa(brief)}
 
   <tr><td style="padding:20px 32px;">
-    <a href="{url_sim}" style="display:inline-block;background:{DORADO};color:{TINTA};
+    <a href="{url_sim}" style="display:inline-block;background:{TEAL};color:{TINTA};
       text-decoration:none;font-weight:bold;font-size:14px;letter-spacing:1px;
       text-transform:uppercase;padding:12px 24px;">Ver el enjambre en vivo →</a>
   </td></tr>
 
-  <tr><td style="padding:16px 32px 28px;border-top:1px solid rgba(244,239,230,0.1);">
-    <div style="color:{MARFIL_SUAVE};font-size:11px;line-height:1.5;">{DISCLAIMER}</div>
+  <tr><td style="padding:16px 32px 28px;border-top:1px solid rgba(243,238,232,0.1);">
+    <div style="color:{CREMA_SUAVE};font-size:11px;line-height:1.5;">{DISCLAIMER}</div>
     <div style="margin-top:10px;">
-      <a href="{url_baja}" style="color:{MARFIL_SUAVE};font-size:11px;">Desuscribirse en un clic</a>
+      <a href="{url_baja}" style="color:{CREMA_SUAVE};font-size:11px;">Desuscribirse en un clic</a>
     </div>
   </td></tr>
 
@@ -216,16 +217,16 @@ def enviar_confirmacion(email: str, token_confirma: str) -> bool:
     url = f"{BASE_API}/api/confirmar/{token_confirma}"
     html = f"""<!doctype html><html><body style="margin:0;background:{TINTA};">
 <table role="presentation" width="100%" style="background:{TINTA};"><tr><td align="center" style="padding:32px;">
-<table role="presentation" width="600" style="max-width:600px;background:{TINTA};border:1px solid rgba(201,162,39,0.3);">
+<table role="presentation" width="600" style="max-width:600px;background:{TINTA};border:1px solid rgba(111,168,158,0.3);">
   <tr><td style="padding:32px;">
-    <div style="font-family:Georgia,serif;font-size:26px;color:{DORADO};font-weight:bold;">El Enjambre</div>
-    <p style="color:{MARFIL};font-size:16px;line-height:1.5;">Confirma tu suscripción a <b>El Pulso</b>,
+    <div style="font-family:Georgia,serif;font-size:26px;color:{TEAL};font-weight:bold;">El Enjambre</div>
+    <p style="color:{CREMA};font-size:16px;line-height:1.5;">Confirma tu suscripción a <b>El Pulso</b>,
       el correo diario donde el enjambre simulado reacciona a los titulares del día.</p>
-    <a href="{url}" style="display:inline-block;background:{DORADO};color:{TINTA};text-decoration:none;
+    <a href="{url}" style="display:inline-block;background:{TEAL};color:{TINTA};text-decoration:none;
       font-weight:bold;padding:12px 24px;text-transform:uppercase;letter-spacing:1px;">Confirmar suscripción</a>
-    <p style="color:{MARFIL_SUAVE};font-size:12px;margin-top:18px;">
+    <p style="color:{CREMA_SUAVE};font-size:12px;margin-top:18px;">
       Si no fuiste tú, ignora este correo y no recibirás nada más.</p>
-    <p style="color:{MARFIL_SUAVE};font-size:11px;">{DISCLAIMER}</p>
+    <p style="color:{CREMA_SUAVE};font-size:11px;">{DISCLAIMER}</p>
   </td></tr>
 </table></td></tr></table></body></html>"""
     return enviar(email, "Confirma tu suscripción a El Pulso 🐝", html)

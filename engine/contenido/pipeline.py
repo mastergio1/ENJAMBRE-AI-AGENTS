@@ -131,10 +131,12 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         # reúne las destacadas de hoy con sus voces (para el correo)
         destacadas = _destacadas_de_hoy(conexion)
 
-        # La Redacción: el análisis de mercado del día (hechos verificados
-        # + qué observa el enjambre hoy = los titulares destacados del día)
+        # La Redacción: el análisis de mercado del día, DINÁMICO. El universo
+        # sale de los titulares que el portero evaluó hoy (sus tickers), así
+        # el brief cambia cada día. "Qué observa hoy" = las destacadas.
         radar = [d["titular"] for d in destacadas]
-        brief = redaccion.preparar_brief(radar=radar)
+        evaluadas = preparado.get("log", [])
+        brief = redaccion.preparar_brief(evaluadas=evaluadas, radar=radar)
         persistencia.guardar_brief(conexion, persistencia.ahora_iso()[:10], brief)
 
         envio = None

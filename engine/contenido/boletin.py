@@ -53,18 +53,25 @@ def asunto_del_dia(destacada: dict) -> str:
     return f"🐝 El Pulso — {resumen}"
 
 
+def _fila_mercado(m: dict) -> str:
+    fuente = (f'<a href="{_esc(m["url"])}" style="color:{MARFIL_SUAVE};font-size:12px;">·&nbsp;fuente</a>'
+              if m.get("url") else "")
+    if m.get("tipo") == "evento":
+        marca = f'<span style="color:{DORADO};font-weight:bold;">◆</span>'
+        cuerpo = _esc(m["titular"])
+    else:  # movimiento de precio
+        marca = f'<span style="color:{COLOR_DIR(m["variacion_pct"])};font-weight:bold;">{_flecha(m["variacion_pct"])}</span>'
+        cuerpo = _esc(m["frase"])
+    return f"""<tr><td style="padding:5px 0;color:{MARFIL};font-size:14px;line-height:1.45;">
+        {marca} {cuerpo} {fuente}</td></tr>"""
+
+
 def _bloque_mercado(brief: dict | None) -> str:
-    """'Lo que pasó en el mercado' — hechos verificados con contexto (La Redacción)."""
+    """'Lo que pasó en el mercado' — movimientos verificados + eventos del
+    día, con su fuente (La Redacción). Dinámico: cambia con las noticias."""
     if not brief or not brief.get("mercado"):
         return ""
-    filas = "".join(
-        f"""<tr><td style="padding:5px 0;color:{MARFIL};font-size:14px;line-height:1.45;">
-        <span style="color:{COLOR_DIR(m['variacion_pct'])};font-weight:bold;">
-        {_flecha(m['variacion_pct'])} {_esc(m['nombre'])}</span> {_esc(m['frase'].split('. ', 1)[-1] if '. ' in m['frase'] else '')}
-        {f'<a href="{_esc(m["url"])}" style="color:{MARFIL_SUAVE};font-size:12px;">·&nbsp;fuente</a>' if m.get('url') else ''}
-        </td></tr>"""
-        for m in brief["mercado"][:5]
-    )
+    filas = "".join(_fila_mercado(m) for m in brief["mercado"][:5])
     return f"""
   <tr><td style="padding:16px 32px 2px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">Lo que pasó en el mercado</div>

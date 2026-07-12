@@ -16,6 +16,13 @@ from contenido.portero import PATRONES_DESCARTE
 from contenido.vocabulario import es_publicable
 
 UMBRAL_MOVIMIENTO = 0.4  # % mínimo para que un instrumento "sea noticia"
+MAX_MOVERS = 3           # cuántos movimientos de precio muestra el correo
+MAX_EVENTOS = 2          # cuántos eventos (adquisiciones, etc.) muestra
+UMBRAL_EVENTO = 6        # impacto mínimo del portero para ser "evento del día"
+
+# telón de fondo del mercado: índices y materias primas SIEMPRE relevantes.
+# El resto del universo del día es dinámico (los tickers de las noticias).
+TELON = ["$SPX", "$IUXX", "CLZ25", "GCZ25"]
 
 # términos para casar cada instrumento con un titular que explique el "por qué"
 TERMINOS = {
@@ -96,10 +103,10 @@ def _verbo(pct: float) -> str:
 
 
 def editar(hecho: dict) -> dict | None:
-    """Redacta la línea del hecho, en pasado y con cita. Pasa por el filtro
-    CMF: si la frase (o el titular citado) tiene vocabulario prohibido, se
-    cae la parte del 'por qué' y queda solo la cifra; si aun así no pasa, se
-    descarta el hecho entero."""
+    """Redacta la línea de un MOVIMIENTO de precio, en pasado y con cita.
+    Pasa por el filtro CMF: si la frase (o el titular citado) tiene
+    vocabulario prohibido, se cae la parte del 'por qué' y queda solo la
+    cifra; si aun así no pasa, se descarta el hecho entero."""
     pct = hecho["variacion_pct"]
     base = f"{hecho['nombre']} {_verbo(pct)} {abs(pct)}%"
     cita = hecho.get("cita")
@@ -108,36 +115,100 @@ def editar(hecho: dict) -> dict | None:
         # "en la prensa" = contexto relacionado, NO una afirmación de causa
         frase = f'{base}. En la prensa: «{cita["titular"]}».'
         if es_publicable(frase):
-            return {"nombre": hecho["nombre"], "variacion_pct": pct, "frase": frase,
+            return {"tipo": "mover", "nombre": hecho["nombre"], "variacion_pct": pct,
+                    "frase": frase, "cita_titular": cita["titular"],
                     "fuente": cita.get("fuente", ""), "url": cita.get("url", "")}
 
     frase = f"{base}."  # sin causa: solo el hecho verificado
     if es_publicable(frase):
-        return {"nombre": hecho["nombre"], "variacion_pct": pct, "frase": frase,
-                "fuente": "", "url": ""}
+        return {"tipo": "mover", "nombre": hecho["nombre"], "variacion_pct": pct,
+                "frase": frase, "fuente": "", "url": ""}
     return None
+
+
+def editar_evento(noticia: dict) -> dict | None:
+    """Redacta una línea de EVENTO (adquisición, resultados, regulación): el
+    hecho ES la noticia, con su fuente. Sin número inventado."""
+    titular = noticia["titular"].strip()
+    if not titular or not es_publicable(titular) or _es_promocional(titular):
+        return None
+    frase = f"En la prensa: «{titular}»."
+    if not es_publicable(frase):
+        return None
+    return {"tipo": "evento", "titular": titular, "frase": frase,
+            "fuente": noticia.get("fuente", ""), "url": noticia.get("url", "")}
+
+
+# ---------- selección dinámica: el universo del día ----------
+
+def _tickers_de_noticias(evaluadas: list[dict]) -> list[str]:
+    """Los tickers que aparecen en las noticias relevantes del día. Esto es
+    lo que hace el brief DINÁMICO: hoy oro/petróleo/Nvidia, mañana lo que
+    los titulares del día traigan (una adquisición, un sector, etc.)."""
+    tickers: list[str] = []
+    for e in evaluadas:
+        if e.get("impacto", 0) < UMBRAL_EVENTO:
+            continue
+        for simbolo in (e.get("simbolos") or "").split(","):
+            simbolo = simbolo.strip().upper()
+            if simbolo and simbolo not in tickers:
+                tickers.append(simbolo)
+    return tickers
 
 
 # ---------- orquestación: el brief del día ----------
 
-def preparar_brief(radar: list[str] | None = None, horas_noticias: int = 24) -> dict:
-    """Arma el brief del día: 'lo que pasó' (verificado, con citas) y 'qué
-    observa hoy' (atención, no predicción).
+def preparar_brief(evaluadas: list[dict] | None = None, radar: list[str] | None = None,
+                   horas_noticias: int = 24) -> dict:
+    """Arma el brief del día, DINÁMICO: 'lo que pasó' (movimientos
+    verificados + eventos del día, con cita) y 'qué observa hoy' (atención).
 
-    `radar`: titulares que el enjambre mira hoy (los del portero). Se
-    reproducen tal cual (ya pasaron el filtro del portero) — son atención.
+    `evaluadas`: los titulares que el portero evaluó hoy (con impacto y
+    simbolos). De ahí sale el universo del día. Si no se pasan, se recogen
+    noticias frescas y se usa solo el telón de fondo.
+    `radar`: titulares que el enjambre mira hoy (atención, no predicción).
     """
-    cotizaciones, origen_datos = barchart.cotizaciones()
-    noticias, _ = alpaca.obtener_titulares(horas=horas_noticias, limite=50)
+    if evaluadas:
+        noticias = evaluadas
+        universo = TELON + _tickers_de_noticias(evaluadas)
+    else:
+        noticias, _ = alpaca.obtener_titulares(horas=horas_noticias, limite=50)
+        universo = TELON + [s.strip().upper() for n in noticias
+                            for s in (n.get("simbolos") or "").split(",") if s.strip()]
 
+    cotizaciones, origen_datos = barchart.cotizaciones(_unicos(universo))
+
+    # movimientos de precio (el número manda), los más grandes primero
     hechos = reportear(cotizaciones, noticias)
-    verificados = verificar(hechos)
-    mercado = [linea for linea in (editar(h) for h in verificados) if linea]
+    movers = [m for m in (editar(h) for h in verificar(hechos)) if m][:MAX_MOVERS]
+
+    # eventos del día (adquisiciones, resultados…): los de mayor impacto que
+    # no sean ya un mover ni una cita ya usada, como hechos con fuente
+    titulares_usados = {m["cita_titular"].lower() for m in movers if m.get("cita_titular")}
+    eventos = []
+    for e in sorted(evaluadas or [], key=lambda x: -x.get("impacto", 0)):
+        if e.get("impacto", 0) < UMBRAL_EVENTO:
+            break
+        linea = editar_evento(e)
+        if linea and linea["titular"].lower() not in titulares_usados:
+            eventos.append(linea)
+            titulares_usados.add(linea["titular"].lower())
+        if len(eventos) >= MAX_EVENTOS:
+            break
 
     observa = [t for t in (radar or []) if es_publicable(t)][:3]
 
     return {
-        "mercado": mercado,            # [{nombre, variacion_pct, frase, fuente, url}]
-        "observa": observa,            # [titular, ...] — lo que el enjambre mira hoy
+        "mercado": movers + eventos,   # movimientos + eventos, dinámico cada día
+        "observa": observa,            # lo que el enjambre mira hoy (atención)
         "origen_datos": origen_datos,  # 'barchart' | 'demo'
     }
+
+
+def _unicos(secuencia: list[str]) -> list[str]:
+    vistos, salida = set(), []
+    for x in secuencia:
+        if x and x not in vistos:
+            vistos.add(x)
+            salida.append(x)
+    return salida

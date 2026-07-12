@@ -108,6 +108,37 @@ def test_brief_del_dia():
     assert brief["observa"] == ["La Fed decide tasas hoy"]
 
 
+def test_brief_es_dinamico_segun_las_noticias_del_dia():
+    """El corazón del requisito: el contenido cambia con lo que pasa cada día."""
+    dia_a = [{"titular": "Amazon to acquire logistics startup for 4.2 billion",
+              "fuente": "x", "url": "", "simbolos": "AMZN", "impacto": 8}]
+    dia_b = [{"titular": "Major cyberattack disrupts operations at three US banks",
+              "fuente": "x", "url": "", "simbolos": "JPM,BAC", "impacto": 9}]
+    texto_a = " ".join(m["frase"] for m in redaccion.preparar_brief(evaluadas=dia_a)["mercado"])
+    texto_b = " ".join(m["frase"] for m in redaccion.preparar_brief(evaluadas=dia_b)["mercado"])
+    assert "Amazon" in texto_a and "Amazon" not in texto_b
+    assert "cyberattack" in texto_b and "cyberattack" not in texto_a
+
+
+def test_eventos_entran_como_hechos_con_fuente():
+    evaluadas = [{"titular": "Amazon to acquire logistics startup for 4.2 billion",
+                  "fuente": "reuters", "url": "https://x", "simbolos": "AMZN", "impacto": 8}]
+    brief = redaccion.preparar_brief(evaluadas=evaluadas)
+    eventos = [m for m in brief["mercado"] if m["tipo"] == "evento"]
+    assert any("acquire" in e["titular"] for e in eventos)
+    for e in eventos:
+        assert es_publicable(e["frase"])  # nada prohibido, ni número inventado
+
+
+def test_evento_no_duplica_una_cita_ya_usada():
+    # el mismo titular que explica un movimiento no se repite como evento
+    evaluadas = [{"titular": "Nvidia beats earnings expectations", "fuente": "x",
+                  "url": "", "simbolos": "NVDA", "impacto": 8}]
+    brief = redaccion.preparar_brief(evaluadas=evaluadas)
+    titulares = [m.get("titular") for m in brief["mercado"] if m["tipo"] == "evento"]
+    assert "Nvidia beats earnings expectations" not in titulares
+
+
 def test_observa_es_atencion_no_prediccion():
     # un 'radar' con vocabulario de predicción se filtra
     brief = redaccion.preparar_brief(radar=["El precio subirá mañana", "La Fed decide hoy"])

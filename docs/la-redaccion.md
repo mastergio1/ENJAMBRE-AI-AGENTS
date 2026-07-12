@@ -73,9 +73,19 @@ director editorial y vive en configuración (se amplía sin tocar código).
 Los endpoints y planes exactos de Barchart se confirman al integrar (tiene
 tier gratuito y de pago; el gratuito puede bastar para el arranque).
 
-Instrumentos del "mercado global" a cubrir al inicio (sugerido): índices
-(S&P 500, Nasdaq), materias primas (petróleo WTI, oro), un puñado de
-mega-caps noticiosas (Nvidia, Apple…), tasas/dólar. Ajustable.
+**Selección dinámica (cada día es distinto).** El brief NO es una lista
+fija. El universo del día se arma solo:
+- **Telón de fondo** (siempre): índices y materias primas (S&P, Nasdaq,
+  petróleo, oro) — el estado general del mercado.
+- **Lo del día** (dinámico): los tickers que traen las noticias relevantes
+  del día, según el **portero** (que ya evalúa ~100 titulares e identifica
+  qué importa). Hoy puede ser Nvidia y el oro; mañana una adquisición, un
+  banco, un sector — lo que el día traiga.
+
+Y "lo que pasó" mezcla **dos tipos de hecho**:
+- **Movimientos de precio** (con número verificado de la capa de datos).
+- **Eventos** (adquisiciones, resultados, regulación): el hecho es la
+  noticia con su fuente, sin número inventado.
 
 ## 5. La anatomía del correo (evolución de la sección 6.2 de CONTENIDO.md)
 

@@ -8,8 +8,8 @@ import { Enjambre } from '../swarm/enjambre.js'
 import { urlApi } from '../ui/conexion.js'
 
 const TAMANO_FRAME = 8 + 5000
-const COLOR_A = '#c9a227' // dorado
-const COLOR_B = '#8fb8d8' // azul frío, para distinguir el segundo enjambre
+const COLOR_A = '#6fa89e' // teal — el río (primer enjambre)
+const COLOR_B = '#d99a9a' // rosa — para distinguir el segundo enjambre
 
 const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
@@ -91,8 +91,8 @@ export async function abrirDuelo({ idA, idB, reducirMovimiento, alCerrar }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true })
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   const escena = new THREE.Scene()
-  escena.background = new THREE.Color('#0b0e14')
-  escena.fog = new THREE.FogExp2('#0b0e14', 0.02)
+  escena.background = new THREE.Color('#1b1916')
+  escena.fog = new THREE.FogExp2('#1b1916', 0.02)
   const camara = new THREE.PerspectiveCamera(55, 2, 0.1, 200)
 
   const enjA = new Enjambre(11)
@@ -232,22 +232,22 @@ async function exportarReel(renderer, datos, estado) {
   function pinta(ts) {
     if (t0 === null) t0 = ts
     const seg = (ts - t0) / 1000
-    ctx.fillStyle = '#0b0e14'; ctx.fillRect(0, 0, 1080, 1920)
+    ctx.fillStyle = '#1b1916'; ctx.fillRect(0, 0, 1080, 1920)
     // el enjambre (recuadro central)
     ctx.drawImage(gl, 0, 420, 1080, 1080)
     // titulares
     ctx.fillStyle = COLOR_A; ctx.font = 'bold 40px Georgia, serif'
     ctx.fillText('A', 60, 200)
-    ctx.fillStyle = '#f4efe6'; ctx.font = '34px Georgia, serif'
+    ctx.fillStyle = '#f3eee8'; ctx.font = '34px Georgia, serif'
     envolver(ctx, datos.a.titular, 130, 175, 900, 40)
     ctx.fillStyle = COLOR_B; ctx.font = 'bold 40px Georgia, serif'
     ctx.fillText('B', 60, 360)
-    ctx.fillStyle = '#f4efe6'; ctx.font = '34px Georgia, serif'
+    ctx.fillStyle = '#f3eee8'; ctx.font = '34px Georgia, serif'
     envolver(ctx, datos.b.titular, 130, 335, 900, 40)
     // marca de agua + disclaimer
-    ctx.fillStyle = '#c9a227'; ctx.font = 'bold 30px Georgia, serif'
+    ctx.fillStyle = '#6fa89e'; ctx.font = 'bold 30px Georgia, serif'
     ctx.fillText('El Enjambre · Rubicón Lab', 60, 1600)
-    ctx.fillStyle = 'rgba(244,239,230,0.6)'; ctx.font = '22px sans-serif'
+    ctx.fillStyle = 'rgba(243,238,232,0.6)'; ctx.font = '22px sans-serif'
     envolver(ctx, datos.descargo, 60, 1660, 960, 28)
     if (seg < 12) requestAnimationFrame(pinta)
     else if (rec.state === 'recording') rec.stop()

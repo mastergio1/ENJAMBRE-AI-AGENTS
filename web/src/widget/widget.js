@@ -28,16 +28,16 @@ function superponer(html) {
   Object.assign(capa.style, {
     position: 'absolute', inset: '0', pointerEvents: 'none',
     display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-    padding: '14px 16px', boxSizing: 'border-box', color: '#f4efe6',
+    padding: '14px 16px', boxSizing: 'border-box', color: '#f3eee8',
     fontFamily: 'system-ui, sans-serif',
   })
   raiz.appendChild(capa)
   return capa
 }
 
-const ESTILO_LINK = 'color:#c9a227;text-decoration:none;pointer-events:auto;'
-const ESTILO_DISCLAIMER = 'font-size:10px;line-height:1.4;color:rgba(244,239,230,0.55);'
-const ESTILO_FIRMA = 'font-size:12px;color:#c9a227;font-weight:600;'
+const ESTILO_LINK = 'color:#6fa89e;text-decoration:none;pointer-events:auto;'
+const ESTILO_DISCLAIMER = 'font-size:10px;line-height:1.4;color:rgba(243,238,232,0.55);'
+const ESTILO_FIRMA = 'font-size:12px;color:#f3eee8;font-weight:600;'
 
 function pie(extra = '') {
   return `<div>${extra}
@@ -52,11 +52,11 @@ function mostrarCTA() {
   superponer(`
     <div></div>
     <div style="pointer-events:auto;text-align:center;">
-      <div style="font-family:Georgia,serif;font-size:22px;color:#c9a227;font-weight:bold;">El Enjambre</div>
-      <p style="font-size:14px;color:#f4efe6;max-width:320px;margin:8px auto;">
+      <div style="font-family:Georgia,serif;font-size:22px;color:#6fa89e;font-weight:bold;">El Enjambre</div>
+      <p style="font-size:14px;color:#f3eee8;max-width:320px;margin:8px auto;">
         El focus group sintético del mercado, para tu medio.</p>
       <a href="${WEB}" target="_blank" rel="noopener"
-        style="display:inline-block;background:#c9a227;color:#0b0e14;text-decoration:none;font-weight:bold;
+        style="display:inline-block;background:#6fa89e;color:#1b1916;text-decoration:none;font-weight:bold;
         padding:10px 20px;font-size:13px;pointer-events:auto;">Consigue el widget para tu medio</a>
     </div>
     ${pie()}`)
@@ -95,8 +95,8 @@ function render(sim, buffer) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   const escena = new THREE.Scene()
-  escena.background = new THREE.Color('#0b0e14')
-  escena.fog = new THREE.FogExp2('#0b0e14', 0.02)
+  escena.background = new THREE.Color('#1b1916')
+  escena.fog = new THREE.FogExp2('#1b1916', 0.02)
   const camara = new THREE.PerspectiveCamera(55, 1, 0.1, 120)
 
   const enjambre = new Enjambre(7)
@@ -137,7 +137,7 @@ function render(sim, buffer) {
 
   superponer(`
     <div style="pointer-events:none;">
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(244,239,230,0.5);">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(243,238,232,0.5);">
         El enjambre reaccionó a</div>
       <div style="font-family:Georgia,serif;font-size:16px;font-weight:bold;line-height:1.2;max-width:80%;">
         ${esc(sim.titular)}</div>

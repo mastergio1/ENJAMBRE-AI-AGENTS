@@ -9,6 +9,25 @@ import { urlApi } from '../ui/conexion.js'
 const TAMANO_FRAME = 8 + 5000 // [precio f32][tick u32][sentimiento i8 × 5000]
 const TARJETAS_VISIBLES = 12
 
+// La firma de autoría "Creada por Rubicón Lab" (manual de marca §10).
+// TODO Giorgio: confirmar el destino real (dominio del estudio o Instagram).
+const URL_ESTUDIO = 'https://instagram.com/rubiconlab'
+const FIRMA_RUBICON = `
+  <div class="cruce" aria-hidden="true"></div>
+  <div class="muro-firma">
+    <a href="${URL_ESTUDIO}" target="_blank" rel="noopener noreferrer"
+       class="rl-credit" aria-label="Sitio creado por Rubicón Lab">
+      <span class="rl-pre">Creada por</span>
+      <span class="rl-full">
+        <span class="rl-name">Rubicón</span><span class="rl-bar"></span><span class="rl-lab">Lab</span>
+      </span>
+      <span class="rl-compact" aria-hidden="true">
+        <span class="rl-iso"><span class="rl-name">R</span><span class="rl-bar"></span></span>
+        <span class="rl-iso-text">Rubicón Lab</span>
+      </span>
+    </a>
+  </div>`
+
 /** Reproduce los frames binarios de una simulación guardada sobre el enjambre. */
 export class ReproductorReplay {
   constructor(enjambre) {
@@ -115,7 +134,8 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
     contenedor.innerHTML = `
       <header class="muro-cabecera"><h1>El Enjambre</h1>
         <p>el focus group sintético del mercado</p></header>
-      <p class="muro-aviso">${mensaje}</p>`
+      <p class="muro-aviso">${mensaje}</p>
+      ${FIRMA_RUBICON}`
     document.body.classList.add('con-muro')
   }
 
@@ -143,7 +163,8 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
         </form>
         <p class="pulso-estado" hidden></p>
       </section>
-      <p class="muro-descargo">${esc(datos.descargo)}</p>`
+      <p class="muro-descargo">${esc(datos.descargo)}</p>
+      ${FIRMA_RUBICON}`
     document.body.classList.add('con-muro')
     conectarEventos(datos)
   }

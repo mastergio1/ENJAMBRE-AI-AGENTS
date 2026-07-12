@@ -1,5 +1,5 @@
 // UI de El Enjambre: entrada de noticia, tooltip de líderes y HUD.
-// Estética editorial Rubicón Lab: tinta profunda, dorado como acento.
+// Estética editorial Rubicón Lab: tinta cálida, el teal como acento — "el río".
 
 import { ESCENARIOS } from '../swarm/escenario.js'
 
@@ -156,7 +156,7 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
         const y = alto - 5 - ((v - minimo) / rango) * (alto - 10)
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
       })
-      ctx.strokeStyle = '#c9a227'
+      ctx.strokeStyle = '#6fa89e'
       ctx.lineWidth = 2
       ctx.lineJoin = 'round'
       ctx.stroke()
@@ -184,7 +184,7 @@ export function dibujarGraficoEstatico(serie) {
   const aY = (v) => alto - margen.abajo - ((v - minimo) / rango) * (alto - margen.arriba - margen.abajo)
 
   // rejilla recesiva: dos líneas de referencia apenas visibles
-  ctx.strokeStyle = 'rgba(244,239,230,0.12)'
+  ctx.strokeStyle = 'rgba(243,238,232,0.12)'
   ctx.lineWidth = 1
   for (const v of [minimo, maximo]) {
     ctx.beginPath(); ctx.moveTo(margen.izq, aY(v)); ctx.lineTo(ancho - margen.der, aY(v)); ctx.stroke()
@@ -192,13 +192,13 @@ export function dibujarGraficoEstatico(serie) {
 
   ctx.beginPath()
   serie.forEach((v, i) => (i === 0 ? ctx.moveTo(aX(i), aY(v)) : ctx.lineTo(aX(i), aY(v))))
-  ctx.strokeStyle = '#c9a227'
+  ctx.strokeStyle = '#6fa89e'
   ctx.lineWidth = 2
   ctx.lineJoin = 'round'
   ctx.stroke()
 
   // etiquetas en tinta (no en el color de la serie)
-  ctx.fillStyle = 'rgba(244,239,230,0.75)'
+  ctx.fillStyle = 'rgba(243,238,232,0.75)'
   ctx.font = '12px Jost, sans-serif'
   ctx.fillText(maximo.toFixed(1), ancho - margen.der + 6, aY(maximo) + 4)
   ctx.fillText(minimo.toFixed(1), ancho - margen.der + 6, aY(minimo) + 4)

@@ -1,11 +1,15 @@
 @import 'tailwindcss';
 
-/* Estética Rubicón Lab: editorial, fondo tinta profunda, dorado como acento */
+/* Estética Rubicón Lab (aplicación "reverse": fondo tinta cálida, el teal
+   como único acento — "el río"). Paleta oficial del manual de marca §05. */
 :root {
-  --tinta: #0b0e14;
-  --dorado: #c9a227;
-  --marfil: #f4efe6;
-  --marfil-suave: rgba(244, 239, 230, 0.65);
+  --tinta: #1b1916;                          /* tinta profunda cálida — fondo inmersivo */
+  --teal: #6fa89e;                           /* el río — acento (teal claro para reverse) */
+  --teal-hondo: #3f7e74;                     /* teal profundo — bordes y trazos */
+  --crema: #f3eee8;                          /* crema — texto principal */
+  --crema-suave: rgba(243, 238, 232, 0.62);  /* crema atenuada — texto secundario */
+  --salvia: #93b3a3;                         /* salvia — compra/sube */
+  --rosa: #d99a9a;                           /* rosa — venta/baja */
 }
 
 html,
@@ -13,7 +17,7 @@ body {
   margin: 0;
   height: 100%;
   background: var(--tinta);
-  color: var(--marfil);
+  color: var(--crema);
   font-family: 'Jost', sans-serif;
   overflow: hidden;
 }
@@ -36,7 +40,7 @@ body {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.9rem;
   font-weight: 600;
-  color: var(--dorado);
+  color: var(--teal);
   margin: 0;
   letter-spacing: 0.02em;
 }
@@ -46,7 +50,7 @@ body {
   font-weight: 300;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
 }
 
 /* ---------- HUD ---------- */
@@ -75,7 +79,7 @@ body {
 #hud-detalle {
   font-size: 0.7rem;
   letter-spacing: 0.12em;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
 }
 
 /* ---------- panel de noticia ---------- */
@@ -94,8 +98,8 @@ body {
 #form-noticia {
   display: flex;
   width: 100%;
-  border: 1px solid rgba(201, 162, 39, 0.45);
-  background: rgba(11, 14, 20, 0.72);
+  border: 1px solid rgba(111, 168, 158, 0.45);
+  background: rgba(27, 25, 22, 0.72);
   backdrop-filter: blur(8px);
 }
 #campo-titular {
@@ -103,17 +107,17 @@ body {
   background: transparent;
   border: 0;
   outline: none;
-  color: var(--marfil);
+  color: var(--crema);
   font-family: 'Jost', sans-serif;
   font-size: 0.95rem;
   font-weight: 300;
   padding: 13px 16px;
 }
 #campo-titular::placeholder {
-  color: rgba(244, 239, 230, 0.35);
+  color: rgba(243, 238, 232, 0.35);
 }
 #form-noticia button {
-  background: var(--dorado);
+  background: var(--teal);
   color: var(--tinta);
   border: 0;
   font-family: 'Jost', sans-serif;
@@ -126,7 +130,7 @@ body {
   transition: filter 0.2s;
 }
 #form-noticia button:hover {
-  filter: brightness(1.15);
+  filter: brightness(1.12);
 }
 .chips {
   display: flex;
@@ -136,8 +140,8 @@ body {
 }
 .chip {
   background: transparent;
-  border: 1px solid rgba(244, 239, 230, 0.25);
-  color: var(--marfil-suave);
+  border: 1px solid rgba(243, 238, 232, 0.25);
+  color: var(--crema-suave);
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
@@ -148,19 +152,19 @@ body {
   transition: border-color 0.2s, color 0.2s;
 }
 .chip:hover {
-  border-color: var(--dorado);
-  color: var(--dorado);
+  border-color: var(--teal);
+  color: var(--teal);
 }
 #btn-observatorio.activo {
-  border-color: var(--dorado);
+  border-color: var(--teal);
   color: var(--tinta);
-  background: var(--dorado);
+  background: var(--teal);
 }
 .descargo {
   margin: 0;
   font-size: 0.62rem;
   letter-spacing: 0.08em;
-  color: rgba(244, 239, 230, 0.3);
+  color: rgba(243, 238, 232, 0.3);
 }
 
 /* ---------- tooltip de líder ---------- */
@@ -168,8 +172,8 @@ body {
 .tooltip {
   position: fixed;
   max-width: 260px;
-  background: rgba(11, 14, 20, 0.92);
-  border: 1px solid rgba(201, 162, 39, 0.6);
+  background: rgba(27, 25, 22, 0.92);
+  border: 1px solid rgba(111, 168, 158, 0.6);
   padding: 10px 14px;
   pointer-events: none;
   z-index: 10;
@@ -179,14 +183,14 @@ body {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--dorado);
+  color: var(--teal);
   margin-bottom: 3px;
 }
 .tooltip em {
   font-size: 0.82rem;
   font-weight: 300;
   font-style: italic;
-  color: var(--marfil);
+  color: var(--crema);
   line-height: 1.35;
 }
 
@@ -199,9 +203,9 @@ body {
   bottom: 0;
   width: min(430px, 100vw);
   overflow-y: auto;
-  background: linear-gradient(to right, rgba(11, 14, 20, 0.93), rgba(11, 14, 20, 0.82));
+  background: linear-gradient(to right, rgba(27, 25, 22, 0.93), rgba(27, 25, 22, 0.82));
   backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(201, 162, 39, 0.25);
+  border-right: 1px solid rgba(111, 168, 158, 0.25);
   padding: 22px 26px 90px;
   transition: transform 0.35s ease;
   z-index: 5;
@@ -217,13 +221,13 @@ body.con-muro .marca {
   position: relative;
   margin-bottom: 18px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+  border-bottom: 1px solid rgba(111, 168, 158, 0.35);
 }
 .muro-cabecera h1 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.9rem;
   font-weight: 600;
-  color: var(--dorado);
+  color: var(--teal);
   margin: 0;
 }
 .muro-cabecera p {
@@ -232,7 +236,7 @@ body.con-muro .marca {
   font-weight: 300;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
 }
 .muro-cabecera time {
   display: block;
@@ -240,15 +244,15 @@ body.con-muro .marca {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-size: 0.95rem;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
 }
 .plegar {
   position: absolute;
   top: 0;
   right: -8px;
   background: none;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -258,7 +262,7 @@ body.con-muro .marca {
 
 .tarjeta {
   padding: 16px 0 14px;
-  border-bottom: 1px solid rgba(244, 239, 230, 0.09);
+  border-bottom: 1px solid rgba(243, 238, 232, 0.09);
 }
 .tarjeta.portada h3 {
   font-size: 1.45rem;
@@ -267,11 +271,11 @@ body.con-muro .marca {
   font-size: 0.66rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(244, 239, 230, 0.45);
+  color: rgba(243, 238, 232, 0.45);
   margin-bottom: 5px;
 }
 .tarjeta .meta strong {
-  color: var(--dorado);
+  color: var(--teal);
   font-weight: 500;
 }
 .tarjeta h3 {
@@ -280,7 +284,7 @@ body.con-muro .marca {
   font-weight: 600;
   line-height: 1.2;
   margin: 0 0 8px;
-  color: var(--marfil);
+  color: var(--crema);
 }
 .tarjeta .resultado {
   display: flex;
@@ -292,32 +296,32 @@ body.con-muro .marca {
   font-size: 0.95rem;
   font-weight: 500;
 }
-.tarjeta .flecha.sube { color: #4fae7f; }
-.tarjeta .flecha.baja { color: #c4472a; }
-.tarjeta .flecha.plana { color: var(--dorado); }
+.tarjeta .flecha.sube { color: var(--salvia); }
+.tarjeta .flecha.baja { color: var(--rosa); }
+.tarjeta .flecha.plana { color: var(--teal); }
 .tarjeta .agitacion {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
 }
 .tarjeta .voz {
   font-size: 0.82rem;
   font-style: italic;
   font-weight: 300;
-  color: var(--marfil);
+  color: var(--crema);
   margin: 0 0 8px;
   line-height: 1.35;
 }
 .tarjeta .voz span {
-  color: var(--dorado);
+  color: var(--teal);
   font-style: normal;
   font-size: 0.75rem;
 }
 .accion {
   background: transparent;
-  border: 1px solid rgba(201, 162, 39, 0.5);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
   font-family: 'Jost', sans-serif;
   font-size: 0.72rem;
   font-weight: 400;
@@ -328,7 +332,7 @@ body.con-muro .marca {
   transition: background 0.2s, color 0.2s;
 }
 .accion:hover:not(:disabled) {
-  background: var(--dorado);
+  background: var(--teal);
   color: var(--tinta);
 }
 .accion:disabled {
@@ -343,19 +347,19 @@ body.con-muro .marca {
 .pulso {
   margin-top: 22px;
   padding: 18px 0 8px;
-  border-top: 1px solid rgba(201, 162, 39, 0.3);
+  border-top: 1px solid rgba(111, 168, 158, 0.3);
 }
 .pulso h2 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--dorado);
+  color: var(--teal);
   margin: 0 0 4px;
 }
 .pulso p {
   font-size: 0.82rem;
   font-weight: 300;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   margin: 0 0 12px;
   line-height: 1.4;
 }
@@ -365,20 +369,20 @@ body.con-muro .marca {
 }
 .pulso-form input {
   flex: 1;
-  background: rgba(11, 14, 20, 0.6);
-  border: 1px solid rgba(244, 239, 230, 0.25);
-  color: var(--marfil);
+  background: rgba(27, 25, 22, 0.6);
+  border: 1px solid rgba(243, 238, 232, 0.25);
+  color: var(--crema);
   font-family: 'Jost', sans-serif;
   font-size: 0.85rem;
   padding: 9px 12px;
   outline: none;
 }
 .pulso-form input:focus {
-  border-color: var(--dorado);
+  border-color: var(--teal);
 }
 .pulso-estado {
   margin-top: 8px !important;
-  color: var(--dorado) !important;
+  color: var(--teal) !important;
   font-size: 0.78rem !important;
 }
 
@@ -386,15 +390,52 @@ body.con-muro .marca {
 .muro-aviso {
   font-size: 0.62rem;
   letter-spacing: 0.06em;
-  color: rgba(244, 239, 230, 0.35);
+  color: rgba(243, 238, 232, 0.35);
   margin-top: 16px;
   line-height: 1.5;
 }
 .muro-aviso {
   font-size: 0.85rem;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   font-weight: 300;
 }
+
+/* ---------- el divisor "cruce" y la firma de autoría (manual §07 y §10) ---------- */
+
+.cruce {
+  position: relative;
+  height: 1px;
+  background: rgba(243, 238, 232, 0.12);
+  margin: 22px 0 16px;
+}
+.cruce::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -7px;
+  width: 2px;
+  height: 15px;
+  background: var(--teal);
+  border-radius: 2px;
+}
+.muro-firma {
+  color: var(--crema-suave); /* la firma hereda este color vía currentColor */
+  padding-top: 4px;
+}
+
+/* Firma "Creada por Rubicón Lab" — snippet oficial del manual §10.
+   Scopeado bajo .rl-*; hereda currentColor; sin teal; cae a isotipo ≤520px. */
+.rl-credit{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit;opacity:.85;transition:opacity .2s ease}
+.rl-credit:hover{opacity:1}
+.rl-pre{font-family:'Jost',sans-serif;font-weight:400;font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:.7}
+.rl-full{display:inline-flex;align-items:center;gap:.42em;font-size:18px;line-height:1;white-space:nowrap}
+.rl-name{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1em;letter-spacing:.004em}
+.rl-bar{width:.05em;min-width:1.5px;height:.84em;border-radius:2px;background:currentColor;flex:none}
+.rl-lab{font-family:'Jost',sans-serif;font-weight:400;font-size:.4em;letter-spacing:.3em;text-transform:uppercase}
+.rl-compact{display:none;align-items:center;gap:8px}
+.rl-iso{display:inline-flex;align-items:center;gap:.14em;font-size:22px;line-height:1}
+.rl-iso-text{font-family:'Jost',sans-serif;font-weight:400;font-size:12px;letter-spacing:.04em}
+@media (max-width:520px){ .rl-full,.rl-pre{display:none} .rl-compact{display:inline-flex} }
 
 /* aviso flotante (límites, errores amables) */
 .aviso {
@@ -402,9 +443,9 @@ body.con-muro .marca {
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(11, 14, 20, 0.95);
-  border: 1px solid rgba(201, 162, 39, 0.6);
-  color: var(--marfil);
+  background: rgba(27, 25, 22, 0.95);
+  border: 1px solid rgba(111, 168, 158, 0.6);
+  color: var(--crema);
   font-size: 0.85rem;
   font-weight: 300;
   padding: 12px 20px;
@@ -444,7 +485,7 @@ body.con-muro .marca {
   margin-top: 10px;
   background: none;
   border: 0;
-  color: var(--dorado);
+  color: var(--teal);
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.06em;
@@ -460,7 +501,7 @@ body.con-muro .marca {
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(6, 8, 12, 0.96);
+  background: rgba(18, 16, 14, 0.96);
   backdrop-filter: blur(6px);
   overflow-y: auto;
   display: flex;
@@ -472,7 +513,7 @@ body.con-muro .marca {
 }
 .arch-cab {
   position: relative;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+  border-bottom: 1px solid rgba(111, 168, 158, 0.35);
   padding-bottom: 16px;
   margin-bottom: 18px;
 }
@@ -480,25 +521,25 @@ body.con-muro .marca {
   font-family: 'Cormorant Garamond', serif;
   font-size: 2.2rem;
   font-weight: 600;
-  color: var(--dorado);
+  color: var(--teal);
   margin: 0;
 }
 .arch-cab p {
   margin: 4px 0 0;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   font-size: 0.85rem;
   font-weight: 300;
 }
 .arch-total {
-  color: var(--dorado);
+  color: var(--teal);
 }
 .arch-cerrar {
   position: absolute;
   top: 0;
   right: 0;
   background: none;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -511,9 +552,9 @@ body.con-muro .marca {
   margin-bottom: 14px;
 }
 .arch-filtros input {
-  background: rgba(11, 14, 20, 0.7);
-  border: 1px solid rgba(244, 239, 230, 0.2);
-  color: var(--marfil);
+  background: rgba(27, 25, 22, 0.7);
+  border: 1px solid rgba(243, 238, 232, 0.2);
+  color: var(--crema);
   font-family: 'Jost', sans-serif;
   font-size: 0.9rem;
   padding: 10px 14px;
@@ -521,7 +562,7 @@ body.con-muro .marca {
 }
 .arch-buscar { flex: 1; }
 .arch-ticker { width: 130px; }
-.arch-filtros input:focus { border-color: var(--dorado); }
+.arch-filtros input:focus { border-color: var(--teal); }
 .arch-meses {
   display: flex;
   gap: 8px;
@@ -530,8 +571,8 @@ body.con-muro .marca {
 }
 .arch-chip {
   background: transparent;
-  border: 1px solid rgba(244, 239, 230, 0.22);
-  color: var(--marfil-suave);
+  border: 1px solid rgba(243, 238, 232, 0.22);
+  color: var(--crema-suave);
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
   padding: 5px 13px;
@@ -540,38 +581,38 @@ body.con-muro .marca {
   text-transform: capitalize;
 }
 .arch-chip.activo {
-  border-color: var(--dorado);
-  color: var(--dorado);
+  border-color: var(--teal);
+  color: var(--teal);
 }
 .arch-item {
   display: block;
   text-decoration: none;
   padding: 18px 0;
-  border-bottom: 1px solid rgba(244, 239, 230, 0.09);
+  border-bottom: 1px solid rgba(243, 238, 232, 0.09);
 }
 .arch-item h3 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.35rem;
   font-weight: 600;
-  color: var(--marfil);
+  color: var(--crema);
   margin: 4px 0 8px;
   line-height: 1.2;
 }
-.arch-item:hover h3 { color: var(--dorado); }
+.arch-item:hover h3 { color: var(--teal); }
 .arch-meta {
   font-size: 0.66rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(244, 239, 230, 0.45);
+  color: rgba(243, 238, 232, 0.45);
 }
-.arch-epi { color: var(--dorado); }
+.arch-epi { color: var(--teal); }
 .arch-res {
   display: flex;
   gap: 14px;
   align-items: baseline;
 }
 .arch-vacio {
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   font-weight: 300;
   padding: 40px 0;
   text-align: center;
@@ -582,13 +623,13 @@ body.con-muro .marca {
   align-items: center;
   gap: 16px;
   margin-top: 24px;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   font-size: 0.85rem;
 }
 .arch-pag button {
   background: none;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
   padding: 6px 14px;
   cursor: pointer;
   font-family: 'Jost', sans-serif;
@@ -597,7 +638,7 @@ body.con-muro .marca {
 .arch-descargo {
   margin-top: 28px;
   font-size: 0.62rem;
-  color: rgba(244, 239, 230, 0.3);
+  color: rgba(243, 238, 232, 0.3);
 }
 body.archivo-abierto .muro { display: none; }
 
@@ -607,13 +648,13 @@ body.archivo-abierto .muro { display: none; }
   align-items: center;
   gap: 14px;
   margin-bottom: 14px;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   font-size: 0.82rem;
 }
 .arch-panel.en-duelo .arch-item { cursor: copy; }
 .arch-item.elegido {
-  outline: 1px solid var(--dorado);
-  background: rgba(201, 162, 39, 0.08);
+  outline: 1px solid var(--teal);
+  background: rgba(111, 168, 158, 0.08);
 }
 
 /* ---------- el duelo de escenarios ---------- */
@@ -621,7 +662,7 @@ body.archivo-abierto .muro { display: none; }
   position: fixed;
   inset: 0;
   z-index: 45;
-  background: #0b0e14;
+  background: #1b1916;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -634,8 +675,8 @@ body.archivo-abierto .muro { display: none; }
   right: 18px;
   z-index: 2;
   background: none;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -664,23 +705,23 @@ body.archivo-abierto .muro { display: none; }
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--marfil);
+  color: var(--crema);
   margin: 2px 0 4px;
   line-height: 1.2;
 }
-.duelo-dir { font-size: 0.85rem; color: var(--marfil-suave); }
+.duelo-dir { font-size: 0.85rem; color: var(--crema-suave); }
 .duelo-vs {
   align-self: center;
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-size: 1.3rem;
-  color: var(--dorado);
+  color: var(--teal);
 }
 .duelo-escena {
   width: min(1000px, 100%);
   height: min(52vh, 460px);
   display: block;
-  border: 1px solid rgba(201, 162, 39, 0.2);
+  border: 1px solid rgba(111, 168, 158, 0.2);
 }
 .duelo-precios {
   width: min(1000px, 100%);
@@ -694,7 +735,7 @@ body.archivo-abierto .muro { display: none; }
   margin-top: 12px;
 }
 .duelo-reel {
-  background: var(--dorado);
+  background: var(--teal);
   color: var(--tinta);
   border: 0;
   font-family: 'Jost', sans-serif;
@@ -707,8 +748,8 @@ body.archivo-abierto .muro { display: none; }
 }
 .duelo-toggle {
   background: transparent;
-  border: 1px solid rgba(201, 162, 39, 0.5);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -716,22 +757,22 @@ body.archivo-abierto .muro { display: none; }
   padding: 9px 16px;
   cursor: pointer;
 }
-.duelo-estado { color: var(--marfil-suave); font-size: 0.8rem; }
+.duelo-estado { color: var(--crema-suave); font-size: 0.8rem; }
 .duelo-descargo {
   margin-top: 12px;
   font-size: 0.62rem;
-  color: rgba(244, 239, 230, 0.3);
+  color: rgba(243, 238, 232, 0.3);
   text-align: center;
 }
-.duelo-error { color: var(--marfil-suave); padding: 40px; }
+.duelo-error { color: var(--crema-suave); padding: 40px; }
 @media (min-width: 821px) { .duelo-toggle { display: none; } }
 
 /* voces por arquetipo y epílogo en el reporte */
-.voz-arq span { color: var(--dorado); font-style: normal; font-size: 0.72rem; }
+.voz-arq span { color: var(--teal); font-style: normal; font-size: 0.72rem; }
 .rep-titular {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.15rem;
-  color: var(--marfil);
+  color: var(--crema);
   font-style: italic;
   margin-bottom: 12px;
   line-height: 1.25;
@@ -739,26 +780,26 @@ body.archivo-abierto .muro { display: none; }
 .epilogo {
   margin: 12px 0;
   padding: 12px 14px;
-  border-left: 2px solid var(--dorado);
-  background: rgba(201, 162, 39, 0.06);
+  border-left: 2px solid var(--teal);
+  background: rgba(111, 168, 158, 0.06);
 }
 .epi-rotulo {
   font-size: 0.62rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dorado);
+  color: var(--teal);
   margin-bottom: 6px;
 }
 .epilogo p {
   font-size: 0.85rem;
-  color: var(--marfil);
+  color: var(--crema);
   line-height: 1.45;
   margin: 0;
 }
 .rep-compartir {
   background: none;
-  border: 1px solid rgba(201, 162, 39, 0.5);
-  color: var(--dorado);
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
   font-family: 'Jost', sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.08em;
@@ -778,8 +819,8 @@ body.archivo-abierto .muro { display: none; }
   width: min(340px, calc(100vw - 40px));
   max-height: 80vh;
   overflow-y: auto;
-  background: rgba(11, 14, 20, 0.94);
-  border: 1px solid rgba(201, 162, 39, 0.5);
+  background: rgba(27, 25, 22, 0.94);
+  border: 1px solid rgba(111, 168, 158, 0.5);
   padding: 20px 22px;
   backdrop-filter: blur(10px);
   z-index: 20;
@@ -788,7 +829,7 @@ body.archivo-abierto .muro { display: none; }
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.35rem;
   font-weight: 600;
-  color: var(--dorado);
+  color: var(--teal);
   margin: 0 0 14px;
 }
 .reporte .cerrar {
@@ -797,7 +838,7 @@ body.archivo-abierto .muro { display: none; }
   right: 12px;
   background: none;
   border: 0;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   font-size: 1.3rem;
   cursor: pointer;
 }
@@ -815,7 +856,7 @@ body.archivo-abierto .muro { display: none; }
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
 }
 .reporte table {
   width: 100%;
@@ -826,17 +867,17 @@ body.archivo-abierto .muro { display: none; }
 }
 .reporte td {
   padding: 4px 0;
-  border-bottom: 1px solid rgba(244, 239, 230, 0.08);
-  color: var(--marfil-suave);
+  border-bottom: 1px solid rgba(243, 238, 232, 0.08);
+  color: var(--crema-suave);
 }
 .reporte td:first-child {
-  color: var(--marfil);
+  color: var(--crema);
 }
 .reporte .voces p {
   font-size: 0.8rem;
   font-style: italic;
   font-weight: 300;
-  color: var(--marfil);
+  color: var(--crema);
   margin: 6px 0;
   line-height: 1.35;
 }
@@ -851,8 +892,8 @@ body.archivo-abierto .muro { display: none; }
   left: 50%;
   top: 96px;
   transform: translateX(-50%);
-  background: rgba(11, 14, 20, 0.85);
-  border: 1px solid rgba(201, 162, 39, 0.35);
+  background: rgba(27, 25, 22, 0.85);
+  border: 1px solid rgba(111, 168, 158, 0.35);
   padding: 8px;
 }
 #aviso-estatico {
@@ -861,7 +902,7 @@ body.archivo-abierto .muro { display: none; }
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.75rem;
-  color: var(--marfil-suave);
+  color: var(--crema-suave);
   margin: 0;
 }
 

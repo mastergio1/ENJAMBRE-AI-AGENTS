@@ -15,8 +15,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.setSize(window.innerWidth, window.innerHeight)
 
 const escena = new THREE.Scene()
-escena.background = new THREE.Color('#0b0e14')
-escena.fog = new THREE.FogExp2('#0b0e14', 0.022)
+escena.background = new THREE.Color('#1b1916')
+escena.fog = new THREE.FogExp2('#1b1916', 0.022)
 
 const camara = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120)
 camara.position.set(0, 7, 30)

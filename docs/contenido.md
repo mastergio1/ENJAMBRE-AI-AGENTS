@@ -91,6 +91,19 @@ en `html_preview`). Con `--enviar` manda de verdad.
   están ven la versión con CTA). Embeber:
   `<iframe src="https://<web>/widget.html?modo=hoy" width="480" height="360"></iframe>`
 
+## El modo observatorio (el enjambre sigue vivo)
+
+Además de la simulación acotada, la web tiene un **modo observatorio**: el
+botón "🔭 Dejar corriendo" abre una sesión donde el enjambre **no se
+detiene** — sigue latiendo indefinidamente, la noticia se desvanece sola
+hacia la calma, y puedes **soltar más noticias encima** (el input pasa a
+"Soltar noticia encima"). Cada noticia nueva gasta las ~100 llamadas LLM y
+va bajo el tope diario; los latidos son casi gratis (sin IA). Guardas:
+máximo 2 observatorios simultáneos y auto-cierre a los ~8 minutos por
+sesión (protegen la CPU). Protocolo WS: `{"tipo":"observatorio"}` para
+arrancar, `{"tipo":"noticia","titular":...}` para soltar encima,
+`{"tipo":"detener"}` para cerrar.
+
 ## La capa de contenido está completa (etapas 6-10)
 
 Falta solo el deploy y las claves (Alpaca, Barchart, Resend) — todo del

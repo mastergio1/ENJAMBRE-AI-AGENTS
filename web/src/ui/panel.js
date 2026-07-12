@@ -7,7 +7,7 @@ import { ESCENARIOS } from '../swarm/escenario.js'
 const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (valor) => String(valor ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
 
-export function crearPanel(alEnviarTitular) {
+export function crearPanel(alEnviarTitular, alObservatorio) {
   const raiz = document.getElementById('ui')
 
   raiz.innerHTML = `
@@ -28,10 +28,11 @@ export function crearPanel(alEnviarTitular) {
       <form id="form-noticia">
         <input id="campo-titular" type="text" autocomplete="off"
           placeholder="Escribe un titular… ej: la Fed sube las tasas 50 puntos base" />
-        <button type="submit">Soltar al enjambre</button>
+        <button type="submit" id="btn-soltar">Soltar al enjambre</button>
       </form>
       <div class="chips">
         ${ESCENARIOS.map((e, i) => `<button class="chip" data-i="${i}">${e.etiqueta}</button>`).join('')}
+        <button class="chip" id="btn-observatorio">🔭 Dejar corriendo</button>
       </div>
       <p class="descargo">Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.</p>
     </div>
@@ -46,13 +47,16 @@ export function crearPanel(alEnviarTitular) {
     evento.preventDefault()
     if (campo.value.trim()) alEnviarTitular(campo.value.trim())
   })
-  raiz.querySelectorAll('.chip').forEach((chip) => {
+  raiz.querySelectorAll('.chip[data-i]').forEach((chip) => {
     chip.addEventListener('click', () => {
       const escenario = ESCENARIOS[Number(chip.dataset.i)]
       campo.value = escenario.titular
       alEnviarTitular(escenario.titular)
     })
   })
+  const btnObs = raiz.querySelector('#btn-observatorio')
+  const btnSoltar = raiz.querySelector('#btn-soltar')
+  btnObs.addEventListener('click', () => alObservatorio?.(campo.value.trim()))
 
   const tooltip = raiz.querySelector('#tooltip')
   const precioEl = raiz.querySelector('#hud-precio')
@@ -61,6 +65,11 @@ export function crearPanel(alEnviarTitular) {
   const ctx = lienzo.getContext('2d')
 
   return {
+    fijarModoObservatorio(activo) {
+      btnObs.textContent = activo ? '⏹ Detener observatorio' : '🔭 Dejar corriendo'
+      btnObs.classList.toggle('activo', activo)
+      btnSoltar.textContent = activo ? 'Soltar noticia encima' : 'Soltar al enjambre'
+    },
     mostrarTooltip(lider, x, y) {
       tooltip.innerHTML = `<strong>${lider.nombre}</strong>${
         lider.frase ? `<em>«${lider.frase}»</em>` : '<em>aún no opina</em>'

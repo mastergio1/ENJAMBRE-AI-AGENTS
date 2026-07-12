@@ -38,10 +38,16 @@ let motor = urlMotor ? new MotorRemoto(urlMotor) : null
 let modo = 'demo local'
 
 let muroCtl = { recargar: async () => {}, detenerReplay: () => {} }
+let observatorio = null // el mando cuando el enjambre está "dejado corriendo"
 
 async function soltarTitular(titular, titularId = null) {
   if (reducirMovimiento) {
     correrEstatico(titular)
+    return
+  }
+  // si el observatorio está activo, la noticia se suelta ENCIMA (no reinicia)
+  if (observatorio) {
+    if (titular) observatorio.soltarNoticia(titular)
     return
   }
   muroCtl.detenerReplay() // la portada cede el escenario a la simulación en vivo
@@ -68,7 +74,43 @@ async function soltarTitular(titular, titularId = null) {
   enjambre.aplicarTitular(titular, reloj.getElapsedTime())
 }
 
-const panel = crearPanel(soltarTitular)
+// Modo observatorio: el enjambre sigue vivo y recibe noticias encima
+async function alternarObservatorio(titular) {
+  if (observatorio) {
+    observatorio.detener()
+    observatorio = null
+    enjambre.modoRemoto = false
+    modo = 'demo local'
+    panel.fijarModoObservatorio(false)
+    return
+  }
+  if (reducirMovimiento || !motor) {
+    panel.avisar('El modo observatorio necesita el motor en vivo.')
+    return
+  }
+  try {
+    muroCtl.detenerReplay()
+    observatorio = await motor.observatorio(titular, {
+      alInicio: (m) => enjambre.fijarLideresRemotos(m.lideres),
+      alTick: (precio, _t, sent) => enjambre.aplicarEstadoRemoto(precio, sent),
+      alLimite: (m) => panel.avisar(m),
+      alFin: () => {
+        observatorio = null
+        enjambre.modoRemoto = false
+        panel.fijarModoObservatorio(false)
+        panel.avisar('El observatorio descansó. Puedes reabrirlo cuando quieras.')
+      },
+    })
+    enjambre.modoRemoto = true
+    modo = 'observatorio'
+    panel.fijarModoObservatorio(true)
+  } catch {
+    observatorio = null
+    panel.avisar('No se pudo abrir el observatorio.')
+  }
+}
+
+const panel = crearPanel(soltarTitular, alternarObservatorio)
 
 // ---------- el archivo + enlaces compartibles (?sim=<id>) ----------
 

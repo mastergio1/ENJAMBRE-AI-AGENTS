@@ -57,4 +57,34 @@ export class MotorRemoto {
     }
     this.ws.send(JSON.stringify({ tipo: 'simular', titular, ...extras }))
   }
+
+  /**
+   * Modo observatorio: abre una sesión continua donde el enjambre sigue
+   * vivo. Devuelve un mando con soltarNoticia(titular) y detener().
+   */
+  async observatorio(titular, { alInicio, alTick, alLimite, alFin }) {
+    const ws = await this._conectar()
+    this.wsObs = ws
+    ws.onmessage = (evento) => {
+      if (typeof evento.data === 'string') {
+        const m = JSON.parse(evento.data)
+        if (m.tipo === 'inicio') alInicio?.(m)
+        else if (m.tipo === 'limite') alLimite?.(m.mensaje)
+        else if (m.tipo === 'observatorio-fin') alFin?.()
+      } else {
+        const v = new DataView(evento.data)
+        alTick(v.getFloat32(0, true), v.getUint32(4, true), new Int8Array(evento.data, 8))
+      }
+    }
+    ws.send(JSON.stringify({ tipo: 'observatorio', titular }))
+    return {
+      soltarNoticia(t) {
+        if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'noticia', titular: t }))
+      },
+      detener() {
+        if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'detener' }))
+        try { ws.close() } catch { /* ya cerrado */ }
+      },
+    }
+  }
 }

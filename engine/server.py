@@ -13,6 +13,7 @@ solo necesita saber cuánto pánico o codicia siente cada partícula.
 """
 
 import asyncio
+import contextlib as _contextlib
 import json
 import struct
 from collections import defaultdict
@@ -67,6 +68,10 @@ app.add_middleware(
 import asyncio as _asyncio  # noqa: E402
 
 _semaforo_sim = _asyncio.Semaphore(MAX_SIM_CONCURRENTES)
+
+MAX_OBSERVATORIOS = 2       # sesiones "en vivo" simultáneas (protege CPU)
+MAX_TICKS_OBS = 6000        # tope de latidos por sesión (~8 min); luego se cierra
+_semaforo_obs = _asyncio.Semaphore(MAX_OBSERVATORIOS)
 
 
 @app.middleware("http")
@@ -124,7 +129,26 @@ async def canal(ws: WebSocket) -> None:
             except (ValueError, TypeError):
                 await ws.send_text(_responder(ws, tipo="error", mensaje="formato inválido"))
                 continue
-            if not isinstance(mensaje, dict) or mensaje.get("tipo") != "simular":
+            if not isinstance(mensaje, dict):
+                continue
+            tipo = mensaje.get("tipo")
+
+            # modo observatorio: el enjambre sigue vivo y recibe noticias encima
+            if tipo == "observatorio":
+                try:
+                    await _asyncio.wait_for(_semaforo_obs.acquire(), timeout=0.01)
+                except _asyncio.TimeoutError:
+                    await ws.send_text(_responder(
+                        ws, tipo="ocupado",
+                        mensaje="El observatorio está lleno ahora mismo. Intenta en unos minutos."))
+                    continue
+                try:
+                    await _correr_observatorio(ws, mensaje, ip)
+                finally:
+                    _semaforo_obs.release()
+                continue
+
+            if tipo != "simular":
                 continue
 
             # tope de simulaciones pesadas simultáneas (antes de gastar cupo)
@@ -153,6 +177,94 @@ async def canal(ws: WebSocket) -> None:
             await ws.close()
         except Exception:
             pass
+
+
+# ---------- el modo observatorio (el enjambre sigue vivo) ----------
+
+async def _leer_titular_en_vivo(modelo, lideres, titular, candado) -> list[dict]:
+    """Los líderes leen una noticia y se inyecta al modelo EN VIVO (sin
+    frenar el latido). El candado evita chocar con el step en curso."""
+    consultas = [(lider.unique_id, lider.arquetipo) for lider in lideres]
+    respuestas = await analizar_titular_async(titular, consultas)  # lento: sin candado
+    async with candado:
+        await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas)
+    return respuestas
+
+
+async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
+    """El enjambre late indefinidamente; el usuario suelta noticias encima.
+    El costo LLM ocurre SOLO al leer un titular (bajo el tope diario); los
+    latidos son casi gratis."""
+    try:
+        semilla = int(mensaje.get("seed", 42)) % 2_147_483_647
+    except (TypeError, ValueError):
+        semilla = 42
+    ritmo = 0.08
+    try:
+        ritmo = max(0.04, float(mensaje.get("ritmo", 0.08)))
+    except (TypeError, ValueError):
+        pass
+
+    modelo = await asyncio.to_thread(_crear_mercado, semilla)
+    lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
+    candado = _asyncio.Lock()
+    detener = _asyncio.Event()
+
+    await ws.send_text(_responder(ws, tipo="observatorio-inicio",
+                                  precio=modelo.historial_precios[-1]))
+
+    async def latir() -> None:
+        latidos = 0
+        while not detener.is_set() and latidos < MAX_TICKS_OBS:
+            async with candado:
+                await asyncio.to_thread(modelo.step)
+            await ws.send_bytes(_paquete_tick(modelo))
+            await asyncio.sleep(ritmo)
+            latidos += 1
+        detener.set()
+
+    async def _inyectar(titular: str) -> None:
+        # cada noticia gasta ~100 llamadas LLM → bajo el tope diario
+        permitido, motivo = limites.permitir(ip)
+        if not permitido:
+            await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
+            return
+        respuestas = await _leer_titular_en_vivo(modelo, lideres, titular, candado)
+        await ws.send_text(json.dumps({
+            "tipo": "inicio", "titular": titular,
+            "lideres": [{"arquetipo": l.arquetipo, **{k: r[k] for k in ("senal", "confianza", "frase", "fuente")}}
+                        for l, r in zip(lideres, respuestas)],
+        }, ensure_ascii=False))
+
+    async def escuchar() -> None:
+        # noticia inicial (opcional): la que traía el mensaje de arranque
+        inicial = str(mensaje.get("titular", "")).strip()[:300]
+        if inicial:
+            await _inyectar(inicial)
+        while not detener.is_set():
+            texto = await ws.receive_text()
+            if len(texto) > MAX_MENSAJE_WS:
+                continue
+            try:
+                dato = json.loads(texto)
+            except (ValueError, TypeError):
+                continue
+            tipo = dato.get("tipo") if isinstance(dato, dict) else None
+            if tipo == "detener":
+                detener.set()
+            elif tipo == "noticia":
+                titular = str(dato.get("titular", "")).strip()[:300]
+                if titular:
+                    await _inyectar(titular)
+
+    try:
+        await _asyncio.gather(latir(), escuchar())
+    except WebSocketDisconnect:
+        detener.set()
+    finally:
+        detener.set()
+        with _contextlib.suppress(Exception):
+            await ws.send_text(_responder(ws, tipo="observatorio-fin"))
 
 
 # ---------- la simulación transmitida ----------

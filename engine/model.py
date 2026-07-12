@@ -49,6 +49,8 @@ CAPITAL_BASE = 10_000.0  # capital de un agente retail 1x
 
 
 class MercadoEnjambre(mesa.Model):
+    MAX_HISTORIAL = 600  # cola de precios/retornos en sesiones largas
+
     def __init__(
         self,
         seed: int | None = None,
@@ -178,6 +180,14 @@ class MercadoEnjambre(mesa.Model):
         self.flujo_compras.append(self.libro.volumen_compras_tick)
         self.flujo_ventas.append(self.libro.volumen_ventas_tick)
         self.sentimiento *= 0.95  # la noticia pierde fuerza cada tick
+        # en sesiones largas (modo observatorio) las listas no crecen sin fin:
+        # los agentes solo miran ventanas cortas, así que basta la cola reciente
+        if len(self.historial_precios) > self.MAX_HISTORIAL:
+            recorte = len(self.historial_precios) - self.MAX_HISTORIAL
+            del self.historial_precios[:recorte]
+            del self.retornos[:recorte]
+            del self.flujo_compras[:recorte]
+            del self.flujo_ventas[:recorte]
 
     def correr(self, ticks: int) -> None:
         for _ in range(ticks):

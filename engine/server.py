@@ -46,6 +46,12 @@ ORIGENES = [o.strip() for o in _origenes_env.split(",") if o.strip()] or [
     "http://localhost:5173",
     "http://localhost:4173",
 ]
+# lista blanca del widget: los medios donde se puede embeber (sección 9).
+# Un dominio fuera de lista no obtiene los datos (CORS) → el widget muestra
+# la versión con CTA "Consigue el widget para tu medio".
+_widget_env = os.environ.get("ENJAMBRE_WIDGET_DOMINIOS", "").strip()
+DOMINIOS_WIDGET = [d.strip() for d in _widget_env.split(",") if d.strip()]
+ORIGENES = ORIGENES + DOMINIOS_WIDGET
 
 app = FastAPI(title="El Enjambre", version="0.7.0")
 app.add_middleware(
@@ -95,7 +101,7 @@ NOMBRES_TIPO = {
 
 @app.get("/salud")
 def salud() -> dict:
-    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 9, "redaccion": True}
+    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 10, "redaccion": True}
 
 
 def _responder(ws: WebSocket, **campos) -> str:
@@ -372,18 +378,15 @@ def muro(respuesta: Response) -> dict:
     return {"tarjetas": tarjetas, "descargo": DISCLAIMER}
 
 
-@app.get("/api/simulacion/{sim_id}")
-def simulacion(sim_id: str, respuesta: Response) -> dict:
-    if not seguridad.sim_id_valido(sim_id):
-        return Response(status_code=404)  # type: ignore[return-value]
+def _payload_simulacion(sim_id: str) -> dict | None:
+    """Los datos de una simulación para la UI (o None si no existe)."""
     conexion = persistencia.conectar()
     try:
         datos = persistencia.obtener_simulacion(conexion, sim_id)
     finally:
         conexion.close()
     if datos is None:
-        return Response(status_code=404)  # type: ignore[return-value]
-    respuesta.headers["Cache-Control"] = "public, max-age=300"
+        return None
     return {
         "id": datos["id"],
         "titular": datos["titular"],
@@ -398,6 +401,29 @@ def simulacion(sim_id: str, respuesta: Response) -> dict:
         "epilogo": datos.get("epilogo"),
         "tiene_replay": persistencia.leer_frames(sim_id) is not None,
     }
+
+
+@app.get("/api/simulacion/{sim_id}")
+def simulacion(sim_id: str, respuesta: Response) -> dict:
+    if not seguridad.sim_id_valido(sim_id):
+        return Response(status_code=404)  # type: ignore[return-value]
+    datos = _payload_simulacion(sim_id)
+    if datos is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    respuesta.headers["Cache-Control"] = "public, max-age=300"
+    return datos
+
+
+@app.get("/api/duelo/{id_a}/{id_b}")
+def duelo(id_a: str, id_b: str, respuesta: Response) -> dict:
+    """Los dos resúmenes de un duelo de escenarios (CONTENIDO.md sección 8)."""
+    if not (seguridad.sim_id_valido(id_a) and seguridad.sim_id_valido(id_b)):
+        return Response(status_code=404)  # type: ignore[return-value]
+    a, b = _payload_simulacion(id_a), _payload_simulacion(id_b)
+    if a is None or b is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    respuesta.headers["Cache-Control"] = "public, max-age=300"
+    return {"a": a, "b": b, "descargo": DISCLAIMER}
 
 
 def _voces_por_arquetipo(lideres: list[dict]) -> list[dict]:

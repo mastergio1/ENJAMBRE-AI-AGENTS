@@ -3,7 +3,10 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/archivo", "destination": "/" }],
+  "rewrites": [
+    { "source": "/archivo", "destination": "/" },
+    { "source": "/duelo/(.*)", "destination": "/" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

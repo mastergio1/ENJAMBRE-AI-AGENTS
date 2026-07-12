@@ -3,6 +3,7 @@
 
 import * as THREE from 'three'
 import { abrirArchivo } from './archivo/archivo.js'
+import { abrirDuelo } from './duelo/duelo.js'
 import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
 import { Enjambre } from './swarm/enjambre.js'
 import { MotorRemoto, urlApi } from './ui/conexion.js'
@@ -100,6 +101,21 @@ async function mostrarArchivo() {
       control?.cerrar()          // la hemeroteca cede el paso al reporte
       abrirSimulacion(id)
     },
+    alDuelo: (idA, idB) => {
+      control?.cerrar()
+      mostrarDuelo(idA, idB)
+    },
+    alCerrar: () => history.pushState({}, '', '/'),
+  })
+}
+
+async function mostrarDuelo(idA, idB) {
+  if (!/^[0-9a-f]{16}$/.test(idA) || !/^[0-9a-f]{16}$/.test(idB)) return
+  muroCtl.detenerReplay()
+  reproductorArchivo.detener()
+  history.pushState({}, '', `/duelo/${idA}-vs-${idB}`)
+  await abrirDuelo({
+    idA, idB, reducirMovimiento,
     alCerrar: () => history.pushState({}, '', '/'),
   })
 }
@@ -116,10 +132,13 @@ inicializarMuro({
   .then((control) => { muroCtl = control })
   .catch(() => {})
 
-// enrutamiento inicial: enlace compartible o la hemeroteca
+// enrutamiento inicial: enlace compartible, duelo o la hemeroteca
 const paramsIniciales = new URLSearchParams(location.search)
+const dueloRuta = location.pathname.match(/^\/duelo\/([0-9a-f]{16})-vs-([0-9a-f]{16})/)
 if (paramsIniciales.get('sim')) {
   abrirSimulacion(paramsIniciales.get('sim'))
+} else if (dueloRuta) {
+  mostrarDuelo(dueloRuta[1], dueloRuta[2])
 } else if (location.pathname.startsWith('/archivo')) {
   mostrarArchivo()
 }

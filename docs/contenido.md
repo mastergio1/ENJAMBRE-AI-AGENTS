@@ -3,7 +3,7 @@
 > Para Giorgio. Qué existe de la capa de contenido, cómo se opera y qué
 > falta. Se actualiza al cierre de cada etapa (6-10 de `CONTENIDO.md`).
 
-## Qué existe hoy (Etapas 6, 7, 8 y 9 completadas)
+## Qué existe hoy (Etapas 6-10 completadas)
 
 | Pieza | Qué hace |
 |---|---|
@@ -78,7 +78,21 @@ montado en `/app/datos` para que la base sobreviva a los reinicios.
 Probar sin enviar: `python -m contenido.pipeline` (arma el correo y lo deja
 en `html_preview`). Con `--enviar` manda de verdad.
 
-## Qué sigue (en orden)
+## El duelo y el widget (Etapa 10)
 
-- **Etapa 10 — Duelo + widget** (el comparador con export vertical + el
-  build embebible para medios).
+- **El duelo** (`web/src/duelo/`): dos escenarios enfrentados, dos enjambres
+  sincronizados tick a tick, curvas de precio superpuestas, y "Exportar
+  Reel" (video vertical 9:16 con MediaRecorder). Se arma desde el archivo
+  (modo ⚔ Duelo → eliges dos). URL propia `/duelo/<idA>-vs-<idB>`.
+- **El widget** (`web/src/widget/`, build separado `widget.html`): iframe
+  minimal del enjambre del día (`?modo=hoy`) o uno fijo (`?sim=<id>`), con
+  firma, link y disclaimer CMF siempre visible. Solo lee caché, nunca
+  simula. Lista blanca de dominios: `ENJAMBRE_WIDGET_DOMINIOS` (los que no
+  están ven la versión con CTA). Embeber:
+  `<iframe src="https://<web>/widget.html?modo=hoy" width="480" height="360"></iframe>`
+
+## La capa de contenido está completa (etapas 6-10)
+
+Falta solo el deploy y las claves (Alpaca, Barchart, Resend) — todo del
+lado de Giorgio. El Reel del duelo conviene verificarlo en un dispositivo
+real (la grabación con MediaRecorder no se certifica headless).

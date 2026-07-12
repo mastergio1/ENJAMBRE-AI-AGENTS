@@ -38,13 +38,15 @@ function tarjetaArchivo(item) {
  * Monta la hemeroteca como overlay. `alAbrirSim(id)` la cierra y abre esa
  * simulación. Devuelve { cerrar }.
  */
-export async function abrirArchivo({ alAbrirSim, alCerrar }) {
+export async function abrirArchivo({ alAbrirSim, alDuelo, alCerrar }) {
   const api = urlApi()
   const capa = document.getElementById('archivo')
   capa.hidden = false
   document.body.classList.add('archivo-abierto')
 
   const estado = { mes: '', q: '', ticker: '', pagina: 0 }
+  let modoDuelo = false
+  const elegidos = []  // ids seleccionados para el duelo (máx 2)
 
   function cerrar() {
     capa.hidden = true
@@ -105,8 +107,36 @@ export async function abrirArchivo({ alAbrirSim, alCerrar }) {
       a.addEventListener('click', (e) => {
         e.preventDefault()
         const id = idSeguro(new URL(a.href).searchParams.get('sim'))
-        alAbrirSim(id)
+        if (modoDuelo) alternarEleccion(id, a)
+        else alAbrirSim(id)
       }))
+    capa.querySelector('.arch-duelo-btn')?.addEventListener('click', () => {
+      modoDuelo = !modoDuelo
+      elegidos.length = 0
+      capa.querySelector('.arch-panel').classList.toggle('en-duelo', modoDuelo)
+      pintarBarraDuelo()
+    })
+    capa.querySelector('.arch-duelo-ir')?.addEventListener('click', () => {
+      if (elegidos.length === 2 && alDuelo) alDuelo(elegidos[0], elegidos[1])
+    })
+  }
+
+  function alternarEleccion(id, nodo) {
+    const i = elegidos.indexOf(id)
+    if (i >= 0) { elegidos.splice(i, 1); nodo.classList.remove('elegido') }
+    else if (elegidos.length < 2) { elegidos.push(id); nodo.classList.add('elegido') }
+    pintarBarraDuelo()
+  }
+
+  function pintarBarraDuelo() {
+    const barra = capa.querySelector('.arch-duelo-barra')
+    if (!barra) return
+    barra.hidden = !modoDuelo
+    const ir = capa.querySelector('.arch-duelo-ir')
+    if (ir) ir.disabled = elegidos.length !== 2
+    const info = capa.querySelector('.arch-duelo-info')
+    if (info) info.textContent = modoDuelo
+      ? `Elige dos simulaciones para enfrentarlas (${elegidos.length}/2)` : ''
   }
 
   async function recargar() {
@@ -123,6 +153,11 @@ export async function abrirArchivo({ alAbrirSim, alCerrar }) {
       <div class="arch-filtros">
         <input class="arch-buscar" type="search" placeholder="Buscar en los titulares…" />
         <input class="arch-ticker" type="text" placeholder="Ticker (ej: SPY)" />
+        <button class="arch-duelo-btn accion">⚔ Duelo</button>
+      </div>
+      <div class="arch-duelo-barra" hidden>
+        <span class="arch-duelo-info"></span>
+        <button class="arch-duelo-ir accion" disabled>Ver el duelo →</button>
       </div>
       <div class="arch-meses"></div>
       <div class="arch-lista"></div>

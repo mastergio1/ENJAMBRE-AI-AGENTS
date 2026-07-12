@@ -79,6 +79,7 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
         for tabla, columna, tipo in [
             ("titulares", "impacto", "INTEGER DEFAULT 0"),
             ("suscriptores", "token_confirma", "TEXT"),
+            ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
         ]:
             try:
                 conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
@@ -128,6 +129,7 @@ def obtener_simulacion(conexion, sim_id: str) -> dict | None:
     datos["resumen"] = json.loads(datos.pop("resumen_json"))
     datos["lideres"] = json.loads(datos.pop("lideres_json"))
     datos["serie_precios"] = json.loads(datos["serie_precios"])
+    datos["epilogo"] = datos.get("epilogo")  # puede no existir en bases viejas
     return datos
 
 
@@ -150,6 +152,57 @@ def listar_simulaciones(conexion, mes: str | None = None, limite: int = 50, solo
 def marcar_destacada(conexion, sim_id: str) -> None:
     conexion.execute("UPDATE simulaciones SET destacada = 1 WHERE id = ?", (sim_id,))
     conexion.commit()
+
+
+# ---------- el archivo / hemeroteca (Etapa 9) ----------
+
+def archivo(conexion, *, mes: str | None = None, texto: str | None = None,
+            ticker: str | None = None, pagina: int = 0, por_pagina: int = 12) -> dict:
+    """La hemeroteca: destacadas navegables por mes, buscables por texto del
+    titular y filtrables por ticker. Devuelve {total, pagina, por_pagina, items}."""
+    condiciones = ["s.destacada = 1"]
+    parametros: list = []
+    if mes:
+        condiciones.append("s.fecha LIKE ?")
+        parametros.append(f"{mes}%")
+    if texto:
+        condiciones.append("s.titular LIKE ? COLLATE NOCASE")
+        parametros.append(f"%{texto}%")
+    if ticker:
+        condiciones.append("t.simbolos LIKE ? COLLATE NOCASE")
+        parametros.append(f"%{ticker}%")
+    donde = " AND ".join(condiciones)
+
+    base = f"FROM simulaciones s LEFT JOIN titulares t ON t.sim_id = s.id WHERE {donde}"
+    total = conexion.execute(f"SELECT COUNT(*) {base}", parametros).fetchone()[0]
+
+    pagina = max(0, pagina)
+    filas = conexion.execute(
+        f"""SELECT s.id, s.titular, s.fuente, s.fecha, s.resumen_json,
+                   t.simbolos, (s.epilogo IS NOT NULL AND s.epilogo != '') AS tiene_epilogo
+            {base} ORDER BY s.fecha DESC LIMIT ? OFFSET ?""",
+        (*parametros, por_pagina, pagina * por_pagina),
+    ).fetchall()
+    return {"total": total, "pagina": pagina, "por_pagina": por_pagina,
+            "items": [dict(f) for f in filas]}
+
+
+def meses_disponibles(conexion) -> list[str]:
+    """Los meses (AAAA-MM) que tienen al menos una destacada, más recientes primero."""
+    filas = conexion.execute(
+        "SELECT DISTINCT substr(fecha, 1, 7) AS mes FROM simulaciones "
+        "WHERE destacada = 1 ORDER BY mes DESC"
+    ).fetchall()
+    return [f["mes"] for f in filas]
+
+
+def guardar_epilogo(conexion, sim_id: str, texto: str) -> bool:
+    """El '¿y qué pasó después?' que Giorgio completa. True si la sim existe."""
+    cursor = conexion.execute(
+        "UPDATE simulaciones SET epilogo = ? WHERE id = ?", (texto.strip() or None, sim_id)
+    )
+    conexion.commit()
+    return cursor.rowcount > 0
 
 
 # ---------- titulares (el log del portero) ----------

@@ -2,9 +2,10 @@
 // Un solo loop, tres draw calls, gobernador de fps para móvil.
 
 import * as THREE from 'three'
-import { inicializarMuro } from './muro/muro.js'
+import { abrirArchivo } from './archivo/archivo.js'
+import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
 import { Enjambre } from './swarm/enjambre.js'
-import { MotorRemoto } from './ui/conexion.js'
+import { MotorRemoto, urlApi } from './ui/conexion.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
 
 const canvas = document.getElementById('escena')
@@ -68,6 +69,41 @@ async function soltarTitular(titular, titularId = null) {
 
 const panel = crearPanel(soltarTitular)
 
+// ---------- el archivo + enlaces compartibles (?sim=<id>) ----------
+
+const reproductorArchivo = new ReproductorReplay(enjambre)
+
+/** Abre una simulación guardada: replay + reporte con las 8 voces y epílogo. */
+async function abrirSimulacion(id) {
+  const api = urlApi()
+  if (!api || !/^[0-9a-f]{16}$/.test(id)) return
+  muroCtl.detenerReplay()
+  reproductorArchivo.detener()
+  try {
+    const d = await (await fetch(`${api}/api/simulacion/${id}`)).json()
+    enjambre.fijarLideresRemotos(d.lideres || [])
+    panel.mostrarReporte(d.resumen, { voces: d.voces, epilogo: d.epilogo, titular: d.titular, id: d.id })
+    history.replaceState({}, '', `?sim=${id}`)
+    if (d.tiene_replay && !reducirMovimiento) {
+      await reproductorArchivo.cargar(`${api}/api/simulacion/${id}/replay`)
+      reproductorArchivo.reproducir({})
+    }
+  } catch {
+    panel.avisar('No se pudo cargar esa simulación.')
+  }
+}
+
+async function mostrarArchivo() {
+  history.pushState({}, '', '/archivo')
+  const control = await abrirArchivo({
+    alAbrirSim: (id) => {
+      control?.cerrar()          // la hemeroteca cede el paso al reporte
+      abrirSimulacion(id)
+    },
+    alCerrar: () => history.pushState({}, '', '/'),
+  })
+}
+
 // el muro de noticias: la nueva portada (carga en paralelo, nunca bloquea)
 inicializarMuro({
   enjambre,
@@ -75,9 +111,18 @@ inicializarMuro({
   correrTitular: soltarTitular,
   reducirMovimiento,
   fijarModo: (nuevo) => { modo = nuevo },
+  abrirArchivo: mostrarArchivo,
 })
   .then((control) => { muroCtl = control })
   .catch(() => {})
+
+// enrutamiento inicial: enlace compartible o la hemeroteca
+const paramsIniciales = new URLSearchParams(location.search)
+if (paramsIniciales.get('sim')) {
+  abrirSimulacion(paramsIniciales.get('sim'))
+} else if (location.pathname.startsWith('/archivo')) {
+  mostrarArchivo()
+}
 
 // parallax sutil con el puntero (vectores reutilizados, nada nuevo por frame)
 const punteroMeta = new THREE.Vector2()

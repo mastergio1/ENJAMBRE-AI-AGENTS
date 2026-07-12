@@ -99,7 +99,7 @@ function plantillaTarjeta(tarjeta) {
  * Monta el muro. Devuelve {recargar, detenerReplay} para coordinarse
  * con las simulaciones en vivo que dispara main.js.
  */
-export async function inicializarMuro({ enjambre, panel, correrTitular, reducirMovimiento, fijarModo }) {
+export async function inicializarMuro({ enjambre, panel, correrTitular, reducirMovimiento, fijarModo, abrirArchivo }) {
   const api = urlApi()
   const contenedor = document.getElementById('muro')
   const replay = new ReproductorReplay(enjambre)
@@ -129,6 +129,7 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
         <h1>El Enjambre</h1>
         <p>el focus group sintético del mercado</p>
         <time>${fecha}</time>
+        <button class="ver-archivo">El archivo · «El Enjambre dijo» →</button>
       </header>
       <div class="muro-lista">${tarjetas.map(plantillaTarjeta).join('')}</div>
       ${datos.tarjetas.length > visibles
@@ -172,6 +173,7 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
 
   function conectarEventos(datos) {
     conectarPulso()
+    contenedor.querySelector('.ver-archivo')?.addEventListener('click', () => abrirArchivo?.())
     contenedor.querySelector('.plegar')?.addEventListener('click', () => {
       document.body.classList.toggle('muro-plegado')
       contenedor.querySelector('.plegar').textContent =

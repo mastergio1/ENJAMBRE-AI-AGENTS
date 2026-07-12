@@ -95,7 +95,7 @@ NOMBRES_TIPO = {
 
 @app.get("/salud")
 def salud() -> dict:
-    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 8}
+    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 9}
 
 
 def _responder(ws: WebSocket, **campos) -> str:
@@ -393,9 +393,29 @@ def simulacion(sim_id: str, respuesta: Response) -> dict:
         "resumen": datos["resumen"],
         "tarjeta": _resumen_tarjeta(datos["resumen"]),
         "lideres": datos["lideres"],
+        "voces": _voces_por_arquetipo(datos["lideres"]),
         "serie_precios": datos["serie_precios"],
+        "epilogo": datos.get("epilogo"),
         "tiene_replay": persistencia.leer_frames(sim_id) is not None,
     }
+
+
+def _voces_por_arquetipo(lideres: list[dict]) -> list[dict]:
+    """Las 8 voces del reporte: por arquetipo, señal media + la mejor frase."""
+    grupos: dict[str, list[dict]] = defaultdict(list)
+    for lider in lideres:
+        grupos[lider["arquetipo"]].append(lider)
+    voces = []
+    for arquetipo, miembros in grupos.items():
+        senal_media = sum(m["senal"] for m in miembros) / len(miembros)
+        mejor = max(miembros, key=lambda m: abs(m["senal"]))
+        voces.append({
+            "arquetipo": arquetipo,
+            "nombre": POR_ID.get(arquetipo, {}).get("nombre", arquetipo),
+            "senal_media": round(senal_media, 2),
+            "frase": mejor["frase"],
+        })
+    return sorted(voces, key=lambda v: v["senal_media"])
 
 
 @app.get("/api/simulacion/{sim_id}/imagen")
@@ -574,3 +594,71 @@ def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(de
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     tareas.add_task(_correr_ritual)
     return {"estado": "iniciado"}
+
+
+# ---------- El Archivo / hemeroteca (Etapa 9) ----------
+
+@app.get("/api/archivo")
+def api_archivo(respuesta: Response, mes: str = "", q: str = "", ticker: str = "", pagina: int = 0) -> dict:
+    """La hemeroteca: destacadas navegables por mes, buscables por titular
+    y filtrables por ticker. Paginado."""
+    respuesta.headers["Cache-Control"] = "public, max-age=120"
+    mes = mes.strip()[:7] or None
+    texto = q.strip()[:80] or None
+    tick = ticker.strip()[:12] or None
+    try:
+        pagina = max(0, int(pagina))
+    except (TypeError, ValueError):
+        pagina = 0
+
+    conexion = persistencia.conectar()
+    try:
+        datos = persistencia.archivo(conexion, mes=mes, texto=texto, ticker=tick, pagina=pagina)
+        meses = persistencia.meses_disponibles(conexion)
+    finally:
+        conexion.close()
+
+    items = []
+    for fila in datos["items"]:
+        resumen = json.loads(fila["resumen_json"]) if fila["resumen_json"] else {}
+        items.append({
+            "id": fila["id"],
+            "titular": fila["titular"],
+            "fuente": fila["fuente"],
+            "fecha": fila["fecha"],
+            "simbolos": fila["simbolos"],
+            "tarjeta": _resumen_tarjeta(resumen),
+            "tiene_epilogo": bool(fila["tiene_epilogo"]),
+        })
+    return {"total": datos["total"], "pagina": datos["pagina"], "por_pagina": datos["por_pagina"],
+            "meses": meses, "items": items, "descargo": DISCLAIMER}
+
+
+class PeticionEpilogo(BaseModel):
+    texto: str
+
+
+@app.post("/api/epilogo/{sim_id}")
+def api_epilogo(sim_id: str, peticion: PeticionEpilogo, x_pipeline_token: str = Header(default="")) -> dict:
+    """'¿Y qué pasó después?' — solo Giorgio (protegido por el token de admin).
+
+    Se muestra SIEMPRE bajo 'comparación educativa', nunca como acierto ni
+    predicción (vocabulario CMF)."""
+    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
+    if not esperado or x_pipeline_token != esperado:
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not seguridad.sim_id_valido(sim_id):
+        return Response(status_code=404)  # type: ignore[return-value]
+    from contenido.vocabulario import es_publicable
+
+    texto = peticion.texto.strip()[:600]
+    if texto and not es_publicable(texto):
+        return JSONResponse({"error": "el texto usa vocabulario no permitido (CMF)"}, status_code=400)
+    conexion = persistencia.conectar()
+    try:
+        ok = persistencia.guardar_epilogo(conexion, sim_id, texto)
+    finally:
+        conexion.close()
+    if not ok:
+        return Response(status_code=404)  # type: ignore[return-value]
+    return {"estado": "guardado", "epilogo": texto or None}

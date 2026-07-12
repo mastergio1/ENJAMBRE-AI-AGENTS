@@ -432,6 +432,212 @@ body.con-muro .marca {
   }
 }
 
+/* ---------- el archivo / hemeroteca ---------- */
+
+.ver-archivo {
+  display: block;
+  margin-top: 10px;
+  background: none;
+  border: 0;
+  color: var(--dorado);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+.ver-archivo:hover {
+  text-decoration: underline;
+}
+
+.archivo {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(6, 8, 12, 0.96);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+.arch-panel {
+  width: min(760px, 100%);
+  padding: 40px 28px 80px;
+}
+.arch-cab {
+  position: relative;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+}
+.arch-cab h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--dorado);
+  margin: 0;
+}
+.arch-cab p {
+  margin: 4px 0 0;
+  color: var(--marfil-suave);
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+.arch-total {
+  color: var(--dorado);
+}
+.arch-cerrar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  color: var(--dorado);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.arch-filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.arch-filtros input {
+  background: rgba(11, 14, 20, 0.7);
+  border: 1px solid rgba(244, 239, 230, 0.2);
+  color: var(--marfil);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  outline: none;
+}
+.arch-buscar { flex: 1; }
+.arch-ticker { width: 130px; }
+.arch-filtros input:focus { border-color: var(--dorado); }
+.arch-meses {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.arch-chip {
+  background: transparent;
+  border: 1px solid rgba(244, 239, 230, 0.22);
+  color: var(--marfil-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  padding: 5px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.arch-chip.activo {
+  border-color: var(--dorado);
+  color: var(--dorado);
+}
+.arch-item {
+  display: block;
+  text-decoration: none;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.09);
+}
+.arch-item h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--marfil);
+  margin: 4px 0 8px;
+  line-height: 1.2;
+}
+.arch-item:hover h3 { color: var(--dorado); }
+.arch-meta {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.45);
+}
+.arch-epi { color: var(--dorado); }
+.arch-res {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+.arch-vacio {
+  color: var(--marfil-suave);
+  font-weight: 300;
+  padding: 40px 0;
+  text-align: center;
+}
+.arch-pag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  color: var(--marfil-suave);
+  font-size: 0.85rem;
+}
+.arch-pag button {
+  background: none;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  color: var(--dorado);
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+}
+.arch-pag button:disabled { opacity: 0.35; cursor: default; }
+.arch-descargo {
+  margin-top: 28px;
+  font-size: 0.62rem;
+  color: rgba(244, 239, 230, 0.3);
+}
+body.archivo-abierto .muro { display: none; }
+
+/* voces por arquetipo y epílogo en el reporte */
+.voz-arq span { color: var(--dorado); font-style: normal; font-size: 0.72rem; }
+.rep-titular {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  color: var(--marfil);
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+.epilogo {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-left: 2px solid var(--dorado);
+  background: rgba(201, 162, 39, 0.06);
+}
+.epi-rotulo {
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  margin-bottom: 6px;
+}
+.epilogo p {
+  font-size: 0.85rem;
+  color: var(--marfil);
+  line-height: 1.45;
+  margin: 0;
+}
+.rep-compartir {
+  background: none;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  color: var(--dorado);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
 /* ---------- reporte final ---------- */
 
 .reporte {

@@ -84,15 +84,31 @@ export function crearPanel(alEnviarTitular) {
       clearTimeout(aviso._temporizador)
       aviso._temporizador = setTimeout(() => { aviso.hidden = true }, 6000)
     },
-    mostrarReporte(reporte) {
+    mostrarReporte(reporte, extras = {}) {
       const panelReporte = raiz.querySelector('#reporte')
-      const desglose = Object.entries(reporte.desglose).slice(0, 6)
-      // los % son números nuestros; tipos, frases y descargo pueden venir
-      // de datos (LLM/Alpaca) → se escapan antes de ir a innerHTML
+      const desglose = Object.entries(reporte.desglose || {}).slice(0, 6)
       const num = (v) => Number(v) || 0
+
+      // las 8 voces (archivo) o las 3 frases del reporte en vivo
+      const vocesHtml = extras.voces
+        ? extras.voces.map((v) =>
+            `<p class="voz-arq">«${esc(v.frase)}» <span>— ${esc(v.nombre)} (${v.senal_media > 0 ? '+' : ''}${num(v.senal_media)})</span></p>`).join('')
+        : (reporte.frases || []).map((f) => `<p>«${esc(f.frase)}»</p>`).join('')
+
+      const epilogoHtml = extras.epilogo
+        ? `<div class="epilogo"><div class="epi-rotulo">Comparación educativa · ¿y qué pasó después?</div>
+           <p>${esc(extras.epilogo)}</p></div>`
+        : ''
+
+      const cabecera = extras.titular
+        ? `<div class="rep-titular">${esc(extras.titular)}</div>` : ''
+      const compartir = extras.id
+        ? `<button class="rep-compartir" data-id="${String(extras.id).replace(/[^0-9a-f]/g, '')}">Copiar enlace</button>` : ''
+
       panelReporte.innerHTML = `
         <button class="cerrar" aria-label="cerrar">×</button>
         <h2>Reporte del enjambre</h2>
+        ${cabecera}
         <div class="cifras">
           <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
           <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>
@@ -101,12 +117,20 @@ export function crearPanel(alEnviarTitular) {
         <table>${desglose.map(([tipo, d]) =>
           `<tr><td>${esc(tipo)}</td><td>${num(d.compras)} compras</td><td>${num(d.ventas)} ventas</td></tr>`).join('')}
         </table>
-        <div class="voces">${reporte.frases.map((f) => `<p>«${esc(f.frase)}»</p>`).join('')}</div>
+        <div class="voces">${vocesHtml}</div>
+        ${epilogoHtml}
+        ${compartir}
         <p class="descargo">${esc(reporte.descargo)}</p>
       `
       panelReporte.hidden = false
       panelReporte.querySelector('.cerrar').addEventListener('click', () => {
         panelReporte.hidden = true
+      })
+      const botonCompartir = panelReporte.querySelector('.rep-compartir')
+      botonCompartir?.addEventListener('click', () => {
+        const url = `${location.origin}${location.pathname}?sim=${botonCompartir.dataset.id}`
+        navigator.clipboard?.writeText(url)
+        botonCompartir.textContent = '¡Enlace copiado!'
       })
     },
     // sparkline del precio: una serie, línea 2px, sin adornos —

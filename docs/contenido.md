@@ -3,7 +3,7 @@
 > Para Giorgio. Qué existe de la capa de contenido, cómo se opera y qué
 > falta. Se actualiza al cierre de cada etapa (6-10 de `CONTENIDO.md`).
 
-## Qué existe hoy (Etapas 6, 7 y 8 completadas)
+## Qué existe hoy (Etapas 6, 7, 8 y 9 completadas)
 
 | Pieza | Qué hace |
 |---|---|
@@ -18,6 +18,21 @@
 | **La imagen** (`contenido/captura.py`) | El "momento dramático" 1200×630 (Pillow): titular, dirección, agitación, la curva con el tick de máxima caída marcado, disclaimer y marca de agua. Sirve de portada del correo y de Open Graph. Endpoint: `/api/simulacion/{id}/imagen`. |
 | **Suscripción double opt-in** | Formulario en el muro → `/api/suscribir` (nace pendiente) → correo de confirmación → `/api/confirmar/{token}` (activo) → `/api/baja/{token}` (un clic). La lista vive en SQLite: los leads son del negocio. |
 | **El cron** (`contenido/disparar_pulso.py`) | El cron de Render (6:30 AM Chile, L-V) golpea `/api/pipeline` (protegido por token) y el ritual corre dentro del proceso web, sobre la misma base que sirve el muro. |
+| **El archivo** (`web/src/archivo/` + `/api/archivo`) | La hemeroteca "El Enjambre dijo": destacadas navegables por mes, buscables por titular y filtrables por ticker. Cada una con URL propia (`?sim=<id>`), su reporte con las **8 voces** por arquetipo, y el campo **"¿y qué pasó después?"** (epílogo). |
+
+### Cómo escribir el "¿y qué pasó después?" de una simulación
+
+Es manual y protegido (solo tú). Con el token de admin (`ENJAMBRE_PIPELINE_TOKEN`):
+
+```bash
+curl -X POST https://<motor>/api/epilogo/<sim_id> \
+  -H "X-Pipeline-Token: <tu-token>" \
+  -H "Content-Type: application/json" \
+  -d '{"texto":"El IPSA cerró -1,2% ese día."}'
+```
+
+Aparece en la página de la simulación bajo "Comparación educativa" — nunca
+como "acierto" ni "predicción". El filtro CMF rechaza vocabulario prohibido.
 
 ## Cómo revisar el log de veredictos del portero
 
@@ -56,4 +71,5 @@ en `html_preview`). Con `--enviar` manda de verdad.
 
 ## Qué sigue (en orden)
 
-- **Etapa 9 — El archivo** (la hemeroteca navegable) · **Etapa 10 — Duelo + widget.**
+- **Etapa 10 — Duelo + widget** (el comparador con export vertical + el
+  build embebible para medios).

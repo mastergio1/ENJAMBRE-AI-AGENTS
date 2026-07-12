@@ -1,6 +1,11 @@
 # La Redacción — propuesta de diseño
 
-> **Documento de propuesta, NO implementación.** Especifica cómo El Pulso
+> **ESTADO: Fase 1 implementada** (commit de La Redacción). El análisis de
+> mercado ya aparece en El Pulso, con datos que degradan a un snapshot de
+> demostración hasta que se enchufe la clave de Barchart. El resto del
+> documento es la especificación original.
+>
+> **Documento de propuesta.** Especifica cómo El Pulso
 > (la newsletter) pasa de "así reaccionó el enjambre" a un **análisis de
 > mercado con contexto real, investigado por agentes desde fuentes
 > verificadas**. Para revisión de Giorgio antes de codificar. Si se

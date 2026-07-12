@@ -40,6 +40,11 @@ CREATE TABLE IF NOT EXISTS titulares (
   impacto    INTEGER DEFAULT 0,
   sim_id     TEXT REFERENCES simulaciones(id)
 );
+CREATE TABLE IF NOT EXISTS briefs (
+  fecha      TEXT PRIMARY KEY,     -- AAAA-MM-DD (uno por día)
+  brief_json TEXT NOT NULL,        -- 'lo que pasó' + 'qué observa hoy' + origen
+  aprobado   INTEGER DEFAULT 0     -- 1 tras el visto bueno de Giorgio
+);
 CREATE TABLE IF NOT EXISTS suscriptores (
   email          TEXT PRIMARY KEY,
   fecha_alta     TEXT NOT NULL,
@@ -152,6 +157,34 @@ def listar_simulaciones(conexion, mes: str | None = None, limite: int = 50, solo
 def marcar_destacada(conexion, sim_id: str) -> None:
     conexion.execute("UPDATE simulaciones SET destacada = 1 WHERE id = ?", (sim_id,))
     conexion.commit()
+
+
+# ---------- briefs de La Redacción (el análisis de mercado del día) ----------
+
+def guardar_brief(conexion, fecha: str, brief: dict, aprobado: bool = False) -> None:
+    conexion.execute(
+        """INSERT INTO briefs (fecha, brief_json, aprobado) VALUES (?, ?, ?)
+           ON CONFLICT(fecha) DO UPDATE SET brief_json = excluded.brief_json""",
+        (fecha, json.dumps(brief, ensure_ascii=False), int(aprobado)),
+    )
+    conexion.commit()
+
+
+def obtener_brief(conexion, fecha: str) -> dict | None:
+    fila = conexion.execute(
+        "SELECT brief_json, aprobado FROM briefs WHERE fecha = ?", (fecha,)
+    ).fetchone()
+    if fila is None:
+        return None
+    brief = json.loads(fila["brief_json"])
+    brief["aprobado"] = bool(fila["aprobado"])
+    return brief
+
+
+def aprobar_brief(conexion, fecha: str) -> bool:
+    cursor = conexion.execute("UPDATE briefs SET aprobado = 1 WHERE fecha = ?", (fecha,))
+    conexion.commit()
+    return cursor.rowcount > 0
 
 
 # ---------- el archivo / hemeroteca (Etapa 9) ----------

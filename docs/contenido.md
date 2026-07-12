@@ -18,6 +18,15 @@
 | **La imagen** (`contenido/captura.py`) | El "momento dramático" 1200×630 (Pillow): titular, dirección, agitación, la curva con el tick de máxima caída marcado, disclaimer y marca de agua. Sirve de portada del correo y de Open Graph. Endpoint: `/api/simulacion/{id}/imagen`. |
 | **Suscripción double opt-in** | Formulario en el muro → `/api/suscribir` (nace pendiente) → correo de confirmación → `/api/confirmar/{token}` (activo) → `/api/baja/{token}` (un clic). La lista vive en SQLite: los leads son del negocio. |
 | **El cron** (`contenido/disparar_pulso.py`) | El cron de Render (6:30 AM Chile, L-V) golpea `/api/pipeline` (protegido por token) y el ritual corre dentro del proceso web, sobre la misma base que sirve el muro. |
+| **La Redacción** (`contenido/redaccion.py` + `fuentes/barchart.py`) | El análisis de mercado del Pulso: reportero (trae hechos con cita) → verificador (el número manda, viene de Barchart, no de un texto) → editor (voz + filtro CMF). Añade al correo "Lo que pasó en el mercado" y "Qué observa el enjambre hoy". Sin clave de Barchart, degrada a un snapshot de demostración. Ver `docs/la-redaccion.md`. |
+
+### El brief y el "humano en el lazo"
+
+El análisis de cada día se guarda (`GET /api/brief/<fecha>`, protegido) y
+tú lo apruebas antes de que salga (`POST /api/brief/<fecha>/aprobar`).
+Regla CMF: se cuenta el pasado con fuente; "qué observa hoy" es atención,
+nunca predicción. Para datos reales: cuenta de **Barchart** →
+`BARCHART_API_KEY` en Render.
 | **El archivo** (`web/src/archivo/` + `/api/archivo`) | La hemeroteca "El Enjambre dijo": destacadas navegables por mes, buscables por titular y filtrables por ticker. Cada una con URL propia (`?sim=<id>`), su reporte con las **8 voces** por arquetipo, y el campo **"¿y qué pasó después?"** (epílogo). |
 
 ### Cómo escribir el "¿y qué pasó después?" de una simulación

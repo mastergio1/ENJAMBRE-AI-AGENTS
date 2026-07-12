@@ -45,6 +45,21 @@ PROHIBIDAS = [
     "asesoria personalizada",
     "vendan todo",
     "compren todo",
+    # inglés: los titulares y datos llegan en inglés (Alpaca/Barchart)
+    "should you buy",
+    "should you sell",
+    "should i buy",
+    "should i sell",
+    "buy now",
+    "sell now",
+    "strong buy",
+    "table pounding buy",
+    "price target",
+    "buy alert",
+    "will surge",
+    "will crash",
+    "guaranteed return",
+    "must buy",
 ]
 
 

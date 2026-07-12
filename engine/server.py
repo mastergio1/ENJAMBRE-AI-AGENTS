@@ -95,7 +95,7 @@ NOMBRES_TIPO = {
 
 @app.get("/salud")
 def salud() -> dict:
-    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 9}
+    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 9, "redaccion": True}
 
 
 def _responder(ws: WebSocket, **campos) -> str:
@@ -662,3 +662,42 @@ def api_epilogo(sim_id: str, peticion: PeticionEpilogo, x_pipeline_token: str = 
     if not ok:
         return Response(status_code=404)  # type: ignore[return-value]
     return {"estado": "guardado", "epilogo": texto or None}
+
+
+# ---------- El brief de La Redacción (humano en el lazo) ----------
+
+@app.get("/api/brief/{fecha}")
+def api_brief(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    """El análisis de mercado de un día, para que Giorgio lo revise antes de
+    enviarlo. Protegido (es material sin publicar aún)."""
+    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
+    if not esperado or x_pipeline_token != esperado:
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _re.match(r"^\d{4}-\d{2}-\d{2}$", fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        brief = persistencia.obtener_brief(conexion, fecha)
+    finally:
+        conexion.close()
+    if brief is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    return brief
+
+
+@app.post("/api/brief/{fecha}/aprobar")
+def api_aprobar_brief(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    """El visto bueno de Giorgio: marca el brief como aprobado."""
+    esperado = os.environ.get("ENJAMBRE_PIPELINE_TOKEN", "")
+    if not esperado or x_pipeline_token != esperado:
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _re.match(r"^\d{4}-\d{2}-\d{2}$", fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        ok = persistencia.aprobar_brief(conexion, fecha)
+    finally:
+        conexion.close()
+    if not ok:
+        return Response(status_code=404)  # type: ignore[return-value]
+    return {"estado": "aprobado", "fecha": fecha}

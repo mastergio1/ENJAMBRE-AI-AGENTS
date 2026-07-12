@@ -49,7 +49,8 @@ def titulares_recientes(horas: int = 18, limite: int = 50) -> list[dict]:
     return [
         {
             "titular": n.get("headline", "").strip(),
-            "fuente": "alpaca",
+            "fuente": n.get("source", "alpaca"),
+            "url": n.get("url", ""),
             "simbolos": ",".join(n.get("symbols", [])),
             "fecha": n.get("created_at", ""),
         }

@@ -7,12 +7,15 @@ de salir. Degradación elegante: sin RESEND_API_KEY, genera el HTML pero
 no envía (útil para pruebas y para revisar antes de conectar el dominio).
 """
 
+import html
 import os
 
 import httpx
 
 from contenido import persistencia
 from contenido.vocabulario import DISCLAIMER, es_publicable
+
+_esc = html.escape
 
 URL_RESEND = "https://api.resend.com/emails"
 REMITENTE = os.environ.get("PULSO_REMITENTE", "El Enjambre <pulso@rubiconlab.cl>")
@@ -50,8 +53,47 @@ def asunto_del_dia(destacada: dict) -> str:
     return f"🐝 El Pulso — {resumen}"
 
 
-def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN") -> str:
-    """El HTML del correo. destacadas: [{titular, sim_id, resumen, lideres}]."""
+def _bloque_mercado(brief: dict | None) -> str:
+    """'Lo que pasó en el mercado' — hechos verificados con contexto (La Redacción)."""
+    if not brief or not brief.get("mercado"):
+        return ""
+    filas = "".join(
+        f"""<tr><td style="padding:5px 0;color:{MARFIL};font-size:14px;line-height:1.45;">
+        <span style="color:{COLOR_DIR(m['variacion_pct'])};font-weight:bold;">
+        {_flecha(m['variacion_pct'])} {_esc(m['nombre'])}</span> {_esc(m['frase'].split('. ', 1)[-1] if '. ' in m['frase'] else '')}
+        {f'<a href="{_esc(m["url"])}" style="color:{MARFIL_SUAVE};font-size:12px;">·&nbsp;fuente</a>' if m.get('url') else ''}
+        </td></tr>"""
+        for m in brief["mercado"][:5]
+    )
+    return f"""
+  <tr><td style="padding:16px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">Lo que pasó en el mercado</div>
+  </td></tr>
+  <tr><td style="padding:4px 32px;"><table role="presentation" width="100%">{filas}</table></td></tr>"""
+
+
+def _bloque_observa(brief: dict | None) -> str:
+    """'Qué observa el enjambre hoy' — atención, NUNCA predicción."""
+    if not brief or not brief.get("observa"):
+        return ""
+    filas = "".join(
+        f"""<p style="margin:4px 0;color:{MARFIL_SUAVE};font-size:14px;">· {_esc(t)}</p>"""
+        for t in brief["observa"][:3]
+    )
+    return f"""
+  <tr><td style="padding:14px 32px 4px;border-top:1px solid rgba(244,239,230,0.1);">
+    <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">Qué observa el enjambre hoy</div>
+    {filas}</td></tr>"""
+
+
+def COLOR_DIR(pct: float) -> str:
+    return "#4fae7f" if pct > 0.15 else "#c4472a" if pct < -0.15 else DORADO
+
+
+def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN",
+                   brief: dict | None = None) -> str:
+    """El HTML del correo. destacadas: [{titular, sim_id, resumen, lideres}].
+    brief (opcional): el análisis de mercado de La Redacción."""
     if not destacadas:
         raise ValueError("no hay simulaciones destacadas para el Pulso")
 
@@ -97,6 +139,7 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     <div style="font-family:Georgia,serif;font-size:26px;font-weight:bold;color:{DORADO};">El Enjambre</div>
     <div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:{MARFIL_SUAVE};">{fecha}</div>
   </td></tr>
+  {_bloque_mercado(brief)}
 
   <tr><td style="padding:16px 32px 4px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">La reacción del día</div>
@@ -126,6 +169,7 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     <div style="font-size:11px;letter-spacing:2px;color:{MARFIL_SUAVE};text-transform:uppercase;">También reaccionó a</div>
     <table role="presentation" width="100%">{otras}</table>
   </td></tr>''' if otras else ''}
+  {_bloque_observa(brief)}
 
   <tr><td style="padding:20px 32px;">
     <a href="{url_sim}" style="display:inline-block;background:{DORADO};color:{TINTA};

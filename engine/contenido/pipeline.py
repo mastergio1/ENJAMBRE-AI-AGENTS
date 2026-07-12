@@ -121,7 +121,7 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
     """
     from datetime import datetime, timezone
 
-    from contenido import boletin, notificar
+    from contenido import boletin, notificar, redaccion
 
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
@@ -130,21 +130,43 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
 
         # reúne las destacadas de hoy con sus voces (para el correo)
         destacadas = _destacadas_de_hoy(conexion)
+
+        # La Redacción: el análisis de mercado del día (hechos verificados
+        # + qué observa el enjambre hoy = los titulares destacados del día)
+        radar = [d["titular"] for d in destacadas]
+        brief = redaccion.preparar_brief(radar=radar)
+        persistencia.guardar_brief(conexion, persistencia.ahora_iso()[:10], brief)
+
         envio = None
         html = None
         if destacadas:
             fecha = _fecha_es(datetime.now(timezone.utc))
-            html = boletin.construir_html(destacadas, fecha)  # preview (token genérico)
+            html = boletin.construir_html(destacadas, fecha, brief=brief)  # preview
             if enviar:
-                envio = boletin.enviar_pulso(conexion, destacadas, fecha)
+                envio = _enviar_con_brief(conexion, destacadas, fecha, brief)
 
         # paso 8: avisar a Giorgio
         notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], envio))
 
-        return {**preparado, "destacadas": len(destacadas), "envio": envio, "html_preview": html}
+        return {**preparado, "destacadas": len(destacadas), "envio": envio,
+                "brief": brief, "html_preview": html}
     finally:
         if propia:
             conexion.close()
+
+
+def _enviar_con_brief(conexion, destacadas, fecha, brief) -> dict:
+    """Como boletin.enviar_pulso pero incluyendo el análisis de mercado."""
+    from contenido import boletin
+
+    activos = persistencia.suscriptores_activos(conexion)
+    asunto = boletin.asunto_del_dia(destacadas[0])
+    enviados = 0
+    for suscriptor in activos:
+        html = boletin.construir_html(destacadas, fecha, token_baja=suscriptor["token_baja"], brief=brief)
+        if boletin.enviar(suscriptor["email"], asunto, html):
+            enviados += 1
+    return {"suscriptores": len(activos), "enviados": enviados, "fallidos": len(activos) - enviados}
 
 
 def _destacadas_de_hoy(conexion) -> list[dict]:

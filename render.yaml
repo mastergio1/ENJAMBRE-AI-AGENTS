@@ -30,6 +30,9 @@ services:
       # El Pulso (Etapa 8) — se pegan a mano cuando el dominio esté verificado:
       - key: RESEND_API_KEY
         sync: false
+      # La Redacción — capa de datos de mercado (Barchart) para el análisis:
+      - key: BARCHART_API_KEY
+        sync: false
       - key: PULSO_REMITENTE
         value: "El Enjambre <pulso@tudominio.cl>"
       - key: ENJAMBRE_WEB_URL

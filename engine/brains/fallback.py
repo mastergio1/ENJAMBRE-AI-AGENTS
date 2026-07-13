@@ -94,8 +94,13 @@ def es_noticia_macro(titular: str) -> bool:
     return any(p in texto for p in PALABRAS_MACRO)
 
 
-def _frase(opciones: tuple[str, str, str], sentimiento: float) -> str:
-    """Elige la frase enlatada según la dirección del sentimiento."""
+def _frase(opciones: tuple, sentimiento: float) -> tuple:
+    """Elige el RAMO de frases según la dirección del sentimiento.
+
+    Cada opción es una tupla de variantes en la misma voz; la variante
+    concreta la sortea respuesta_fallback con su rng — así dos líderes
+    del mismo arquetipo (o dos corridas) no suenan como loros.
+    """
     if sentimiento < -0.15:
         return opciones[0]
     if sentimiento > 0.15:
@@ -106,50 +111,86 @@ def _frase(opciones: tuple[str, str, str], sentimiento: float) -> str:
 # por arquetipo: cómo transforma el sentimiento léxico en (señal, confianza, frase)
 def _institucional_frio(s, titular):
     return _clip(0.4 * s, -0.5, 0.5), 0.85, _frase((
-        "Ajustamos flujos de caja proyectados; sin dramatismos.",
-        "Sin impacto material en fundamentales. Seguimos.",
-        "Mejora marginal en márgenes; posición sin cambios grandes.",
+        ("Ajustamos flujos de caja proyectados; sin dramatismos.",
+         "Revisamos la tasa de descuento; el modelo manda.",
+         "Impacto acotado en márgenes; rebalanceo menor."),
+        ("Sin impacto material en fundamentales. Seguimos.",
+         "Nada que cambie el caso base.",
+         "Lo monitoreamos; la tesis no se mueve."),
+        ("Mejora marginal en márgenes; posición sin cambios grandes.",
+         "Flujos algo mejores; disciplina primero.",
+         "Buen dato, pero un dato no hace tendencia."),
     ), s)
 
 
 def _quant_esceptico(s, titular):
     return _clip(-0.5 * s, -0.6, 0.6), 0.55, _frase((
-        "El pánico está sobrevendido; apuesto a la reversión.",
-        "Ruido estadístico. Nada que operar.",
-        "La euforia ya está en el precio; me pongo del otro lado.",
+        ("El pánico está sobrevendido; apuesto a la reversión.",
+         "Sobre-reacción de manual: la media siempre espera.",
+         "Volatilidad disparada: mi modelo huele reversión."),
+        ("Ruido estadístico. Nada que operar.",
+         "Sin ventaja medible en este titular.",
+         "Muestra insuficiente; sigo plano."),
+        ("La euforia ya está en el precio; me pongo del otro lado.",
+         "Demasiado consenso alcista; voy contra.",
+         "Subida sin volumen: reversión probable."),
     ), s)
 
 
 def _fomo_evangelista(s, titular):
     return _clip(1.6 * s), 0.95, _frase((
-        "🚨 ESTO SE DERRUMBA. El que no salió ayer ya llegó tarde.",
-        "Atentos: algo grande se cocina. No se duerman.",
-        "🚀 EL MOMENTO DE LA DÉCADA. El que no está adentro, llora mañana.",
+        ("🚨 ESTO SE DERRUMBA. El que no salió ayer ya llegó tarde.",
+         "🔴 SE ACABÓ LA FIESTA. Corran la voz.",
+         "⚠️ ALERTA MÁXIMA: esto se pone feo YA."),
+        ("Atentos: algo grande se cocina. No se duerman.",
+         "Huele a movimiento gigante. Palomitas listas.",
+         "Silencio raro en el mercado… algo viene."),
+        ("🚀 EL MOMENTO DE LA DÉCADA. El que no está adentro, llora mañana.",
+         "🔥 DESPEGUE CONFIRMADO. Luego no digan que no avisé.",
+         "💎 Historia pura: esto no se repite dos veces."),
     ), s)
 
 
 def _doomer(s, titular):
     return _clip(0.6 * s - 0.35, -1.0, 0.1), 0.8, _frase((
-        "Lo vengo advirtiendo desde 2008: esto es el principio del fin.",
-        "Demasiada calma. Justo así se veía antes del colapso.",
-        "Trampa alcista de manual. El riesgo sistémico sigue ahí.",
+        ("Lo vengo advirtiendo desde 2008: esto es el principio del fin.",
+         "El contagio ya empezó; nadie quiere verlo.",
+         "Primero cruje, después colapsa. Ya está crujiendo."),
+        ("Demasiada calma. Justo así se veía antes del colapso.",
+         "La fragilidad no avisa: se acumula.",
+         "Nada que celebrar: la deuda sigue ahí."),
+        ("Trampa alcista de manual. El riesgo sistémico sigue ahí.",
+         "Suban nomás: más alto el piso, más dura la caída.",
+         "Euforia con cimientos podridos."),
     ), s)
 
 
 def _contrarian_sabio(s, titular):
     return _clip(-0.7 * s, -0.8, 0.8), 0.7, _frase((
-        "Sangre en las calles: el momento favorito de los pacientes.",
-        "La masa aún no decide; yo tampoco. Paciencia.",
-        "Todos codiciosos a la vez: mi señal favorita para retirarme.",
+        ("Sangre en las calles: el momento favorito de los pacientes.",
+         "El miedo ajeno fabrica oportunidades; sin apuro.",
+         "Cuando todos venden a la vez, yo empiezo a mirar."),
+        ("La masa aún no decide; yo tampoco. Paciencia.",
+         "Sin extremos de sentimiento no hay ventaja.",
+         "Espero al pesimismo extremo; esto es tibio."),
+        ("Todos codiciosos a la vez: mi señal favorita para retirarme.",
+         "Cuando el taxista da consejos de bolsa, yo me bajo.",
+         "La euforia unánime nunca envejece bien."),
     ), s)
 
 
 def _macro_trader(s, titular):
     factor = 1.2 if es_noticia_macro(titular) else 0.1
     return _clip(factor * s), 0.75, _frase((
-        "Menos liquidez global: se viene rotación a refugio.",
-        "Sin lectura macro relevante. Las acciones son un derivado de las tasas.",
-        "Más liquidez en el sistema: viento a favor para el riesgo.",
+        ("Menos liquidez global: se viene rotación a refugio.",
+         "Esto endurece las condiciones financieras; dólar arriba.",
+         "Riesgo geopolítico al alza: cobertura y a esperar a la Fed."),
+        ("Sin lectura macro relevante. Las acciones son un derivado de las tasas.",
+         "Micro-ruido; la macro no se movió.",
+         "Mi tablero sigue igual: tasas, dólar, liquidez."),
+        ("Más liquidez en el sistema: viento a favor para el riesgo.",
+         "Condiciones financieras más blandas; apetito por riesgo.",
+         "La macro acompaña: viento de cola."),
     ), s)
 
 
@@ -159,18 +200,30 @@ def _influencer_optimista(s, titular):
     else:
         senal = _clip(0.5 * s + 0.25, 0.0, 0.6)
     return senal, 0.8, _frase((
-        "Calma: el mercado siempre premia al que aguanta. ¡Rebajas!",
-        "Sigan aportando todos los meses. El tiempo hace el resto.",
-        "El interés compuesto trabajando: seguimos acumulando.",
+        ("Calma: el mercado siempre premia al que aguanta. ¡Rebajas!",
+         "Los grandes patrimonios se construyen en los días rojos.",
+         "Respiren: esto en cinco años es una anécdota."),
+        ("Sigan aportando todos los meses. El tiempo hace el resto.",
+         "Aburrido gana: aporte, paciencia y a vivir la vida.",
+         "El plan no cambia con los titulares."),
+        ("El interés compuesto trabajando: seguimos acumulando.",
+         "El largo plazo pagando dividendos de paciencia.",
+         "Otro ladrillo más en la casa del largo plazo."),
     ), s)
 
 
 def _value_paciente(s, titular):
     senal = _clip(0.5 * s, -0.7, 0.7) if abs(s) > 0.6 else 0.0
     return senal, 0.9, _frase((
-        "Si el negocio vale menos hoy, revisaré la tesis. Si no, teatro.",
-        "Ruido de corto plazo. Mi horizonte se mide en décadas.",
-        "El precio sube, el valor no. No confundir las dos cosas.",
+        ("Si el negocio vale menos hoy, revisaré la tesis. Si no, teatro.",
+         "El precio cae rápido; el valor casi nunca.",
+         "Volatilidad no es riesgo; pagar de más, sí."),
+        ("Ruido de corto plazo. Mi horizonte se mide en décadas.",
+         "El 80% de los titulares no merece ni un movimiento.",
+         "Nada que altere el valor intrínseco. Café y a leer."),
+        ("El precio sube, el valor no. No confundir las dos cosas.",
+         "Me alegro por los que llegaron; yo ya estaba adentro.",
+         "Subió el precio, no la calidad del negocio."),
     ), s)
 
 
@@ -195,8 +248,9 @@ def respuesta_fallback(titular: str, arquetipo_id: str, semilla: int = 0) -> dic
     import random
 
     s = sentimiento_lexico(titular)
-    senal, confianza, frase = TRANSFORMACIONES[arquetipo_id](s, titular)
+    senal, confianza, variantes = TRANSFORMACIONES[arquetipo_id](s, titular)
     rng = random.Random(hash((titular, arquetipo_id, semilla)))
+    frase = rng.choice(variantes)  # variante sorteada: el respaldo no suena a loro
     senal = _clip(senal + rng.gauss(0, 0.08))
     confianza = _clip(confianza + rng.gauss(0, 0.05), 0.0, 1.0)
     return {"senal": senal, "confianza": confianza, "frase": frase, "fuente": "fallback"}

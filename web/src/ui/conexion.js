@@ -35,7 +35,9 @@ export class MotorRemoto {
     })
   }
 
-  /** Envía el titular y entrega los eventos: alInicio, alTick, alFin, alLimite. */
+  /** Envía el titular y entrega los eventos: alInicio, alTick, alFin, alLimite.
+   * La semilla es aleatoria por corrida: dos corridas del mismo titular dan
+   * reacciones y voces distintas — el enjambre nunca suena a loro. */
   async simular(titular, { alInicio, alTick, alFin, alLimite }, extras = {}) {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.ws = await this._conectar()
@@ -55,7 +57,8 @@ export class MotorRemoto {
         )
       }
     }
-    this.ws.send(JSON.stringify({ tipo: 'simular', titular, ...extras }))
+    const seed = Math.floor(Math.random() * 2_000_000_000)
+    this.ws.send(JSON.stringify({ tipo: 'simular', titular, seed, ...extras }))
   }
 
   /**
@@ -76,7 +79,7 @@ export class MotorRemoto {
         alTick(v.getFloat32(0, true), v.getUint32(4, true), new Int8Array(evento.data, 8))
       }
     }
-    ws.send(JSON.stringify({ tipo: 'observatorio', titular }))
+    ws.send(JSON.stringify({ tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000) }))
     return {
       soltarNoticia(t) {
         if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'noticia', titular: t }))

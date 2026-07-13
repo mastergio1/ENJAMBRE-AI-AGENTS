@@ -132,6 +132,14 @@ body {
 #form-noticia button:hover {
   filter: brightness(1.12);
 }
+#form-noticia button:disabled {
+  opacity: 0.75;
+  cursor: progress;
+  animation: leyendo 1.6s ease-in-out infinite;
+}
+@keyframes leyendo {
+  50% { opacity: 0.45; }
+}
 .chips {
   display: flex;
   gap: 8px;

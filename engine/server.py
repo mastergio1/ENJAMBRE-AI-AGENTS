@@ -38,8 +38,16 @@ TICKS_PREVIOS = 10        # calma visible antes de la noticia
 TICKS_POSTERIORES = 140   # la reacción completa
 RITMO_DEFECTO = 0.08      # segundos entre ticks transmitidos
 RITMO_MINIMO = 0.02       # piso: nadie pide ticks sin pausa (protege la CPU)
+MAX_TITULAR = 1200        # caracteres: cabe un tweet presidencial completo
 MAX_MENSAJE_WS = 4000     # bytes de texto por mensaje del cliente
 MAX_SIM_CONCURRENTES = 2  # simulaciones pesadas en vuelo a la vez
+
+
+def _semilla_lider(semilla_sim: int, unique_id: int) -> int:
+    """Semilla de cerebro por líder Y por corrida: mezcla la semilla de la
+    simulación con el id del líder. Así dos corridas del mismo titular no
+    repiten frases (ni de la IA —caché aparte— ni del respaldo)."""
+    return semilla_sim * 1_000_003 + unique_id
 
 # orígenes permitidos: la web de producción + localhost de desarrollo.
 # Configurable por entorno (ENJAMBRE_ORIGENES, separado por comas).
@@ -193,10 +201,10 @@ async def canal(ws: WebSocket) -> None:
 
 # ---------- el modo observatorio (el enjambre sigue vivo) ----------
 
-async def _leer_titular_en_vivo(modelo, lideres, titular, candado) -> list[dict]:
+async def _leer_titular_en_vivo(modelo, lideres, titular, candado, semilla) -> list[dict]:
     """Los líderes leen una noticia y se inyecta al modelo EN VIVO (sin
     frenar el latido). El candado evita chocar con el step en curso."""
-    consultas = [(lider.unique_id, lider.arquetipo) for lider in lideres]
+    consultas = [(_semilla_lider(semilla, lider.unique_id), lider.arquetipo) for lider in lideres]
     respuestas = await analizar_titular_async(titular, consultas)  # lento: sin candado
     async with candado:
         await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas)
@@ -241,7 +249,7 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
         if not permitido:
             await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
             return
-        respuestas = await _leer_titular_en_vivo(modelo, lideres, titular, candado)
+        respuestas = await _leer_titular_en_vivo(modelo, lideres, titular, candado, semilla)
         await ws.send_text(json.dumps({
             "tipo": "inicio", "titular": titular,
             "lideres": [{"arquetipo": l.arquetipo, **{k: r[k] for k in ("senal", "confianza", "frase", "fuente")}}
@@ -250,7 +258,7 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
 
     async def escuchar() -> None:
         # noticia inicial (opcional): la que traía el mensaje de arranque
-        inicial = str(mensaje.get("titular", "")).strip()[:300]
+        inicial = str(mensaje.get("titular", "")).strip()[:MAX_TITULAR]
         if inicial:
             await _inyectar(inicial)
         while not detener.is_set():
@@ -265,7 +273,7 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
             if tipo == "detener":
                 detener.set()
             elif tipo == "noticia":
-                titular = str(dato.get("titular", "")).strip()[:300]
+                titular = str(dato.get("titular", "")).strip()[:MAX_TITULAR]
                 if titular:
                     await _inyectar(titular)
 
@@ -282,7 +290,7 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
 # ---------- la simulación transmitida ----------
 
 async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
-    titular = str(mensaje.get("titular", ""))[:300].strip() or "Sin novedades en los mercados"
+    titular = str(mensaje.get("titular", ""))[:MAX_TITULAR].strip() or "Sin novedades en los mercados"
     try:
         semilla = int(mensaje.get("seed", 42)) % 2_147_483_647
     except (TypeError, ValueError):
@@ -296,8 +304,9 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
     modelo = await asyncio.to_thread(_crear_mercado, semilla)
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
 
-    # los 100 líderes leen el titular (en paralelo si hay API; si no, fallback)
-    consultas = [(lider.unique_id, lider.arquetipo) for lider in lideres]
+    # los 100 líderes leen el titular (en paralelo si hay API; si no, fallback);
+    # la semilla de la corrida entra a la mezcla: cada corrida, voces frescas
+    consultas = [(_semilla_lider(semilla, lider.unique_id), lider.arquetipo) for lider in lideres]
     respuestas = await analizar_titular_async(titular, consultas)
 
     await ws.send_text(json.dumps({

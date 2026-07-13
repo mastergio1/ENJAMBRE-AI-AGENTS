@@ -64,11 +64,21 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
   const lienzo = raiz.querySelector('#sparkline')
   const ctx = lienzo.getContext('2d')
 
+  let enObservatorio = false
+
   return {
     fijarModoObservatorio(activo) {
+      enObservatorio = activo
       btnObs.textContent = activo ? '⏹ Detener observatorio' : '🔭 Dejar corriendo'
       btnObs.classList.toggle('activo', activo)
       btnSoltar.textContent = activo ? 'Soltar noticia encima' : 'Soltar al enjambre'
+    },
+    // los 100 líderes tardan ~10-15 s leyendo con IA real: la espera se
+    // muestra como parte del show, no como una pantalla colgada
+    fijarLeyendo(activo) {
+      btnSoltar.disabled = activo
+      if (activo) btnSoltar.textContent = 'Los 100 líderes están leyendo…'
+      else btnSoltar.textContent = enObservatorio ? 'Soltar noticia encima' : 'Soltar al enjambre'
     },
     mostrarTooltip(lider, x, y) {
       // nombre y frase provienen del LLM/datos: se escapan antes de innerHTML

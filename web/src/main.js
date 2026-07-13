@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js'
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { abrirArchivo } from './archivo/archivo.js'
 import { abrirDuelo } from './duelo/duelo.js'
 import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
@@ -35,6 +36,14 @@ escena.add(enjambre.grupo)
 // se alarga y el fondo se entibia hacia el rosa-arcilla (turbulencia).
 const composer = new EffectComposer(renderer)
 composer.addPass(new RenderPass(escena, camara))
+// bloom: los faros dorados y las olas de color ganan un halo cinematográfico
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.85,  // fuerza
+  0.55,  // radio
+  0.5,   // umbral: brilla lo luminoso (líderes y emociones fuertes), no el fondo
+)
+composer.addPass(bloom)
 const estela = new AfterimagePass(0.82)
 composer.addPass(estela)
 composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -59,6 +68,14 @@ let modo = 'demo local'
 let muroCtl = { recargar: async () => {}, detenerReplay: () => {} }
 let observatorio = null // el mando cuando el enjambre está "dejado corriendo"
 
+// ¿Los líderes respondieron con IA real o con el respaldo léxico? Se lee
+// del campo `fuente` que manda el motor — y se muestra en el HUD.
+function evaluarCerebros(lideres) {
+  const total = (lideres || []).length || 1
+  const ia = (lideres || []).filter((l) => l.fuente === 'api' || l.fuente === 'cache').length
+  return ia > total / 2
+}
+
 async function soltarTitular(titular, titularId = null) {
   if (reducirMovimiento) {
     correrEstatico(titular)
@@ -66,28 +83,45 @@ async function soltarTitular(titular, titularId = null) {
   }
   // si el observatorio está activo, la noticia se suelta ENCIMA (no reinicia)
   if (observatorio) {
-    if (titular) observatorio.soltarNoticia(titular)
+    if (titular) {
+      panel.fijarLeyendo(true)
+      observatorio.soltarNoticia(titular)
+    }
     return
   }
   muroCtl.detenerReplay() // la portada cede el escenario a la simulación en vivo
   if (motor) {
     try {
+      panel.fijarLeyendo(true) // los 100 líderes leen (~10-15 s con IA real)
       await motor.simular(titular, {
-        alInicio: (mensaje) => enjambre.fijarLideresRemotos(mensaje.lideres),
+        alInicio: (mensaje) => {
+          panel.fijarLeyendo(false)
+          enjambre.fijarLideresRemotos(mensaje.lideres)
+          const conIA = evaluarCerebros(mensaje.lideres)
+          modo = conIA ? 'motor real · IA' : 'motor real · respaldo'
+          if (!conIA) {
+            panel.avisar('Los líderes respondieron con el cerebro de respaldo (sin IA). ' +
+              'Revisa la clave de Anthropic en Render: valor y saldo.')
+          }
+        },
         alTick: (precio, _tick, sentimientos) => enjambre.aplicarEstadoRemoto(precio, sentimientos),
         alFin: (reporte) => {
           panel.mostrarReporte(reporte)
           muroCtl.recargar() // la tarjeta recién simulada pasa a Estado A
         },
-        alLimite: (mensaje) => panel.avisar(mensaje),
+        alLimite: (mensaje) => {
+          panel.fijarLeyendo(false)
+          panel.avisar(mensaje)
+        },
       }, titularId ? { titular_id: titularId } : {})
       enjambre.modoRemoto = true
-      modo = 'motor real'
       return
     } catch {
+      panel.fijarLeyendo(false)
       motor = null // el motor no está: de aquí en adelante, demo local
     }
   }
+  panel.fijarLeyendo(false)
   enjambre.modoRemoto = false
   modo = 'demo local'
   enjambre.aplicarTitular(titular, reloj.getElapsedTime())
@@ -110,9 +144,16 @@ async function alternarObservatorio(titular) {
   try {
     muroCtl.detenerReplay()
     observatorio = await motor.observatorio(titular, {
-      alInicio: (m) => enjambre.fijarLideresRemotos(m.lideres),
+      alInicio: (m) => {
+        panel.fijarLeyendo(false)
+        enjambre.fijarLideresRemotos(m.lideres)
+        modo = evaluarCerebros(m.lideres) ? 'observatorio · IA' : 'observatorio · respaldo'
+      },
       alTick: (precio, _t, sent) => enjambre.aplicarEstadoRemoto(precio, sent),
-      alLimite: (m) => panel.avisar(m),
+      alLimite: (m) => {
+        panel.fijarLeyendo(false)
+        panel.avisar(m)
+      },
       alFin: () => {
         observatorio = null
         enjambre.modoRemoto = false
@@ -289,8 +330,9 @@ function cuadro() {
   _fondo.copy(FONDO_CALMA).lerp(FONDO_PANICO, panico)
   escena.background.copy(_fondo)
   escena.fog.color.copy(_fondo)
-  // en equipos lentos, la estela se apaga para recuperar cuadros
+  // en equipos lentos, los efectos se apagan para recuperar cuadros
   estela.enabled = fpsSuavizado > 38
+  bloom.enabled = fpsSuavizado > 38
   composer.render()
 }
 

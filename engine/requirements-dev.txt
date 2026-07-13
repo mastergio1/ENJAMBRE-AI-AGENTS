@@ -1,0 +1,6 @@
+# Dependencias solo de desarrollo y tests (NO van en la imagen de producción).
+# Instalar en local/CI con: pip install -r requirements-dev.txt
+-r requirements.txt
+
+pytest==9.1.1
+httpx==0.28.1            # cliente para probar la API

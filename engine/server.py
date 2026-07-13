@@ -688,9 +688,12 @@ def suscribir(peticion: PeticionSuscribir) -> dict:
     if alta["ya_activo"]:
         return {"estado": "ya_suscrito", "mensaje": "Ya estabas suscrito al Pulso. ¡Gracias!"}
 
-    from contenido import boletin
+    # solo se envía si no hubo una confirmación reciente (antibombardeo, auditoría C).
+    # La respuesta es idéntica en ambos casos: no revela si el correo ya existía.
+    if alta.get("reenviar", True):
+        from contenido import boletin
 
-    boletin.enviar_confirmacion(email, alta["token_confirma"])  # sin Resend, no envía (dev)
+        boletin.enviar_confirmacion(email, alta["token_confirma"])  # sin Resend, no envía (dev)
     return {"estado": "pendiente",
             "mensaje": "Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja."}
 

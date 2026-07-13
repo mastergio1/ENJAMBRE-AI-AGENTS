@@ -128,6 +128,18 @@ def test_suscribir_dos_veces_no_duplica():
     assert total == 1
 
 
+def test_no_reenvia_confirmacion_a_pendiente_reciente():
+    """Antibombardeo (auditoría C): un segundo intento inmediato para el mismo
+    correo pendiente no reenvía ni rota el token."""
+    conexion = persistencia.conectar()
+    a1 = persistencia.agregar_suscriptor(conexion, "victima@correo.cl")
+    a2 = persistencia.agregar_suscriptor(conexion, "victima@correo.cl")
+    conexion.close()
+    assert a1["reenviar"] is True
+    assert a2["reenviar"] is False              # no se reenvía el correo
+    assert a2["token_confirma"] == a1["token_confirma"]  # ni se rota el token
+
+
 # ---------- el ritual completo ----------
 
 def test_ritual_matutino_arma_todo_sin_enviar(monkeypatch):

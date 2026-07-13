@@ -84,6 +84,7 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
         for tabla, columna, tipo in [
             ("titulares", "impacto", "INTEGER DEFAULT 0"),
             ("suscriptores", "token_confirma", "TEXT"),
+            ("suscriptores", "fecha_confirma", "TEXT"),  # anti-reenvío (auditoría C)
             ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
         ]:
             try:
@@ -326,30 +327,55 @@ def leer_frames(sim_id: str) -> bytes | None:
 
 # ---------- suscriptores del boletín (double opt-in) ----------
 
+# Ventana anti-abuso: no se reenvía el correo de confirmación a la misma
+# dirección más seguido que esto (evita usar el alta como bombardeo de un
+# tercero). Ver auditoría previa al despliegue, punto C.
+VENTANA_REENVIO = timedelta(minutes=10)
+
+
 def agregar_suscriptor(conexion, email: str, origen: str = "web") -> dict:
     """Alta PENDIENTE de suscriptor (double opt-in): nace inactivo hasta
-    confirmar. Devuelve {email, token_confirma, token_baja, ya_activo}.
-    Reenviar un alta de alguien pendiente renueva su token de confirmación;
-    de alguien ya activo, no lo molesta."""
+    confirmar. Devuelve {email, token_confirma, token_baja, ya_activo, reenviar}.
+
+    - Ya activo: no se le molesta (reenviar=False).
+    - Pendiente con confirmación reciente (< VENTANA_REENVIO): NO se rota el
+      token ni se reenvía correo (reenviar=False) — antibombardeo.
+    - Nuevo o pendiente antiguo: se emite token y se pide reenviar (True).
+    """
     email = email.strip().lower()
     fila = conexion.execute(
-        "SELECT activo, token_confirma, token_baja FROM suscriptores WHERE email = ?", (email,)
+        "SELECT activo, token_confirma, token_baja, fecha_confirma FROM suscriptores WHERE email = ?",
+        (email,),
     ).fetchone()
     if fila and fila["activo"]:
         return {"email": email, "token_confirma": fila["token_confirma"],
-                "token_baja": fila["token_baja"], "ya_activo": True}
+                "token_baja": fila["token_baja"], "ya_activo": True, "reenviar": False}
+
+    ahora = datetime.now(timezone.utc)
+    # ¿hay un alta pendiente con un correo de confirmación reciente? no reenviar
+    if fila and fila["fecha_confirma"]:
+        try:
+            emitido = datetime.fromisoformat(fila["fecha_confirma"])
+            if ahora - emitido < VENTANA_REENVIO:
+                return {"email": email, "token_confirma": fila["token_confirma"],
+                        "token_baja": fila["token_baja"], "ya_activo": False, "reenviar": False}
+        except ValueError:
+            pass
 
     token_confirma = secrets.token_urlsafe(24)
     token_baja = fila["token_baja"] if fila else secrets.token_urlsafe(24)
+    ahora_txt = ahora.isoformat(timespec="seconds")
     conexion.execute(
-        """INSERT INTO suscriptores (email, fecha_alta, origen, activo, token_baja, token_confirma)
-           VALUES (?, ?, ?, 0, ?, ?)
-           ON CONFLICT(email) DO UPDATE SET token_confirma = excluded.token_confirma""",
-        (email, ahora_iso(), origen, token_baja, token_confirma),
+        """INSERT INTO suscriptores
+             (email, fecha_alta, origen, activo, token_baja, token_confirma, fecha_confirma)
+           VALUES (?, ?, ?, 0, ?, ?, ?)
+           ON CONFLICT(email) DO UPDATE SET token_confirma = excluded.token_confirma,
+                                            fecha_confirma = excluded.fecha_confirma""",
+        (email, ahora_txt, origen, token_baja, token_confirma, ahora_txt),
     )
     conexion.commit()
     return {"email": email, "token_confirma": token_confirma,
-            "token_baja": token_baja, "ya_activo": False}
+            "token_baja": token_baja, "ya_activo": False, "reenviar": True}
 
 
 def confirmar_suscriptor(conexion, token: str) -> str | None:

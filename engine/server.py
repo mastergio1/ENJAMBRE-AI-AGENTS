@@ -744,6 +744,42 @@ def _correr_ritual() -> None:
         pass
 
 
+@app.get("/api/diagnostico")
+def api_diagnostico(x_pipeline_token: str = Header(default="")) -> dict:
+    """Diagnóstico de la clave de Anthropic en UN comando (protegido).
+
+    Hace una llamada mínima a la API y devuelve el veredicto con la causa
+    exacta si falla (clave inválida, sin saldo, timeout…). Evita pescar
+    errores en los logs cuando los líderes caen al respaldo."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    clave = os.environ.get("ANTHROPIC_API_KEY", "")
+    resultado = {
+        "clave_presente": bool(clave),
+        "formato_sk_ant": clave.startswith("sk-ant-"),
+        "largo_clave": len(clave),
+    }
+    if not clave:
+        resultado["veredicto"] = "FALTA la variable ANTHROPIC_API_KEY"
+        return resultado
+    if clave != clave.strip():
+        resultado["veredicto"] = "la clave tiene espacios al inicio o final: bórralos y guarda"
+        return resultado
+    try:
+        import anthropic
+
+        cliente = anthropic.Anthropic(timeout=20)
+        r = cliente.messages.create(
+            model="claude-haiku-4-5-20251001", max_tokens=10,
+            messages=[{"role": "user", "content": "Di solo: hola"}],
+        )
+        resultado["veredicto"] = "OK: la IA respondió — los cerebros reales funcionan"
+        resultado["respuesta"] = r.content[0].text[:40]
+    except Exception as error:
+        resultado["veredicto"] = f"FALLA {type(error).__name__}: {str(error)[:300]}"
+    return resultado
+
+
 @app.post("/api/pipeline")
 def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
     """Lo llama el cron de Render (o Giorgio a mano) para preparar el día.

@@ -140,6 +140,19 @@ def test_endpoint_protegido_rechaza_token_incorrecto(monkeypatch):
     assert cliente.post("/api/pipeline").status_code == 403
     # token equivocado → 403
     assert cliente.post("/api/pipeline", headers={"X-Pipeline-Token": "malo"}).status_code == 403
+    # el diagnóstico también es solo-admin
+    assert cliente.get("/api/diagnostico").status_code == 403
+
+
+def test_diagnostico_reporta_clave_faltante(monkeypatch):
+    from fastapi.testclient import TestClient
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto-de-prueba")
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    import server
+    cliente = TestClient(server.app)
+    datos = cliente.get("/api/diagnostico", headers={"X-Pipeline-Token": "secreto-de-prueba"}).json()
+    assert datos["clave_presente"] is False
+    assert "FALTA" in datos["veredicto"]
 
 
 # ---------- el tope diario ahora es 5 ----------

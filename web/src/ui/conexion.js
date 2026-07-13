@@ -16,14 +16,14 @@ export class MotorRemoto {
     this.ws = null
   }
 
-  _conectar() {
+  _conectar(esperaMs = 8000) {
     return new Promise((resolver, rechazar) => {
       const ws = new WebSocket(this.url)
       ws.binaryType = 'arraybuffer'
       const temporizador = setTimeout(() => {
         ws.close()
         rechazar(new Error('el motor no respondió a tiempo'))
-      }, 3000)
+      }, esperaMs)
       ws.onopen = () => {
         clearTimeout(temporizador)
         resolver(ws)
@@ -35,12 +35,35 @@ export class MotorRemoto {
     })
   }
 
+  /**
+   * Conecta con paciencia: el motor gratuito de Render se duerme con la
+   * inactividad y tarda ~50 s en despertar. Reintenta hasta ~75 s y avisa
+   * (alLento) para que la UI diga "despertando el motor…" en vez de caer
+   * al demo a los 3 segundos.
+   */
+  async _conectarConPaciencia(alLento = null) {
+    const inicio = Date.now()
+    let avisado = false
+    for (;;) {
+      try {
+        return await this._conectar(8000)
+      } catch (error) {
+        if (!avisado) {
+          avisado = true
+          alLento?.()
+        }
+        if (Date.now() - inicio > 75000) throw error
+        await new Promise((r) => setTimeout(r, 4000))
+      }
+    }
+  }
+
   /** Envía el titular y entrega los eventos: alInicio, alTick, alFin, alLimite.
    * La semilla es aleatoria por corrida: dos corridas del mismo titular dan
    * reacciones y voces distintas — el enjambre nunca suena a loro. */
-  async simular(titular, { alInicio, alTick, alFin, alLimite }, extras = {}) {
+  async simular(titular, { alInicio, alTick, alFin, alLimite, alDespertar }, extras = {}) {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      this.ws = await this._conectar()
+      this.ws = await this._conectarConPaciencia(alDespertar)
     }
     this.ws.onmessage = (evento) => {
       if (typeof evento.data === 'string') {
@@ -65,8 +88,8 @@ export class MotorRemoto {
    * Modo observatorio: abre una sesión continua donde el enjambre sigue
    * vivo. Devuelve un mando con soltarNoticia(titular) y detener().
    */
-  async observatorio(titular, { alInicio, alTick, alLimite, alFin }) {
-    const ws = await this._conectar()
+  async observatorio(titular, { alInicio, alTick, alLimite, alFin, alDespertar }) {
+    const ws = await this._conectarConPaciencia(alDespertar)
     this.wsObs = ws
     ws.onmessage = (evento) => {
       if (typeof evento.data === 'string') {

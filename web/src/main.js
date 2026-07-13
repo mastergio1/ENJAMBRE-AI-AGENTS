@@ -113,12 +113,16 @@ async function soltarTitular(titular, titularId = null) {
           panel.fijarLeyendo(false)
           panel.avisar(mensaje)
         },
+        alDespertar: () => panel.avisar(
+          'El motor estaba descansando y está despertando (hasta 1 minuto). El enjambre reaccionará en cuanto abra los ojos…'),
       }, titularId ? { titular_id: titularId } : {})
       enjambre.modoRemoto = true
       return
     } catch {
+      // el motor no respondió ESTA vez (dormido o redesplegando): esta corrida
+      // va en demo local, pero el próximo intento vuelve a buscar el motor
       panel.fijarLeyendo(false)
-      motor = null // el motor no está: de aquí en adelante, demo local
+      panel.avisar('No se pudo alcanzar el motor; esta corrida es una demostración local. Vuelve a intentarlo en un momento.')
     }
   }
   panel.fijarLeyendo(false)
@@ -154,6 +158,8 @@ async function alternarObservatorio(titular) {
         panel.fijarLeyendo(false)
         panel.avisar(m)
       },
+      alDespertar: () => panel.avisar(
+        'El motor estaba descansando y está despertando (hasta 1 minuto)…'),
       alFin: () => {
         observatorio = null
         enjambre.modoRemoto = false

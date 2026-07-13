@@ -437,6 +437,221 @@ body.con-muro .marca {
 .rl-iso-text{font-family:'Jost',sans-serif;font-weight:400;font-size:12px;letter-spacing:.04em}
 @media (max-width:520px){ .rl-full,.rl-pre{display:none} .rl-compact{display:inline-flex} }
 
+/* ---------- la guía rápida "¿Cómo funciona?" ---------- */
+
+.guia-boton {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(27, 25, 22, 0.72);
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, color 0.2s;
+}
+.guia-boton span {
+  display: inline-grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 0.66rem;
+  font-weight: 500;
+}
+.guia-boton:hover {
+  background: var(--teal);
+  color: var(--tinta);
+}
+
+.guia {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(18, 16, 14, 0.9);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 6vh 20px 40px;
+}
+.guia-panel {
+  position: relative;
+  width: min(560px, 100%);
+  background: var(--tinta);
+  border: 1px solid rgba(111, 168, 158, 0.3);
+  padding: 30px 30px 26px;
+}
+.guia-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.guia-eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.guia-panel h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--crema);
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+.guia-intro {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--crema-suave);
+  margin: 0;
+}
+.guia-intro strong { color: var(--crema); font-weight: 400; }
+.guia-seccion { margin-top: 20px; }
+.guia-seccion h3 {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 0 0 10px;
+}
+.guia-seccion p {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--crema-suave);
+  margin: 0;
+}
+.guia-seccion p strong { color: var(--crema); font-weight: 400; }
+.guia-pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.guia-pasos li {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--crema-suave);
+}
+.guia-pasos li strong { color: var(--crema); font-weight: 400; }
+.guia-pasos li em { color: var(--crema); font-style: italic; }
+.guia-pasos .n {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-size: 0.72rem;
+  transform: translateY(1px);
+}
+.guia-colores {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.guia-colores li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--crema-suave);
+  line-height: 1.4;
+}
+.guia-colores b { color: var(--crema); font-weight: 500; }
+.guia-colores .pt {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  transform: translateY(1px);
+}
+.guia-numeros {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+}
+.guia-numeros dt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.02rem;
+  color: var(--teal);
+}
+.guia-numeros dd {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--crema-suave);
+}
+.guia-numeros dd strong { color: var(--crema); font-weight: 400; }
+.guia-numeros dd em { color: var(--crema); font-style: italic; }
+.guia-descargo {
+  margin: 22px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(243, 238, 232, 0.1);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: rgba(243, 238, 232, 0.4);
+}
+.guia-listo {
+  margin-top: 16px;
+  width: 100%;
+  background: var(--teal);
+  color: var(--tinta);
+  border: 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.guia-listo:hover { filter: brightness(1.12); }
+/* con el muro abierto en móvil, el botón flotante cede (hay enlace en el muro) */
+@media (max-width: 820px) {
+  body.con-muro:not(.muro-plegado) .guia-boton { display: none; }
+  .guia-panel { padding: 26px 20px 22px; }
+  .guia-panel h2 { font-size: 1.6rem; }
+}
+
 /* aviso flotante (límites, errores amables) */
 .aviso {
   position: fixed;

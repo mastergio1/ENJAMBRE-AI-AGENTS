@@ -10,6 +10,7 @@ import { abrirDuelo } from './duelo/duelo.js'
 import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
 import { Enjambre } from './swarm/enjambre.js'
 import { MotorRemoto, urlApi } from './ui/conexion.js'
+import { montarGuia } from './ui/guia.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
 
 const canvas = document.getElementById('escena')
@@ -129,6 +130,9 @@ async function alternarObservatorio(titular) {
 }
 
 const panel = crearPanel(soltarTitular, alternarObservatorio)
+
+// la guía "¿Cómo funciona?": botón flotante + panel; se abre sola la 1ª visita
+montarGuia()
 
 // ---------- el archivo + enlaces compartibles (?sim=<id>) ----------
 

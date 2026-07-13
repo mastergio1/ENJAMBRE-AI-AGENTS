@@ -149,6 +149,7 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
         <h1>El Enjambre</h1>
         <p>el focus group sintético del mercado</p>
         <time>${fecha}</time>
+        <button class="ver-archivo" data-guia>¿Cómo funciona? · Guía rápida</button>
         <button class="ver-archivo">El archivo · «El Enjambre dijo» →</button>
       </header>
       <div class="muro-lista">${tarjetas.map(plantillaTarjeta).join('')}</div>

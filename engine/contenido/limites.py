@@ -13,7 +13,14 @@ import os
 import time
 from datetime import date
 
-LIMITE_IP_HORA = 3
+LIMITE_IP_HORA = 3  # defecto; configurable con ENJAMBRE_MAX_SIM_IP_HORA
+
+
+def tope_ip_hora() -> int:
+    try:
+        return max(1, int(os.environ.get("ENJAMBRE_MAX_SIM_IP_HORA", str(LIMITE_IP_HORA))))
+    except (TypeError, ValueError):
+        return LIMITE_IP_HORA
 
 _por_ip: dict[str, list[float]] = {}
 _dia_actual: date = date.today()
@@ -48,7 +55,7 @@ def permitir(ip: str, consumir: bool = True) -> tuple[bool, str]:
         return False, MENSAJE_GLOBAL
     hace_una_hora = time.time() - 3600
     recientes = [t for t in _por_ip.get(ip, []) if t > hace_una_hora]
-    if len(recientes) >= LIMITE_IP_HORA:
+    if len(recientes) >= tope_ip_hora():
         _por_ip[ip] = recientes
         return False, MENSAJE_IP
     if consumir:

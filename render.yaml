@@ -15,9 +15,14 @@ services:
         sync: false
       - key: ALPACA_API_SECRET_KEY
         sync: false
-      # tope de simulaciones on-demand gratis por día (el on-demand es un lujo)
+      # ⚠️ FASE DE PRUEBAS: topes abiertos para que Giorgio teste sin frenos.
+      # ANTES DEL LANZAMIENTO PÚBLICO volver a: DIA="5" e IP_HORA="3"
+      # (cada simulación ≈ 100 llamadas LLM; estos topes son la muralla
+      # de la billetera cuando la URL sea pública).
       - key: ENJAMBRE_MAX_SIM_DIA
-        value: "5"
+        value: "500"
+      - key: ENJAMBRE_MAX_SIM_IP_HORA
+        value: "100"
       # orígenes permitidos por CORS: el dominio de Vercel de producción.
       # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
       - key: ENJAMBRE_ORIGENES

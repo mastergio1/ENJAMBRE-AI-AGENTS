@@ -70,6 +70,20 @@ def _validar_respuesta(texto: str) -> dict | None:
 
 # ---------- llamadas a la API ----------
 
+_primera_falla_reportada = False
+
+
+def _reportar_primera_falla(error: Exception) -> None:
+    """Deja UNA línea en el log con la causa real de la primera falla de API
+    del proceso (clave inválida, sin saldo, timeout…). Sin esto, el fallback
+    silencioso hace imposible diagnosticar en producción."""
+    global _primera_falla_reportada
+    if not _primera_falla_reportada:
+        _primera_falla_reportada = True
+        print(f"⚠️ cerebro: la API de Anthropic falló ({type(error).__name__}): {error} "
+              "— los líderes usan el fallback léxico", flush=True)
+
+
 async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, semilla: int) -> dict:
     """Una llamada por líder. Cualquier falla degrada al fallback léxico."""
     prompt = POR_ID[arquetipo_id]["prompt"]
@@ -89,8 +103,10 @@ async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, s
             if datos is not None:
                 datos["fuente"] = "api"
                 return datos
-        except Exception:
-            pass  # timeout, red, límite de tasa, JSON roto: da igual, hay fallback
+        except Exception as error:
+            # timeout, red, límite de tasa, JSON roto: hay fallback, pero la
+            # PRIMERA causa queda en el log para poder diagnosticar
+            _reportar_primera_falla(error)
     return respuesta_fallback(titular, arquetipo_id, semilla)
 
 

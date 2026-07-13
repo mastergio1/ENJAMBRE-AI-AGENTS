@@ -6,16 +6,18 @@
 > (biblia de la capa de contenido). Cuenta **lo construido, cómo quedó y
 > por qué**.
 >
-> Actualizado: julio 2026 · rama `claude/m-d-file-6z1e63` · commit de la Etapa 10.
+> Actualizado: julio 2026 · rama `claude/m-d-file-6z1e63` · tras la marca
+> Rubicón Lab y la auditoría previa al despliegue.
 
 ---
 
 ## 1. Estado en una línea
 
-**El producto está funcionalmente completo: etapas 0-4 (simulador) + 6-10
-(capa de contenido) + blindaje de seguridad. 97 tests verdes.** Lo único
-pendiente es del lado de Giorgio: el deploy (Render + Vercel) y las claves
-externas (Alpaca, Barchart, Resend).
+**El producto está funcionalmente completo, vestido con la marca Rubicón Lab
+y auditado antes de desplegar. 106 tests verdes.** Lo único pendiente es del
+lado de Giorgio: el deploy (Render + Vercel), las claves externas (Alpaca,
+Barchart, Resend) y cerrar 4 puntos de configuración de la auditoría en el
+momento del deploy.
 
 | Etapa | Qué |
 |---|---|
@@ -23,7 +25,6 @@ externas (Alpaca, Barchart, Resend).
 | 2 | Cerebros LLM + red de influencia |
 | 3 | Enjambre 3D (instanced) |
 | 4 | Integración WebSocket + deploy listo |
-| — | Blindaje de seguridad (rate-limit, XSS, path traversal, DoS) |
 | 6 | Persistencia SQLite + Alpaca + portero |
 | 7 | El muro (portada) |
 | 8 | El Pulso (newsletter) |
@@ -31,6 +32,8 @@ externas (Alpaca, Barchart, Resend).
 | 9 | El archivo (hemeroteca) |
 | 10 | El duelo + el widget |
 | 5 | Reporte exportable — recogido dentro de la capa de contenido |
+| — | **Marca Rubicón Lab** (paleta, firma, rediseño del enjambre) |
+| — | **Blindaje de seguridad** + **auditoría previa al despliegue** |
 
 ## 2. Mapa del código
 
@@ -56,20 +59,26 @@ engine/                        Python 3.11 · Mesa 3 · FastAPI (venv en engine/
 │   ├── disparar_pulso.py      el cron golpea el endpoint protegido
 │   ├── vocabulario.py         filtro CMF (prohibidos ES+EN + disclaimer)
 │   └── fuentes/               alpaca.py (noticias) · barchart.py (datos de mercado)
-└── validation/                97 tests
+├── validation/                106 tests
+├── requirements.txt           deps de PRODUCCIÓN, versiones fijas (==)
+├── requirements-dev.txt       pytest/httpx (NO van en la imagen)
+├── Dockerfile                 imagen no-root (uid 10001)
+└── .dockerignore              fuera .venv, datos, caché, secretos, dev-deps, tests
 
 web/                           Vite · Three.js · Tailwind 4 · GSAP
-├── src/swarm/                 enjambre 3D instanced + datos/escenario espejo
-├── src/muro/muro.js           portada: tarjetas, replay, on-demand, suscripción
+├── src/swarm/enjambre.js      enjambre 3D instanced (paleta de marca, §3.6)
+├── src/muro/muro.js           portada: tarjetas, replay, on-demand, suscripción, FIRMA
 ├── src/archivo/archivo.js     hemeroteca + modo "armar duelo"
 ├── src/duelo/duelo.js         dos enjambres sincronizados + Reel (MediaRecorder)
 ├── src/widget/widget.js       iframe embebible (build separado widget.html)
-├── src/ui/                    panel (reporte, voces, epílogo) + conexión WS
+├── src/ui/                    panel (reporte, voces, epílogo, tooltip) + conexión WS
+├── src/style.css              tokens de marca + firma .rl-* + divisor "cruce"
 └── src/main.js                wiring + enrutamiento (?sim, /archivo, /duelo/...)
 
 render.yaml + engine/Dockerfile   deploy motor (web + cron) en Render
 web/vercel.json                   deploy web + CSP + rewrites SPA
-docs/                             despliegue · contenido · seguridad · la-redaccion · contexto
+docs/                             despliegue · contenido · seguridad · la-redaccion ·
+                                  auditoria-pre-deploy · contexto
 ```
 
 ## 3. Decisiones técnicas y POR QUÉ (lo caro de re-aprender)
@@ -97,7 +106,9 @@ u32 tick · i8×5000`) → texto `fin` con reporte y `sim_id`. **El orden de
 agentes es el contrato**: orden de creación (= agentes.json, líderes al
 final), debe coincidir con `web/src/swarm/datos.js`. El replay reusa el
 mismo formato de frame (`TAMANO_FRAME = 8+5000`), lo usan muro, archivo,
-duelo y widget.
+duelo y widget. Hay además un **modo observatorio** (`{"tipo":"observatorio"}`
+/ `noticia` / `detener`): el enjambre late indefinidamente y recibe noticias
+encima; máx 2 sesiones, auto-cierre ~8 min.
 
 ### 3.4 La capa de contenido
 - **Persistencia primero**: TODA simulación se guarda. `id =
@@ -124,50 +135,90 @@ duelo y widget.
   jamás simula; lista blanca vía CORS (`ENJAMBRE_WIDGET_DOMINIOS`) — fuera
   de lista, CORS bloquea los datos → muestra el CTA.
 
-### 3.5 Seguridad (ver docs/seguridad.md)
-Rate-limit HTTP por IP (IP real = último salto de X-Forwarded-For);
-XSS neutralizado con `esc()` antes de todo `innerHTML` + CSP en
-`vercel.json`; `sim_id` validado `^[0-9a-f]{16}$`; semáforo de 2
-simulaciones concurrentes; WebSocket robusto ante basura; CORS restringido.
-Tope on-demand **5/día** (la muralla de la billetera LLM).
+### 3.5 Seguridad y auditoría previa al despliegue (ver docs/auditoria-pre-deploy.md)
+Controles de base: rate-limit HTTP por IP (IP real = último salto de
+X-Forwarded-For); XSS neutralizado con `esc()` antes de todo `innerHTML` +
+CSP en `vercel.json`; `sim_id` validado `^[0-9a-f]{16}$`; SQL 100%
+parametrizado; path traversal con doble muralla; semáforos (2 simulaciones,
+2 observatorios); tope on-demand **5/día** (la muralla de la billetera LLM).
+
+La **auditoría previa al deploy** cerró 5 puntos en código:
+- Escapado del **tooltip del líder** (frase del LLM iba cruda a innerHTML).
+- Token de admin comparado en **tiempo constante** (`hmac.compare_digest`).
+- **Dependencias fijas** (`==`) + dev-deps fuera de la imagen.
+- **Antirreenvío** del correo de confirmación (ventana 10 min por dirección).
+- **Contenedor no-root** + `.dockerignore`.
+
+Quedan 4 puntos para el **momento del deploy** (necesitan probar contra
+Vercel/Render): **A** exceptuar `widget.html` de `frame-ancestors 'none'`
+(si no, el widget no se puede incrustar) · **D** confirmar que la IP tras el
+proxy de Render es la real · **G** fijar el dominio real en `ENJAMBRE_ORIGENES`
+· **F/H** notas menores (límites en memoria de 1 instancia, tope de conexiones
+WS). Detalle y niveles en `docs/auditoria-pre-deploy.md`.
+
+### 3.6 La marca Rubicón Lab (paleta, firma, enjambre)
+Se aplicó el manual de marca. **Aplicación "reverse"**: fondo tinta cálida,
+el **teal** (`#6fa89e`, "el río") como único acento de la interfaz (reemplaza
+el dorado anterior). Tipografías Cormorant Garamond + Jost (ya eran las de la
+marca). Decisiones de color:
+- **La fachada** (botones, sparkline, bordes, acentos de UI) = teal de marca.
+- **El enjambre en acción** (decisión de Giorgio, versión "seria" para público
+  B2B): reposo en grafito cálido `#5c574f`, compra en verde viridiano
+  `#4f9e86`, venta en rosa-arcilla `#c47b7b`, y **los líderes conservan su
+  DORADO** `#e3c565` como faros — el único acento cálido, distinto del teal de
+  la interfaz, marca quién guía a la manada.
+- **La firma "Creada por Rubicón Lab"** (§10 del manual) al pie del muro:
+  snippet oficial scopeado `.rl-*`, hereda `currentColor` (sin teal), cae al
+  isotipo `R|` en ≤520 px. Enlace en `URL_ESTUDIO` (`muro.js`) — hoy apunta a
+  Instagram como marcador; **decisión abierta**: confirmar dominio o handle.
+- Coherencia de marca también en la imagen del "momento dramático"
+  (`captura.py`) y el correo El Pulso (`boletin.py`).
+- Los colores del enjambre viven como constantes en `web/src/swarm/enjambre.js`
+  (`NEUTRO/COMPRA/VENTA/LIDER`): cambiar la paleta es tocar esas 4 líneas.
 
 ## 4. Cómo correr y verificar
 
 ```bash
 cd engine && source .venv/bin/activate
-python -m pytest validation/ -q         # 97 tests (~3-4 min)
-python simular.py 42                     # métricas de hechos estilizados
-python -m contenido.pipeline            # el ritual (sin enviar correos)
-python probar_portero.py                # log de veredictos del día
-uvicorn server:app --port 8000          # motor
-cd web && npm install && npm run dev     # web → localhost:5173
+pip install -r requirements-dev.txt      # deps de prod + pytest/httpx
+python -m pytest validation/ -q          # 106 tests (~4-5 min)
+python simular.py 42                      # métricas de hechos estilizados
+python -m contenido.pipeline             # el ritual (sin enviar correos)
+python probar_portero.py                 # log de veredictos del día
+uvicorn server:app --port 8000           # motor
+cd web && npm install && npm run dev      # web → localhost:5173
 ```
 
 Números sanos: curtosis 4-9 · AC|r| lag1 0.15-0.45 · AC retornos |media|
 < 0.1 · asimetría 1.2-3 · shock -0.9 → mínimo -7% a -18% con rebote ·
 institucionales ~65-70% del volumen. E2E con navegador:
 `npm run build && npx vite preview --port 4173` + Playwright
-(`executablePath /opt/pw-browsers/chromium`, flags swiftshader).
+(`executablePath /opt/pw-browsers/chromium-*/chrome-linux/chrome`).
 
 ## 5. Pendientes — todos del lado de Giorgio
 
 1. **Deploy** (~10 min, `docs/despliegue.md`): Render (Blueprint lee
-   `render.yaml`: web + cron) + Vercel (root `web`, `VITE_WS_URL`). Cerrar
-   CORS con `ENJAMBRE_ORIGENES`.
+   `render.yaml`: web + cron) + Vercel (root `web`, `VITE_WS_URL`). En el
+   deploy se cierran los 4 puntos de la auditoría (A widget CSP, D IP tras
+   proxy, G CORS con `ENJAMBRE_ORIGENES`, F/H notas).
 2. **Claves** (todo con degradación a demo hasta que lleguen):
    - Alpaca (`ALPACA_API_KEY_ID/SECRET`) → titulares reales.
    - Barchart (`BARCHART_API_KEY`) → datos de mercado reales de La Redacción.
    - Resend (`RESEND_API_KEY`) + dominio verificado → el correo llega.
    - `ENJAMBRE_PIPELINE_TOKEN` (mismo valor en web y cron), opcional
      Telegram, opcional `ENJAMBRE_WIDGET_DOMINIOS` para embebido en medios.
-3. **Verificar en dispositivo real**: el Reel del duelo (MediaRecorder no
+3. **Decisión de marca abierta**: el destino de la firma (`URL_ESTUDIO` en
+   `muro.js`) — dominio del estudio o Instagram. Reemplazar el marcador.
+4. **Verificar en dispositivo real**: el Reel del duelo (MediaRecorder no
    se certifica headless) y los 100 cerebros con API real (latencia < 15 s).
-4. **Recomendado**: Cloudflare gratis delante de todo (DDoS volumétrico).
+5. **Recomendado**: Cloudflare gratis delante de todo (DDoS volumétrico).
 
 ## 6. Deuda técnica consciente
-- Rate-limit y tope en memoria de una instancia (Redis al escalar).
+- Rate-limit y tope en memoria de una instancia (Redis al escalar);
+  `seguridad.limpiar()` existe pero no se programa aún.
 - Render free = disco efímero: el pipeline regenera el día; para archivo
-  histórico persistente, subir de plan + disco en `/app/datos`.
+  histórico persistente, subir de plan + disco en `/app/datos` (con permiso
+  de escritura para el uid 10001 del contenedor no-root).
 - Órdenes límite en reposo no reservan efectivo (acotado por expiración).
 - La demo de Barchart es un snapshot fijo: los EVENTOS ya varían por día,
   los MOVIMIENTOS varían recién con la clave real.

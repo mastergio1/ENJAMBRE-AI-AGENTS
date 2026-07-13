@@ -2,6 +2,9 @@
 // Un solo loop, tres draw calls, gobernador de fps para móvil.
 
 import * as THREE from 'three'
+import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { abrirArchivo } from './archivo/archivo.js'
 import { abrirDuelo } from './duelo/duelo.js'
 import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
@@ -24,6 +27,21 @@ camara.lookAt(0, 0, 0)
 
 const enjambre = new Enjambre(7)
 escena.add(enjambre.grupo)
+
+// ---------- estela de movimiento (afterimage) + tinte de pánico ----------
+// La estela es una realimentación de cuadro: cada frame mezcla el anterior
+// atenuado con el nuevo. En calma es sutil (hipnótica); en un shock fuerte
+// se alarga y el fondo se entibia hacia el rosa-arcilla (turbulencia).
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(escena, camara))
+const estela = new AfterimagePass(0.82)
+composer.addPass(estela)
+composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+composer.setSize(window.innerWidth, window.innerHeight)
+
+const FONDO_CALMA = new THREE.Color('#1b1916')
+const FONDO_PANICO = new THREE.Color('#241216') // tinta cálida entintada de rosa
+const _fondo = new THREE.Color() // reutilizado por frame (nada nuevo en el loop)
 
 // ---------- interacción ----------
 
@@ -217,6 +235,7 @@ window.addEventListener('resize', () => {
   camara.aspect = window.innerWidth / window.innerHeight
   camara.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
+  composer.setSize(window.innerWidth, window.innerHeight)
 })
 
 // ---------- gobernador de fps: bajo 45 recorta partículas ----------
@@ -259,7 +278,16 @@ function cuadro() {
     panel.actualizarHUD(enjambre.precio, fpsSuavizado, enjambre.malla.count + enjambre.lideres.length, modo)
     panel.dibujarSparkline(enjambre.seriePrecio)
   }
-  renderer.render(escena, camara)
+
+  // estela y tinte según el pánico de la masa (0..1)
+  const panico = enjambre.panico || 0
+  estela.uniforms.damp.value = 0.80 + panico * 0.14 // 0.80 (sutil) → ~0.94 (larga)
+  _fondo.copy(FONDO_CALMA).lerp(FONDO_PANICO, panico)
+  escena.background.copy(_fondo)
+  escena.fog.color.copy(_fondo)
+  // en equipos lentos, la estela se apaga para recuperar cuadros
+  estela.enabled = fpsSuavizado > 38
+  composer.render()
 }
 
 // ---------- modo estático (prefers-reduced-motion) ----------

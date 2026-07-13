@@ -31,6 +31,7 @@ export class Enjambre {
     this._ultimaMuestra = 0
     this.sentimientoGlobal = 0
     this.modoRemoto = false  // true: el motor real manda por WebSocket
+    this.panico = 0          // 0..1: cuánto se hunde la masa (estela + tinte)
 
     this._construirClusters()
     this._construirParticulas()
@@ -271,6 +272,11 @@ export class Enjambre {
       if (this.seriePrecio.length > 400) this.seriePrecio.shift()
     }
     this.sentimientoMedio = sentMedio
+
+    // pánico visual: sube con el hundimiento de la masa, decae suave. Alimenta
+    // la estela (más larga) y el tinte del fondo (hacia el rosa-arcilla).
+    const objetivoPanico = Math.min(1, Math.max(0, -sentMedio) * 1.9)
+    this.panico += (objetivoPanico - this.panico) * Math.min(1, dt * 2.2)
 
     // rotación lenta de todo el enjambre: hipnosis
     this.grupo.rotation.y = t * 0.03

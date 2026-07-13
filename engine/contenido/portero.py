@@ -18,7 +18,7 @@ import re
 
 from contenido import persistencia
 
-MODELO_PORTERO = "claude-haiku-4-5"
+MODELO_PORTERO = "claude-haiku-4-5-20251001"
 LOTE_MAXIMO = 20
 UMBRAL_DUPLICADO = 0.85
 UMBRAL_IMPACTO = 5  # bajo esto, el heurístico descarta

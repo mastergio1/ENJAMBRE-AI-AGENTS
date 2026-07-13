@@ -48,7 +48,7 @@ enjambre/
 **Flujo de una simulación:**
 1. Usuario escribe titular → 2. Los 100 líderes LLM lo interpretan (paralelo, 1 llamada c/u) → 3. Cada líder emite señal ∈ [-1, +1] con justificación de una frase → 4. La señal se propaga por la red de influencia a los 4.900 agentes de reglas → 5. El motor corre N ticks; los agentes ponen órdenes; el precio emerge del libro de órdenes → 6. Cada tick se transmite por WebSocket al frontend → 7. Three.js anima el enjambre → 8. Al terminar, se genera el reporte.
 
-**Stack fijo:** Python + Mesa + FastAPI (motor) · API de Anthropic, modelo `claude-sonnet-4-6` (cerebros) · Vite + Three.js + GSAP + Tailwind (frontend) · GitHub (`mastergio1`) + Vercel (deploy frontend).
+**Stack fijo:** Python + Mesa + FastAPI (motor) · API de Anthropic, modelo `claude-sonnet-5` (cerebros) + `claude-haiku-4-5` (portero) · Vite + Three.js + GSAP + Tailwind (frontend) · GitHub (`mastergio1`) + Vercel (deploy frontend).
 
 ## 4. LA MEZCLA — 5.000 AGENTES
 

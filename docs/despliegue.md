@@ -54,6 +54,6 @@ cd web && npm run dev
 
 ## Presupuesto LLM
 
-Cada simulación = 100 llamadas a `claude-sonnet-4-6` (una por líder), dentro
+Cada simulación = 100 llamadas a `claude-sonnet-5` (una por líder), dentro
 del presupuesto de CLAUDE.md (~100-120). Las respuestas se cachean por
 (titular, arquetipo, semilla): repetir la misma demo no cuesta nada.

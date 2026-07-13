@@ -16,7 +16,7 @@ from pathlib import Path
 from brains.arquetipos import INSTRUCCION_JSON, POR_ID
 from brains.fallback import respuesta_fallback
 
-MODELO = "claude-sonnet-4-6"
+MODELO = "claude-sonnet-5"
 TEMPERATURA = 0.8       # variabilidad intra-arquetipo: dos Doomers no responden igual
 MAX_CONCURRENTES = 25   # llamadas simultáneas
 TIMEOUT_SEGUNDOS = 12.0

@@ -194,7 +194,10 @@ async function abrirSimulacion(id) {
   try {
     const d = await (await fetch(`${api}/api/simulacion/${id}`)).json()
     enjambre.fijarLideresRemotos(d.lideres || [])
-    panel.mostrarReporte(d.resumen, { voces: d.voces, epilogo: d.epilogo, titular: d.titular, id: d.id })
+    panel.mostrarReporte(d.resumen, {
+      voces: d.voces, epilogo: d.epilogo, titular: d.titular, id: d.id,
+      simbolos: d.simbolos,  // habilita la comparación con el gráfico real
+    })
     history.replaceState({}, '', `?sim=${id}`)
     if (d.tiene_replay && !reducirMovimiento) {
       await reproductorArchivo.cargar(`${api}/api/simulacion/${id}/replay`)

@@ -1019,6 +1019,20 @@ body.archivo-abierto .muro { display: none; }
   line-height: 1.45;
   margin: 0;
 }
+/* comparación educativa: el gráfico REAL del símbolo (TradingView) */
+.mercado-real {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-left: 2px solid var(--teal);
+  background: rgba(111, 168, 158, 0.06);
+}
+.mercado-real .mr-grafico { min-height: 190px; }
+.mercado-real .mr-nota {
+  font-size: 0.72rem;
+  color: var(--crema-suave);
+  line-height: 1.4;
+  margin: 8px 0 0;
+}
 .rep-compartir {
   background: none;
   border: 1px solid rgba(111, 168, 158, 0.5);

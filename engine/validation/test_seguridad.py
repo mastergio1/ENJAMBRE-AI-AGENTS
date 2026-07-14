@@ -118,6 +118,9 @@ def test_el_muro_escapa_datos_antes_de_innerhtml():
     assert "${esc(lider.frase)}" in panel
     assert re.search(r"\$\{lider\.frase\}", panel) is None
     assert re.search(r"\$\{lider\.nombre\}", panel) is None
+    # el ticker pasa por la lista blanca antes del HTML y del widget externo
+    assert "tickerSeguro(" in panel
+    assert re.search(r"\$\{extras\.simbolos\}", panel) is None  # nunca crudo
 
 
 # ---------- el token de admin se compara en tiempo constante ----------

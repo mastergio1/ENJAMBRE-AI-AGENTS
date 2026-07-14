@@ -7,6 +7,34 @@ import { ESCENARIOS } from '../swarm/escenario.js'
 const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (valor) => String(valor ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
 
+// el ticker viaja hasta la config del widget de TradingView: lista blanca
+// estricta (solo letras, números, punto, dos puntos y guion), nunca crudo
+const tickerSeguro = (v) =>
+  String(v ?? '').split(',')[0].trim().toUpperCase().replace(/[^A-Z0-9.:\-]/g, '').slice(0, 12)
+
+/** Monta el mini-gráfico REAL del símbolo (widget oficial de TradingView).
+ * El <script> se crea programáticamente porque innerHTML no ejecuta scripts. */
+function montarGraficoReal(contenedor, simbolo) {
+  if (!contenedor || !simbolo) return
+  const caja = document.createElement('div')
+  caja.className = 'tradingview-widget-container'
+  const script = document.createElement('script')
+  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js'
+  script.async = true
+  script.textContent = JSON.stringify({
+    symbol: simbolo,
+    width: '100%',
+    height: 190,
+    locale: 'es',
+    dateRange: '1M',
+    colorTheme: 'dark',
+    isTransparent: true,
+    autosize: false,
+  })
+  caja.appendChild(script)
+  contenedor.appendChild(caja)
+}
+
 export function crearPanel(alEnviarTitular, alObservatorio) {
   const raiz = document.getElementById('ui')
 
@@ -120,6 +148,15 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
            <p>${esc(extras.epilogo)}</p></div>`
         : ''
 
+      // el gráfico REAL del símbolo (TradingView) junto a la reacción simulada:
+      // el ejercicio educativo central — enjambre vs mercado de verdad
+      const simbolo = tickerSeguro(extras.simbolos)
+      const mercadoRealHtml = simbolo
+        ? `<div class="mercado-real"><div class="epi-rotulo">Comparación educativa · el mercado real (${esc(simbolo)})</div>
+           <div class="mr-grafico"></div>
+           <p class="mr-nota">El enjambre simula el comportamiento de una masa de inversionistas; arriba, el precio real del símbolo (TradingView). Compararlos es un ejercicio educativo — no una predicción ni una validación.</p></div>`
+        : ''
+
       const cabecera = extras.titular
         ? `<div class="rep-titular">${esc(extras.titular)}</div>` : ''
       const compartir = extras.id
@@ -139,9 +176,11 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
         </table>
         <div class="voces">${vocesHtml}</div>
         ${epilogoHtml}
+        ${mercadoRealHtml}
         ${compartir}
         <p class="descargo">${esc(reporte.descargo)}</p>
       `
+      if (simbolo) montarGraficoReal(panelReporte.querySelector('.mr-grafico'), simbolo)
       panelReporte.hidden = false
       panelReporte.querySelector('.cerrar').addEventListener('click', () => {
         panelReporte.hidden = true

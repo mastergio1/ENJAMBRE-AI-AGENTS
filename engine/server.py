@@ -516,6 +516,14 @@ def _payload_simulacion(sim_id: str) -> dict | None:
     conexion = persistencia.conectar()
     try:
         datos = persistencia.obtener_simulacion(conexion, sim_id)
+        simbolos = ""
+        if datos is not None:
+            # el ticker viene del titular del muro (si esta sim nació de uno):
+            # la UI lo usa para la comparación educativa con el gráfico real
+            fila = conexion.execute(
+                "SELECT simbolos FROM titulares WHERE sim_id = ?", (sim_id,)
+            ).fetchone()
+            simbolos = (fila["simbolos"] or "") if fila else ""
     finally:
         conexion.close()
     if datos is None:
@@ -532,6 +540,7 @@ def _payload_simulacion(sim_id: str) -> dict | None:
         "voces": _voces_por_arquetipo(datos["lideres"]),
         "serie_precios": datos["serie_precios"],
         "epilogo": datos.get("epilogo"),
+        "simbolos": simbolos,
         "tiene_replay": persistencia.leer_frames(sim_id) is not None,
     }
 

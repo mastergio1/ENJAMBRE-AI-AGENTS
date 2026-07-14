@@ -110,6 +110,20 @@ def test_simulacion_incluye_ocho_voces(dia):
     assert voces == sorted(voces, key=lambda v: v["senal_media"])
 
 
+def test_simulacion_incluye_simbolos_del_titular(dia):
+    """El ticker viaja con la simulación: habilita la comparación educativa
+    con el gráfico real (TradingView) en el frontend."""
+    cliente = TestClient(server.app)
+    # todas las publicadas del día demo traen su titular vinculado con simbolos
+    con_ticker = [
+        cliente.get(f"/api/simulacion/{p['sim_id']}").json()
+        for p in dia["publicadas"]
+    ]
+    assert any(d["simbolos"] for d in con_ticker)
+    for d in con_ticker:
+        assert isinstance(d["simbolos"], str)  # nunca None: la UI no valida tipos
+
+
 # ---------- '¿y qué pasó después?' (epílogo, protegido) ----------
 
 def test_epilogo_exige_token(dia, monkeypatch):

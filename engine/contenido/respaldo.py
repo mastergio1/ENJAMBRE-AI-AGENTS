@@ -36,25 +36,29 @@ def hay_token() -> bool:
 
 
 def exportar_casos(conexion) -> list[dict]:
-    """Los casos de calibración (destacadas ya corregidas) como dicts planos."""
+    """Los casos de calibración como dicts planos: destacadas corregidas
+    (origen 'en_vivo') y exámenes históricos del backtest ('historico')."""
     filas = conexion.execute(
         """SELECT s.id, s.fecha, s.titular, s.resumen_json, s.reaccion_real,
-                  s.epilogo, t.simbolos
+                  s.epilogo, s.fuente, t.simbolos
            FROM simulaciones s LEFT JOIN titulares t ON t.sim_id = s.id
-           WHERE s.destacada = 1 AND s.reaccion_real IS NOT NULL
+           WHERE s.reaccion_real IS NOT NULL
+             AND (s.destacada = 1 OR s.fuente = 'backtest')
            ORDER BY s.fecha"""
     ).fetchall()
     casos = []
     for fila in filas:
         resumen = json.loads(fila["resumen_json"])
+        reaccion = json.loads(fila["reaccion_real"])
         casos.append({
             "sim_id": fila["id"],
+            "origen": "historico" if fila["fuente"] == "backtest" else "en_vivo",
             "fecha": fila["fecha"],
             "titular": fila["titular"],
-            "simbolos": fila["simbolos"] or "",
+            "simbolos": fila["simbolos"] or reaccion.get("simbolo", ""),
             "direccion_pct": resumen.get("direccion_pct"),
             "volatilidad_pct": resumen.get("volatilidad_pct"),
-            "reaccion_real": json.loads(fila["reaccion_real"]),
+            "reaccion_real": reaccion,
             "epilogo": fila["epilogo"],
         })
     return casos

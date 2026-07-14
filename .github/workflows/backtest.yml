@@ -1,0 +1,57 @@
+# El backtest histórico — una tanda por botón, para cuidar el presupuesto.
+#
+# Cada corrida procesa una tanda de exámenes históricos (por defecto 5):
+# el enjambre simula noticias del pasado y se compara con cuánto se movió
+# el símbolo de verdad en esos días. Costo aprox.: cada simulación son
+# ~100 llamadas LLM. Se dispara SOLO a mano (pestaña Actions → Run
+# workflow, también desde la app móvil de GitHub). Sin agenda automática.
+
+name: Backtest histórico (tanda)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tanda:
+        description: "Cuántos exámenes rendir en esta tanda (máx 10)"
+        required: false
+        default: "5"
+
+jobs:
+  rendir-tanda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Rendir la tanda
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          TANDA: ${{ github.event.inputs.tanda || '5' }}
+        run: |
+          respuesta=$(curl -sf -m 60 -X POST \
+            "https://enjambre-motor.onrender.com/api/backtest?tanda=$TANDA" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "Respuesta del motor: $respuesta"
+          echo "La tanda corre en segundo plano (~1 minuto por examen)."
+          echo "El avance se ve con GET /api/backtest y los casos quedan en"
+          echo "la rama respaldo-datos (datos/calibracion.json)."

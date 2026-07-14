@@ -827,6 +827,42 @@ def api_libreta(x_pipeline_token: str = Header(default="")) -> dict:
     return corrector.libreta()
 
 
+def _correr_backtest(tanda: int) -> None:
+    from contenido import backtest
+
+    resultado = backtest.correr_tanda(tamano=tanda)
+    print(f"backtest: {len(resultado['hechas'])} exámenes rendidos, "
+          f"{resultado['pendientes']} pendientes, sin datos: {resultado['sin_datos']}",
+          flush=True)
+
+
+@app.post("/api/backtest")
+def api_backtest(tareas: BackgroundTasks, tanda: int = 5,
+                 x_pipeline_token: str = Header(default="")) -> dict:
+    """Rinde una tanda de exámenes históricos (protegido, freno de
+    presupuesto: máx 10 por corrida). Corre en segundo plano — cada
+    simulación toma ~1 minuto."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import backtest
+
+    avance = backtest.estado()
+    tareas.add_task(_correr_backtest, tanda)
+    return {"estado": "iniciado", "tanda": max(1, min(int(tanda), backtest.TANDA_MAXIMA)),
+            "hechos": avance["hechos"], "pendientes": avance["pendientes"]}
+
+
+@app.get("/api/backtest")
+def api_backtest_estado(x_pipeline_token: str = Header(default="")) -> dict:
+    """El avance del backtest: cuántos exámenes rendidos y cuántos faltan."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import backtest
+
+    avance = backtest.estado()
+    return {k: v for k, v in avance.items() if not k.startswith("_")}
+
+
 # ---------- El Archivo / hemeroteca (Etapa 9) ----------
 
 @app.get("/api/archivo")

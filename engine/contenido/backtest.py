@@ -1,0 +1,116 @@
+"""Backtesting histórico — la calibración no espera al futuro.
+
+Le pasa al enjambre exámenes del pasado cuya respuesta real ya se conoce:
+titulares de eventos reales (backtest_eventos.json) se simulan hoy y se
+comparan con cuánto se movió el símbolo EN ESOS DÍAS históricos (Alpaca).
+
+Reglas de diseño:
+- **Tandas pequeñas** (presupuesto LLM ~100 llamadas por simulación):
+  cada corrida procesa `tamano` eventos y se detiene. Tope duro TANDA_MAXIMA.
+- Los casos quedan con fuente='backtest' y NUNCA destacada: no aparecen
+  en el muro ni en la hemeroteca (el archivo es el registro EN VIVO);
+  solo alimentan la libreta de calificaciones y la caja fuerte.
+- Reproducible: la semilla de cada evento sale de su fecha — repetir una
+  tanda no gasta (la caché de cerebros responde gratis).
+- Si Alpaca no entrega datos para un evento, queda pendiente y la
+  próxima tanda lo reintenta. Nunca lanza.
+"""
+
+import json
+from pathlib import Path
+
+from contenido import persistencia
+
+RUTA_EVENTOS = Path(__file__).parent / "backtest_eventos.json"
+TANDA_DEFECTO = 5
+TANDA_MAXIMA = 10   # freno duro de presupuesto por corrida
+RUEDAS = 2          # misma ventana de medición que el corrector en vivo
+
+
+def cargar_eventos() -> list[dict]:
+    with open(RUTA_EVENTOS, encoding="utf-8") as archivo:
+        return json.load(archivo)["eventos"]
+
+
+def _seed(evento: dict) -> int:
+    """Semilla determinística por evento: la fecha como número (AAAAMMDD)."""
+    return int(evento["fecha"].replace("-", ""))
+
+
+def _sim_id(evento: dict) -> str:
+    return persistencia.id_simulacion(evento["titular"], _seed(evento))
+
+
+def estado(conexion=None) -> dict:
+    """Cuántos exámenes están rendidos (con nota real) y cuántos faltan."""
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        eventos = cargar_eventos()
+        pendientes = []
+        for evento in eventos:
+            fila = conexion.execute(
+                "SELECT reaccion_real FROM simulaciones WHERE id = ?", (_sim_id(evento),)
+            ).fetchone()
+            if not (fila and fila["reaccion_real"]):
+                pendientes.append(evento)
+        return {"total": len(eventos), "hechos": len(eventos) - len(pendientes),
+                "pendientes": len(pendientes), "_lista_pendiente": pendientes}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
+                 simular=None, obtener_variacion=None) -> dict:
+    """Rinde una tanda de exámenes históricos. Devuelve el detalle.
+
+    `simular` y `obtener_variacion` son inyectables para los tests;
+    en producción usan el pipeline real y las barras de Alpaca.
+    """
+    if simular is None:
+        from contenido import pipeline
+        simular = lambda titular, seed: pipeline.simular_titular_completo(  # noqa: E731
+            titular, seed, con_frames=False
+        )
+    if obtener_variacion is None:
+        from contenido.fuentes import alpaca
+        obtener_variacion = alpaca.variacion_real
+
+    tamano = max(1, min(int(tamano), TANDA_MAXIMA))
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        pendientes = estado(conexion)["_lista_pendiente"]
+        hechas, sin_datos = [], []
+        for evento in pendientes[:tamano]:
+            reporte, lideres, serie, _ = simular(evento["titular"], _seed(evento))
+            sim_id = persistencia.guardar_simulacion(
+                conexion, titular=evento["titular"], fuente="backtest",
+                seed=_seed(evento), resumen=reporte, lideres=lideres,
+                serie_precios=serie, destacada=False,
+            )
+            variacion = obtener_variacion(evento["simbolo"], evento["fecha"], RUEDAS)
+            if variacion is None:
+                sin_datos.append(evento["id"])  # la próxima tanda reintenta
+                continue
+            persistencia.guardar_reaccion_real(
+                conexion, sim_id, {**variacion, "categoria": evento["categoria"]}
+            )
+            hechas.append({"id": evento["id"], "sim_id": sim_id,
+                           "sim_pct": reporte.get("direccion_pct"),
+                           "real_pct": variacion["pct_real"]})
+
+        resultado = {"hechas": hechas, "sin_datos": sin_datos,
+                     "pendientes": len(pendientes) - len(hechas)}
+        if hechas:
+            # los exámenes rendidos van directo a la caja fuerte de GitHub
+            try:
+                from contenido import respaldo
+                resultado["respaldo"] = respaldo.respaldar(conexion)
+            except Exception:
+                resultado["respaldo"] = None
+        return resultado
+    finally:
+        if propia:
+            conexion.close()

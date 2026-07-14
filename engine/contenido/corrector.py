@@ -85,34 +85,14 @@ def _texto_epilogo(direccion_pct: float, variacion: dict) -> str:
     )
 
 
-def libreta(conexion=None) -> dict:
-    """La libreta de calificaciones: enjambre vs mercado real, acumulado.
+def _signo(x: float) -> int:
+    return 0 if abs(x) < UMBRAL_PLANO else (1 if x > 0 else -1)
 
-    Es la brújula de la calibración (¿acierta la dirección? ¿exagera?),
-    no una métrica de marketing. Con pocos casos la tasa es anecdótica.
-    """
-    propia = conexion is None
-    conexion = conexion or persistencia.conectar()
-    try:
-        filas = conexion.execute(
-            "SELECT resumen_json, reaccion_real FROM simulaciones "
-            "WHERE destacada = 1 AND reaccion_real IS NOT NULL"
-        ).fetchall()
-    finally:
-        if propia:
-            conexion.close()
 
-    casos = []
-    for fila in filas:
-        sim = float(json.loads(fila["resumen_json"]).get("direccion_pct") or 0)
-        real = float(json.loads(fila["reaccion_real"]).get("pct_real") or 0)
-        casos.append((sim, real))
-
-    def signo(x: float) -> int:
-        return 0 if abs(x) < UMBRAL_PLANO else (1 if x > 0 else -1)
-
-    evaluables = [(s, r) for s, r in casos if signo(s) or signo(r)]
-    aciertos = sum(1 for s, r in evaluables if signo(s) == signo(r))
+def _resumir(casos: list[tuple[float, float]]) -> dict:
+    """Las métricas de un conjunto de casos (sim_pct, real_pct)."""
+    evaluables = [(s, r) for s, r in casos if _signo(s) or _signo(r)]
+    aciertos = sum(1 for s, r in evaluables if _signo(s) == _signo(r))
     return {
         "casos": len(casos),
         "evaluables": len(evaluables),  # al menos un lado se movió
@@ -120,5 +100,36 @@ def libreta(conexion=None) -> dict:
         "tasa_acierto": round(aciertos / len(evaluables), 2) if evaluables else None,
         "magnitud_media_sim": round(mean(abs(s) for s, _ in casos), 2) if casos else None,
         "magnitud_media_real": round(mean(abs(r) for _, r in casos), 2) if casos else None,
+    }
+
+
+def libreta(conexion=None) -> dict:
+    """La libreta de calificaciones: enjambre vs mercado real, acumulado.
+
+    Es la brújula de la calibración (¿acierta la dirección? ¿exagera?),
+    no una métrica de marketing. Separa lo EN VIVO (destacadas corregidas
+    día a día) de lo HISTÓRICO (backtest): peras con peras.
+    """
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        filas = conexion.execute(
+            "SELECT resumen_json, reaccion_real, fuente FROM simulaciones "
+            "WHERE reaccion_real IS NOT NULL AND (destacada = 1 OR fuente = 'backtest')"
+        ).fetchall()
+    finally:
+        if propia:
+            conexion.close()
+
+    vivo, historico = [], []
+    for fila in filas:
+        sim = float(json.loads(fila["resumen_json"]).get("direccion_pct") or 0)
+        real = float(json.loads(fila["reaccion_real"]).get("pct_real") or 0)
+        (historico if fila["fuente"] == "backtest" else vivo).append((sim, real))
+
+    return {
+        **_resumir(vivo + historico),
+        "en_vivo": _resumir(vivo),
+        "historico": _resumir(historico),
         "nota": "con menos de 30 casos, la tasa es anecdótica — seguir acumulando",
     }

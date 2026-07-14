@@ -18,7 +18,7 @@
 en Render, web viva en Vercel, ambos con auto-deploy desde `main`. Los 100
 líderes leen con IA real (claude-sonnet-5), el muro publica las noticias
 del día, y el reporte compara la reacción del enjambre con el gráfico real
-del símbolo. 121 tests verdes.
+del símbolo. 129 tests verdes.
 
 | Pieza | URL |
 |---|---|
@@ -67,7 +67,7 @@ engine/                        Python 3.11 · Mesa 3 · FastAPI (venv en engine/
 │   ├── disparar_pulso.py      el cron golpea el endpoint protegido
 │   ├── vocabulario.py         filtro CMF (prohibidos ES+EN + disclaimer)
 │   └── fuentes/               alpaca.py (noticias) · barchart.py (datos de mercado)
-├── validation/                121 tests
+├── validation/                129 tests
 ├── requirements.txt           deps de PRODUCCIÓN, versiones fijas (==)
 ├── requirements-dev.txt       pytest/httpx (NO van en la imagen)
 ├── Dockerfile                 imagen no-root (uid 10001)
@@ -255,7 +255,7 @@ marca). Decisiones de color:
 ```bash
 cd engine && source .venv/bin/activate
 pip install -r requirements-dev.txt      # deps de prod + pytest/httpx
-python -m pytest validation/ -q          # 121 tests (~5 min)
+python -m pytest validation/ -q          # 129 tests (~5 min)
 python simular.py 42                      # métricas de hechos estilizados
 python -m contenido.pipeline             # el ritual (sin enviar correos)
 python probar_portero.py                 # log de veredictos del día

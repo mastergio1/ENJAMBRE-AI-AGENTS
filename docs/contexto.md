@@ -6,18 +6,24 @@
 > (biblia de la capa de contenido). Cuenta **lo construido, cómo quedó y
 > por qué**.
 >
-> Actualizado: julio 2026 · rama `claude/m-d-file-6z1e63` · tras la marca
-> Rubicón Lab y la auditoría previa al despliegue.
+> Actualizado: 14 de julio de 2026 · rama `claude/m-d-file-6z1e63` (espejo
+> en `main`, que es la que despliega) · tras el DEPLOY REAL, el arreglo de
+> los cerebros IA y la comparación con el mercado real (TradingView).
 
 ---
 
 ## 1. Estado en una línea
 
-**El producto está funcionalmente completo, vestido con la marca Rubicón Lab
-y auditado antes de desplegar. 106 tests verdes.** Lo único pendiente es del
-lado de Giorgio: el deploy (Render + Vercel), las claves externas (Alpaca,
-Barchart, Resend) y cerrar 4 puntos de configuración de la auditoría en el
-momento del deploy.
+**El producto está EN PRODUCCIÓN y en fase de pruebas reales.** Motor vivo
+en Render, web viva en Vercel, ambos con auto-deploy desde `main`. Los 100
+líderes leen con IA real (claude-sonnet-5), el muro publica las noticias
+del día, y el reporte compara la reacción del enjambre con el gráfico real
+del símbolo. 108 tests verdes.
+
+| Pieza | URL |
+|---|---|
+| Web (Vercel) | https://enjambre-ai-agents.vercel.app |
+| Motor (Render, plan free — duerme y tarda ~50 s en despertar) | https://enjambre-motor.onrender.com |
 
 | Etapa | Qué |
 |---|---|
@@ -34,6 +40,8 @@ momento del deploy.
 | 5 | Reporte exportable — recogido dentro de la capa de contenido |
 | — | **Marca Rubicón Lab** (paleta, firma, rediseño del enjambre) |
 | — | **Blindaje de seguridad** + **auditoría previa al despliegue** |
+| — | **DEPLOY REAL** (Render + Vercel, julio 2026) + guía "¿Cómo funciona?" |
+| — | **Cerebros IA funcionando** (arreglo `temperature`) + comparación TradingView |
 
 ## 2. Mapa del código
 
@@ -59,7 +67,7 @@ engine/                        Python 3.11 · Mesa 3 · FastAPI (venv en engine/
 │   ├── disparar_pulso.py      el cron golpea el endpoint protegido
 │   ├── vocabulario.py         filtro CMF (prohibidos ES+EN + disclaimer)
 │   └── fuentes/               alpaca.py (noticias) · barchart.py (datos de mercado)
-├── validation/                106 tests
+├── validation/                108 tests
 ├── requirements.txt           deps de PRODUCCIÓN, versiones fijas (==)
 ├── requirements-dev.txt       pytest/httpx (NO van en la imagen)
 ├── Dockerfile                 imagen no-root (uid 10001)
@@ -95,9 +103,21 @@ umbral 0.006) borra tendencias predecibles: si se debilita, el test 3 cae.
 ### 3.2 Los cerebros y la noticia
 - `model.aplicar_titular()`: sync usa `asyncio.run`; el servidor usa
   `analizar_titular_async` — **nunca la sync dentro de un event loop**.
+- Modelos: `claude-sonnet-5` (líderes) + `claude-haiku-4-5-20251001` (portero).
+- **⚠️ LECCIÓN CARA:** `claude-sonnet-5` eliminó los parámetros de sampling
+  (`temperature`/`top_p`/`top_k`) — enviarlos devuelve **400** y TODOS los
+  líderes caen silenciosamente al fallback. No volver a agregarlos. El
+  síntoma era: clave válida pero HUD siempre "· respaldo" y frases enlatadas.
+  `_reportar_primera_falla()` deja la causa real en el log de Render;
+  `GET /api/diagnostico` (solo-admin) prueba la clave con una llamada mínima.
+- **El caché solo guarda voces de la API, nunca fallback**: una falla
+  pasajera no congela frases enlatadas para ese (titular, arquetipo, semilla).
+- La semilla de los líderes es aleatoria por corrida (`_semilla_lider`):
+  dos corridas del mismo titular dan voces distintas.
 - El tono ambiente sale del **léxico crudo del titular**, no del promedio.
 - Léxico **bilingüe** (ES+EN): los cables de Alpaca llegan en inglés.
-- Fallback obligatorio por arquetipo; caché en `brains/cache/`.
+- Fallback obligatorio por arquetipo (3 variantes de frase por ramo, se
+  sortean por semilla); caché en `brains/cache/` (efímero en Render free).
 
 ### 3.3 El contrato motor ↔ frontend (WebSocket)
 Cliente: `{"tipo":"simular","titular","seed","ritmo","titular_id?"}`.
@@ -176,12 +196,51 @@ marca). Decisiones de color:
 - Los colores del enjambre viven como constantes en `web/src/swarm/enjambre.js`
   (`NEUTRO/COMPRA/VENTA/LIDER`): cambiar la paleta es tocar esas 4 líneas.
 
+### 3.7 El deploy real (julio 2026) y lo aprendido
+- **Render** (Blueprint desde `render.yaml`, solo el servicio web por ahora;
+  el cron del Pulso se agrega cuando Resend esté listo). **Vercel** (root
+  `web`, framework Vite, `VITE_WS_URL=wss://enjambre-motor.onrender.com/ws`).
+  Ambos auto-despliegan al empujar a `main`.
+- **Cold start:** el plan free de Render duerme el motor; el frontend
+  conecta "con paciencia" (`_conectarConPaciencia`, reintentos hasta 75 s)
+  y avisa "despertando el motor…" en vez de caer al demo a los 3 s.
+- **⚠️ MODO PRUEBAS ACTIVO:** los topes están abiertos en `render.yaml`
+  (`ENJAMBRE_MAX_SIM_DIA=500`, `ENJAMBRE_MAX_SIM_IP_HORA=100`). **ANTES del
+  lanzamiento público volver a 5 y 3** — cada simulación ≈ 100 llamadas LLM;
+  esos topes son la muralla de la billetera.
+- El pipeline se dispara a mano con
+  `curl -X POST https://enjambre-motor.onrender.com/api/pipeline -H "X-Pipeline-Token: <token>"`
+  (el token vive en el Environment de Render). Puebla el muro con las 3
+  destacadas del día.
+- La guía **"¿Cómo funciona?"** (`web/src/ui/guia.js`) se abre sola en la
+  primera visita (localStorage) — explica el enjambre a un retail que entra
+  sin contexto.
+
+### 3.8 Comparación con el mercado real + la ruta de calibración
+- **Lo construido:** las simulaciones que nacen de un titular del muro
+  exponen su ticker en `/api/simulacion/<id>` (`simbolos`, viene de la tabla
+  `titulares`), y el reporte muestra el mini-gráfico REAL del símbolo
+  (widget oficial de TradingView) bajo el rótulo "Comparación educativa ·
+  el mercado real". El ticker pasa por lista blanca (`tickerSeguro` en
+  `panel.js`) antes de tocar HTML o la config del widget — con guard de test.
+  Las simulaciones manuales no lo muestran (sin ticker asociado).
+- **Línea CMF:** la nota junto al gráfico dice explícitamente que es un
+  ejercicio educativo, no predicción ni validación. Mantener SIEMPRE.
+- **La ruta de calibración acordada (el "entrenamiento" honesto):** el
+  enjambre no predice precios; se calibra contra la realidad. Circuito:
+  (1) cada destacada guarda su ticker → (2) capturar automáticamente el
+  movimiento real 1-2 días después vía Alpaca y guardarlo como epílogo →
+  (3) con 30-50 casos, libreta de calificaciones (% de aciertos de
+  dirección, sesgos de sobre/sub-reacción) → (4) ajustar parámetros de
+  conducta de la mezcla (§4 de CLAUDE.md), jamás hardcodear el resultado.
+  El paso (2) está pendiente de construir; el archivo ya acumula casos.
+
 ## 4. Cómo correr y verificar
 
 ```bash
 cd engine && source .venv/bin/activate
 pip install -r requirements-dev.txt      # deps de prod + pytest/httpx
-python -m pytest validation/ -q          # 106 tests (~4-5 min)
+python -m pytest validation/ -q          # 108 tests (~4-5 min)
 python simular.py 42                      # métricas de hechos estilizados
 python -m contenido.pipeline             # el ritual (sin enviar correos)
 python probar_portero.py                 # log de veredictos del día
@@ -195,23 +254,31 @@ institucionales ~65-70% del volumen. E2E con navegador:
 `npm run build && npx vite preview --port 4173` + Playwright
 (`executablePath /opt/pw-browsers/chromium-*/chrome-linux/chrome`).
 
-## 5. Pendientes — todos del lado de Giorgio
+## 5. Pendientes
 
-1. **Deploy** (~10 min, `docs/despliegue.md`): Render (Blueprint lee
-   `render.yaml`: web + cron) + Vercel (root `web`, `VITE_WS_URL`). En el
-   deploy se cierran los 4 puntos de la auditoría (A widget CSP, D IP tras
-   proxy, G CORS con `ENJAMBRE_ORIGENES`, F/H notas).
-2. **Claves** (todo con degradación a demo hasta que lleguen):
-   - Alpaca (`ALPACA_API_KEY_ID/SECRET`) → titulares reales.
-   - Barchart (`BARCHART_API_KEY`) → datos de mercado reales de La Redacción.
-   - Resend (`RESEND_API_KEY`) + dominio verificado → el correo llega.
-   - `ENJAMBRE_PIPELINE_TOKEN` (mismo valor en web y cron), opcional
-     Telegram, opcional `ENJAMBRE_WIDGET_DOMINIOS` para embebido en medios.
-3. **Decisión de marca abierta**: el destino de la firma (`URL_ESTUDIO` en
-   `muro.js`) — dominio del estudio o Instagram. Reemplazar el marcador.
-4. **Verificar en dispositivo real**: el Reel del duelo (MediaRecorder no
-   se certifica headless) y los 100 cerebros con API real (latencia < 15 s).
-5. **Recomendado**: Cloudflare gratis delante de todo (DDoS volumétrico).
+**Antes del lanzamiento público (no negociables):**
+1. **Volver los topes a 5/día y 3/hora/IP** en `render.yaml` (hoy 500/100
+   por la fase de pruebas). Es la muralla de la billetera LLM.
+2. **Regenerar las claves de Alpaca** (se pegaron en un chat) y rotar el
+   `ENJAMBRE_PIPELINE_TOKEN` (parcialmente visible en capturas).
+3. Cerrar los puntos de auditoría que se prueban en vivo: **A** exceptuar
+   `widget.html` de `frame-ancestors` · **D** confirmar IP real tras el
+   proxy de Render · **G** dominio definitivo en `ENJAMBRE_ORIGENES`.
+
+**Para completar el producto:**
+4. **Resend** (clave + dominio verificado) → habilita El Pulso; entonces
+   re-agregar el cron a `render.yaml` (bloque en `docs/despliegue.md`).
+5. **Barchart** (clave) → datos reales de La Redacción (hoy demo).
+6. **Epílogo automático** (paso 2 de la ruta de calibración): capturar el
+   movimiento real del ticker vía Alpaca 1-2 días después y guardarlo como
+   "¿y qué pasó después?". Propuesto, no construido.
+7. **Mejoras UX propuestas tras el primer test** (lista de Giorgio):
+   navbar + footer, tour de bienvenida, controles 3D táctiles, estados de
+   carga, formulario educadores, CTA premium (cuidando CMF). Sin empezar.
+8. **Decisión de marca abierta**: destino de la firma (`URL_ESTUDIO` en
+   `muro.js`) — hoy marcador a Instagram.
+9. **Verificar en dispositivo real**: el Reel del duelo (MediaRecorder).
+10. **Recomendado**: Cloudflare gratis delante de todo (DDoS volumétrico).
 
 ## 6. Deuda técnica consciente
 - Rate-limit y tope en memoria de una instancia (Redis al escalar);

@@ -18,7 +18,7 @@
 en Render, web viva en Vercel, ambos con auto-deploy desde `main`. Los 100
 líderes leen con IA real (claude-sonnet-5), el muro publica las noticias
 del día, y el reporte compara la reacción del enjambre con el gráfico real
-del símbolo. 108 tests verdes.
+del símbolo. 115 tests verdes.
 
 | Pieza | URL |
 |---|---|

@@ -1,0 +1,59 @@
+# El despertador del ritual — llena el muro cada madrugada sin manos.
+#
+# Todas las madrugadas de lunes a viernes (6:00 en Chile), este robot:
+#   1. despierta el motor de Render (el plan free lo duerme), y
+#   2. dispara POST /api/pipeline: recolectar titulares → el portero elige
+#      las 3 del día → se simulan con IA → el muro amanece lleno.
+#
+# Requisito ÚNICO: el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub
+# (Settings → Secrets and variables → Actions), con el MISMO valor que la
+# variable de entorno del servicio enjambre-motor en Render.
+#
+# También se puede disparar a mano: pestaña Actions → este workflow →
+# "Run workflow" (funciona desde la app de GitHub en el teléfono).
+
+name: El ritual del día
+
+on:
+  schedule:
+    # 10:00 UTC = 6:00 en Chile (invierno) — antes de la apertura de EE.UU.
+    - cron: "0 10 * * 1-5"
+  workflow_dispatch: {}
+
+jobs:
+  despertar-y-preparar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub (Settings → Secrets and variables → Actions). Copia el valor desde el Environment del servicio enjambre-motor en Render."
+            exit 1
+          fi
+
+      - name: Despertar el motor (el plan free duerme; ~50 s de bostezo)
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto (intento $intento)."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Disparar el ritual (portero + 3 simulaciones + corrector)
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          respuesta=$(curl -sf -m 60 -X POST \
+            https://enjambre-motor.onrender.com/api/pipeline \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "Respuesta del motor: $respuesta"
+          # el ritual corre en segundo plano dentro del motor: esta respuesta
+          # solo confirma que arrancó; las 3 destacadas tardan ~3-4 minutos

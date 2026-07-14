@@ -80,7 +80,9 @@ export function montarGuia() {
   boton.className = 'guia-boton'
   boton.setAttribute('data-guia', '')
   boton.setAttribute('aria-haspopup', 'dialog')
-  boton.innerHTML = '<span aria-hidden="true">?</span> ¿Cómo funciona?'
+  boton.setAttribute('aria-label', '¿Cómo funciona?')
+  // el texto va en su propio nodo para poder ocultarlo en móvil (queda el ?)
+  boton.innerHTML = '<span aria-hidden="true">?</span><em class="guia-boton-texto">¿Cómo funciona?</em>'
 
   const capa = document.createElement('div')
   capa.id = 'guia'

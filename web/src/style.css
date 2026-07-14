@@ -481,6 +481,19 @@ body.con-muro .marca {
   background: var(--teal);
   color: var(--tinta);
 }
+.guia-boton-texto {
+  font-style: normal;
+}
+/* en móvil el botón se compacta al círculo "?" (el HUD vive arriba) */
+@media (max-width: 700px) {
+  .guia-boton {
+    padding: 7px;
+    border-radius: 50%;
+  }
+  .guia-boton-texto {
+    display: none;
+  }
+}
 
 .guia {
   position: fixed;
@@ -1143,12 +1156,69 @@ body.archivo-abierto .muro { display: none; }
   margin: 0;
 }
 
-/* móvil: el HUD no choca con el panel */
+/* ---------- móvil (≤700px): layout sin choques ---------- */
 @media (max-width: 700px) {
+  /* letra de 16px en TODO campo de texto: bajo eso, Safari iOS hace zoom
+     automático al enfocar y deja la página amplificada y corrida */
+  #campo-titular,
+  .pulso-form input,
+  .arch-filtros input {
+    font-size: 16px;
+  }
+
+  /* el HUD se muda arriba a la izquierda (despeja la pestaña del muro
+     plegado, ~46px): abajo ya no compite con la barra de noticia.
+     max-width le deja aire al botón "?" de la esquina derecha */
   .hud {
-    bottom: 150px;
+    top: calc(14px + env(safe-area-inset-top));
+    bottom: auto;
+    left: 60px;
+    align-items: flex-start;
+    max-width: calc(100vw - 135px);
+  }
+  #sparkline {
+    width: 110px;
+    height: 28px;
+  }
+  #hud-precio {
+    font-size: 1.25rem;
+  }
+  #hud-detalle {
+    font-size: 0.6rem;
   }
   .marca h1 {
     font-size: 1.4rem;
+  }
+
+  /* la barra de noticia usa el ancho completo y respeta la franja segura
+     del iPhone (home bar) */
+  .panel-noticia {
+    width: calc(100vw - 20px);
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  /* con el muro plegado queda su pestaña de 46px a la izquierda:
+     la barra se corre para que no la tape */
+  body.con-muro.muro-plegado .panel-noticia {
+    left: calc(50% + 23px);
+    width: calc(100vw - 62px);
+  }
+  #campo-titular {
+    padding: 12px 12px;
+    min-width: 0; /* sin esto, el ancho mínimo intrínseco del input empuja
+                     el botón fuera del formulario */
+  }
+  #form-noticia button {
+    font-size: 0.7rem;
+    padding: 0 14px;
+    white-space: nowrap; /* el botón nunca se parte en dos líneas */
+    flex-shrink: 0;
+  }
+  .chip {
+    font-size: 0.7rem;
+    padding: 5px 11px;
+  }
+  .panel-noticia .descargo {
+    font-size: 0.55rem;
   }
 }

@@ -52,6 +52,12 @@ services:
       # token que autoriza al cron a disparar el ritual (mismo valor en ambos)
       - key: ENJAMBRE_PIPELINE_TOKEN
         generateValue: true
+      # respaldo de la calibración a GitHub (rama respaldo-datos, nunca main):
+      # token fine-grained con permiso Contents (RW) SOLO sobre este repo.
+      # El disco free de Render es efímero; sin este token, los casos del
+      # corrector se pierden en cada redeploy.
+      - key: GITHUB_RESPALDO_TOKEN
+        sync: false
 
 # ─────────────────────────────────────────────────────────────────────────
 # El cron del correo diario (El Pulso) se agrega DESPUÉS, cuando esté lista

@@ -18,7 +18,7 @@
 en Render, web viva en Vercel, ambos con auto-deploy desde `main`. Los 100
 líderes leen con IA real (claude-sonnet-5), el muro publica las noticias
 del día, y el reporte compara la reacción del enjambre con el gráfico real
-del símbolo. 115 tests verdes.
+del símbolo. 121 tests verdes.
 
 | Pieza | URL |
 |---|---|
@@ -67,7 +67,7 @@ engine/                        Python 3.11 · Mesa 3 · FastAPI (venv en engine/
 │   ├── disparar_pulso.py      el cron golpea el endpoint protegido
 │   ├── vocabulario.py         filtro CMF (prohibidos ES+EN + disclaimer)
 │   └── fuentes/               alpaca.py (noticias) · barchart.py (datos de mercado)
-├── validation/                115 tests
+├── validation/                121 tests
 ├── requirements.txt           deps de PRODUCCIÓN, versiones fijas (==)
 ├── requirements-dev.txt       pytest/httpx (NO van en la imagen)
 ├── Dockerfile                 imagen no-root (uid 10001)
@@ -239,13 +239,23 @@ marca). Decisiones de color:
   a la noticia), guarda `reaccion_real` (JSON) y redacta el epílogo CMF-limpio
   solo si no hay uno manual. Sin datos aún → reintenta en la próxima corrida.
   La libreta (paso 3) también existe: `corrector.libreta()` / `GET /api/libreta`.
+- **La caja fuerte de la calibración** (`contenido/respaldo.py`): tras cada
+  corrección, el acumulado de casos se sube como JSON a GitHub en la rama
+  **`respaldo-datos`** (⚠️ NUNCA a `main` — un commit a `main` redespliega
+  el motor y borra el disco: el perro mordiéndose la cola). Antes de subir
+  FUSIONA con lo remoto por sim_id: los redeploys de Render (disco efímero)
+  no pierden historia. Requiere `GITHUB_RESPALDO_TOKEN` en Render (token
+  fine-grained, permiso Contents RW solo sobre este repo); sin token, el
+  corrector funciona igual y solo avisa en su respuesta. El archivo:
+  `datos/calibracion.json` en esa rama — la libreta de agosto puede
+  calcularse desde ahí aunque la base local haya muerto.
 
 ## 4. Cómo correr y verificar
 
 ```bash
 cd engine && source .venv/bin/activate
 pip install -r requirements-dev.txt      # deps de prod + pytest/httpx
-python -m pytest validation/ -q          # 115 tests (~5 min)
+python -m pytest validation/ -q          # 121 tests (~5 min)
 python simular.py 42                      # métricas de hechos estilizados
 python -m contenido.pipeline             # el ritual (sin enviar correos)
 python probar_portero.py                 # log de veredictos del día

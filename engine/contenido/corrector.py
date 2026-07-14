@@ -53,7 +53,16 @@ def corregir_pendientes(conexion=None, obtener_variacion=None, limite: int = 10,
                     persistencia.guardar_epilogo(conexion, sim["id"], texto)
             corregidas.append({"sim_id": sim["id"], "simbolo": simbolo,
                                "pct_real": variacion["pct_real"]})
-        return {"corregidas": corregidas, "esperando": esperando}
+        resultado = {"corregidas": corregidas, "esperando": esperando}
+        if corregidas:
+            # caja fuerte: el acumulado se respalda en GitHub (rama aparte);
+            # si falla, el corrector no se cae — reintenta con la próxima
+            try:
+                from contenido import respaldo
+                resultado["respaldo"] = respaldo.respaldar(conexion)
+            except Exception:
+                resultado["respaldo"] = None
+        return resultado
     finally:
         if propia:
             conexion.close()

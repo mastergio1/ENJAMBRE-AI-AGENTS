@@ -56,8 +56,9 @@ def test_frases_fallback_de_los_lideres_son_publicables():
 
     for arquetipo, transformar in TRANSFORMACIONES.items():
         for sentimiento in (-0.9, 0.0, 0.9):
-            _, _, frase = transformar(sentimiento, "titular de prueba")
-            assert vocabulario.es_publicable(frase), f"{arquetipo}: «{frase}»"
+            _, _, variantes = transformar(sentimiento, "titular de prueba")
+            for frase in variantes:  # cada ramo trae 3 variantes; todas publicables
+                assert vocabulario.es_publicable(frase), f"{arquetipo}: «{frase}»"
 
 
 # ---------- persistencia (regla: TODA simulación se guarda) ----------

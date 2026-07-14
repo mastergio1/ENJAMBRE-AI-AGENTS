@@ -17,7 +17,8 @@ from brains.arquetipos import INSTRUCCION_JSON, POR_ID
 from brains.fallback import respuesta_fallback
 
 MODELO = "claude-sonnet-5"
-TEMPERATURA = 0.8       # variabilidad intra-arquetipo: dos Doomers no responden igual
+# Nota: claude-sonnet-5 ya no acepta `temperature` (devuelve 400 si se envía).
+# La variabilidad intra-arquetipo viene del propio modelo y de la semilla del caché.
 MAX_CONCURRENTES = 25   # llamadas simultáneas
 TIMEOUT_SEGUNDOS = 12.0
 RUTA_CACHE = Path(__file__).parent / "cache" / "respuestas.json"
@@ -93,7 +94,6 @@ async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, s
                 cliente.messages.create(
                     model=MODELO,
                     max_tokens=200,
-                    temperature=TEMPERATURA,
                     system=f"{prompt}\n\n{INSTRUCCION_JSON}",
                     messages=[{"role": "user", "content": f"Titular de hoy: {titular}"}],
                 ),

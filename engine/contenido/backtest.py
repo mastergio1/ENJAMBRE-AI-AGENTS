@@ -107,16 +107,18 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
             hechas.append({"id": evento["id"], "sim_id": sim_id,
                            "sim_pct": reporte.get("direccion_pct"),
                            "real_pct": variacion["pct_real"]})
+            # a la caja fuerte DESPUÉS DE CADA EXAMEN (no al final): si un
+            # deploy reinicia el motor a mitad de tanda, lo rendido no se pierde
+            try:
+                from contenido import respaldo
+                ultimo_respaldo = respaldo.respaldar(conexion)
+            except Exception:
+                ultimo_respaldo = None
 
         resultado = {"hechas": hechas, "sin_datos": sin_datos,
                      "pendientes": len(pendientes) - len(hechas)}
         if hechas:
-            # los exámenes rendidos van directo a la caja fuerte de GitHub
-            try:
-                from contenido import respaldo
-                resultado["respaldo"] = respaldo.respaldar(conexion)
-            except Exception:
-                resultado["respaldo"] = None
+            resultado["respaldo"] = ultimo_respaldo
         return resultado
     finally:
         if propia:

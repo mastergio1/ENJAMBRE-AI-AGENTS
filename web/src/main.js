@@ -14,6 +14,11 @@ import { MotorRemoto, urlApi } from './ui/conexion.js'
 import { montarGuia } from './ui/guia.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
 
+// el JS llegó y va a arrancar: se retira la señal de vida de index.html
+// (si este módulo nunca llega — 4G débil, error — el mensaje queda visible
+// en vez de una pantalla negra muda)
+document.getElementById('cargando')?.remove()
+
 const canvas = document.getElementById('escena')
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))

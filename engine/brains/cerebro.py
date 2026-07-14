@@ -141,8 +141,11 @@ async def analizar_titular_async(titular: str, lideres: list[tuple[int, str]]) -
             ]
         for (posicion, semilla, arquetipo_id), resultado in zip(pendientes, resultados):
             respuestas[posicion] = resultado
-            clave = _clave_cache(titular, arquetipo_id, semilla)
-            cache[clave] = {k: v for k, v in resultado.items() if k != "fuente"}
+            # solo se cachea la voz real de la IA: si un líder cayó al fallback
+            # por una falla pasajera, la próxima corrida vuelve a intentar la API
+            if resultado.get("fuente") == "api":
+                clave = _clave_cache(titular, arquetipo_id, semilla)
+                cache[clave] = {k: v for k, v in resultado.items() if k != "fuente"}
         _guardar_cache(cache)
 
     return [respuestas[i] for i in range(len(lideres))]

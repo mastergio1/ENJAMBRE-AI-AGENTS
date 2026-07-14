@@ -61,11 +61,30 @@ def test_los_arquetipos_tienen_personalidad():
     assert abs(medias["institucional_frio"]) < 0.55   # nunca extremo
 
 
-def test_cache_evita_llamadas_repetidas():
+def test_cache_guarda_la_api_pero_no_el_fallback():
+    """El fallback NO se cachea: una falla pasajera de la API no debe congelar
+    frases enlatadas para siempre. La voz real de la IA sí se cachea."""
+    import json
+
+    from brains.cerebro import _clave_cache
+
+    # sin API, la segunda corrida vuelve a intentar (fuente = fallback, no cache)…
     primera = analizar_titular(TITULAR_NEGATIVO, _cien_lideres())
     segunda = analizar_titular(TITULAR_NEGATIVO, _cien_lideres())
-    assert all(r["fuente"] == "cache" for r in segunda)
+    assert all(r["fuente"] == "fallback" for r in segunda)
+    # …pero el fallback es determinístico por semilla: mismos valores
     assert [r["senal"] for r in primera] == [r["senal"] for r in segunda]
+
+    # una respuesta de API pre-sembrada en el caché sí se reutiliza
+    clave = _clave_cache(TITULAR_NEGATIVO, "doomer", 0)
+    cerebro.RUTA_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    cerebro.RUTA_CACHE.write_text(
+        json.dumps({clave: {"senal": -0.8, "confianza": 0.9, "frase": "voz real"}}),
+        encoding="utf-8",
+    )
+    respuesta = analizar_titular(TITULAR_NEGATIVO, [(0, "doomer")])[0]
+    assert respuesta["fuente"] == "cache"
+    assert respuesta["frase"] == "voz real"
 
 
 def test_validacion_del_json_del_llm():

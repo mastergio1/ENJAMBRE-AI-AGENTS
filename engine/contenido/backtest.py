@@ -32,6 +32,14 @@ def cargar_eventos() -> list[dict]:
         return json.load(archivo)["eventos"]
 
 
+def _variacion_historica(simbolo: str, fecha: str, ruedas: int = RUEDAS) -> dict | None:
+    """Alpaca primero (cubre ~2016→hoy); Stooq de plan B para lo antiguo."""
+    from contenido.fuentes import alpaca, stooq
+
+    return (alpaca.variacion_real(simbolo, fecha, ruedas)
+            or stooq.variacion_real(simbolo, fecha, ruedas))
+
+
 def _seed(evento: dict) -> int:
     """Semilla determinística por evento: la fecha como número (AAAAMMDD)."""
     return int(evento["fecha"].replace("-", ""))
@@ -74,8 +82,7 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
             titular, seed, con_frames=False
         )
     if obtener_variacion is None:
-        from contenido.fuentes import alpaca
-        obtener_variacion = alpaca.variacion_real
+        obtener_variacion = _variacion_historica
 
     tamano = max(1, min(int(tamano), TANDA_MAXIMA))
     propia = conexion is None

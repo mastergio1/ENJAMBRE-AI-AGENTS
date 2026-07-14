@@ -34,7 +34,7 @@ def _variacion_falsa(simbolo, fecha, ruedas=2):
 
 def test_eventos_estan_bien_formados_y_balanceados():
     eventos = backtest.cargar_eventos()
-    assert len(eventos) >= 30
+    assert len(eventos) >= 50  # la recopilación 2001-2025 completa
     ids = [e["id"] for e in eventos]
     assert len(ids) == len(set(ids))  # sin duplicados
     conteo = {"negativa": 0, "positiva": 0, "neutra": 0}
@@ -135,6 +135,47 @@ def test_el_respaldo_incluye_el_backtest_con_su_origen():
     assert all(c["simbolos"] for c in casos)  # el símbolo viene de la reacción
     assert all(c["reaccion_real"]["categoria"] in ("negativa", "positiva", "neutra")
                for c in casos)
+
+
+def test_variacion_historica_cae_a_stooq_para_lo_antiguo(monkeypatch):
+    """Alpaca no tiene datos pre-2016: el plan B (Stooq) responde."""
+    from contenido.fuentes import alpaca, stooq
+
+    monkeypatch.setattr(alpaca, "variacion_real", lambda *a: None)
+    monkeypatch.setattr(stooq, "variacion_real",
+                        lambda s, f, r=2: {"simbolo": s, "pct_real": -4.7, "fuente_datos": "stooq"})
+    variacion = backtest._variacion_historica("SPY", "2008-09-15")
+    assert variacion["pct_real"] == -4.7
+    assert variacion["fuente_datos"] == "stooq"
+
+
+def test_stooq_parsea_csv_y_mide_igual_que_alpaca(monkeypatch):
+    from contenido.fuentes import stooq
+
+    csv_falso = ("Date,Open,High,Low,Close,Volume\n"
+                 "2008-09-12,124,126,123,125.0,100\n"
+                 "2008-09-15,120,121,117,118.0,200\n"
+                 "2008-09-16,118,119,116,117.0,150\n")
+
+    class Respuesta:
+        text = csv_falso
+        def raise_for_status(self): pass
+
+    monkeypatch.setattr(stooq.httpx, "get", lambda *a, **k: Respuesta())
+    v = stooq.variacion_real("SPY", "2008-09-15", ruedas=2)
+    # base = cierre previo (125.0), final = 2ª rueda desde la fecha (117.0)
+    assert v["cierre_base"] == 125.0
+    assert v["cierre_final"] == 117.0
+    assert v["pct_real"] == -6.4
+    assert v["fuente_datos"] == "stooq"
+
+
+def test_stooq_sin_red_devuelve_none(monkeypatch):
+    from contenido.fuentes import stooq
+
+    monkeypatch.setattr(stooq.httpx, "get",
+                        lambda *a, **k: (_ for _ in ()).throw(OSError("sin red")))
+    assert stooq.variacion_real("SPY", "2008-09-15") is None
 
 
 def test_endpoints_del_backtest_exigen_token(monkeypatch):

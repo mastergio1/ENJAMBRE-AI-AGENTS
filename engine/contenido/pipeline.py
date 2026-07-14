@@ -128,6 +128,15 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
     try:
         preparado = preparar_dia(conexion, maximo=maximo, semilla_base=semilla_base)
 
+        # el corrector automático: guarda cuánto se movió de verdad el
+        # símbolo de las destacadas de días anteriores (calibración).
+        # El ritual jamás se cae por el corrector.
+        try:
+            from contenido import corrector
+            correccion = corrector.corregir_pendientes(conexion)
+        except Exception:
+            correccion = None
+
         # reúne las destacadas de hoy con sus voces (para el correo)
         destacadas = _destacadas_de_hoy(conexion)
 
@@ -151,7 +160,7 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], envio))
 
         return {**preparado, "destacadas": len(destacadas), "envio": envio,
-                "brief": brief, "html_preview": html}
+                "brief": brief, "html_preview": html, "correccion": correccion}
     finally:
         if propia:
             conexion.close()

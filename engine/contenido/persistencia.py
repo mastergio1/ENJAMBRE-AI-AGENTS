@@ -86,6 +86,7 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("suscriptores", "token_confirma", "TEXT"),
             ("suscriptores", "fecha_confirma", "TEXT"),  # anti-reenvío (auditoría C)
             ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
+            ("simulaciones", "reaccion_real", "TEXT"),  # corrector automático (calibración)
         ]:
             try:
                 conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
@@ -136,6 +137,8 @@ def obtener_simulacion(conexion, sim_id: str) -> dict | None:
     datos["lideres"] = json.loads(datos.pop("lideres_json"))
     datos["serie_precios"] = json.loads(datos["serie_precios"])
     datos["epilogo"] = datos.get("epilogo")  # puede no existir en bases viejas
+    cruda = datos.get("reaccion_real")
+    datos["reaccion_real"] = json.loads(cruda) if cruda else None
     return datos
 
 
@@ -237,6 +240,33 @@ def guardar_epilogo(conexion, sim_id: str, texto: str) -> bool:
     )
     conexion.commit()
     return cursor.rowcount > 0
+
+
+# ---------- el corrector automático (calibración) ----------
+
+def guardar_reaccion_real(conexion, sim_id: str, datos: dict) -> bool:
+    """El movimiento real del símbolo (JSON): la materia prima de la libreta."""
+    cursor = conexion.execute(
+        "UPDATE simulaciones SET reaccion_real = ? WHERE id = ?",
+        (json.dumps(datos, ensure_ascii=False), sim_id),
+    )
+    conexion.commit()
+    return cursor.rowcount > 0
+
+
+def destacadas_sin_correccion(conexion, antes_de: str, limite: int = 10) -> list[dict]:
+    """Destacadas con ticker, anteriores a `antes_de` y aún sin corrección.
+    Más antiguas primero: nada se queda esperando para siempre."""
+    filas = conexion.execute(
+        """SELECT s.id, s.fecha, s.resumen_json, s.epilogo, t.simbolos
+           FROM simulaciones s JOIN titulares t ON t.sim_id = s.id
+           WHERE s.destacada = 1 AND s.reaccion_real IS NULL
+             AND t.simbolos IS NOT NULL AND t.simbolos != ''
+             AND s.fecha < ?
+           ORDER BY s.fecha ASC LIMIT ?""",
+        (antes_de, limite),
+    ).fetchall()
+    return [dict(f) for f in filas]
 
 
 # ---------- titulares (el log del portero) ----------

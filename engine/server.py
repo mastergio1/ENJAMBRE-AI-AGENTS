@@ -541,6 +541,7 @@ def _payload_simulacion(sim_id: str) -> dict | None:
         "serie_precios": datos["serie_precios"],
         "epilogo": datos.get("epilogo"),
         "simbolos": simbolos,
+        "reaccion_real": datos.get("reaccion_real"),
         "tiene_replay": persistencia.leer_frames(sim_id) is not None,
     }
 
@@ -800,6 +801,30 @@ def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(de
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     tareas.add_task(_correr_ritual)
     return {"estado": "iniciado"}
+
+
+@app.post("/api/corrector")
+def api_corrector(x_pipeline_token: str = Header(default="")) -> dict:
+    """Corre el corrector automático a demanda (protegido).
+
+    Normalmente corre solo dentro del ritual diario; este endpoint sirve
+    para corregir sin esperar la madrugada."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import corrector
+
+    return corrector.corregir_pendientes()
+
+
+@app.get("/api/libreta")
+def api_libreta(x_pipeline_token: str = Header(default="")) -> dict:
+    """La libreta de calificaciones (enjambre vs mercado real). Protegida:
+    es la brújula interna de la calibración, no material publicable."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import corrector
+
+    return corrector.libreta()
 
 
 # ---------- El Archivo / hemeroteca (Etapa 9) ----------

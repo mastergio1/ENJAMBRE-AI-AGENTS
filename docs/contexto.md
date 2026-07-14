@@ -67,7 +67,7 @@ engine/                        Python 3.11 · Mesa 3 · FastAPI (venv en engine/
 │   ├── disparar_pulso.py      el cron golpea el endpoint protegido
 │   ├── vocabulario.py         filtro CMF (prohibidos ES+EN + disclaimer)
 │   └── fuentes/               alpaca.py (noticias) · barchart.py (datos de mercado)
-├── validation/                108 tests
+├── validation/                115 tests
 ├── requirements.txt           deps de PRODUCCIÓN, versiones fijas (==)
 ├── requirements-dev.txt       pytest/httpx (NO van en la imagen)
 ├── Dockerfile                 imagen no-root (uid 10001)
@@ -233,14 +233,19 @@ marca). Decisiones de color:
   (3) con 30-50 casos, libreta de calificaciones (% de aciertos de
   dirección, sesgos de sobre/sub-reacción) → (4) ajustar parámetros de
   conducta de la mezcla (§4 de CLAUDE.md), jamás hardcodear el resultado.
-  El paso (2) está pendiente de construir; el archivo ya acumula casos.
+- **El corrector automático (paso 2) YA EXISTE** (`contenido/corrector.py`):
+  corre dentro del ritual diario; espera ≥1 día, mide 2 ruedas con barras
+  IEX de Alpaca (`variacion_real` en fuentes/alpaca.py: base = cierre previo
+  a la noticia), guarda `reaccion_real` (JSON) y redacta el epílogo CMF-limpio
+  solo si no hay uno manual. Sin datos aún → reintenta en la próxima corrida.
+  La libreta (paso 3) también existe: `corrector.libreta()` / `GET /api/libreta`.
 
 ## 4. Cómo correr y verificar
 
 ```bash
 cd engine && source .venv/bin/activate
 pip install -r requirements-dev.txt      # deps de prod + pytest/httpx
-python -m pytest validation/ -q          # 108 tests (~4-5 min)
+python -m pytest validation/ -q          # 115 tests (~5 min)
 python simular.py 42                      # métricas de hechos estilizados
 python -m contenido.pipeline             # el ritual (sin enviar correos)
 python probar_portero.py                 # log de veredictos del día
@@ -269,9 +274,11 @@ institucionales ~65-70% del volumen. E2E con navegador:
 4. **Resend** (clave + dominio verificado) → habilita El Pulso; entonces
    re-agregar el cron a `render.yaml` (bloque en `docs/despliegue.md`).
 5. **Barchart** (clave) → datos reales de La Redacción (hoy demo).
-6. **Epílogo automático** (paso 2 de la ruta de calibración): capturar el
-   movimiento real del ticker vía Alpaca 1-2 días después y guardarlo como
-   "¿y qué pasó después?". Propuesto, no construido.
+6. ~~Epílogo automático~~ **CONSTRUIDO** (julio 2026): `contenido/corrector.py`
+   corre dentro del ritual diario (y a demanda vía `POST /api/corrector`);
+   guarda el movimiento real en `simulaciones.reaccion_real` y redacta el
+   epílogo si no hay uno manual. La libreta: `GET /api/libreta` (admin).
+   Primera ronda de ajuste de diales: inicios de agosto (con 30-50 casos).
 7. **Mejoras UX propuestas tras el primer test** (lista de Giorgio):
    navbar + footer, tour de bienvenida, controles 3D táctiles, estados de
    carga, formulario educadores, CTA premium (cuidando CMF). Sin empezar.

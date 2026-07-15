@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T10:16:52+00:00",
+ "generado": "2026-07-15T10:17:34+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -137,6 +137,26 @@
     "cierre_final": 472.03,
     "fecha_base": "2023-12-12",
     "fecha_final": "2023-12-14",
+    "ruedas": 2,
+    "categoria": "positiva"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cb44eb6620553a3f",
+   "origen": "historico",
+   "fecha": "2026-07-15T10:17:34+00:00",
+   "titular": "US inflation comes in flat for October; rate-hike bets evaporate and stocks jump",
+   "simbolos": "SPY",
+   "direccion_pct": 1.26,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 2.16,
+    "cierre_base": 440.17,
+    "cierre_final": 449.69,
+    "fecha_base": "2023-11-13",
+    "fecha_final": "2023-11-15",
     "ruedas": 2,
     "categoria": "positiva"
    },

@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T10:18:57+00:00",
+ "generado": "2026-07-15T10:19:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -199,6 +199,26 @@
     "fecha_final": "2023-06-15",
     "ruedas": 2,
     "categoria": "neutra"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "94c091f83f6ac886",
+   "origen": "historico",
+   "fecha": "2026-07-15T10:19:35+00:00",
+   "titular": "Nvidia forecast blows past estimates on booming AI demand; shares soar",
+   "simbolos": "NVDA",
+   "direccion_pct": 1.85,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "NVDA",
+    "pct_real": 27.43,
+    "cierre_base": 305.46,
+    "cierre_final": 389.24,
+    "fecha_base": "2023-05-24",
+    "fecha_final": "2023-05-26",
+    "ruedas": 2,
+    "categoria": "positiva"
    },
    "epilogo": null
   }

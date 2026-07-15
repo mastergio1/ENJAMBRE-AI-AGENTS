@@ -50,13 +50,22 @@ def _sim_id(evento: dict) -> str:
 
 
 def estado(conexion=None) -> dict:
-    """Cuántos exámenes están rendidos (con nota real) y cuántos faltan."""
+    """Cuántos exámenes están rendidos (con nota real) y cuántos faltan.
+
+    Cuenta lo local Y lo ya respaldado en GitHub: el disco de Render se
+    borra con cada deploy, pero un examen en la caja fuerte no se repite
+    (repetirlo costaría ~100 llamadas LLM cada vez)."""
+    from contenido import respaldo
+
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
     try:
         eventos = cargar_eventos()
+        respaldados = {c.get("sim_id") for c in respaldo.casos_remotos()}
         pendientes = []
         for evento in eventos:
+            if _sim_id(evento) in respaldados:
+                continue  # la caja fuerte ya lo tiene
             fila = conexion.execute(
                 "SELECT reaccion_real FROM simulaciones WHERE id = ?", (_sim_id(evento),)
             ).fetchone()

@@ -17,6 +17,8 @@ def entorno(monkeypatch, tmp_path):
     monkeypatch.delenv("GITHUB_RESPALDO_TOKEN", raising=False)
     monkeypatch.delenv("ALPACA_API_KEY_ID", raising=False)
     monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
+    # los tests jamás tocan la red: la caja fuerte remota se simula vacía
+    monkeypatch.setattr(respaldo, "casos_remotos", lambda: [])
 
 
 def _simulador_falso(titular, seed):
@@ -135,6 +137,19 @@ def test_el_respaldo_incluye_el_backtest_con_su_origen():
     assert all(c["simbolos"] for c in casos)  # el símbolo viene de la reacción
     assert all(c["reaccion_real"]["categoria"] in ("negativa", "positiva", "neutra")
                for c in casos)
+
+
+def test_estado_no_repite_lo_ya_respaldado_en_github(monkeypatch):
+    """Tras un borrón del disco (deploy), lo que la caja fuerte ya tiene
+    no se vuelve a rendir — repetirlo costaría ~100 llamadas LLM."""
+    eventos = backtest.cargar_eventos()
+    ya_respaldado = backtest._sim_id(eventos[0])
+    monkeypatch.setattr(respaldo, "casos_remotos", lambda: [{"sim_id": ya_respaldado}])
+    conexion = persistencia.conectar()  # base recién nacida (post-deploy)
+    avance = backtest.estado(conexion)
+    conexion.close()
+    assert avance["hechos"] == 1
+    assert all(backtest._sim_id(e) != ya_respaldado for e in avance["_lista_pendiente"])
 
 
 def test_variacion_historica_cae_a_stooq_para_lo_antiguo(monkeypatch):

@@ -35,6 +35,26 @@ def hay_token() -> bool:
     return bool(os.environ.get("GITHUB_RESPALDO_TOKEN"))
 
 
+def casos_remotos() -> list[dict]:
+    """Lo ya respaldado en GitHub (lectura pública del raw, sin token).
+
+    El backtest lo consulta para NO re-rendir exámenes que la caja fuerte
+    ya tiene — el disco de Render se borra con cada deploy, pero GitHub no
+    olvida. Lista vacía ante cualquier problema; nunca lanza."""
+    repo = os.environ.get("GITHUB_RESPALDO_REPO", REPO_DEFECTO)
+    rama = os.environ.get("GITHUB_RESPALDO_RAMA", RAMA_DEFECTO)
+    ruta = os.environ.get("GITHUB_RESPALDO_RUTA", RUTA_DEFECTO)
+    try:
+        respuesta = httpx.get(
+            f"https://raw.githubusercontent.com/{repo}/{rama}/{ruta}", timeout=10
+        )
+        if respuesta.status_code != 200:
+            return []
+        return (json.loads(respuesta.text) or {}).get("casos", [])
+    except Exception:
+        return []
+
+
 def exportar_casos(conexion) -> list[dict]:
     """Los casos de calibración como dicts planos: destacadas corregidas
     (origen 'en_vivo') y exámenes históricos del backtest ('historico')."""

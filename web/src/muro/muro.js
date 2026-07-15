@@ -164,11 +164,26 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
         </form>
         <p class="pulso-estado" hidden></p>
       </section>
+      <section class="organizaciones">
+        <h2>El Enjambre para tu organización</h2>
+        <p>Educación financiera, medios y fintechs: demos guiadas, el widget
+        embebible para tu sitio y escenarios a medida para tus cursos o
+        coberturas. Herramienta educativa de simulación — cuéntanos tu caso.</p>
+        <form class="org-form">
+          <input type="text" name="nombre" placeholder="Tu nombre" autocomplete="name" required aria-label="Tu nombre" />
+          <input type="text" name="organizacion" placeholder="Organización (opcional)" autocomplete="organization" aria-label="Organización" />
+          <input type="email" name="email" placeholder="tu@correo.cl" autocomplete="email" required aria-label="Tu correo" />
+          <textarea name="mensaje" rows="3" maxlength="800" placeholder="¿Qué te gustaría hacer con El Enjambre?" aria-label="Mensaje"></textarea>
+          <button type="submit" class="accion">Conversemos</button>
+        </form>
+        <p class="org-estado" role="status" hidden></p>
+      </section>
       <p class="muro-descargo">${esc(datos.descargo)}</p>
       <footer class="pie">
         <span>© ${new Date().getFullYear()} · El Enjambre</span>
         <button class="pie-enlace" data-guia>Guía rápida</button>
         <button class="pie-enlace pie-archivo">El archivo</button>
+        <button class="pie-enlace pie-org">Organizaciones</button>
       </footer>
       ${FIRMA_RUBICON}`
     document.body.classList.add('con-muro')
@@ -205,10 +220,40 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
     })
   }
 
+  function conectarOrganizaciones() {
+    const form = contenedor.querySelector('.org-form')
+    const estado = contenedor.querySelector('.org-estado')
+    if (!form) return
+    form.addEventListener('submit', async (evento) => {
+      evento.preventDefault()
+      estado.hidden = false
+      estado.textContent = 'Enviando…'
+      try {
+        const r = await (await fetch(`${api}/api/contacto`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: form.nombre.value.trim(),
+            organizacion: form.organizacion.value.trim(),
+            email: form.email.value.trim(),
+            mensaje: form.mensaje.value.trim(),
+          }),
+        })).json()
+        estado.textContent = r.mensaje || r.error || 'Listo.'
+        if (r.estado === 'recibido') form.reset()
+      } catch {
+        estado.textContent = 'No se pudo enviar. Intenta más tarde.'
+      }
+    })
+  }
+
   function conectarEventos(datos) {
     conectarPulso()
+    conectarOrganizaciones()
     contenedor.querySelector('.ver-archivo')?.addEventListener('click', () => abrirArchivo?.())
     contenedor.querySelector('.pie-archivo')?.addEventListener('click', () => abrirArchivo?.())
+    contenedor.querySelector('.pie-org')?.addEventListener('click', () =>
+      contenedor.querySelector('.organizaciones')?.scrollIntoView({ behavior: 'smooth', block: 'center' }))
     contenedor.querySelector('.plegar')?.addEventListener('click', () =>
       fijarPlegado(!document.body.classList.contains('muro-plegado')))
     contenedor.querySelector('.ver-mas')?.addEventListener('click', () => {

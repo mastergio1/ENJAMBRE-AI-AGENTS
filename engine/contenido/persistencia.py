@@ -53,6 +53,14 @@ CREATE TABLE IF NOT EXISTS suscriptores (
   token_baja     TEXT NOT NULL,
   token_confirma TEXT
 );
+CREATE TABLE IF NOT EXISTS contactos (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,  -- leads B2B (organizaciones)
+  fecha        TEXT NOT NULL,
+  nombre       TEXT NOT NULL,
+  organizacion TEXT,
+  email        TEXT NOT NULL,
+  mensaje      TEXT
+);
 """
 
 
@@ -353,6 +361,28 @@ def guardar_frames(sim_id: str, frames: list[bytes]) -> str:
 def leer_frames(sim_id: str) -> bytes | None:
     ruta = ruta_frames(sim_id)
     return ruta.read_bytes() if ruta.exists() else None
+
+
+# ---------- contactos B2B (el canal de organizaciones) ----------
+
+def agregar_contacto(conexion, *, nombre: str, email: str,
+                     organizacion: str = "", mensaje: str = "") -> int:
+    """Guarda un lead del formulario de organizaciones. Devuelve su id."""
+    cursor = conexion.execute(
+        "INSERT INTO contactos (fecha, nombre, organizacion, email, mensaje) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (ahora_iso(), nombre.strip()[:120], organizacion.strip()[:160],
+         email.strip().lower()[:200], mensaje.strip()[:800]),
+    )
+    conexion.commit()
+    return cursor.lastrowid
+
+
+def listar_contactos(conexion, limite: int = 100) -> list[dict]:
+    filas = conexion.execute(
+        "SELECT * FROM contactos ORDER BY fecha DESC LIMIT ?", (limite,)
+    ).fetchall()
+    return [dict(f) for f in filas]
 
 
 # ---------- suscriptores del boletín (double opt-in) ----------

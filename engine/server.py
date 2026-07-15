@@ -717,6 +717,58 @@ def suscribir(peticion: PeticionSuscribir) -> dict:
             "mensaje": "Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja."}
 
 
+class PeticionContacto(BaseModel):
+    nombre: str
+    email: str
+    organizacion: str = ""
+    mensaje: str = ""
+
+
+@app.post("/api/contacto")
+def api_contacto(peticion: PeticionContacto) -> dict:
+    """El canal B2B: educadores, medios y fintechs que quieren conversar.
+
+    Guarda el lead y avisa a Giorgio por Telegram (si está configurado).
+    Sin promesas de inversión: es una solicitud de contacto, nada más."""
+    nombre = peticion.nombre.strip()
+    email = peticion.email.strip().lower()
+    if not nombre or len(nombre) > 120:
+        return JSONResponse({"error": "cuéntanos tu nombre"}, status_code=400)
+    if not _EMAIL.match(email) or len(email) > 200:
+        return JSONResponse({"error": "correo inválido"}, status_code=400)
+    conexion = persistencia.conectar()
+    try:
+        persistencia.agregar_contacto(
+            conexion, nombre=nombre, email=email,
+            organizacion=peticion.organizacion, mensaje=peticion.mensaje,
+        )
+    finally:
+        conexion.close()
+    try:
+        from contenido import notificar
+        notificar.avisar(
+            f"🤝 <b>Nuevo contacto B2B</b>\n{nombre}"
+            + (f" · {peticion.organizacion.strip()[:80]}" if peticion.organizacion.strip() else "")
+            + f"\n{email}\n{peticion.mensaje.strip()[:200]}"
+        )
+    except Exception:
+        pass  # el lead ya quedó guardado; el aviso es cortesía
+    return {"estado": "recibido",
+            "mensaje": "¡Gracias! Te escribiremos pronto para coordinar."}
+
+
+@app.get("/api/contactos")
+def api_contactos(x_pipeline_token: str = Header(default="")) -> dict:
+    """Los leads B2B, para Giorgio (protegido)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        return {"contactos": persistencia.listar_contactos(conexion)}
+    finally:
+        conexion.close()
+
+
 @app.get("/api/confirmar/{token}")
 def confirmar(token: str) -> HTMLResponse:
     conexion = persistencia.conectar()

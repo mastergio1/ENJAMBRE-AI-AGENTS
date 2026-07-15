@@ -1442,3 +1442,65 @@ body.archivo-abierto .muro { display: none; }
   cursor: pointer;
 }
 .tour-sigue:hover { filter: brightness(1.12); }
+
+/* ---------- organizaciones (el canal B2B, tono educativo) ---------- */
+
+.organizaciones {
+  margin-top: 22px;
+  padding: 18px 0 8px;
+  border-top: 1px solid rgba(111, 168, 158, 0.3);
+}
+.organizaciones h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 4px;
+}
+.organizaciones p {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--crema-suave);
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+.org-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.org-form input,
+.org-form textarea {
+  background: rgba(27, 25, 22, 0.6);
+  border: 1px solid rgba(243, 238, 232, 0.25);
+  color: var(--crema);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  padding: 9px 12px;
+  outline: none;
+  resize: vertical;
+}
+.org-form input:focus,
+.org-form textarea:focus {
+  border-color: var(--teal);
+}
+.org-form .accion {
+  align-self: flex-start;
+}
+.org-estado {
+  margin-top: 8px !important;
+  color: var(--teal) !important;
+  font-size: 0.78rem !important;
+}
+@media (max-width: 700px) {
+  .org-form input,
+  .org-form textarea { font-size: 16px; } /* sin zoom automático de iOS */
+}
+
+/* ---------- accesibilidad: foco visible en toda la interfaz ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T10:19:36+00:00",
+ "generado": "2026-07-15T10:20:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -219,6 +219,26 @@
     "fecha_final": "2023-05-26",
     "ruedas": 2,
     "categoria": "positiva"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "813b86afcd04046f",
+   "origen": "historico",
+   "fecha": "2026-07-15T10:20:16+00:00",
+   "titular": "Credit Suisse shares crash to record low as top backer rules out more aid; bank fears spread",
+   "simbolos": "XLF",
+   "direccion_pct": -6.57,
+   "volatilidad_pct": 1.06,
+   "reaccion_real": {
+    "simbolo": "XLF",
+    "pct_real": -0.94,
+    "cierre_base": 32.315,
+    "cierre_final": 32.01,
+    "fecha_base": "2023-03-14",
+    "fecha_final": "2023-03-16",
+    "ruedas": 2,
+    "categoria": "negativa"
    },
    "epilogo": null
   }

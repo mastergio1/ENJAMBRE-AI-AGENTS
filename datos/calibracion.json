@@ -1,0 +1,26 @@
+{
+ "generado": "2026-07-15T06:27:22+00:00",
+ "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
+ "casos": [
+  {
+   "sim_id": "1be9c2ef8f469af7",
+   "origen": "historico",
+   "fecha": "2026-07-15T06:27:21+00:00",
+   "titular": "Sweeping new US tariffs stun markets; stocks sink on trade war fears",
+   "simbolos": "SPY",
+   "direccion_pct": -12.4,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -10.4,
+    "cierre_base": 564.63,
+    "cierre_final": 505.93,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "categoria": "negativa"
+   },
+   "epilogo": null
+  }
+ ]
+}

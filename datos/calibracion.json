@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T10:18:16+00:00",
+ "generado": "2026-07-15T10:18:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -177,6 +177,26 @@
     "cierre_final": 442.78,
     "fecha_base": "2023-08-24",
     "fecha_final": "2023-08-28",
+    "ruedas": 2,
+    "categoria": "neutra"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5383e9ee4846f7af",
+   "origen": "historico",
+   "fecha": "2026-07-15T10:18:57+00:00",
+   "titular": "Fed pauses rate hikes but signals two more increases may lie ahead",
+   "simbolos": "SPY",
+   "direccion_pct": -7.38,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.36,
+    "cierre_base": 436.67,
+    "cierre_final": 442.59,
+    "fecha_base": "2023-06-13",
+    "fecha_final": "2023-06-15",
     "ruedas": 2,
     "categoria": "neutra"
    },

@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T06:28:37+00:00",
+ "generado": "2026-07-15T06:29:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -59,6 +59,26 @@
     "fecha_final": "2024-09-19",
     "ruedas": 2,
     "categoria": "positiva"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ec8bd2f5161f417e",
+   "origen": "historico",
+   "fecha": "2026-07-15T06:29:16+00:00",
+   "titular": "Global sell-off deepens as yen carry trade unwinds; Nikkei posts worst day since 1987",
+   "simbolos": "SPY",
+   "direccion_pct": 3.07,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.04,
+    "cierre_base": 532.92,
+    "cierre_final": 522.07,
+    "fecha_base": "2024-08-02",
+    "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "categoria": "negativa"
    },
    "epilogo": null
   }

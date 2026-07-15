@@ -127,13 +127,8 @@ export function montarGuia() {
 
   // primera visita: la guía saluda sola (salvo enlaces profundos a contenido)
   const params = new URLSearchParams(location.search)
-  const enlaceProfundo = params.get('sim') || location.pathname.startsWith('/duelo') ||
-    location.pathname.startsWith('/archivo')
-  let vista = false
-  try { vista = localStorage.getItem(CLAVE_VISTA) === '1' } catch { /* nada */ }
-  if (!vista && !enlaceProfundo) {
-    setTimeout(abrir, 900) // deja respirar al enjambre un momento antes
-  }
+  // la guía ya no se abre sola: la primera visita la recibe el TOUR
+  // (ui/tour.js), que es de la mano y no interrumpe; la guía queda en el "?"
 
   return { abrir, cerrar }
 }

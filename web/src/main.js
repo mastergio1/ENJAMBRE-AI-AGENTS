@@ -2,6 +2,7 @@
 // Un solo loop, tres draw calls, gobernador de fps para móvil.
 
 import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js'
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
@@ -13,6 +14,7 @@ import { Enjambre } from './swarm/enjambre.js'
 import { MotorRemoto, urlApi } from './ui/conexion.js'
 import { montarGuia } from './ui/guia.js'
 import { montarNavegacion } from './ui/navegacion.js'
+import { iniciarTour, tourVisto } from './ui/tour.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
 
 // el JS llegó y va a arrancar: se retira la señal de vida de index.html
@@ -27,11 +29,27 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 
 const escena = new THREE.Scene()
 escena.background = new THREE.Color('#1b1916')
-escena.fog = new THREE.FogExp2('#1b1916', 0.022)
+// niebla contenida: da profundidad sin velar la escena (antes 0.022 la
+// dejaba "nublada" — observación de Giorgio en producción)
+escena.fog = new THREE.FogExp2('#1b1916', 0.014)
 
 const camara = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120)
 camara.position.set(0, 7, 30)
 camara.lookAt(0, 0, 0)
+
+// controles de cámara: arrastrar gira, rueda/pellizco acerca. Hasta que el
+// visitante toma el mando, la cámara sigue con su parallax sutil; doble
+// clic (o doble toque) devuelve el mando al parallax.
+const controles = new OrbitControls(camara, document.getElementById('escena'))
+controles.enablePan = false
+controles.enableDamping = true
+controles.dampingFactor = 0.08
+controles.minDistance = 14
+controles.maxDistance = 55
+controles.maxPolarAngle = 1.5 // nunca por debajo del "suelo" del enjambre
+let camaraManual = false
+controles.addEventListener('start', () => { camaraManual = true })
+document.getElementById('escena').addEventListener('dblclick', () => { camaraManual = false })
 
 const enjambre = new Enjambre(7)
 escena.add(enjambre.grupo)
@@ -42,12 +60,13 @@ escena.add(enjambre.grupo)
 // se alarga y el fondo se entibia hacia el rosa-arcilla (turbulencia).
 const composer = new EffectComposer(renderer)
 composer.addPass(new RenderPass(escena, camara))
-// bloom: los faros dorados y las olas de color ganan un halo cinematográfico
+// bloom contenido: brillan SOLO los faros dorados y las emociones fuertes.
+// (0.85/0.55/0.5 hacía brillar media escena: el origen de la "nubosidad")
 const bloom = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.85,  // fuerza
-  0.55,  // radio
-  0.5,   // umbral: brilla lo luminoso (líderes y emociones fuertes), no el fondo
+  0.5,   // fuerza
+  0.3,   // radio
+  0.72,  // umbral alto: el fondo y la masa gris quedan nítidos
 )
 composer.addPass(bloom)
 const estela = new AfterimagePass(0.82)
@@ -200,6 +219,7 @@ async function abrirSimulacion(id) {
   if (!api || !/^[0-9a-f]{16}$/.test(id)) return
   muroCtl.detenerReplay()
   reproductorArchivo.detener()
+  panel.avisar('Abriendo la simulación…') // estado de carga: nunca silencio
   try {
     const d = await (await fetch(`${api}/api/simulacion/${id}`)).json()
     enjambre.fijarLideresRemotos(d.lideres || [])
@@ -288,6 +308,18 @@ inicializarMuro({
 })
   .then((control) => { muroCtl = control })
   .catch(() => {})
+  .finally(() => {
+    // el tour de bienvenida: primera visita, sin enlaces profundos, y con
+    // el muro plegado para que la escena sea la protagonista
+    const profundo = new URLSearchParams(location.search).get('sim') ||
+      location.pathname.startsWith('/duelo') || location.pathname.startsWith('/archivo')
+    if (!tourVisto() && !profundo && !reducirMovimiento) {
+      setTimeout(() => {
+        muroCtl.plegar?.()
+        iniciarTour()
+      }, 1100)
+    }
+  })
 
 // enrutamiento inicial: enlace compartible, duelo o la hemeroteca
 const paramsIniciales = new URLSearchParams(location.search)
@@ -380,9 +412,15 @@ function cuadro() {
   const t = reloj.getElapsedTime()
 
   enjambre.actualizar(t, dt)
-  camara.position.x += (punteroMeta.x * 2.5 - camara.position.x) * 0.03
-  camara.position.y += (7 - punteroMeta.y * 2 - camara.position.y) * 0.03
-  camara.lookAt(0, 0, 0)
+  if (camaraManual) {
+    controles.update() // el visitante manda: damping suave de OrbitControls
+  } else {
+    // parallax sutil por defecto (y regreso elegante tras el doble clic)
+    camara.position.x += (punteroMeta.x * 2.5 - camara.position.x) * 0.03
+    camara.position.y += (7 - punteroMeta.y * 2 - camara.position.y) * 0.03
+    camara.position.z += (30 - camara.position.z) * 0.03
+    camara.lookAt(0, 0, 0)
+  }
   gobernarFps(dt, t)
 
   if (t - ultimoHud > 0.25) {
@@ -391,9 +429,10 @@ function cuadro() {
     panel.dibujarSparkline(enjambre.seriePrecio)
   }
 
-  // estela y tinte según el pánico de la masa (0..1)
+  // estela y tinte según el pánico de la masa (0..1). En calma es corta y
+  // la escena se ve despejada; solo el pánico la alarga (la ola dramática)
   const panico = enjambre.panico || 0
-  estela.uniforms.damp.value = 0.80 + panico * 0.14 // 0.80 (sutil) → ~0.94 (larga)
+  estela.uniforms.damp.value = 0.55 + panico * 0.35 // 0.55 (nítida) → 0.90 (larga)
   _fondo.copy(FONDO_CALMA).lerp(FONDO_PANICO, panico)
   escena.background.copy(_fondo)
   escena.fog.color.copy(_fondo)

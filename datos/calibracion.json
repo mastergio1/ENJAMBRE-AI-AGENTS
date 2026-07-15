@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T06:29:54+00:00",
+ "generado": "2026-07-15T10:16:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -99,6 +99,26 @@
     "fecha_final": "2024-06-13",
     "ruedas": 2,
     "categoria": "neutra"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f6e972c13982da3a",
+   "origen": "historico",
+   "fecha": "2026-07-15T10:16:07+00:00",
+   "titular": "Nvidia earnings smash expectations; stock adds record market value in a single day",
+   "simbolos": "NVDA",
+   "direccion_pct": -0.15,
+   "volatilidad_pct": 1.41,
+   "reaccion_real": {
+    "simbolo": "NVDA",
+    "pct_real": 16.83,
+    "cierre_base": 674.72,
+    "cierre_final": 788.27,
+    "fecha_base": "2024-02-21",
+    "fecha_final": "2024-02-23",
+    "ruedas": 2,
+    "categoria": "positiva"
    },
    "epilogo": null
   }

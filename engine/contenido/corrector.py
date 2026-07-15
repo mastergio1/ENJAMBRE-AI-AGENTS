@@ -25,6 +25,19 @@ RUEDAS = 2         # ventana de medición: días de mercado tras la noticia
 UMBRAL_PLANO = 0.3  # bajo este |%|, la dirección se considera plana
 
 
+def cerebros_ia(lideres: list[dict]) -> bool:
+    """¿La mayoría de los líderes habló con IA real (no con el respaldo)?
+
+    Sin saldo de API el enjambre sigue funcionando con el cerebro léxico,
+    pero la calibración solo debe medir al titular, no al suplente.
+    Si los líderes no traen `fuente` (registros antiguos), se asume IA."""
+    fuentes = [l.get("fuente") for l in (lideres or []) if l.get("fuente")]
+    if not fuentes:
+        return True
+    ia = sum(1 for f in fuentes if f in ("api", "cache"))
+    return ia > len(fuentes) / 2
+
+
 def corregir_pendientes(conexion=None, obtener_variacion=None, limite: int = 10,
                         dias_espera: int = DIAS_ESPERA, ruedas: int = RUEDAS) -> dict:
     """Corrige las destacadas pendientes. Devuelve {corregidas, esperando}."""
@@ -45,6 +58,11 @@ def corregir_pendientes(conexion=None, obtener_variacion=None, limite: int = 10,
             if variacion is None:
                 esperando += 1  # sin datos todavía: la próxima corrida reintenta
                 continue
+            # la etiqueta ia/respaldo viaja con la nota: la libreta solo
+            # califica al titular (IA real), nunca al suplente léxico
+            lideres = json.loads(sim.get("lideres_json") or "[]")
+            variacion = {**variacion,
+                         "cerebros": "ia" if cerebros_ia(lideres) else "respaldo"}
             persistencia.guardar_reaccion_real(conexion, sim["id"], variacion)
             if not (sim["epilogo"] or "").strip():
                 resumen = json.loads(sim["resumen_json"])
@@ -121,15 +139,20 @@ def libreta(conexion=None) -> dict:
         if propia:
             conexion.close()
 
-    vivo, historico = [], []
+    vivo, historico, excluidos = [], [], 0
     for fila in filas:
+        reaccion = json.loads(fila["reaccion_real"])
+        if reaccion.get("cerebros") == "respaldo":
+            excluidos += 1  # simulado sin IA (sin saldo): no califica al titular
+            continue
         sim = float(json.loads(fila["resumen_json"]).get("direccion_pct") or 0)
-        real = float(json.loads(fila["reaccion_real"]).get("pct_real") or 0)
+        real = float(reaccion.get("pct_real") or 0)
         (historico if fila["fuente"] == "backtest" else vivo).append((sim, real))
 
     return {
         **_resumir(vivo + historico),
         "en_vivo": _resumir(vivo),
         "historico": _resumir(historico),
+        "excluidos_respaldo": excluidos,
         "nota": "con menos de 30 casos, la tasa es anecdótica — seguir acumulando",
     }

@@ -97,11 +97,13 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
     try:
+        from contenido.corrector import cerebros_ia
+
         pendientes = estado(conexion)["_lista_pendiente"]
         # los recientes primero: sus datos (Alpaca) son los más confiables,
         # y así el avance no se atasca si la fuente antigua no responde
         pendientes.sort(key=lambda e: e["fecha"], reverse=True)
-        hechas, sin_datos = [], []
+        hechas, sin_datos, sin_ia = [], [], []
         for evento in pendientes[:tamano]:
             # el precio real se consulta ANTES de simular: si no hay dato,
             # el examen se salta sin gastar ni una llamada LLM
@@ -110,13 +112,19 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
                 sin_datos.append(evento["id"])  # la próxima tanda reintenta
                 continue
             reporte, lideres, serie, _ = simular(evento["titular"], _seed(evento))
+            if not cerebros_ia(lideres):
+                # sin saldo de API los líderes usaron el respaldo léxico: el
+                # examen NO se guarda — se rendirá de verdad cuando vuelva la IA
+                sin_ia.append(evento["id"])
+                break  # sin saldo no tiene sentido seguir gastando la tanda
             sim_id = persistencia.guardar_simulacion(
                 conexion, titular=evento["titular"], fuente="backtest",
                 seed=_seed(evento), resumen=reporte, lideres=lideres,
                 serie_precios=serie, destacada=False,
             )
             persistencia.guardar_reaccion_real(
-                conexion, sim_id, {**variacion, "categoria": evento["categoria"]}
+                conexion, sim_id, {**variacion, "categoria": evento["categoria"],
+                                   "cerebros": "ia"}
             )
             hechas.append({"id": evento["id"], "sim_id": sim_id,
                            "sim_pct": reporte.get("direccion_pct"),
@@ -129,7 +137,7 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
             except Exception:
                 ultimo_respaldo = None
 
-        resultado = {"hechas": hechas, "sin_datos": sin_datos,
+        resultado = {"hechas": hechas, "sin_datos": sin_datos, "sin_ia": sin_ia,
                      "pendientes": len(pendientes) - len(hechas)}
         if hechas:
             resultado["respaldo"] = ultimo_respaldo

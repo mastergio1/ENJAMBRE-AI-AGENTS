@@ -139,6 +139,25 @@ def test_el_respaldo_incluye_el_backtest_con_su_origen():
                for c in casos)
 
 
+def test_sin_saldo_no_guarda_examenes_con_respaldo():
+    """Sin saldo de API los líderes usan el cerebro léxico: ese examen NO
+    cuenta (mediría al suplente) y la tanda se detiene para no gastar."""
+    def simulador_respaldo(titular, seed):
+        reporte = {"direccion_pct": -1.0, "volatilidad_pct": 1.0}
+        lideres = [{"arquetipo": "doomer", "fuente": "fallback",
+                    "senal": -0.5, "confianza": 0.8, "frase": "x"}]
+        return reporte, lideres, [100.0], []
+
+    conexion = persistencia.conectar()
+    r = backtest.correr_tanda(conexion, tamano=5, simular=simulador_respaldo,
+                              obtener_variacion=_variacion_falsa)
+    guardadas = conexion.execute("SELECT COUNT(*) FROM simulaciones").fetchone()[0]
+    conexion.close()
+    assert r["hechas"] == []
+    assert len(r["sin_ia"]) == 1  # se detuvo en el primero: no siguió gastando
+    assert guardadas == 0         # nada quedó marcado como rendido
+
+
 def test_estado_no_repite_lo_ya_respaldado_en_github(monkeypatch):
     """Tras un borrón del disco (deploy), lo que la caja fuerte ya tiene
     no se vuelve a rendir — repetirlo costaría ~100 llamadas LLM."""

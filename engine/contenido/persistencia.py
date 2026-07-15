@@ -258,7 +258,7 @@ def destacadas_sin_correccion(conexion, antes_de: str, limite: int = 10) -> list
     """Destacadas con ticker, anteriores a `antes_de` y aún sin corrección.
     Más antiguas primero: nada se queda esperando para siempre."""
     filas = conexion.execute(
-        """SELECT s.id, s.fecha, s.resumen_json, s.epilogo, t.simbolos
+        """SELECT s.id, s.fecha, s.resumen_json, s.epilogo, s.lideres_json, t.simbolos
            FROM simulaciones s JOIN titulares t ON t.sim_id = s.id
            WHERE s.destacada = 1 AND s.reaccion_real IS NULL
              AND t.simbolos IS NOT NULL AND t.simbolos != ''

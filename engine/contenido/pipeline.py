@@ -53,7 +53,10 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
 
     reporte = server._generar_reporte(modelo, precio_previo, respuestas, lideres, contador)
     lideres_datos = [
-        {"arquetipo": lider.arquetipo, **{k: r[k] for k in ("senal", "confianza", "frase")}}
+        # `fuente` viaja con cada líder: la calibración necesita saber si la
+        # voz fue IA real o el respaldo léxico (sin saldo, el suplente juega)
+        {"arquetipo": lider.arquetipo, "fuente": r.get("fuente", "fallback"),
+         **{k: r[k] for k in ("senal", "confianza", "frase")}}
         for lider, r in zip(lideres, respuestas)
     ]
     serie = modelo.historial_precios[-(server.TICKS_PREVIOS + server.TICKS_POSTERIORES + 1):]

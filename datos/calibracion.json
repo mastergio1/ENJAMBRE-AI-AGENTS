@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-15T10:20:16+00:00",
+ "generado": "2026-07-15T10:20:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -237,6 +237,26 @@
     "cierre_final": 32.01,
     "fecha_base": "2023-03-14",
     "fecha_final": "2023-03-16",
+    "ruedas": 2,
+    "categoria": "negativa"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ea62277f2ee483d0",
+   "origen": "historico",
+   "fecha": "2026-07-15T10:20:58+00:00",
+   "titular": "SVB collapses in biggest US bank failure since 2008; regulators seize assets",
+   "simbolos": "KRE",
+   "direccion_pct": -7.98,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "KRE",
+    "pct_real": -16.06,
+    "cierre_base": 52.96,
+    "cierre_final": 44.455,
+    "fecha_base": "2023-03-09",
+    "fecha_final": "2023-03-13",
     "ruedas": 2,
     "categoria": "negativa"
    },

@@ -6,42 +6,40 @@
 > (biblia de la capa de contenido). Cuenta **lo construido, cómo quedó y
 > por qué**.
 >
-> Actualizado: 14 de julio de 2026 · rama `claude/m-d-file-6z1e63` (espejo
-> en `main`, que es la que despliega) · tras el DEPLOY REAL, el arreglo de
-> los cerebros IA y la comparación con el mercado real (TradingView).
+> Actualizado: 15 de julio de 2026 · rama `claude/m-d-file-6z1e63` (espejo
+> en `main`, que es la que despliega) · tras el deploy real, la
+> calibración en marcha (backtest + corrector) y los Sprints 1-3 de UX.
 
 ---
 
 ## 1. Estado en una línea
 
-**El producto está EN PRODUCCIÓN y en fase de pruebas reales.** Motor vivo
-en Render, web viva en Vercel, ambos con auto-deploy desde `main`. Los 100
-líderes leen con IA real (claude-sonnet-5), el muro publica las noticias
-del día, y el reporte compara la reacción del enjambre con el gráfico real
-del símbolo. 129 tests verdes.
+**EN PRODUCCIÓN, en fase de pruebas reales, con la calibración en marcha.**
+Motor en Render y web en Vercel (auto-deploy desde `main`). Los 100 líderes
+leen con IA real (claude-sonnet-5) *cuando hay saldo de Anthropic* — hoy el
+saldo está agotado y el enjambre corre con el respaldo léxico (por diseño,
+nunca se cae). La calibración acumula: **12 exámenes históricos rendidos
+(8/12 direcciones acertadas)** guardados en la caja fuerte de GitHub.
 
 | Pieza | URL |
 |---|---|
 | Web (Vercel) | https://enjambre-ai-agents.vercel.app |
-| Motor (Render, plan free — duerme y tarda ~50 s en despertar) | https://enjambre-motor.onrender.com |
+| Motor (Render free — duerme, ~50 s de bostezo) | https://enjambre-motor.onrender.com |
+| Caja fuerte de calibración | rama `respaldo-datos` → `datos/calibracion.json` |
 
-| Etapa | Qué |
+| Hito | Estado |
 |---|---|
-| 0-1 | Motor + 5.000 agentes + hechos estilizados |
-| 2 | Cerebros LLM + red de influencia |
-| 3 | Enjambre 3D (instanced) |
-| 4 | Integración WebSocket + deploy listo |
-| 6 | Persistencia SQLite + Alpaca + portero |
-| 7 | El muro (portada) |
-| 8 | El Pulso (newsletter) |
-| — | La Redacción (análisis de mercado dinámico en el Pulso) |
-| 9 | El archivo (hemeroteca) |
-| 10 | El duelo + el widget |
-| 5 | Reporte exportable — recogido dentro de la capa de contenido |
-| — | **Marca Rubicón Lab** (paleta, firma, rediseño del enjambre) |
-| — | **Blindaje de seguridad** + **auditoría previa al despliegue** |
-| — | **DEPLOY REAL** (Render + Vercel, julio 2026) + guía "¿Cómo funciona?" |
-| — | **Cerebros IA funcionando** (arreglo `temperature`) + comparación TradingView |
+| Etapas 0-10 del roadmap (motor, cerebros, 3D, contenido) | ✅ completas |
+| Marca Rubicón Lab + blindaje de seguridad + auditoría | ✅ |
+| DEPLOY REAL (Render + Vercel) | ✅ julio 2026 |
+| Cerebros IA funcionando (arreglo `temperature`) | ✅ |
+| Comparación con el mercado real (TradingView en el reporte) | ✅ |
+| Corrector automático + libreta de calificaciones | ✅ |
+| Caja fuerte GitHub (rama `respaldo-datos`) | ✅ |
+| Despertador diario (GitHub Actions, 6:00 Chile L-V) | ✅ |
+| Backtest histórico (55 exámenes 2001-2025, por tandas) | ✅ 12/55 rendidos |
+| Blindaje sin-saldo (la calibración nunca mide al respaldo) | ✅ |
+| Sprints 1-3 de UX (nav, tour, cámara, escena nítida, B2B) | ✅ |
 
 ## 2. Mapa del código
 
@@ -53,264 +51,206 @@ engine/                        Python 3.11 · Mesa 3 · FastAPI (venv en engine/
 ├── brains/                    arquetipos, cerebro (API async + caché), fallback léxico
 ├── network/red.py             grafo scale-free (líderes→seguidores + pares retail)
 ├── model.py                   MercadoEnjambre (el modelo central Mesa)
-├── server.py                  FastAPI: WS /ws + todos los endpoints REST
-├── contenido/                 ← LA CAPA DE CONTENIDO (etapas 6-10)
-│   ├── persistencia.py        SQLite: simulaciones, titulares, suscriptores, briefs
+├── server.py                  FastAPI: WS /ws + REST (incl. admin: diagnostico,
+│                              pipeline, corrector, libreta, backtest, contactos)
+├── contenido/
+│   ├── persistencia.py        SQLite: simulaciones, titulares, suscriptores,
+│   │                          briefs, contactos (B2B) · reaccion_real (calibración)
 │   ├── portero.py             clasificador 2 pisos (léxico + Haiku) del día
-│   ├── limites.py             tope on-demand 5/día global, 3/hora IP
-│   ├── seguridad.py           IP real, rate-limit HTTP, validación, cabeceras
-│   ├── pipeline.py            el ritual de la madrugada (8 pasos)
-│   ├── boletin.py             El Pulso: HTML del correo + envío Resend
-│   ├── captura.py             imagen del "momento dramático" (Pillow)
-│   ├── redaccion.py           La Redacción: análisis de mercado (3 roles)
-│   ├── notificar.py           aviso a Giorgio por Telegram
-│   ├── disparar_pulso.py      el cron golpea el endpoint protegido
+│   ├── limites.py             topes on-demand (⚠️ abiertos en fase de pruebas)
+│   ├── seguridad.py           IP real, rate-limit, validación, cabeceras
+│   ├── pipeline.py            ritual de la madrugada (+ corrector integrado)
+│   ├── corrector.py           califica destacadas vs mercado real + libreta
+│   ├── backtest.py            exámenes históricos por tandas (freno de gasto)
+│   ├── backtest_eventos.json  55 eventos 2001-2025 (24 neg / 21 pos / 10 neutras)
+│   ├── respaldo.py            caja fuerte GitHub (fusiona, nunca pierde)
+│   ├── boletin.py · captura.py · redaccion.py · notificar.py · disparar_pulso.py
 │   ├── vocabulario.py         filtro CMF (prohibidos ES+EN + disclaimer)
-│   └── fuentes/               alpaca.py (noticias) · barchart.py (datos de mercado)
-├── validation/                129 tests
-├── requirements.txt           deps de PRODUCCIÓN, versiones fijas (==)
-├── requirements-dev.txt       pytest/httpx (NO van en la imagen)
-├── Dockerfile                 imagen no-root (uid 10001)
-└── .dockerignore              fuera .venv, datos, caché, secretos, dev-deps, tests
+│   └── fuentes/               alpaca.py (noticias + barras) · stooq.py (histórico
+│                              pre-2016, sin clave) · barchart.py
+├── validation/                138 tests
+└── Dockerfile · requirements  imagen no-root, deps fijas
 
 web/                           Vite · Three.js · Tailwind 4 · GSAP
-├── src/swarm/enjambre.js      enjambre 3D instanced (paleta de marca, §3.6)
-├── src/muro/muro.js           portada: tarjetas, replay, on-demand, suscripción, FIRMA
-├── src/archivo/archivo.js     hemeroteca + modo "armar duelo"
-├── src/duelo/duelo.js         dos enjambres sincronizados + Reel (MediaRecorder)
-├── src/widget/widget.js       iframe embebible (build separado widget.html)
-├── src/ui/                    panel (reporte, voces, epílogo, tooltip) + conexión WS
-├── src/style.css              tokens de marca + firma .rl-* + divisor "cruce"
-└── src/main.js                wiring + enrutamiento (?sim, /archivo, /duelo/...)
+├── src/swarm/enjambre.js      enjambre instanced (NEUTRO/COMPRA/VENTA/LIDER)
+├── src/muro/muro.js           portada: tarjetas, replay, Pulso, ORGANIZACIONES
+│                              (form B2B), pie, firma Rubicón
+├── src/archivo/ · src/duelo/ · src/widget/
+├── src/ui/panel.js            reporte (acciones post-sim, TradingView), tooltip
+│                              táctil con señal/convicción, HUD, avisos
+├── src/ui/navegacion.js       barra fija (Inicio·Muro·Archivo·Duelo·El Pulso)
+├── src/ui/tour.js             tour de bienvenida 5 pasos (1ª visita)
+├── src/ui/guia.js             "¿Cómo funciona?" (botón ?, ya no auto-abre)
+├── src/ui/conexion.js         WS con paciencia (cold start ~50 s de Render)
+└── src/main.js                wiring, OrbitControls + parallax, bloom/estela
+                               afinados, señal de vida anti-pantalla-negra
 
-render.yaml + engine/Dockerfile   deploy motor (web + cron) en Render
-web/vercel.json                   deploy web + CSP + rewrites SPA
-docs/                             despliegue · contenido · seguridad · la-redaccion ·
-                                  auditoria-pre-deploy · contexto
+.github/workflows/ritual-diario.yml   despertador: 10:00 UTC L-V + botón manual
+.github/workflows/backtest.yml        tanda de backtest a demanda (botón/API)
+render.yaml · web/vercel.json · docs/
 ```
 
 ## 3. Decisiones técnicas y POR QUÉ (lo caro de re-aprender)
 
 ### 3.1 El mercado — solo órdenes límite (Chiarella-Iori)
-Los primeros libros explotaban (+8.000%/tick, precios negativos). Diseño
-final: **toda orden es límite con "urgencia"** (`precio*(1±urgencia)`,
-urgencia exponencial `min(expovariate(125),0.06)`); lo no cruzado reposa y
-**expira a los 4 ticks**. Precio de cierre = **última transacción** (VWAP y
-punto medio fallan). El precio de referencia de los agentes es el cierre
-del tick anterior, no `libro.ultimo_precio`. El **arbitrajista** (SMA-3,
-umbral 0.006) borra tendencias predecibles: si se debilita, el test 3 cae.
+Toda orden es límite con "urgencia" (`precio*(1±urgencia)`, exponencial
+`min(expovariate(125),0.06)`); lo no cruzado reposa y expira a los 4 ticks.
+Cierre = última transacción. Referencia de agentes = cierre del tick
+anterior. El arbitrajista (SMA-3, umbral 0.006) borra tendencias
+predecibles: si se debilita, cae el test de no-autocorrelación.
 
 ### 3.2 Los cerebros y la noticia
-- `model.aplicar_titular()`: sync usa `asyncio.run`; el servidor usa
-  `analizar_titular_async` — **nunca la sync dentro de un event loop**.
 - Modelos: `claude-sonnet-5` (líderes) + `claude-haiku-4-5-20251001` (portero).
-- **⚠️ LECCIÓN CARA:** `claude-sonnet-5` eliminó los parámetros de sampling
-  (`temperature`/`top_p`/`top_k`) — enviarlos devuelve **400** y TODOS los
-  líderes caen silenciosamente al fallback. No volver a agregarlos. El
-  síntoma era: clave válida pero HUD siempre "· respaldo" y frases enlatadas.
-  `_reportar_primera_falla()` deja la causa real en el log de Render;
-  `GET /api/diagnostico` (solo-admin) prueba la clave con una llamada mínima.
-- **El caché solo guarda voces de la API, nunca fallback**: una falla
-  pasajera no congela frases enlatadas para ese (titular, arquetipo, semilla).
-- La semilla de los líderes es aleatoria por corrida (`_semilla_lider`):
-  dos corridas del mismo titular dan voces distintas.
-- El tono ambiente sale del **léxico crudo del titular**, no del promedio.
-- Léxico **bilingüe** (ES+EN): los cables de Alpaca llegan en inglés.
-- Fallback obligatorio por arquetipo (3 variantes de frase por ramo, se
-  sortean por semilla); caché en `brains/cache/` (efímero en Render free).
+- **⚠️ LECCIÓN CARA:** `claude-sonnet-5` NO acepta `temperature`/`top_p`/
+  `top_k` (400 y todos caen al respaldo silenciosamente). No re-agregarlos.
+  Diagnóstico: `GET /api/diagnostico` (admin) prueba la clave en un comando;
+  `_reportar_primera_falla()` deja la causa en el log de Render.
+- El caché solo guarda voces de la API (nunca fallback). Semilla aleatoria
+  por corrida → voces distintas. Fallback bilingüe con 3 variantes por ramo.
+- **`fuente` (api/cache/fallback) viaja con cada líder guardado** — es lo
+  que permite el blindaje sin-saldo (§3.9).
 
-### 3.3 El contrato motor ↔ frontend (WebSocket)
-Cliente: `{"tipo":"simular","titular","seed","ritmo","titular_id?"}`.
-Servidor: texto `inicio` (100 líderes) → 150 frames binarios (`f32 precio ·
-u32 tick · i8×5000`) → texto `fin` con reporte y `sim_id`. **El orden de
-agentes es el contrato**: orden de creación (= agentes.json, líderes al
-final), debe coincidir con `web/src/swarm/datos.js`. El replay reusa el
-mismo formato de frame (`TAMANO_FRAME = 8+5000`), lo usan muro, archivo,
-duelo y widget. Hay además un **modo observatorio** (`{"tipo":"observatorio"}`
-/ `noticia` / `detener`): el enjambre late indefinidamente y recibe noticias
-encima; máx 2 sesiones, auto-cierre ~8 min.
+### 3.3 Contrato motor ↔ frontend
+WS: texto `inicio` (líderes) → frames binarios (f32 precio · u32 tick ·
+i8×5000, orden de creación = contrato con datos.js) → texto `fin`.
+Replay reutiliza el formato (muro, archivo, duelo, widget). Observatorio:
+sesión continua con noticias encima (máx 2, autocierre ~8 min).
 
 ### 3.4 La capa de contenido
-- **Persistencia primero**: TODA simulación se guarda. `id =
-  sha256(titular|seed)[:16]`.
-- **SQLite en WAL + busy_timeout**, esquema una sola vez por proceso.
-- **El portero** (2 pisos) es la inteligencia del día: elige las 3
-  destacadas Y define el universo de La Redacción (sus tickers).
-- **El muro**: destacadas con replay desde caché; on-demand en vivo que
-  queda cacheado (Estado B→A). Degrada elegante si el motor duerme.
-- **El Pulso** (ritual de 8 pasos): imagen Pillow (2D, no GL headless),
-  Resend, double opt-in, humano en el lazo (aprobar antes de enviar).
-- **La Redacción**: 3 roles (reportero/verificador/editor). El número
-  manda (viene de Barchart, no de un texto). **Selección dinámica**: el
-  universo del día = telón fijo (índices/commodities) + tickers de las
-  noticias relevantes del portero. Mezcla MOVIMIENTOS (con cifra) y
-  EVENTOS (adquisiciones: el hecho es la noticia con fuente). Línea CMF:
-  se cuenta el pasado, "qué observa hoy" es atención, nunca predicción.
-- **El cron NO comparte disco con la web** en Render free: golpea
-  `POST /api/pipeline` (token) y el ritual corre DENTRO del proceso web.
-- **El duelo**: dos Enjambre en una escena, offset en X, replay
-  sincronizado por un índice de cuadro compartido; en móvil, uno a la vez
-  (dos escenas 3D rompen el fps). Reel = MediaRecorder a WebM 9:16.
-- **El widget**: build Vite separado (`widget.html`), solo lee caché,
-  jamás simula; lista blanca vía CORS (`ENJAMBRE_WIDGET_DOMINIOS`) — fuera
-  de lista, CORS bloquea los datos → muestra el CTA.
+Persistencia primero (toda simulación se guarda; id = sha256(titular|seed)
+[:16]) · SQLite WAL · portero de 2 pisos elige las 3 del día · muro con
+replay cacheado y on-demand · Pulso con double opt-in y humano en el lazo ·
+La Redacción (3 roles, el número manda, CMF) · duelo (2 escenas, Reel) ·
+widget (build aparte, lista blanca CORS).
 
-### 3.5 Seguridad y auditoría previa al despliegue (ver docs/auditoria-pre-deploy.md)
-Controles de base: rate-limit HTTP por IP (IP real = último salto de
-X-Forwarded-For); XSS neutralizado con `esc()` antes de todo `innerHTML` +
-CSP en `vercel.json`; `sim_id` validado `^[0-9a-f]{16}$`; SQL 100%
-parametrizado; path traversal con doble muralla; semáforos (2 simulaciones,
-2 observatorios); tope on-demand **5/día** (la muralla de la billetera LLM).
+### 3.5 Seguridad
+Rate-limit por IP real (último salto XFF) · XSS: esc() antes de TODO
+innerHTML (guards en tests, incl. ticker con lista blanca `tickerSeguro`) ·
+sim_id `^[0-9a-f]{16}$` · SQL parametrizado · hmac.compare_digest para el
+token admin · contenedor no-root · deps fijas. Pendientes del deploy:
+CSP del widget, dominio definitivo en ENJAMBRE_ORIGENES.
 
-La **auditoría previa al deploy** cerró 5 puntos en código:
-- Escapado del **tooltip del líder** (frase del LLM iba cruda a innerHTML).
-- Token de admin comparado en **tiempo constante** (`hmac.compare_digest`).
-- **Dependencias fijas** (`==`) + dev-deps fuera de la imagen.
-- **Antirreenvío** del correo de confirmación (ventana 10 min por dirección).
-- **Contenedor no-root** + `.dockerignore`.
+### 3.6 La marca
+Fondo tinta cálida #1b1916 · teal #6fa89e único acento UI · enjambre:
+grafito #5c574f / viridiano #4f9e86 / rosa-arcilla #c47b7b / líderes
+DORADOS #e3c565 · Cormorant Garamond + Jost · firma .rl-* al pie del muro
+(`URL_ESTUDIO` aún marcador).
 
-Quedan 4 puntos para el **momento del deploy** (necesitan probar contra
-Vercel/Render): **A** exceptuar `widget.html` de `frame-ancestors 'none'`
-(si no, el widget no se puede incrustar) · **D** confirmar que la IP tras el
-proxy de Render es la real · **G** fijar el dominio real en `ENJAMBRE_ORIGENES`
-· **F/H** notas menores (límites en memoria de 1 instancia, tope de conexiones
-WS). Detalle y niveles en `docs/auditoria-pre-deploy.md`.
+### 3.7 El deploy real y sus lecciones
+- Render (Blueprint, solo servicio web; cron del Pulso pendiente de Resend)
+  + Vercel (root `web`, `VITE_WS_URL`). Auto-deploy desde `main`.
+- **El disco free de Render es efímero: CADA deploy lo borra.** De ahí: la
+  caja fuerte (§3.8), el anti-repetición del backtest, y que el muro
+  amanezca vacío tras un día de muchos pushes (el despertador lo rellena
+  a las 6:00; también a mano: workflow "El ritual del día" → Run workflow).
+- **⚠️ MODO PRUEBAS:** `ENJAMBRE_MAX_SIM_DIA=500`, `IP_HORA=100` en
+  render.yaml. **Volver a 5 y 3 antes del lanzamiento público.**
+- Frontend anti-pantalla-negra: Google Fonts asíncronas (en 4G débil una
+  hoja colgada dejaba TODO negro) + señal de vida inline en index.html.
+- iOS: maximum-scale=1 + campos ≥16px (el zoom automático descuadraba todo).
 
-### 3.6 La marca Rubicón Lab (paleta, firma, enjambre)
-Se aplicó el manual de marca. **Aplicación "reverse"**: fondo tinta cálida,
-el **teal** (`#6fa89e`, "el río") como único acento de la interfaz (reemplaza
-el dorado anterior). Tipografías Cormorant Garamond + Jost (ya eran las de la
-marca). Decisiones de color:
-- **La fachada** (botones, sparkline, bordes, acentos de UI) = teal de marca.
-- **El enjambre en acción** (decisión de Giorgio, versión "seria" para público
-  B2B): reposo en grafito cálido `#5c574f`, compra en verde viridiano
-  `#4f9e86`, venta en rosa-arcilla `#c47b7b`, y **los líderes conservan su
-  DORADO** `#e3c565` como faros — el único acento cálido, distinto del teal de
-  la interfaz, marca quién guía a la manada.
-- **La firma "Creada por Rubicón Lab"** (§10 del manual) al pie del muro:
-  snippet oficial scopeado `.rl-*`, hereda `currentColor` (sin teal), cae al
-  isotipo `R|` en ≤520 px. Enlace en `URL_ESTUDIO` (`muro.js`) — hoy apunta a
-  Instagram como marcador; **decisión abierta**: confirmar dominio o handle.
-- Coherencia de marca también en la imagen del "momento dramático"
-  (`captura.py`) y el correo El Pulso (`boletin.py`).
-- Los colores del enjambre viven como constantes en `web/src/swarm/enjambre.js`
-  (`NEUTRO/COMPRA/VENTA/LIDER`): cambiar la paleta es tocar esas 4 líneas.
+### 3.8 La calibración (el corazón del roadmap actual)
+- **Corrector automático** (`corrector.py`): ≥1 día después de cada
+  destacada mide el movimiento real (2 ruedas; base = cierre previo) con
+  Alpaca; guarda `reaccion_real` y redacta el epílogo CMF-limpio si no hay
+  uno manual. Corre en el ritual y con POST /api/corrector (token).
+- **Backtest** (`backtest.py` + 55 eventos 2001-2025): tandas pequeñas
+  (freno TANDA_MAXIMA=10, ~$0.10-0.20 por examen), precio real ANTES de
+  simular (sin dato = no gasta), recientes primero, Alpaca→Stooq (pre-2016),
+  y NO repite lo ya respaldado en GitHub (anti doble-gasto tras borrones).
+  Workflow manual "Backtest histórico (tanda)". Claude puede dispararlo.
+- **Libreta** (`corrector.libreta()` / GET /api/libreta): casos, aciertos
+  de dirección (umbral plano 0.3%), magnitudes medias, separando EN VIVO
+  vs HISTÓRICO, y excluyendo lo simulado con respaldo.
+- **Caja fuerte** (`respaldo.py`): tras cada examen/corrección sube el JSON
+  fusionado a la rama `respaldo-datos` (NUNCA main: redeployaría el motor).
+  Lectura pública sin token; escritura con GITHUB_RESPALDO_TOKEN
+  (fine-grained, Contents RW solo este repo, ya configurado en Render).
+- **Primeros hallazgos (12 casos, anecdótico aún):** 8/12 direcciones;
+  clava macro dramática (aranceles 2025: -12.4% vs -10.4% real) pero
+  SUBESTIMA euforias corporativas (Nvidia +16.8% real vs -0.1% sim) y
+  EXAGERA macro tibia (Fed en pausa: -7.4% sim vs +1.4% real). Diales
+  candidatos: FOMO ante earnings, sensibilidad léxica a matices Fed.
+- **Ronda 1 de ajuste de diales:** con ~30-50 casos (los 55 históricos +
+  los vivos diarios). Regla de CLAUDE.md §7: ajustar parámetros de
+  conducta, jamás hardcodear; los hechos estilizados no se rompen.
 
-### 3.7 El deploy real (julio 2026) y lo aprendido
-- **Render** (Blueprint desde `render.yaml`, solo el servicio web por ahora;
-  el cron del Pulso se agrega cuando Resend esté listo). **Vercel** (root
-  `web`, framework Vite, `VITE_WS_URL=wss://enjambre-motor.onrender.com/ws`).
-  Ambos auto-despliegan al empujar a `main`.
-- **Cold start:** el plan free de Render duerme el motor; el frontend
-  conecta "con paciencia" (`_conectarConPaciencia`, reintentos hasta 75 s)
-  y avisa "despertando el motor…" en vez de caer al demo a los 3 s.
-- **⚠️ MODO PRUEBAS ACTIVO:** los topes están abiertos en `render.yaml`
-  (`ENJAMBRE_MAX_SIM_DIA=500`, `ENJAMBRE_MAX_SIM_IP_HORA=100`). **ANTES del
-  lanzamiento público volver a 5 y 3** — cada simulación ≈ 100 llamadas LLM;
-  esos topes son la muralla de la billetera.
-- El pipeline se dispara a mano con
-  `curl -X POST https://enjambre-motor.onrender.com/api/pipeline -H "X-Pipeline-Token: <token>"`
-  (el token vive en el Environment de Render). Puebla el muro con las 3
-  destacadas del día.
-- La guía **"¿Cómo funciona?"** (`web/src/ui/guia.js`) se abre sola en la
-  primera visita (localStorage) — explica el enjambre a un retail que entra
-  sin contexto.
+### 3.9 Blindaje sin-saldo (estado ACTUAL: sin saldo de Anthropic)
+Sin saldo, el enjambre funciona con el respaldo léxico (HUD "· respaldo").
+Para que eso jamás contamine la calibración:
+- el corrector etiqueta cada nota con `cerebros: ia|respaldo` y la libreta
+  EXCLUYE lo de respaldo;
+- el backtest NO guarda exámenes rendidos sin IA y detiene la tanda
+  (`sin_ia` en el resultado y en el log de Render).
+Al recargar saldo todo se reanuda solo; los exámenes saltados se rinden
+de verdad en la siguiente tanda.
 
-### 3.8 Comparación con el mercado real + la ruta de calibración
-- **Lo construido:** las simulaciones que nacen de un titular del muro
-  exponen su ticker en `/api/simulacion/<id>` (`simbolos`, viene de la tabla
-  `titulares`), y el reporte muestra el mini-gráfico REAL del símbolo
-  (widget oficial de TradingView) bajo el rótulo "Comparación educativa ·
-  el mercado real". El ticker pasa por lista blanca (`tickerSeguro` en
-  `panel.js`) antes de tocar HTML o la config del widget — con guard de test.
-  Las simulaciones manuales no lo muestran (sin ticker asociado).
-- **Línea CMF:** la nota junto al gráfico dice explícitamente que es un
-  ejercicio educativo, no predicción ni validación. Mantener SIEMPRE.
-- **La ruta de calibración acordada (el "entrenamiento" honesto):** el
-  enjambre no predice precios; se calibra contra la realidad. Circuito:
-  (1) cada destacada guarda su ticker → (2) capturar automáticamente el
-  movimiento real 1-2 días después vía Alpaca y guardarlo como epílogo →
-  (3) con 30-50 casos, libreta de calificaciones (% de aciertos de
-  dirección, sesgos de sobre/sub-reacción) → (4) ajustar parámetros de
-  conducta de la mezcla (§4 de CLAUDE.md), jamás hardcodear el resultado.
-- **El corrector automático (paso 2) YA EXISTE** (`contenido/corrector.py`):
-  corre dentro del ritual diario; espera ≥1 día, mide 2 ruedas con barras
-  IEX de Alpaca (`variacion_real` en fuentes/alpaca.py: base = cierre previo
-  a la noticia), guarda `reaccion_real` (JSON) y redacta el epílogo CMF-limpio
-  solo si no hay uno manual. Sin datos aún → reintenta en la próxima corrida.
-  La libreta (paso 3) también existe: `corrector.libreta()` / `GET /api/libreta`.
-- **La caja fuerte de la calibración** (`contenido/respaldo.py`): tras cada
-  corrección, el acumulado de casos se sube como JSON a GitHub en la rama
-  **`respaldo-datos`** (⚠️ NUNCA a `main` — un commit a `main` redespliega
-  el motor y borra el disco: el perro mordiéndose la cola). Antes de subir
-  FUSIONA con lo remoto por sim_id: los redeploys de Render (disco efímero)
-  no pierden historia. Requiere `GITHUB_RESPALDO_TOKEN` en Render (token
-  fine-grained, permiso Contents RW solo sobre este repo); sin token, el
-  corrector funciona igual y solo avisa en su respuesta. El archivo:
-  `datos/calibracion.json` en esa rama — la libreta de agosto puede
-  calcularse desde ahí aunque la base local haya muerto.
+### 3.10 UX (Sprints 1-3, completos)
+Barra de navegación sobre los overlays (z=48) · tour de bienvenida 5 pasos
+(reemplaza el auto-open de la guía; localStorage) · OrbitControls acotado
+conviviendo con el parallax (dblclick devuelve el mando) · escena
+despejada: bloom 0.5/0.3/umbral 0.72, estela 0.55→0.90 solo en pánico,
+fog 0.014 (la "niebla" que reportó Giorgio eran los tres apilados) ·
+tooltip táctil con señal y convicción · acciones post-reporte (otro
+titular / armar duelo / copiar enlace) · pie del muro · sección B2B
+"El Enjambre para tu organización" → POST /api/contacto (tabla contactos,
+aviso Telegram opcional, GET /api/contactos con token) · focus-visible.
 
 ## 4. Cómo correr y verificar
 
 ```bash
 cd engine && source .venv/bin/activate
-pip install -r requirements-dev.txt      # deps de prod + pytest/httpx
-python -m pytest validation/ -q          # 129 tests (~5 min)
-python simular.py 42                      # métricas de hechos estilizados
-python -m contenido.pipeline             # el ritual (sin enviar correos)
-python probar_portero.py                 # log de veredictos del día
-uvicorn server:app --port 8000           # motor
+pip install -r requirements-dev.txt
+python -m pytest validation/ -q          # 138 tests (~5 min)
+python simular.py 42                      # hechos estilizados
+uvicorn server:app --port 8000            # motor
 cd web && npm install && npm run dev      # web → localhost:5173
 ```
 
-Números sanos: curtosis 4-9 · AC|r| lag1 0.15-0.45 · AC retornos |media|
-< 0.1 · asimetría 1.2-3 · shock -0.9 → mínimo -7% a -18% con rebote ·
-institucionales ~65-70% del volumen. E2E con navegador:
-`npm run build && npx vite preview --port 4173` + Playwright
-(`executablePath /opt/pw-browsers/chromium-*/chrome-linux/chrome`).
+Números sanos: curtosis 4-9 · AC|r| lag1 0.15-0.45 · asimetría 1.2-3 ·
+shock -0.9 → mínimo -7% a -18% con rebote. E2E: `npm run build && npx vite
+preview` + Playwright (`/opt/pw-browsers/chromium-*/chrome-linux/chrome`).
+
+Operación remota (Claude puede hacerlo vía GitHub):
+- Llenar el muro: workflow "El ritual del día" → Run workflow.
+- Tanda de backtest: workflow "Backtest histórico (tanda)".
+- Ver avance: `datos/calibracion.json` en la rama `respaldo-datos`.
 
 ## 5. Pendientes
 
+**Ahora mismo:**
+1. **Recargar saldo de Anthropic** → vuelven las voces IA y se reanudan
+   las tandas (~43 exámenes restantes ≈ $5-9 USD).
+
 **Antes del lanzamiento público (no negociables):**
-1. **Volver los topes a 5/día y 3/hora/IP** en `render.yaml` (hoy 500/100
-   por la fase de pruebas). Es la muralla de la billetera LLM.
-2. **Regenerar las claves de Alpaca** (se pegaron en un chat) y rotar el
-   `ENJAMBRE_PIPELINE_TOKEN` (parcialmente visible en capturas).
-3. Cerrar los puntos de auditoría que se prueban en vivo: **A** exceptuar
-   `widget.html` de `frame-ancestors` · **D** confirmar IP real tras el
-   proxy de Render · **G** dominio definitivo en `ENJAMBRE_ORIGENES`.
+2. Topes a 5/día y 3/hora/IP en render.yaml.
+3. Regenerar claves de Alpaca (expuestas en un chat) y rotar
+   ENJAMBRE_PIPELINE_TOKEN (parcial en capturas).
+4. Puntos de auditoría en vivo: CSP del widget · dominio en
+   ENJAMBRE_ORIGENES.
 
 **Para completar el producto:**
-4. **Resend** (clave + dominio verificado) → habilita El Pulso; entonces
-   re-agregar el cron a `render.yaml` (bloque en `docs/despliegue.md`).
-5. **Barchart** (clave) → datos reales de La Redacción (hoy demo).
-6. ~~Epílogo automático~~ **CONSTRUIDO** (julio 2026): `contenido/corrector.py`
-   corre dentro del ritual diario (y a demanda vía `POST /api/corrector`);
-   guarda el movimiento real en `simulaciones.reaccion_real` y redacta el
-   epílogo si no hay uno manual. La libreta: `GET /api/libreta` (admin).
-   Primera ronda de ajuste de diales: inicios de agosto (con 30-50 casos).
-7. **Mejoras UX propuestas tras el primer test** (lista de Giorgio):
-   navbar + footer, tour de bienvenida, controles 3D táctiles, estados de
-   carga, formulario educadores, CTA premium (cuidando CMF). Sin empezar.
-8. **Decisión de marca abierta**: destino de la firma (`URL_ESTUDIO` en
-   `muro.js`) — hoy marcador a Instagram.
-9. **Verificar en dispositivo real**: el Reel del duelo (MediaRecorder).
-10. **Recomendado**: Cloudflare gratis delante de todo (DDoS volumétrico).
+5. Resend (clave + dominio) → El Pulso; re-agregar el cron a render.yaml.
+6. Barchart (clave) → datos reales de La Redacción.
+7. Disco persistente de Render ($7/mes) — agosto, con la calibración seria.
+8. Informe de calibración #1 + ajuste de diales (con ~30-50 casos).
+9. Decisión de marca: destino de la firma (URL_ESTUDIO).
+10. Verificar el Reel del duelo en dispositivo real; Cloudflare delante.
 
 ## 6. Deuda técnica consciente
-- Rate-limit y tope en memoria de una instancia (Redis al escalar);
-  `seguridad.limpiar()` existe pero no se programa aún.
-- Render free = disco efímero: el pipeline regenera el día; para archivo
-  histórico persistente, subir de plan + disco en `/app/datos` (con permiso
-  de escritura para el uid 10001 del contenedor no-root).
-- Órdenes límite en reposo no reservan efectivo (acotado por expiración).
-- La demo de Barchart es un snapshot fijo: los EVENTOS ya varían por día,
-  los MOVIMIENTOS varían recién con la clave real.
+- Rate-limit/topes en memoria de 1 instancia (Redis al escalar).
+- Disco efímero: hemeroteca y suscriptores se pierden por deploy hasta el
+  disco persistente (la calibración NO: caja fuerte).
+- Órdenes en reposo no reservan efectivo (acotado por expiración).
+- El mensaje de un commit perdió la palabra "fuente" (backticks en shell);
+  sin efecto en el código.
 
 ## 7. Convenciones
-Español en comentarios/commits/explicaciones. El motor usa **nombres en
-español** (decisión temprana, consistente: `comprar_mercado`,
-`senal_social`). Commits como puntos de guardado por avance funcional.
-Nunca "listo" sin correr los tests. Explicar a Giorgio en simple, con
-analogías. **Nada de lenguaje de recomendación de inversión** en ninguna
-pieza pública (filtro CMF con test).
+Español en comentarios/commits/explicaciones; nombres de dominio del motor
+en español (`comprar_mercado`). Commits como puntos de guardado. Nunca
+"listo" sin evidencia. Explicar a Giorgio en simple, con analogías.
+**Nada de lenguaje de recomendación de inversión** (filtro CMF con tests).
+La calibración solo mide IA real, nunca al respaldo.
+
+---
+*Rubicón Lab · El Enjambre · contexto.md · 15 de julio de 2026*

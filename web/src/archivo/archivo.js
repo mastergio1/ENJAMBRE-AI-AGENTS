@@ -38,7 +38,7 @@ function tarjetaArchivo(item) {
  * Monta la hemeroteca como overlay. `alAbrirSim(id)` la cierra y abre esa
  * simulación. Devuelve { cerrar }.
  */
-export async function abrirArchivo({ alAbrirSim, alDuelo, alCerrar }) {
+export async function abrirArchivo({ alAbrirSim, alDuelo, alCerrar, enDuelo = false }) {
   const api = urlApi()
   const capa = document.getElementById('archivo')
   capa.hidden = false
@@ -178,6 +178,8 @@ export async function abrirArchivo({ alAbrirSim, alDuelo, alCerrar }) {
   const datos = await cargar()
   render(datos)
   if (datos) capa.querySelector('.arch-descargo').textContent = datos.descargo
+  // navegación directa al duelo: la hemeroteca abre lista para elegir dos
+  if (enDuelo) capa.querySelector('.arch-duelo-btn')?.click()
 
   return { cerrar }
 }

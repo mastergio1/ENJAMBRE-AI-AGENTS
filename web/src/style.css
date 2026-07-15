@@ -202,11 +202,69 @@ body {
   line-height: 1.35;
 }
 
+/* ---------- la barra de navegación ---------- */
+
+.navegacion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px 0 20px;
+  background: rgba(27, 25, 22, 0.78);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(111, 168, 158, 0.25);
+  z-index: 48; /* sobre archivo (40) y duelo (45); bajo la guía modal (50) */
+}
+.nav-marca {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.nav-enlaces {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-enlaces::-webkit-scrollbar { display: none; }
+.nav-enlaces button {
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-enlaces button:hover,
+.nav-enlaces button.activo {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+}
+
 /* ---------- el muro de noticias (la portada) ---------- */
 
 .muro {
   position: fixed;
-  top: 0;
+  top: 46px;
   left: 0;
   bottom: 0;
   width: min(430px, 100vw);
@@ -704,13 +762,17 @@ body.con-muro .marca {
     display: none; /* con el muro abierto, el muro manda */
   }
 }
-/* en desktop, el panel de noticia se corre al espacio libre */
+/* en desktop, el panel de noticia se corre al espacio libre y el HUD
+   sube junto a la barra (abajo pisaba el texto legal del panel) */
 @media (min-width: 821px) {
   body.con-muro:not(.muro-plegado) .panel-noticia {
     left: calc(50% + 215px);
   }
   body.con-muro:not(.muro-plegado) .hud {
     left: 456px;
+    top: 62px;
+    bottom: auto;
+    align-items: flex-start;
   }
 }
 
@@ -1222,3 +1284,87 @@ body.archivo-abierto .muro { display: none; }
     font-size: 0.55rem;
   }
 }
+
+/* ---------- ajustes por la barra de navegación (al final: ganan) ---------- */
+
+/* lo fijado arriba baja para dejarle sitio a la barra (46px) */
+.marca { top: 60px; }
+.guia-boton { top: 56px; }
+.aviso { top: 62px; }
+.archivo,
+.duelo { top: 46px; }
+
+@media (max-width: 700px) {
+  /* el HUD móvil vive bajo la barra */
+  .hud { top: calc(56px + env(safe-area-inset-top)); }
+  .guia-boton { top: 56px; }
+  .navegacion { padding: 0 10px; justify-content: center; }
+  /* la marca cede su lugar: los 5 enlaces caben sin scroll (la marca
+     sigue viva en el muro y en la escena) */
+  .nav-marca { display: none; }
+  .nav-enlaces button { font-size: 0.7rem; padding: 6px 8px; letter-spacing: 0.06em; }
+}
+
+/* ---------- tooltip enriquecido del líder ---------- */
+
+.tooltip .tt-datos {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--crema-suave);
+}
+.tooltip .tt-datos b { font-weight: 500; }
+.tooltip .tt-datos b.sube { color: var(--salvia); }
+.tooltip .tt-datos b.baja { color: var(--rosa); }
+.tooltip .tt-datos b.plana { color: var(--crema-suave); }
+
+/* ---------- acciones al pie del reporte ---------- */
+
+.rep-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+.rep-acciones button {
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.rep-acciones button:hover {
+  background: var(--teal);
+  color: var(--tinta);
+}
+
+/* ---------- pie de página del muro ---------- */
+
+.pie {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(243, 238, 232, 0.12);
+  font-size: 0.68rem;
+  color: rgba(243, 238, 232, 0.45);
+}
+.pie-enlace {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-decoration: none;
+}
+.pie-enlace:hover { text-decoration: underline; }

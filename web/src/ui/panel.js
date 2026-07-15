@@ -35,7 +35,7 @@ function montarGraficoReal(contenedor, simbolo) {
   contenedor.appendChild(caja)
 }
 
-export function crearPanel(alEnviarTitular, alObservatorio) {
+export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
   const raiz = document.getElementById('ui')
 
   raiz.innerHTML = `
@@ -110,15 +110,32 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
     },
     mostrarTooltip(lider, x, y) {
       // nombre y frase provienen del LLM/datos: se escapan antes de innerHTML
+      const senal = Number(lider.senal)
+      const confianza = Number(lider.confianza)
+      const conDatos = lider.frase && Number.isFinite(senal)
+      const flecha = senal > 0.05 ? '▲' : senal < -0.05 ? '▼' : '◆'
+      const clase = senal > 0.05 ? 'sube' : senal < -0.05 ? 'baja' : 'plana'
       tooltip.innerHTML = `<strong>${esc(lider.nombre)}</strong>${
         lider.frase ? `<em>«${esc(lider.frase)}»</em>` : '<em>aún no opina</em>'
+      }${conDatos
+        ? `<span class="tt-datos"><b class="${clase}">${flecha} ${senal > 0 ? '+' : ''}${senal.toFixed(2)}</b>` +
+          (Number.isFinite(confianza) ? ` · convicción ${Math.round(confianza * 100)}%` : '') + '</span>'
+        : ''
       }`
       tooltip.style.left = `${Math.min(x + 14, window.innerWidth - 280)}px`
       tooltip.style.top = `${y + 14}px`
       tooltip.hidden = false
+      // en pantallas táctiles no hay "salir del hover": se despide solo
+      clearTimeout(tooltip._temporizador)
+      tooltip._temporizador = setTimeout(() => { tooltip.hidden = true }, 6000)
     },
     ocultarTooltip() {
       tooltip.hidden = true
+    },
+    enfocarEntrada() {
+      const reporte = raiz.querySelector('#reporte')
+      if (reporte) reporte.hidden = true
+      campo.focus()
     },
     actualizarHUD(precio, fps, particulas, modo = '') {
       precioEl.textContent = precio.toFixed(2)
@@ -161,6 +178,13 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
         ? `<div class="rep-titular">${esc(extras.titular)}</div>` : ''
       const compartir = extras.id
         ? `<button class="rep-compartir" data-id="${String(extras.id).replace(/[^0-9a-f]/g, '')}">Copiar enlace</button>` : ''
+      // qué hacer después: el reporte nunca es un callejón sin salida
+      const accionesHtml = `
+        <div class="rep-acciones">
+          <button class="rep-otra">Probar otro titular</button>
+          <button class="rep-duelo">⚔ Armar un duelo</button>
+          ${compartir}
+        </div>`
 
       panelReporte.innerHTML = `
         <button class="cerrar" aria-label="cerrar">×</button>
@@ -177,13 +201,21 @@ export function crearPanel(alEnviarTitular, alObservatorio) {
         <div class="voces">${vocesHtml}</div>
         ${epilogoHtml}
         ${mercadoRealHtml}
-        ${compartir}
+        ${accionesHtml}
         <p class="descargo">${esc(reporte.descargo)}</p>
       `
       if (simbolo) montarGraficoReal(panelReporte.querySelector('.mr-grafico'), simbolo)
       panelReporte.hidden = false
       panelReporte.querySelector('.cerrar').addEventListener('click', () => {
         panelReporte.hidden = true
+      })
+      panelReporte.querySelector('.rep-otra')?.addEventListener('click', () => {
+        panelReporte.hidden = true
+        campo.focus()
+      })
+      panelReporte.querySelector('.rep-duelo')?.addEventListener('click', () => {
+        panelReporte.hidden = true
+        acciones.alDuelo?.()
       })
       const botonCompartir = panelReporte.querySelector('.rep-compartir')
       botonCompartir?.addEventListener('click', () => {

@@ -12,6 +12,7 @@ import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
 import { Enjambre } from './swarm/enjambre.js'
 import { MotorRemoto, urlApi } from './ui/conexion.js'
 import { montarGuia } from './ui/guia.js'
+import { montarNavegacion } from './ui/navegacion.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
 
 // el JS llegó y va a arrancar: se retira la señal de vida de index.html
@@ -181,7 +182,10 @@ async function alternarObservatorio(titular) {
   }
 }
 
-const panel = crearPanel(soltarTitular, alternarObservatorio)
+const panel = crearPanel(soltarTitular, alternarObservatorio, {
+  // "⚔ Armar un duelo" desde el reporte: la hemeroteca abre lista para elegir
+  alDuelo: () => { cerrarOverlays(); mostrarArchivo({ enDuelo: true }) },
+})
 
 // la guía "¿Cómo funciona?": botón flotante + panel; se abre sola la 1ª visita
 montarGuia()
@@ -213,9 +217,21 @@ async function abrirSimulacion(id) {
   }
 }
 
-async function mostrarArchivo() {
+let archivoCtl = null
+let dueloCtl = null
+
+/** Cierra archivo y duelo (para que la navegación nunca deje atrapado a nadie). */
+function cerrarOverlays() {
+  try { archivoCtl?.cerrar() } catch { /* ya cerrado */ }
+  try { dueloCtl?.cerrar() } catch { /* ya cerrado */ }
+  archivoCtl = null
+  dueloCtl = null
+}
+
+async function mostrarArchivo({ enDuelo = false } = {}) {
   history.pushState({}, '', '/archivo')
   const control = await abrirArchivo({
+    enDuelo,
     alAbrirSim: (id) => {
       control?.cerrar()          // la hemeroteca cede el paso al reporte
       abrirSimulacion(id)
@@ -226,6 +242,7 @@ async function mostrarArchivo() {
     },
     alCerrar: () => history.pushState({}, '', '/'),
   })
+  archivoCtl = control
 }
 
 async function mostrarDuelo(idA, idB) {
@@ -233,11 +250,32 @@ async function mostrarDuelo(idA, idB) {
   muroCtl.detenerReplay()
   reproductorArchivo.detener()
   history.pushState({}, '', `/duelo/${idA}-vs-${idB}`)
-  await abrirDuelo({
+  dueloCtl = await abrirDuelo({
     idA, idB, reducirMovimiento,
     alCerrar: () => history.pushState({}, '', '/'),
   })
 }
+
+// ---------- la barra de navegación ----------
+montarNavegacion({
+  inicio: () => {
+    cerrarOverlays()
+    muroCtl.plegar?.()           // el muro cede el escenario al enjambre
+    history.pushState({}, '', '/')
+  },
+  muro: () => {
+    cerrarOverlays()
+    muroCtl.abrir?.()
+    history.pushState({}, '', '/')
+  },
+  archivo: () => { cerrarOverlays(); mostrarArchivo() },
+  duelo: () => { cerrarOverlays(); mostrarArchivo({ enDuelo: true }) },
+  pulso: () => {
+    cerrarOverlays()
+    history.pushState({}, '', '/')
+    muroCtl.irAlPulso?.()
+  },
+})
 
 // el muro de noticias: la nueva portada (carga en paralelo, nunca bloquea)
 inicializarMuro({
@@ -268,6 +306,25 @@ const rayo = new THREE.Raycaster()
 const punteroNDC = new THREE.Vector2()
 let ultimoRaycast = 0
 
+/** Raycast contra los halos de líderes; muestra el tooltip si acierta. */
+function buscarLider(evento) {
+  punteroNDC.set(
+    (evento.clientX / window.innerWidth) * 2 - 1,
+    -((evento.clientY / window.innerHeight) * 2 - 1),
+  )
+  rayo.setFromCamera(punteroNDC, camara)
+  const impactos = rayo.intersectObject(enjambre.mallaHalos)
+  if (impactos.length > 0) {
+    const lider = enjambre.lideres[impactos[0].instanceId]
+    panel.mostrarTooltip(lider, evento.clientX, evento.clientY)
+    canvas.style.cursor = 'pointer'
+    return true
+  }
+  panel.ocultarTooltip()
+  canvas.style.cursor = 'default'
+  return false
+}
+
 window.addEventListener('pointermove', (evento) => {
   punteroMeta.set(
     (evento.clientX / window.innerWidth) * 2 - 1,
@@ -277,17 +334,13 @@ window.addEventListener('pointermove', (evento) => {
   const ahora = performance.now()
   if (ahora - ultimoRaycast < 80) return
   ultimoRaycast = ahora
-  punteroNDC.set(punteroMeta.x, -punteroMeta.y)
-  rayo.setFromCamera(punteroNDC, camara)
-  const impactos = rayo.intersectObject(enjambre.mallaHalos)
-  if (impactos.length > 0) {
-    const lider = enjambre.lideres[impactos[0].instanceId]
-    panel.mostrarTooltip(lider, evento.clientX, evento.clientY)
-    canvas.style.cursor = 'pointer'
-  } else {
-    panel.ocultarTooltip()
-    canvas.style.cursor = 'default'
-  }
+  buscarLider(evento)
+})
+
+// en pantallas táctiles el "hover" no existe: un toque sobre un faro dorado
+// muestra su frase (el tooltip se despide solo a los segundos)
+canvas.addEventListener('pointerdown', (evento) => {
+  if (evento.pointerType === 'touch') buscarLider(evento)
 })
 
 window.addEventListener('resize', () => {

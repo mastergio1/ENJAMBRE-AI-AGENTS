@@ -165,9 +165,21 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
         <p class="pulso-estado" hidden></p>
       </section>
       <p class="muro-descargo">${esc(datos.descargo)}</p>
+      <footer class="pie">
+        <span>© ${new Date().getFullYear()} · El Enjambre</span>
+        <button class="pie-enlace" data-guia>Guía rápida</button>
+        <button class="pie-enlace pie-archivo">El archivo</button>
+      </footer>
       ${FIRMA_RUBICON}`
     document.body.classList.add('con-muro')
     conectarEventos(datos)
+  }
+
+  /** Pliega o despliega el muro manteniendo la flecha sincronizada. */
+  function fijarPlegado(plegado) {
+    document.body.classList.toggle('muro-plegado', plegado)
+    const boton = contenedor.querySelector('.plegar')
+    if (boton) boton.textContent = plegado ? '⟩' : '⟨'
   }
 
   function conectarPulso() {
@@ -196,11 +208,9 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
   function conectarEventos(datos) {
     conectarPulso()
     contenedor.querySelector('.ver-archivo')?.addEventListener('click', () => abrirArchivo?.())
-    contenedor.querySelector('.plegar')?.addEventListener('click', () => {
-      document.body.classList.toggle('muro-plegado')
-      contenedor.querySelector('.plegar').textContent =
-        document.body.classList.contains('muro-plegado') ? '⟩' : '⟨'
-    })
+    contenedor.querySelector('.pie-archivo')?.addEventListener('click', () => abrirArchivo?.())
+    contenedor.querySelector('.plegar')?.addEventListener('click', () =>
+      fijarPlegado(!document.body.classList.contains('muro-plegado')))
     contenedor.querySelector('.ver-mas')?.addEventListener('click', () => {
       visibles += TARJETAS_VISIBLES
       render(datos)
@@ -261,10 +271,22 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
     }
   }
 
+  // el mando del muro para la navegación (abrir, plegar, ir al Pulso)
+  const mando = {
+    recargar,
+    detenerReplay: () => replay.detener(),
+    abrir: () => fijarPlegado(false),
+    plegar: () => fijarPlegado(true),
+    irAlPulso: () => {
+      fijarPlegado(false)
+      contenedor.querySelector('.pulso')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    },
+  }
+
   // ---------- arranque ----------
   if (!api) {
     renderAviso('Modo demo local: escribe un titular abajo y suéltalo al enjambre.')
-    return { recargar: async () => {}, detenerReplay: () => {} }
+    return { ...mando, recargar: async () => {} }
   }
   try {
     const datos = await cargarDatos()
@@ -282,5 +304,5 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
     renderAviso('El motor descansa en este momento. Mostrando el enjambre en modo demo — escribe un titular abajo.')
   }
 
-  return { recargar, detenerReplay: () => replay.detener() }
+  return mando
 }

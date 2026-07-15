@@ -89,18 +89,23 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
     conexion = conexion or persistencia.conectar()
     try:
         pendientes = estado(conexion)["_lista_pendiente"]
+        # los recientes primero: sus datos (Alpaca) son los más confiables,
+        # y así el avance no se atasca si la fuente antigua no responde
+        pendientes.sort(key=lambda e: e["fecha"], reverse=True)
         hechas, sin_datos = [], []
         for evento in pendientes[:tamano]:
+            # el precio real se consulta ANTES de simular: si no hay dato,
+            # el examen se salta sin gastar ni una llamada LLM
+            variacion = obtener_variacion(evento["simbolo"], evento["fecha"], RUEDAS)
+            if variacion is None:
+                sin_datos.append(evento["id"])  # la próxima tanda reintenta
+                continue
             reporte, lideres, serie, _ = simular(evento["titular"], _seed(evento))
             sim_id = persistencia.guardar_simulacion(
                 conexion, titular=evento["titular"], fuente="backtest",
                 seed=_seed(evento), resumen=reporte, lideres=lideres,
                 serie_precios=serie, destacada=False,
             )
-            variacion = obtener_variacion(evento["simbolo"], evento["fecha"], RUEDAS)
-            if variacion is None:
-                sin_datos.append(evento["id"])  # la próxima tanda reintenta
-                continue
             persistencia.guardar_reaccion_real(
                 conexion, sim_id, {**variacion, "categoria": evento["categoria"]}
             )

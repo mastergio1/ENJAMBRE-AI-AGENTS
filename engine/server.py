@@ -832,7 +832,8 @@ def _correr_backtest(tanda: int) -> None:
 
     resultado = backtest.correr_tanda(tamano=tanda)
     print(f"backtest: {len(resultado['hechas'])} exámenes rendidos, "
-          f"{resultado['pendientes']} pendientes, sin datos: {resultado['sin_datos']}",
+          f"{resultado['pendientes']} pendientes, sin datos: {resultado['sin_datos']}, "
+          f"respaldo: {resultado.get('respaldo')}",
           flush=True)
 
 

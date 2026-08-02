@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:15:25+00:00",
+ "generado": "2026-08-02T18:16:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -788,6 +788,28 @@
     "cierre_final": 288.42,
     "fecha_base": "2020-03-06",
     "fecha_final": "2020-03-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "624c5e4577117e8c",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:16:03+00:00",
+   "titular": "Global stocks plunge as coronavirus cases surge outside China; Dow drops 1,000 points",
+   "simbolos": "SPY",
+   "direccion_pct": -7.44,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -6.25,
+    "cierre_base": 333.48,
+    "cierre_final": 312.65,
+    "fecha_base": "2020-02-21",
+    "fecha_final": "2020-02-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -961,29 +961,32 @@ def api_backtest_estado(x_pipeline_token: str = Header(default="")) -> dict:
     return {k: v for k, v in avance.items() if not k.startswith("_")}
 
 
-def _correr_cosecha(mercados, desde, hasta, tope) -> None:
+def _correr_cosecha(mercados, desde, hasta, tope, reemplazar) -> None:
     from contenido import cosechador
 
     resultado = cosechador.cosechar_y_guardar(mercados=mercados, desde=desde,
-                                              hasta=hasta, tope_por_simbolo=tope)
+                                              hasta=hasta, tope_por_simbolo=tope,
+                                              reemplazar=reemplazar)
     print(f"cosecha: {resultado['resumen']} · respaldo: {resultado.get('respaldo')}",
           flush=True)
 
 
 @app.post("/api/cosechar")
 def api_cosechar(tareas: BackgroundTasks, mercados: str = "", desde: str = "2016-01-01",
-                 hasta: str = "", tope: int = 8,
+                 hasta: str = "", tope: int = 8, reemplazar: bool = False,
                  x_pipeline_token: str = Header(default="")) -> dict:
     """El cosechador: busca días de gran movimiento reales (Yahoo) y les pega
     su titular real (Benzinga/Alpaca), sumando exámenes al banco sin curado
     manual. Protegido. Corre en segundo plano. `mercados` separado por comas
-    (ej. "oro,cripto"); vacío = todos. Solo suma eventos NUEVOS."""
+    (ej. "oro,cripto"); vacío = todos. `reemplazar=true` purga la cosecha
+    anterior (para limpiar una de baja calidad). Solo suma eventos NUEVOS."""
     if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
     lista = [m.strip() for m in mercados.split(",") if m.strip()] or None
     tope = max(1, min(int(tope), 20))
-    tareas.add_task(_correr_cosecha, lista, desde, hasta or None, tope)
+    tareas.add_task(_correr_cosecha, lista, desde, hasta or None, tope, reemplazar)
     return {"estado": "cosechando", "mercados": lista or "todos", "desde": desde,
+            "reemplazar": reemplazar,
             "nota": "corre en segundo plano; los nuevos exámenes aparecen en la próxima tanda"}
 
 

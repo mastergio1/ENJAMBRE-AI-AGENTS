@@ -23,6 +23,10 @@ on:
         description: "Máx. eventos por símbolo (1-20)"
         required: false
         default: "8"
+      reemplazar:
+        description: "Purgar la cosecha anterior y reescribir limpia (true/false)"
+        required: false
+        default: "false"
 
 jobs:
   cosechar:
@@ -57,9 +61,10 @@ jobs:
           MERCADOS: ${{ github.event.inputs.mercados }}
           DESDE: ${{ github.event.inputs.desde || '2016-01-01' }}
           TOPE: ${{ github.event.inputs.tope || '8' }}
+          REEMPLAZAR: ${{ github.event.inputs.reemplazar || 'false' }}
         run: |
           respuesta=$(curl -sf -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/cosechar?mercados=$MERCADOS&desde=$DESDE&tope=$TOPE" \
+            "https://enjambre-motor.onrender.com/api/cosechar?mercados=$MERCADOS&desde=$DESDE&tope=$TOPE&reemplazar=$REEMPLAZAR" \
             -H "X-Pipeline-Token: $TOKEN")
           echo "Respuesta del motor: $respuesta"
           echo "La cosecha corre en segundo plano. Los eventos nuevos quedan en"

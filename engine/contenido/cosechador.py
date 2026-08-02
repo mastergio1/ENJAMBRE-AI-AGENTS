@@ -17,11 +17,36 @@ El resultado son "eventos candidatos" con el mismo formato que
 backtest_eventos.json, listos para revisar y fusionar al banco.
 """
 
+import re
 from datetime import datetime, timedelta, timezone
 
 import httpx
 
 URL_YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart/{simbolo}"
+
+# Titulares que son REALES pero no sirven de examen: no cuentan qué pasó,
+# solo listan movimientos ("40 Biggest Movers", "Stocks Moving Pre-Market",
+# "Gainers"…). El enjambre no puede razonar sobre ellos, así que se descartan
+# (no se inventa nada: simplemente ese día no tiene una noticia utilizable).
+PATRONES_GENERICOS = re.compile(
+    r"biggest movers|stocks? moving|pre-?market (session|gainers|losers|movers)|"
+    r"premarket|mid-?day (movers|gainers|losers)|movers from|"
+    r"gainers?( and | & )?losers|top (gainers|losers)|"
+    r"what's .* doing today|unusual options|stocks to watch|market update|"
+    r"stocks moving in|movers list|market clubhouse|watch list|"
+    r"benzinga('s)? (pro |)?(top |)(movers|gainers|losers)",
+    re.IGNORECASE,
+)
+
+# Símbolos que solo representan a su mercado DESPUÉS de una fecha: proxies de
+# cripto que antes eran otra empresa. Cosechar antes de esa fecha mezclaría
+# noticias de otro negocio (patentes, biotech, software) como si fueran cripto.
+SIMBOLO_DESDE = {
+    "MSTR": "2020-08-11",  # primera compra de Bitcoin de MicroStrategy
+    "MARA": "2020-12-01",  # rebrand a Marathon Digital (minería de Bitcoin)
+    "RIOT": "2017-10-04",  # rebrand de Bioptix a Riot Blockchain
+    "BITO": "2021-10-19",  # lanzamiento del ETF de futuros de Bitcoin
+}
 
 # Umbral de "día de movimiento" por mercado: un día importa si el símbolo se
 # movió más que esto (en %). Calibrado a la volatilidad típica de cada uno:
@@ -119,6 +144,10 @@ def dias_de_movimiento(simbolo: str, mercado: str, desde: str, hasta: str,
     categoria, pct_ventana}. El titular real se busca aparte (puede no existir).
     """
     umbral = UMBRAL_POR_MERCADO.get(mercado, UMBRAL_DEFECTO)
+    # si el símbolo solo representa a su mercado desde cierta fecha, no cosechar antes
+    piso = SIMBOLO_DESDE.get(simbolo)
+    if piso and piso > desde:
+        desde = piso
     barras = _historia_diaria(simbolo, desde, hasta)
     if len(barras) < ruedas + 2:
         return []
@@ -186,6 +215,8 @@ def _titular_de(simbolo: str, fecha: str) -> dict | None:
         noticias = [n for n in respuesta.json().get("news", []) if n.get("headline")]
     except Exception:
         return None
+    # solo titulares con contenido real: fuera las listas genéricas de "movers"
+    noticias = [n for n in noticias if not PATRONES_GENERICOS.search(n["headline"])]
     if not noticias:
         return None
     # el titular cuyo momento cae más cerca del cierre del día del movimiento
@@ -254,12 +285,14 @@ def cosechar(watchlist: dict[str, str], desde: str, hasta: str,
 
 def cosechar_y_guardar(mercados: list[str] | None = None,
                        desde: str = "2016-01-01", hasta: str | None = None,
-                       tope_por_simbolo: int = 8) -> dict:
+                       tope_por_simbolo: int = 8, reemplazar: bool = False) -> dict:
     """Cosecha eventos reales y los sube a GitHub (datos/cosecha.json).
 
     `mercados`: filtra la watchlist (ej. ["oro", "cripto"]); None = todos.
-    El banco de exámenes los recoge solo en la próxima tanda (cargar_eventos
-    fusiona lo local con lo cosechado). NUNCA lanza hacia el pipeline.
+    `reemplazar`: si True, la cosecha PISA lo anterior (purga cosechas viejas
+    de baja calidad) en vez de sumarse. El banco de exámenes recoge los nuevos
+    en la próxima tanda (cargar_eventos fusiona lo local con lo cosechado).
+    NUNCA lanza hacia el pipeline.
     """
     from contenido import backtest, respaldo
 
@@ -270,8 +303,22 @@ def cosechar_y_guardar(mercados: list[str] | None = None,
         objetivo = {m.lower() for m in mercados}
         watchlist = {s: m for s, m in WATCHLIST_DEFECTO.items() if m in objetivo}
 
-    ids_existentes = {e["id"] for e in backtest.cargar_eventos()}
+    # al reemplazar solo se evita repetir lo curado a mano (no la cosecha vieja)
+    if reemplazar:
+        ids_existentes = {e["id"] for e in cargar_eventos_locales()}
+    else:
+        ids_existentes = {e["id"] for e in backtest.cargar_eventos()}
     resultado = cosechar(watchlist, desde, hasta, ids_existentes, tope_por_simbolo)
     if resultado["eventos"]:
-        resultado["respaldo"] = respaldo.subir_cosecha(resultado["eventos"])
+        resultado["respaldo"] = respaldo.subir_cosecha(resultado["eventos"], reemplazar=reemplazar)
     return resultado
+
+
+def cargar_eventos_locales() -> list[dict]:
+    """Solo los exámenes curados a mano (backtest_eventos.json), sin la cosecha
+    remota. Se usa al reemplazar para no chocar con lo curado."""
+    import json
+    from contenido.backtest import RUTA_EVENTOS
+
+    with open(RUTA_EVENTOS, encoding="utf-8") as archivo:
+        return json.load(archivo)["eventos"]

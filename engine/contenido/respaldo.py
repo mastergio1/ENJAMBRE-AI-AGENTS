@@ -75,11 +75,12 @@ def cosecha_remota() -> list[dict]:
         return []
 
 
-def subir_cosecha(nuevos: list[dict]) -> dict:
+def subir_cosecha(nuevos: list[dict], reemplazar: bool = False) -> dict:
     """Fusiona y sube eventos cosechados a datos/cosecha.json (rama de respaldo).
 
-    Une por `id` (lo nuevo pisa lo viejo). NUNCA lanza. Devuelve
-    {"subido": bool, "eventos": int, "motivo"?: str}.
+    Une por `id` (lo nuevo pisa lo viejo). Con `reemplazar=True` NO fusiona:
+    escribe solo `nuevos` (útil para purgar una cosecha vieja de baja calidad).
+    NUNCA lanza. Devuelve {"subido": bool, "eventos": int, "motivo"?: str}.
     """
     if not hay_token():
         return {"subido": False, "eventos": 0, "motivo": "sin GITHUB_RESPALDO_TOKEN"}
@@ -100,7 +101,7 @@ def subir_cosecha(nuevos: list[dict]) -> dict:
             sha = datos.get("sha")
             crudo = base64.b64decode(datos.get("content") or "").decode("utf-8")
             previos = (json.loads(crudo) or {}).get("eventos", [])
-        por_id = {e["id"]: e for e in previos}
+        por_id = {} if reemplazar else {e["id"]: e for e in previos}
         por_id.update({e["id"]: e for e in nuevos})
         eventos = sorted(por_id.values(), key=lambda e: e.get("fecha") or "")
         hoy = datetime.now(timezone.utc).strftime("%Y-%m-%d")

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:28:55+00:00",
+ "generado": "2026-08-02T22:29:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1514,6 +1514,28 @@
     "cierre_final": 202.0,
     "fecha_base": "2024-03-07",
     "fecha_final": "2024-03-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bccfceb0694f63ac",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:29:32+00:00",
+   "titular": "Bitcoin surges past $60,000 as spot ETF inflows accelerate",
+   "simbolos": "GBTC",
+   "direccion_pct": 9.74,
+   "volatilidad_pct": 0.99,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 8.85,
+    "cierre_base": 45.93,
+    "cierre_final": 50.0,
+    "fecha_base": "2024-02-27",
+    "fecha_final": "2024-02-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

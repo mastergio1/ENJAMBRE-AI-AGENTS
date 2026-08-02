@@ -65,6 +65,10 @@ class MercadoEnjambre(mesa.Model):
 
         self.tick = 0
         self.sentimiento = 0.0  # sentimiento global de la noticia, decae solo
+        # perfil de personalidad del mercado (índice por defecto); una noticia
+        # de petróleo/oro/cripto lo cambia y con él la reacción del enjambre
+        from brains.mercado import perfil_de
+        self.perfil = perfil_de("indice")
         self.historial_precios: list[float] = [precio_inicial]
         self.retornos: list[float] = []
         self.flujo_compras: list[float] = []  # volumen agresor comprador por tick
@@ -109,15 +113,19 @@ class MercadoEnjambre(mesa.Model):
             lider.recibir_noticia(sentimiento)
         self._propagar_desde_lideres()
 
-    def aplicar_titular(self, titular: str, respuestas: list[dict] | None = None) -> list[dict]:
+    def aplicar_titular(self, titular: str, respuestas: list[dict] | None = None,
+                        perfil: dict | None = None) -> list[dict]:
         """Inyecta una noticia REAL: los 100 líderes la leen (LLM con
         fallback léxico), forman su señal y la propagan por la red.
-        El servidor puede pasar `respuestas` ya calculadas (vía async)."""
+        El servidor puede pasar `respuestas` ya calculadas (vía async) y el
+        `perfil` de mercado (índice/petróleo/oro/cripto/acción) ya clasificado."""
         if respuestas is None:
             from brains.cerebro import analizar_titular
 
             consultas = [(lider.unique_id, lider.arquetipo) for lider in self._lideres]
             respuestas = analizar_titular(titular, consultas)
+        if perfil is not None:
+            self.perfil = perfil
         for lider, respuesta in zip(self._lideres, respuestas):
             lider.senal = respuesta["senal"]
             lider.confianza = respuesta["confianza"]
@@ -127,18 +135,33 @@ class MercadoEnjambre(mesa.Model):
         # de los líderes viajan aparte, por la red de influencia
         from brains.fallback import sentimiento_lexico
 
-        tono = sentimiento_lexico(titular)
+        tono = self._aplicar_perfil(sentimiento_lexico(titular))
         self.sentimiento = max(-1.0, min(1.0, self.sentimiento + tono))
         self._propagar_desde_lideres()
         return respuestas
 
+    def _aplicar_perfil(self, tono: float) -> float:
+        """La personalidad del mercado transforma el tono de la noticia.
+
+        - sensibilidad: cuánto mueve el sentimiento a este mercado.
+        - refugio (oro): el miedo (tono<0) se refleja parcialmente a compra;
+          con refugio=0.5 el miedo se neutraliza, >0.5 lo hace SUBIR.
+        """
+        tono *= self.perfil.get("sensibilidad", 1.0)
+        refugio = self.perfil.get("refugio", 0.0)
+        if refugio and tono < 0:
+            tono *= (1.0 - 2.0 * refugio)
+        return max(-1.0, min(1.0, tono))
+
     def _propagar_desde_lideres(self) -> None:
         """La señal de cada líder viaja a sus seguidores con retardo de
         1-4 ticks y atenuación 0.7 por salto — esto crea la ola visual."""
+        sensibilidad = self.perfil.get("sensibilidad", 1.0)
         for lider in self._lideres:
             if abs(lider.senal) < 0.05:
                 continue
-            valor = lider.senal * lider.confianza * 0.7
+            # la personalidad del mercado escala cuánto arrastra cada líder
+            valor = lider.senal * lider.confianza * 0.7 * sensibilidad
             for seguidor in lider.seguidores:
                 retardo = self.random.randint(1, 4)
                 self.cola_senales.append((self.tick + retardo, seguidor, valor, 1))

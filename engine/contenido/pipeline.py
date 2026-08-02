@@ -29,10 +29,14 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
     from brains.cerebro import analizar_titular
     from model import MercadoEnjambre
 
+    from brains.mercado import clasificar, perfil_de
+
     modelo = MercadoEnjambre(seed=seed, ticks_horizonte=server.TICKS_CALENTAMIENTO + server.TICKS_POSTERIORES)
     modelo.correr(server.TICKS_CALENTAMIENTO)
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
     respuestas = analizar_titular(titular, [(l.unique_id, l.arquetipo) for l in lideres])
+    # el enjambre razona el TIPO de mercado y aplica su personalidad
+    perfil = perfil_de(clasificar(titular))
 
     contador = defaultdict(lambda: [0, 0])
     frames: list[bytes] = []
@@ -47,11 +51,13 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
         avanzar()
     precio_previo = modelo.historial_precios[-1]
     contador.clear()
-    modelo.aplicar_titular(titular, respuestas=respuestas)
+    modelo.aplicar_titular(titular, respuestas=respuestas, perfil=perfil)
     for _ in range(server.TICKS_POSTERIORES):
         avanzar()
 
     reporte = server._generar_reporte(modelo, precio_previo, respuestas, lideres, contador)
+    reporte["mercado"] = perfil["tipo"]            # el tipo detectado (calibración/UI)
+    reporte["mercado_etiqueta"] = perfil["etiqueta"]
     lideres_datos = [
         # `fuente` viaja con cada líder: la calibración necesita saber si la
         # voz fue IA real o el respaldo léxico (sin saldo, el suplente juega)

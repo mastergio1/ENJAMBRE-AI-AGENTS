@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:30:18+00:00",
+ "generado": "2026-08-02T18:30:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1121,6 +1121,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f5152c963ffb6870",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:30:52+00:00",
+   "titular": "Markets tumble worldwide as Fed signals it may taper bond purchases",
+   "simbolos": "SPY",
+   "direccion_pct": -5.46,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.68,
+    "cierre_base": 163.45,
+    "cierre_final": 159.07,
+    "fecha_base": "2013-06-19",
+    "fecha_final": "2013-06-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

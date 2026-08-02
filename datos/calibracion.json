@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:23:21+00:00",
+ "generado": "2026-08-02T18:23:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -967,6 +967,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7617393dc0bf0482",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:23:58+00:00",
+   "titular": "Congress passes sweeping tax overhaul slashing the corporate rate",
+   "simbolos": "SPY",
+   "direccion_pct": -1.58,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 0.15,
+    "cierre_base": 267.17,
+    "cierre_final": 267.58,
+    "fecha_base": "2017-12-19",
+    "fecha_final": "2017-12-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

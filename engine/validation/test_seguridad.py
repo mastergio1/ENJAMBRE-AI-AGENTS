@@ -163,3 +163,43 @@ def test_diagnostico_reporta_clave_faltante(monkeypatch):
 def test_tope_diario_por_defecto_es_cinco(monkeypatch):
     monkeypatch.delenv("ENJAMBRE_MAX_SIM_DIA", raising=False)
     assert limites.tope_global_dia() == 5
+
+
+# ---------- candado de pruebas privadas ----------
+
+def test_acceso_abierto_sin_clave(monkeypatch):
+    """Sin ENJAMBRE_ACCESO, cualquiera pasa (comportamiento normal)."""
+    monkeypatch.delenv("ENJAMBRE_ACCESO", raising=False)
+    assert not seguridad.acceso_privado_activo()
+    assert seguridad.acceso_ok(None)
+    assert seguridad.acceso_ok("lo-que-sea")
+
+
+def test_acceso_privado_exige_la_clave(monkeypatch):
+    """Con ENJAMBRE_ACCESO puesta, solo la clave correcta pasa."""
+    monkeypatch.setenv("ENJAMBRE_ACCESO", "clave-secreta-de-pruebas")
+    assert seguridad.acceso_privado_activo()
+    assert seguridad.acceso_ok("clave-secreta-de-pruebas")
+    assert not seguridad.acceso_ok("")
+    assert not seguridad.acceso_ok(None)
+    assert not seguridad.acceso_ok("clave-equivocada")
+
+
+def test_ws_simular_rechaza_sin_clave_en_modo_privado(monkeypatch):
+    """El WebSocket de simulación no gasta IA sin la clave correcta."""
+    monkeypatch.setenv("ENJAMBRE_ACCESO", "abre-sesamo")
+    cliente = TestClient(server.app)
+    with cliente.websocket_connect("/ws") as ws:
+        ws.send_json({"tipo": "simular", "titular": "La Fed sube las tasas"})
+        respuesta = ws.receive_json()
+        assert respuesta["tipo"] == "privado"
+
+
+def test_simular_titular_respeta_el_candado(monkeypatch):
+    monkeypatch.setenv("ENJAMBRE_ACCESO", "abre-sesamo")
+    cliente = TestClient(server.app)
+    r = cliente.post("/api/simular-titular", json={"id": "a" * 16})
+    assert r.json()["estado"] == "privado"
+    # con la clave correcta, el candado deja pasar (y sigue el flujo normal)
+    r2 = cliente.post("/api/simular-titular", json={"id": "no-hex", "acceso": "abre-sesamo"})
+    assert r2.status_code == 404  # ya pasó el candado; falla por id inválido

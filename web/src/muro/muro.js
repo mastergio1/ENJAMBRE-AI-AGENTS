@@ -4,7 +4,7 @@
 // soltar al enjambre en vivo (Estado B). Todo desde caché: el costo
 // marginal de cada visitante es cero.
 
-import { urlApi } from '../ui/conexion.js'
+import { claveAcceso, urlApi } from '../ui/conexion.js'
 
 const TAMANO_FRAME = 8 + 5000 // [precio f32][tick u32][sentimiento i8 × 5000]
 const TARJETAS_VISIBLES = 12
@@ -288,14 +288,15 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
           const respuesta = await (await fetch(`${api}/api/simular-titular`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: boton.dataset.id }),
+            body: JSON.stringify({ id: boton.dataset.id, acceso: claveAcceso() }),
           })).json()
           if (respuesta.estado === 'adelante') {
             replay.detener()
             correrTitular(respuesta.titular, respuesta.titular_id)
-          } else if (respuesta.estado === 'limite') {
+          } else if (respuesta.estado === 'limite' || respuesta.estado === 'privado') {
             panel.avisar(respuesta.mensaje)
-            boton.textContent = 'El enjambre descansa hasta mañana'
+            boton.disabled = false
+            boton.textContent = 'Ver reacción del enjambre'
           } else if (respuesta.estado === 'simulada') {
             await recargar()
           }

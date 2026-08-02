@@ -41,6 +41,11 @@ RITMO_MINIMO = 0.02       # piso: nadie pide ticks sin pausa (protege la CPU)
 MAX_TITULAR = 1200        # caracteres: cabe un tweet presidencial completo
 MAX_MENSAJE_WS = 4000     # bytes de texto por mensaje del cliente
 MAX_SIM_CONCURRENTES = 2  # simulaciones pesadas en vuelo a la vez
+MENSAJE_PRIVADO = (
+    "El Enjambre está en pruebas privadas. Puedes explorar el muro y el "
+    "archivo; para soltar tus propios titulares, escríbenos desde "
+    "«El Enjambre para tu organización»."
+)
 
 
 def _semilla_lider(semilla_sim: int, unique_id: int) -> int:
@@ -155,6 +160,10 @@ async def canal(ws: WebSocket) -> None:
 
             # modo observatorio: el enjambre sigue vivo y recibe noticias encima
             if tipo == "observatorio":
+                # el observatorio también lee titulares con IA: mismo candado
+                if not seguridad.acceso_ok(mensaje.get("acceso")):
+                    await ws.send_text(_responder(ws, tipo="privado", mensaje=MENSAJE_PRIVADO))
+                    continue
                 try:
                     await _asyncio.wait_for(_semaforo_obs.acquire(), timeout=0.01)
                 except _asyncio.TimeoutError:
@@ -169,6 +178,11 @@ async def canal(ws: WebSocket) -> None:
                 continue
 
             if tipo != "simular":
+                continue
+
+            # candado de pruebas privadas: sin la clave, nadie gasta IA
+            if not seguridad.acceso_ok(mensaje.get("acceso")):
+                await ws.send_text(_responder(ws, tipo="privado", mensaje=MENSAJE_PRIVADO))
                 continue
 
             # tope de simulaciones pesadas simultáneas (antes de gastar cupo)
@@ -631,6 +645,7 @@ def replay(sim_id: str) -> Response:
 
 class PeticionSimular(BaseModel):
     id: str  # el id del titular en el muro
+    acceso: str = ""  # clave de pruebas privadas (si el modo está activo)
 
 
 @app.post("/api/simular-titular")
@@ -640,6 +655,8 @@ def simular_titular(peticion: PeticionSimular) -> dict:
     No consume el cupo (eso pasa al correr de verdad por el WebSocket);
     responde si hay presupuesto y devuelve el titular a simular.
     """
+    if not seguridad.acceso_ok(peticion.acceso):
+        return {"estado": "privado", "mensaje": MENSAJE_PRIVADO}
     if not seguridad.sim_id_valido(peticion.id):
         return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()

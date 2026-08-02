@@ -10,6 +10,19 @@ export function urlApi() {
   return ws.replace(/^ws/, 'http').replace(/\/ws$/, '')
 }
 
+/** La clave de pruebas privadas: llega en la URL (?acceso=…) y se recuerda
+ * en el navegador. Durante las pruebas cerradas, solo quien la trae puede
+ * soltar titulares (que gastan IA). El muro y el archivo quedan abiertos. */
+export function claveAcceso() {
+  try {
+    const enUrl = new URLSearchParams(location.search).get('acceso')
+    if (enUrl) localStorage.setItem('enjambre-acceso', enUrl)
+    return localStorage.getItem('enjambre-acceso') || ''
+  } catch {
+    return ''
+  }
+}
+
 export class MotorRemoto {
   constructor(url) {
     this.url = url
@@ -71,6 +84,7 @@ export class MotorRemoto {
         if (mensaje.tipo === 'inicio') alInicio(mensaje)
         else if (mensaje.tipo === 'fin') alFin(mensaje.reporte, mensaje.sim_id)
         else if (mensaje.tipo === 'limite') alLimite?.(mensaje.mensaje)
+        else if (mensaje.tipo === 'privado') alLimite?.(mensaje.mensaje)
       } else {
         const vista = new DataView(evento.data)
         alTick(
@@ -81,7 +95,7 @@ export class MotorRemoto {
       }
     }
     const seed = Math.floor(Math.random() * 2_000_000_000)
-    this.ws.send(JSON.stringify({ tipo: 'simular', titular, seed, ...extras }))
+    this.ws.send(JSON.stringify({ tipo: 'simular', titular, seed, acceso: claveAcceso(), ...extras }))
   }
 
   /**
@@ -96,13 +110,14 @@ export class MotorRemoto {
         const m = JSON.parse(evento.data)
         if (m.tipo === 'inicio') alInicio?.(m)
         else if (m.tipo === 'limite') alLimite?.(m.mensaje)
+        else if (m.tipo === 'privado') alLimite?.(m.mensaje)
         else if (m.tipo === 'observatorio-fin') alFin?.()
       } else {
         const v = new DataView(evento.data)
         alTick(v.getFloat32(0, true), v.getUint32(4, true), new Int8Array(evento.data, 8))
       }
     }
-    ws.send(JSON.stringify({ tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000) }))
+    ws.send(JSON.stringify({ tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000), acceso: claveAcceso() }))
     return {
       soltarNoticia(t) {
         if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'noticia', titular: t }))

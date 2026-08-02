@@ -6,12 +6,36 @@ las cabeceras de seguridad. Estado en memoria: suficiente para una
 instancia (el deploy actual en Render).
 """
 
+import hmac
+import os
 import re
 import time
 from collections import deque
 
 # los ids de simulación son sha256 recortado a 16 hex — nada más se acepta
 HEX16 = re.compile(r"^[0-9a-f]{16}$")
+
+
+# ---------- candado de acceso privado (pruebas cerradas) ----------
+
+def acceso_privado_activo() -> bool:
+    """True si el enjambre está en modo pruebas privadas (hay clave puesta).
+
+    Se activa poniendo ENJAMBRE_ACCESO en el entorno del motor. Mientras
+    esté activo, solo quien traiga la clave puede disparar simulaciones
+    (que gastan ~100 llamadas LLM). El muro, el archivo y los replays
+    —que NO gastan IA— siguen abiertos a todos."""
+    return bool(os.environ.get("ENJAMBRE_ACCESO", "").strip())
+
+
+def acceso_ok(clave: str | None) -> bool:
+    """¿La clave de acceso es válida? Si no hay modo privado, todo pasa.
+
+    Comparación en tiempo constante (hmac) para no filtrar la clave."""
+    esperada = os.environ.get("ENJAMBRE_ACCESO", "").strip()
+    if not esperada:
+        return True  # modo abierto: comportamiento normal
+    return hmac.compare_digest((clave or "").strip(), esperada)
 
 # ---------- identidad real del cliente ----------
 

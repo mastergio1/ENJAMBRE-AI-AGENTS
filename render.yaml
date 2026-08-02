@@ -52,6 +52,12 @@ services:
       # token que autoriza al cron a disparar el ritual (mismo valor en ambos)
       - key: ENJAMBRE_PIPELINE_TOKEN
         generateValue: true
+      # 🔒 PRUEBAS PRIVADAS: mientras esta clave esté puesta, SOLO quien la
+      # traiga (?acceso=CLAVE en la URL) puede soltar titulares al enjambre
+      # (que gastan IA). El muro, el archivo y los replays siguen abiertos.
+      # Para abrir al público: borrar esta variable. Se pega a mano.
+      - key: ENJAMBRE_ACCESO
+        sync: false
       # respaldo de la calibración a GitHub (rama respaldo-datos, nunca main):
       # token fine-grained con permiso Contents (RW) SOLO sobre este repo.
       # El disco free de Render es efímero; sin este token, los casos del

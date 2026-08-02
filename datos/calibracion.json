@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:16:03+00:00",
+ "generado": "2026-08-02T18:19:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -813,6 +813,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "06ea6359257f08c5",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:19:18+00:00",
+   "titular": "US and China reach phase one trade deal framework; tariff hike shelved",
+   "simbolos": "SPY",
+   "direccion_pct": -4.36,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 0.92,
+    "cierre_base": 293.24,
+    "cierre_final": 295.95,
+    "fecha_base": "2019-10-10",
+    "fecha_final": "2019-10-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

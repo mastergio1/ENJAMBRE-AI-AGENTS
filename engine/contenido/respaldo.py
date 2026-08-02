@@ -29,6 +29,7 @@ API = "https://api.github.com"
 REPO_DEFECTO = "mastergio1/ENJAMBRE-AI-AGENTS"
 RAMA_DEFECTO = "respaldo-datos"
 RUTA_DEFECTO = "datos/calibracion.json"
+RUTA_COSECHA = "datos/cosecha.json"  # eventos cosechados (banco de exámenes que crece solo)
 
 
 def hay_token() -> bool:
@@ -53,6 +54,78 @@ def casos_remotos() -> list[dict]:
         return (json.loads(respuesta.text) or {}).get("casos", [])
     except Exception:
         return []
+
+
+def cosecha_remota() -> list[dict]:
+    """Los eventos cosechados que ya viven en GitHub (lectura pública raw).
+
+    El backtest los suma al banco local de exámenes: así el catálogo crece
+    solo (cosechador) sin depender del disco efímero de Render ni de un
+    redeploy. Lista vacía ante cualquier problema; nunca lanza."""
+    repo = os.environ.get("GITHUB_RESPALDO_REPO", REPO_DEFECTO)
+    rama = os.environ.get("GITHUB_RESPALDO_RAMA", RAMA_DEFECTO)
+    try:
+        respuesta = httpx.get(
+            f"https://raw.githubusercontent.com/{repo}/{rama}/{RUTA_COSECHA}", timeout=10
+        )
+        if respuesta.status_code != 200:
+            return []
+        return (json.loads(respuesta.text) or {}).get("eventos", [])
+    except Exception:
+        return []
+
+
+def subir_cosecha(nuevos: list[dict]) -> dict:
+    """Fusiona y sube eventos cosechados a datos/cosecha.json (rama de respaldo).
+
+    Une por `id` (lo nuevo pisa lo viejo). NUNCA lanza. Devuelve
+    {"subido": bool, "eventos": int, "motivo"?: str}.
+    """
+    if not hay_token():
+        return {"subido": False, "eventos": 0, "motivo": "sin GITHUB_RESPALDO_TOKEN"}
+    if not nuevos:
+        return {"subido": False, "eventos": 0, "motivo": "sin eventos que subir"}
+    repo = os.environ.get("GITHUB_RESPALDO_REPO", REPO_DEFECTO)
+    rama = os.environ.get("GITHUB_RESPALDO_RAMA", RAMA_DEFECTO)
+    url = f"{API}/repos/{repo}/contents/{RUTA_COSECHA}"
+    cabeceras = {
+        "Authorization": f"Bearer {os.environ['GITHUB_RESPALDO_TOKEN']}",
+        "Accept": "application/vnd.github+json",
+    }
+    try:
+        actual = httpx.get(url, params={"ref": rama}, headers=cabeceras, timeout=15)
+        sha, previos = None, []
+        if actual.status_code == 200:
+            datos = actual.json()
+            sha = datos.get("sha")
+            crudo = base64.b64decode(datos.get("content") or "").decode("utf-8")
+            previos = (json.loads(crudo) or {}).get("eventos", [])
+        por_id = {e["id"]: e for e in previos}
+        por_id.update({e["id"]: e for e in nuevos})
+        eventos = sorted(por_id.values(), key=lambda e: e.get("fecha") or "")
+        hoy = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        contenido = {
+            "generado": persistencia.ahora_iso(),
+            "nota": ("Eventos cosechados por El Enjambre: días de mayor movimiento "
+                     "reales (Yahoo) con su titular real (Benzinga). Alimentan el "
+                     "banco de exámenes de calibración."),
+            "eventos": eventos,
+        }
+        cuerpo = {
+            "message": f"Cosecha de exámenes {hoy} ({len(eventos)} eventos)",
+            "content": base64.b64encode(
+                json.dumps(contenido, ensure_ascii=False, indent=1).encode("utf-8")
+            ).decode("ascii"),
+            "branch": rama,
+        }
+        if sha:
+            cuerpo["sha"] = sha
+        respuesta = httpx.put(url, headers=cabeceras, json=cuerpo, timeout=20)
+        respuesta.raise_for_status()
+        return {"subido": True, "eventos": len(eventos)}
+    except Exception as error:
+        return {"subido": False, "eventos": len(nuevos),
+                "motivo": f"{type(error).__name__}: {str(error)[:120]}"}
 
 
 def exportar_casos(conexion) -> list[dict]:

@@ -17,8 +17,9 @@ def entorno(monkeypatch, tmp_path):
     monkeypatch.delenv("GITHUB_RESPALDO_TOKEN", raising=False)
     monkeypatch.delenv("ALPACA_API_KEY_ID", raising=False)
     monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
-    # los tests jamás tocan la red: la caja fuerte remota se simula vacía
+    # los tests jamás tocan la red: la caja fuerte y la cosecha remotas se simulan vacías
     monkeypatch.setattr(respaldo, "casos_remotos", lambda: [])
+    monkeypatch.setattr(respaldo, "cosecha_remota", lambda: [])
 
 
 def _simulador_falso(titular, seed):

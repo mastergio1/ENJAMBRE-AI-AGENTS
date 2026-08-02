@@ -28,8 +28,23 @@ RUEDAS = 2          # misma ventana de medición que el corrector en vivo
 
 
 def cargar_eventos() -> list[dict]:
+    """El banco de exámenes: los curados a mano (backtest_eventos.json) MÁS
+    los que el cosechador fue sumando en GitHub (datos/cosecha.json). Se
+    fusiona por `id` (lo local manda si hay choque) para que el catálogo
+    crezca solo sin depender del disco efímero ni de un redeploy."""
     with open(RUTA_EVENTOS, encoding="utf-8") as archivo:
-        return json.load(archivo)["eventos"]
+        locales = json.load(archivo)["eventos"]
+    por_id = {}
+    try:
+        from contenido import respaldo
+        for evento in respaldo.cosecha_remota():
+            if evento.get("id") and evento.get("titular") and evento.get("simbolo"):
+                por_id[evento["id"]] = evento
+    except Exception:
+        pass  # sin red o sin cosecha: el banco es solo lo local
+    for evento in locales:  # lo curado a mano tiene prioridad sobre lo cosechado
+        por_id[evento["id"]] = evento
+    return sorted(por_id.values(), key=lambda e: e.get("fecha") or "")
 
 
 def _variacion_historica(simbolo: str, fecha: str, ruedas: int = RUEDAS) -> dict | None:

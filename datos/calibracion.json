@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T17:17:26+00:00",
+ "generado": "2026-08-02T17:18:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -552,6 +552,27 @@
     "fecha_final": "2022-03-09",
     "ruedas": 2,
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "eab1e223ccb812f6",
+   "origen": "historico",
+   "fecha": "2026-08-02T17:18:08+00:00",
+   "titular": "Apple beats estimates on strong iPhone sales but warns of chip supply constraints",
+   "simbolos": "AAPL",
+   "direccion_pct": 10.63,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "AAPL",
+    "pct_real": -1.67,
+    "cierre_base": 133.67,
+    "cierre_final": 131.44,
+    "fecha_base": "2021-04-28",
+    "fecha_final": "2021-04-30",
+    "ruedas": 2,
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

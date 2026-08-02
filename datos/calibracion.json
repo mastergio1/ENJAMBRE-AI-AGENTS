@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:32:51+00:00",
+ "generado": "2026-08-02T18:36:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1209,6 +1209,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "822f2ce36f0232c1",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:36:09+00:00",
+   "titular": "Fed launches $600 billion QE2 bond-buying program",
+   "simbolos": "SPY",
+   "direccion_pct": -2.43,
+   "volatilidad_pct": 1.4,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 2.34,
+    "cierre_base": 119.47,
+    "cierre_final": 122.26,
+    "fecha_base": "2010-11-02",
+    "fecha_final": "2010-11-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

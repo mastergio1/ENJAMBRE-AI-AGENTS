@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:38:09+00:00",
+ "generado": "2026-08-02T18:38:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1294,6 +1294,28 @@
     "cierre_final": 115.99,
     "fecha_base": "2008-09-26",
     "fecha_final": "2008-09-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "90731d74ef0f6833",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:38:49+00:00",
+   "titular": "Lehman Brothers files for bankruptcy; global financial system reels",
+   "simbolos": "SPY",
+   "direccion_pct": -5.25,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -3.16,
+    "cierre_base": 126.09,
+    "cierre_final": 122.1,
+    "fecha_base": "2008-09-12",
+    "fecha_final": "2008-09-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

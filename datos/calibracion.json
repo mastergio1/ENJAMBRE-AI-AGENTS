@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T01:13:07+00:00",
+ "generado": "2026-08-02T01:13:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -447,6 +447,27 @@
     "fecha_final": "2021-10-26",
     "ruedas": 2,
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0d5ff1dde3d9717d",
+   "origen": "historico",
+   "fecha": "2026-08-02T01:13:43+00:00",
+   "titular": "Fed holds rates steady and repeats view that inflation pressures are transitory",
+   "simbolos": "SPY",
+   "direccion_pct": -2.53,
+   "volatilidad_pct": 1.46,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 0.38,
+    "cierre_base": 438.97,
+    "cierre_final": 440.66,
+    "fecha_base": "2021-07-27",
+    "fecha_final": "2021-07-29",
+    "ruedas": 2,
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

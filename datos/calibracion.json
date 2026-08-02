@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T01:09:23+00:00",
+ "generado": "2026-08-02T01:10:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -319,6 +319,27 @@
     "cierre_final": 296.02,
     "fecha_base": "2022-09-12",
     "fecha_final": "2022-09-14",
+    "ruedas": 2,
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3518a55b517ab41f",
+   "origen": "historico",
+   "fecha": "2026-08-02T01:10:00+00:00",
+   "titular": "US inflation hits 8.6%, the highest in 40 years; stocks slide",
+   "simbolos": "SPY",
+   "direccion_pct": 0.05,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -6.57,
+    "cierre_base": 401.45,
+    "cierre_final": 375.08,
+    "fecha_base": "2022-06-09",
+    "fecha_final": "2022-06-13",
     "ruedas": 2,
     "categoria": "negativa",
     "cerebros": "ia"

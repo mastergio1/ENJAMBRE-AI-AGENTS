@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:29:03+00:00",
+ "generado": "2026-08-02T18:29:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1074,6 +1074,28 @@
     "cierre_final": 199.6,
     "fecha_base": "2016-06-23",
     "fecha_final": "2016-06-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "05bea3a07ee75ae8",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:29:39+00:00",
+   "titular": "China fears spark global rout; Dow briefly plunges 1,000 points at open",
+   "simbolos": "SPY",
+   "direccion_pct": -4.36,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -5.34,
+    "cierre_base": 197.83,
+    "cierre_final": 187.27,
+    "fecha_base": "2015-08-21",
+    "fecha_final": "2015-08-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

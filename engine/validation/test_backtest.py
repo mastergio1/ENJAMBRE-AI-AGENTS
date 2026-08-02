@@ -36,7 +36,7 @@ def _variacion_falsa(simbolo, fecha, ruedas=2):
 
 def test_eventos_estan_bien_formados_y_balanceados():
     eventos = backtest.cargar_eventos()
-    assert len(eventos) >= 50  # la recopilación 2001-2025 completa
+    assert len(eventos) >= 100  # recopilación 2001-2025 + foco oro/cripto/acciones
     ids = [e["id"] for e in eventos]
     assert len(ids) == len(set(ids))  # sin duplicados
     conteo = {"negativa": 0, "positiva": 0, "neutra": 0}

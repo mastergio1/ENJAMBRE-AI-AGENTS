@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:27:48+00:00",
+ "generado": "2026-08-02T18:28:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1030,6 +1030,28 @@
     "cierre_final": 90.64,
     "fecha_base": "2016-11-29",
     "fecha_final": "2016-12-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "94340b54595b16c5",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:28:26+00:00",
+   "titular": "Stocks stage stunning rally after surprise Trump election win",
+   "simbolos": "SPY",
+   "direccion_pct": -0.67,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.31,
+    "cierre_base": 214.11,
+    "cierre_final": 216.92,
+    "fecha_base": "2016-11-08",
+    "fecha_final": "2016-11-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

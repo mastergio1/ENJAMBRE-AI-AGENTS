@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:39:27+00:00",
+ "generado": "2026-08-02T18:40:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1341,6 +1341,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "277bdcdd73cdf39e",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:40:05+00:00",
+   "titular": "Markets reopen after September 11 attacks; stocks plunge in heavy trading",
+   "simbolos": "SPY",
+   "direccion_pct": -4.87,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -5.45,
+    "cierre_base": 110.05,
+    "cierre_final": 104.05,
+    "fecha_base": "2001-09-10",
+    "fecha_final": "2001-09-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T17:18:52+00:00",
+ "generado": "2026-08-02T17:47:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -592,6 +592,27 @@
     "cierre_final": 354.1,
     "fecha_base": "2020-11-06",
     "fecha_final": "2020-11-10",
+    "ruedas": 2,
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8de7fe4ab302d94b",
+   "origen": "historico",
+   "fecha": "2026-08-02T17:47:12+00:00",
+   "titular": "Gold smashes through $2,000 for the first time as investors seek safe haven",
+   "simbolos": "GLD",
+   "direccion_pct": 5.15,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.33,
+    "cierre_base": 191.39,
+    "cierre_final": 190.76,
+    "fecha_base": "2020-08-05",
+    "fecha_final": "2020-08-07",
     "ruedas": 2,
     "categoria": "positiva",
     "cerebros": "ia"

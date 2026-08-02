@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T17:16:47+00:00",
+ "generado": "2026-08-02T17:17:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -529,6 +529,27 @@
     "cierre_final": 70.285,
     "fecha_base": "2023-03-31",
     "fecha_final": "2023-04-04",
+    "ruedas": 2,
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "04b05a2dca93c442",
+   "origen": "historico",
+   "fecha": "2026-08-02T17:17:26+00:00",
+   "titular": "Gold surges toward record high as Ukraine war fuels safe-haven demand",
+   "simbolos": "GLD",
+   "direccion_pct": 5.27,
+   "volatilidad_pct": 1.42,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.31,
+    "cierre_base": 186.45,
+    "cierre_final": 185.875,
+    "fecha_base": "2022-03-07",
+    "fecha_final": "2022-03-09",
     "ruedas": 2,
     "categoria": "positiva",
     "cerebros": "ia"

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:36:09+00:00",
+ "generado": "2026-08-02T18:36:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1228,6 +1228,28 @@
     "cierre_final": 122.26,
     "fecha_base": "2010-11-02",
     "fecha_final": "2010-11-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "11baf0c7cd95fc57",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:36:52+00:00",
+   "titular": "Treasury unveils plan to absorb toxic bank assets; S&P 500 surges 7%",
+   "simbolos": "SPY",
+   "direccion_pct": 6.92,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 5.07,
+    "cierre_base": 76.71,
+    "cierre_final": 80.6,
+    "fecha_base": "2009-03-20",
+    "fecha_final": "2009-03-24",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

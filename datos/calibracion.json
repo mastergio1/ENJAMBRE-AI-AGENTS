@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:30:10+00:00",
+ "generado": "2026-08-02T22:30:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1561,6 +1561,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b982374800dd1322",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:30:46+00:00",
+   "titular": "Coinbase shares slide after SEC sues the exchange over unregistered securities",
+   "simbolos": "COIN",
+   "direccion_pct": 4.15,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -9.28,
+    "cierre_base": 58.71,
+    "cierre_final": 53.26,
+    "fecha_base": "2023-06-05",
+    "fecha_final": "2023-06-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

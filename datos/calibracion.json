@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:40:05+00:00",
+ "generado": "2026-08-02T22:25:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1363,6 +1363,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6a47df3b1665b56f",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:25:13+00:00",
+   "titular": "Gold tops $3,500 for the first time as trade-war fears fuel safe-haven rush",
+   "simbolos": "GLD",
+   "direccion_pct": 5.07,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -3.78,
+    "cierre_base": 315.59,
+    "cierre_final": 303.65,
+    "fecha_base": "2025-04-21",
+    "fecha_final": "2025-04-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

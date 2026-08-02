@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:36:52+00:00",
+ "generado": "2026-08-02T18:37:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1250,6 +1250,28 @@
     "cierre_final": 80.6,
     "fecha_base": "2009-03-20",
     "fecha_final": "2009-03-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c0127fd075ef0b6a",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:37:29+00:00",
+   "titular": "Global bank rescue plans ignite historic rally; Dow surges 936 points",
+   "simbolos": "SPY",
+   "direccion_pct": 7.11,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 12.82,
+    "cierre_base": 88.5,
+    "cierre_final": 99.85,
+    "fecha_base": "2008-10-10",
+    "fecha_final": "2008-10-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

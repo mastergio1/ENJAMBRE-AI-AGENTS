@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T01:10:01+00:00",
+ "generado": "2026-08-02T01:10:38+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -340,6 +340,27 @@
     "cierre_final": 375.08,
     "fecha_base": "2022-06-09",
     "fecha_final": "2022-06-13",
+    "ruedas": 2,
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8ec0f7d0445911ee",
+   "origen": "historico",
+   "fecha": "2026-08-02T01:10:38+00:00",
+   "titular": "Amazon posts first quarterly loss since 2015 on weak outlook; shares tumble",
+   "simbolos": "AMZN",
+   "direccion_pct": -6.05,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": -13.95,
+    "cierre_base": 2892.03,
+    "cierre_final": 2488.6,
+    "fecha_base": "2022-04-28",
+    "fecha_final": "2022-05-02",
     "ruedas": 2,
     "categoria": "negativa",
     "cerebros": "ia"

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:38:25+00:00",
+ "generado": "2026-08-02T22:39:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1690,6 +1690,28 @@
     "cierre_final": 12.97,
     "fecha_base": "2022-06-10",
     "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f882a619bd527324",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:39:00+00:00",
+   "titular": "Target plummets 25% as soaring costs gut quarterly profit",
+   "simbolos": "TGT",
+   "direccion_pct": 0.76,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "TGT",
+    "pct_real": -28.73,
+    "cierre_base": 215.28,
+    "cierre_final": 153.43,
+    "fecha_base": "2022-05-17",
+    "fecha_final": "2022-05-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

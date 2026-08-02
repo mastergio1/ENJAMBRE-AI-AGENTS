@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:19:19+00:00",
+ "generado": "2026-08-02T18:20:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -835,6 +835,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0e47efecc7841ab2",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:20:01+00:00",
+   "titular": "Yield curve inverts for the first time since 2007, flashing recession warning",
+   "simbolos": "SPY",
+   "direccion_pct": -10.09,
+   "volatilidad_pct": 1.06,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.7,
+    "cierre_base": 292.55,
+    "cierre_final": 284.65,
+    "fecha_base": "2019-08-13",
+    "fecha_final": "2019-08-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

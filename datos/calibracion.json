@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:37:30+00:00",
+ "generado": "2026-08-02T18:38:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1275,6 +1275,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "55882ce3c1bc7fe1",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:38:09+00:00",
+   "titular": "House rejects $700 billion bank bailout; Dow plunges 777 points",
+   "simbolos": "SPY",
+   "direccion_pct": -15.52,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -4.02,
+    "cierre_base": 120.85,
+    "cierre_final": 115.99,
+    "fecha_base": "2008-09-26",
+    "fecha_final": "2008-09-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

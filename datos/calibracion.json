@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:25:14+00:00",
+ "generado": "2026-08-02T22:25:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1382,6 +1382,28 @@
     "cierre_final": 303.65,
     "fecha_base": "2025-04-21",
     "fecha_final": "2025-04-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "616580d5cf615caa",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:25:51+00:00",
+   "titular": "Gold hits record high as investors seek shelter from tariff turmoil",
+   "simbolos": "GLD",
+   "direccion_pct": -1.53,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.26,
+    "cierre_base": 268.37,
+    "cierre_final": 267.67,
+    "fecha_base": "2025-02-10",
+    "fecha_final": "2025-02-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

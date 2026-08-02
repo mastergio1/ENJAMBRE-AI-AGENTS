@@ -171,45 +171,50 @@ def test_estado_no_repite_lo_ya_respaldado_en_github(monkeypatch):
     assert all(backtest._sim_id(e) != ya_respaldado for e in avance["_lista_pendiente"])
 
 
-def test_variacion_historica_cae_a_stooq_para_lo_antiguo(monkeypatch):
-    """Alpaca no tiene datos pre-2016: el plan B (Stooq) responde."""
-    from contenido.fuentes import alpaca, stooq
+def test_variacion_historica_usa_yahoo(monkeypatch):
+    """Yahoo es la fuente principal del backtest (histórico largo y completo)."""
+    from contenido.fuentes import alpaca, yahoo
 
     monkeypatch.setattr(alpaca, "variacion_real", lambda *a: None)
-    monkeypatch.setattr(stooq, "variacion_real",
-                        lambda s, f, r=2: {"simbolo": s, "pct_real": -4.7, "fuente_datos": "stooq"})
+    monkeypatch.setattr(yahoo, "variacion_real",
+                        lambda s, f, r=2: {"simbolo": s, "pct_real": -4.7, "fuente_datos": "yahoo"})
     variacion = backtest._variacion_historica("SPY", "2008-09-15")
     assert variacion["pct_real"] == -4.7
-    assert variacion["fuente_datos"] == "stooq"
+    assert variacion["fuente_datos"] == "yahoo"
 
 
-def test_stooq_parsea_csv_y_mide_igual_que_alpaca(monkeypatch):
-    from contenido.fuentes import stooq
+def test_yahoo_parsea_y_mide_igual_que_alpaca(monkeypatch):
+    from datetime import datetime, timezone
 
-    csv_falso = ("Date,Open,High,Low,Close,Volume\n"
-                 "2008-09-12,124,126,123,125.0,100\n"
-                 "2008-09-15,120,121,117,118.0,200\n"
-                 "2008-09-16,118,119,116,117.0,150\n")
+    from contenido.fuentes import yahoo
+
+    def ts(fecha):
+        return int(datetime.fromisoformat(fecha).replace(tzinfo=timezone.utc).timestamp())
+
+    payload = {"chart": {"result": [{
+        "timestamp": [ts("2008-09-12"), ts("2008-09-15"), ts("2008-09-16")],
+        "indicators": {"quote": [{"close": [125.0, 118.0, 117.0]}]},
+    }]}}
 
     class Respuesta:
-        text = csv_falso
         def raise_for_status(self): pass
+        def json(self): return payload
 
-    monkeypatch.setattr(stooq.httpx, "get", lambda *a, **k: Respuesta())
-    v = stooq.variacion_real("SPY", "2008-09-15", ruedas=2)
+    monkeypatch.setattr(yahoo.httpx, "get", lambda *a, **k: Respuesta())
+    v = yahoo.variacion_real("SPY", "2008-09-15", ruedas=2)
     # base = cierre previo (125.0), final = 2ª rueda desde la fecha (117.0)
     assert v["cierre_base"] == 125.0
     assert v["cierre_final"] == 117.0
     assert v["pct_real"] == -6.4
-    assert v["fuente_datos"] == "stooq"
+    assert v["fuente_datos"] == "yahoo"
 
 
-def test_stooq_sin_red_devuelve_none(monkeypatch):
-    from contenido.fuentes import stooq
+def test_yahoo_sin_red_devuelve_none(monkeypatch):
+    from contenido.fuentes import yahoo
 
-    monkeypatch.setattr(stooq.httpx, "get",
+    monkeypatch.setattr(yahoo.httpx, "get",
                         lambda *a, **k: (_ for _ in ()).throw(OSError("sin red")))
-    assert stooq.variacion_real("SPY", "2008-09-15") is None
+    assert yahoo.variacion_real("SPY", "2008-09-15") is None
 
 
 def test_endpoints_del_backtest_exigen_token(monkeypatch):

@@ -33,11 +33,13 @@ def cargar_eventos() -> list[dict]:
 
 
 def _variacion_historica(simbolo: str, fecha: str, ruedas: int = RUEDAS) -> dict | None:
-    """Alpaca primero (cubre ~2016→hoy); Stooq de plan B para lo antiguo."""
-    from contenido.fuentes import alpaca, stooq
+    """Yahoo primero (histórico largo y completo: acciones, ETFs, cripto),
+    Alpaca de respaldo. Stooq quedó fuera: su API de descarga dejó de
+    responder (404), lo que estancaba el backtest en ~30 exámenes."""
+    from contenido.fuentes import alpaca, yahoo
 
-    return (alpaca.variacion_real(simbolo, fecha, ruedas)
-            or stooq.variacion_real(simbolo, fecha, ruedas))
+    return (yahoo.variacion_real(simbolo, fecha, ruedas)
+            or alpaca.variacion_real(simbolo, fecha, ruedas))
 
 
 def _seed(evento: dict) -> int:

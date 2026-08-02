@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T17:16:06+00:00",
+ "generado": "2026-08-02T17:16:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -508,6 +508,27 @@
     "cierre_final": 177.965,
     "fecha_base": "2023-10-12",
     "fecha_final": "2023-10-16",
+    "ruedas": 2,
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "be449bc3936c2c13",
+   "origen": "historico",
+   "fecha": "2026-08-02T17:16:47+00:00",
+   "titular": "Oil surges after surprise OPEC+ production cut of over 1 million barrels",
+   "simbolos": "USO",
+   "direccion_pct": 8.78,
+   "volatilidad_pct": 1.4,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 5.79,
+    "cierre_base": 66.44,
+    "cierre_final": 70.285,
+    "fecha_base": "2023-03-31",
+    "fecha_final": "2023-04-04",
     "ruedas": 2,
     "categoria": "positiva",
     "cerebros": "ia"

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:23:58+00:00",
+ "generado": "2026-08-02T18:24:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -986,6 +986,28 @@
     "cierre_final": 267.58,
     "fecha_base": "2017-12-19",
     "fecha_final": "2017-12-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "df2ca59f6a4a4cb0",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:24:32+00:00",
+   "titular": "Fed raises rates a quarter point, as widely expected",
+   "simbolos": "SPY",
+   "direccion_pct": -6.91,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -0.32,
+    "cierre_base": 244.55,
+    "cierre_final": 243.77,
+    "fecha_base": "2017-06-13",
+    "fecha_final": "2017-06-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",

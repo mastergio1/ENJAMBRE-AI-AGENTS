@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:24:33+00:00",
+ "generado": "2026-08-02T18:27:48+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1011,6 +1011,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dfa772f0947015ac",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:27:47+00:00",
+   "titular": "OPEC agrees first oil production cut since 2008; crude jumps 9%",
+   "simbolos": "USO",
+   "direccion_pct": 7.13,
+   "volatilidad_pct": 1.04,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 12.62,
+    "cierre_base": 80.48,
+    "cierre_final": 90.64,
+    "fecha_base": "2016-11-29",
+    "fecha_final": "2016-12-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

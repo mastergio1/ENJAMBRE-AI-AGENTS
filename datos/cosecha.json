@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:55:19+00:00",
+ "generado": "2026-08-02T23:07:27+00:00",
  "nota": "Eventos cosechados por El Enjambre: días de mayor movimiento reales (Yahoo) con su titular real (Benzinga). Alimentan el banco de exámenes de calibración.",
  "eventos": [
   {
@@ -9,14 +9,6 @@
    "categoria": "positiva",
    "mercado": "oro",
    "titular": "Gold Futures Spike to $1230/oz; Highest Level Since May 2015"
-  },
-  {
-   "id": "2016-02-11-oro-cosecha-gdx",
-   "fecha": "2016-02-11",
-   "simbolo": "GDX",
-   "categoria": "positiva",
-   "mercado": "oro",
-   "titular": "What's Gold Doing Today?"
   },
   {
    "id": "2016-03-23-oro-cosecha-gdx",
@@ -48,7 +40,23 @@
    "simbolo": "GOLD",
    "categoria": "positiva",
    "mercado": "oro",
-   "titular": "Stocks Moving In Friday's Pre-Market Session Following Brexit"
+   "titular": "Stocks Hitting 52-Week Highs"
+  },
+  {
+   "id": "2016-08-24-oro-cosecha-gdx",
+   "fecha": "2016-08-24",
+   "simbolo": "GDX",
+   "categoria": "negativa",
+   "mercado": "oro",
+   "titular": "PulteGroup, JetBlue, Gold And The VIX: Fast Money Picks For August 24"
+  },
+  {
+   "id": "2016-09-21-oro-cosecha-gdx",
+   "fecha": "2016-09-21",
+   "simbolo": "GDX",
+   "categoria": "positiva",
+   "mercado": "oro",
+   "titular": "Why Miners Can Double Or Triple Within Nine Months"
   },
   {
    "id": "2016-10-04-oro-cosecha-gdx",
@@ -91,22 +99,6 @@
    "titular": "Gold Is Having A Big Day: How Did The Yellow Metal Perform In 2016?"
   },
   {
-   "id": "2017-05-22-cri-cosecha-mara",
-   "fecha": "2017-05-22",
-   "simbolo": "MARA",
-   "categoria": "negativa",
-   "mercado": "cripto",
-   "titular": "Marathon Patent Group Announces Unit Signal IP Received Scheduling Order in Trial with Fiat USA"
-  },
-  {
-   "id": "2017-07-28-cri-cosecha-mstr",
-   "fecha": "2017-07-28",
-   "simbolo": "MSTR",
-   "categoria": "negativa",
-   "mercado": "cripto",
-   "titular": "MicroStrategy Reports Q2 EPS $0.96 vs $1.55 Est., Sales $120.6M vs $125.19M Est."
-  },
-  {
    "id": "2017-09-01-cri-cosecha-gbtc",
    "fecha": "2017-09-01",
    "simbolo": "GBTC",
@@ -123,20 +115,12 @@
    "titular": "Bitcoin Has A China Problem"
   },
   {
-   "id": "2017-11-24-cri-cosecha-mara",
-   "fecha": "2017-11-24",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "Premarket Gainers Marathon Patent Group +47%; Social Reality +23.02%, Xunlei Ltd +7.84%, Net 1 UEPS +5.86%, Top Ships +5.2%"
-  },
-  {
    "id": "2017-11-24-cri-cosecha-riot",
    "fecha": "2017-11-24",
    "simbolo": "RIOT",
    "categoria": "negativa",
    "mercado": "cripto",
-   "titular": "40 Biggest Movers From Wednesday"
+   "titular": "Why Marathon Patent Group Is Considered A Crypto/Blockchain And AI Play"
   },
   {
    "id": "2017-11-27-cri-cosecha-gbtc",
@@ -147,20 +131,12 @@
    "titular": "Citadel's Ken Griffin On CNBC Says Bitcoin 'Is Not The Future Of Currency,' But 'Wouldn't Call It A Fraud Either'"
   },
   {
-   "id": "2017-12-11-cri-cosecha-mara",
-   "fecha": "2017-12-11",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "22 Stocks Moving In Monday's Pre-Market Session"
-  },
-  {
    "id": "2017-12-11-cri-cosecha-riot",
    "fecha": "2017-12-11",
    "simbolo": "RIOT",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "22 Stocks Moving In Monday's Pre-Market Session"
+   "titular": "Riot Blockchain Reports TessPay Unit Signed Letter Of Intent For Merger With Publicly-Traded Cresval Capital Corp."
   },
   {
    "id": "2017-12-12-cri-cosecha-gbtc",
@@ -179,6 +155,30 @@
    "titular": "Mastercard Shares Spike ~$0.25 Over Last Min. As Traders Circulate Chatter Of Partnership With IBM Related To Creation Of An Exchange To Buy, Sell Cryptocurrencies"
   },
   {
+   "id": "2017-12-18-cri-cosecha-riot",
+   "fecha": "2017-12-18",
+   "simbolo": "RIOT",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Attention Crypto Investors: On Track Innovations Is Now A Bitcoin Play"
+  },
+  {
+   "id": "2017-12-26-cri-cosecha-gbtc",
+   "fecha": "2017-12-26",
+   "simbolo": "GBTC",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "A Textbook Technical Move In Bitcoin After Last Week's Haircut"
+  },
+  {
+   "id": "2017-12-26-cri-cosecha-riot",
+   "fecha": "2017-12-26",
+   "simbolo": "RIOT",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Many Crypto/Blockchain Related Stocks Rebounding Today From Friday's Weakness As Bitcoin Regains $16K Level; GROW +9.975%, RIOT +17.5%, DPW +2.1%, OTIV +7.57%, MARA +3.3%, SRAX +4.13%, OSTK +4.33%; LTEA An Outlier Down 9.32%"
+  },
+  {
    "id": "2018-02-06-cri-cosecha-gbtc",
    "fecha": "2018-02-06",
    "simbolo": "GBTC",
@@ -195,14 +195,6 @@
    "titular": "Amplify ETFs CEO Magoon On BLOK ETF: Says Wouldn't Own Something Like Long Blockchain Because Operations Do Not Center Around Blockchain; Notes Owns Positions In Kodak, Riot Blockchain"
   },
   {
-   "id": "2018-03-12-cri-cosecha-mara",
-   "fecha": "2018-03-12",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "Marathon Announces Facility in Quebec Has Commenced Bitcoin Mining Operations"
-  },
-  {
    "id": "2018-07-02-cri-cosecha-gbtc",
    "fecha": "2018-07-02",
    "simbolo": "GBTC",
@@ -216,7 +208,7 @@
    "simbolo": "RIOT",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "22 Stocks Moving In Tuesday's Pre-Market Session"
+   "titular": "Riot Blockchain Shares Spike 3% Over Last Few Mins As Bitcoin Moves Sharply Higher; Riot Blockchain Now Up 6.1% For Session"
   },
   {
    "id": "2019-01-14-oro-cosecha-nem",
@@ -227,12 +219,12 @@
    "titular": "Newmont Mining to Acquire Goldcorp in All-Stock Deal Valued at $10B"
   },
   {
-   "id": "2019-02-19-cri-cosecha-riot",
-   "fecha": "2019-02-19",
-   "simbolo": "RIOT",
+   "id": "2019-05-13-cri-cosecha-gbtc",
+   "fecha": "2019-05-13",
+   "simbolo": "GBTC",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "25 Stocks Moving In Tuesday's Pre-Market Session"
+   "titular": "Bitcoin And Ethereum Now Accepted At Whole Foods, Nordstrom And Other Retailers"
   },
   {
    "id": "2019-06-27-cri-cosecha-gbtc",
@@ -272,7 +264,7 @@
    "simbolo": "GOLD",
    "categoria": "positiva",
    "mercado": "oro",
-   "titular": "5 Basic Materials Stocks Moving In Friday's Pre-Market Session"
+   "titular": "Barrick Gold Says To Date Placed, Forecast Orders Are Still Intact, Have Been No Hold Ups In Supply Chain"
   },
   {
    "id": "2020-03-24-oro-cosecha-gld",
@@ -299,28 +291,12 @@
    "titular": "JP Morgan Initiates Coverage On Newmont with Overweight Rating, Announces Price Target to $61"
   },
   {
-   "id": "2020-05-08-cri-cosecha-mara",
-   "fecha": "2020-05-08",
-   "simbolo": "MARA",
-   "categoria": "positiva",
+   "id": "2020-06-11-cri-cosecha-riot",
+   "fecha": "2020-06-11",
+   "simbolo": "RIOT",
+   "categoria": "negativa",
    "mercado": "cripto",
-   "titular": "7 Financial Services Stocks Moving In Friday's Pre-Market Session"
-  },
-  {
-   "id": "2020-07-27-cri-cosecha-mara",
-   "fecha": "2020-07-27",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "31 Stocks Moving in Monday's Pre-Market Session"
-  },
-  {
-   "id": "2020-08-03-cri-cosecha-mara",
-   "fecha": "2020-08-03",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "30 Stocks Moving in Monday's Pre-Market Session"
+   "titular": "Riot Blockchain Announces Relocatio Of 4,000 Bitmain S17 Pro Miners"
   },
   {
    "id": "2020-08-03-cri-cosecha-riot",
@@ -328,7 +304,7 @@
    "simbolo": "RIOT",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "52 Stocks Moving In Monday's Mid-Day Session"
+   "titular": "Stocks That Hit 52-Week Highs On Monday"
   },
   {
    "id": "2020-08-11-oro-cosecha-gld",
@@ -337,6 +313,14 @@
    "categoria": "negativa",
    "mercado": "oro",
    "titular": "Morning Market Stats in 5 Minutes"
+  },
+  {
+   "id": "2020-11-05-oro-cosecha-gdx",
+   "fecha": "2020-11-05",
+   "simbolo": "GDX",
+   "categoria": "positiva",
+   "mercado": "oro",
+   "titular": "Should You Invest In Gold Right Now?"
   },
   {
    "id": "2020-11-09-oro-cosecha-gld",
@@ -355,14 +339,6 @@
    "titular": "Stocks That Hit 52-Week Highs On Tuesday"
   },
   {
-   "id": "2020-11-23-cri-cosecha-mara",
-   "fecha": "2020-11-23",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "HC Wainwright & Co. Initiates Coverage On Marathon Patent Group with Buy Rating, Announces Price Target of $7.5"
-  },
-  {
    "id": "2020-11-30-cri-cosecha-gbtc",
    "fecha": "2020-11-30",
    "simbolo": "GBTC",
@@ -371,20 +347,12 @@
    "titular": "Guggenheim Fund Mulls Investment in Grayscale Bitcoin Trust"
   },
   {
-   "id": "2020-11-30-cri-cosecha-mara",
-   "fecha": "2020-11-30",
-   "simbolo": "MARA",
-   "categoria": "positiva",
-   "mercado": "cripto",
-   "titular": "64 Biggest Movers From Friday"
-  },
-  {
    "id": "2020-11-30-cri-cosecha-riot",
    "fecha": "2020-11-30",
    "simbolo": "RIOT",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "64 Biggest Movers From Friday"
+   "titular": "Stocks That Hit 52-Week Highs On Monday"
   },
   {
    "id": "2020-11-30-cri-cosecha-mstr",
@@ -392,7 +360,7 @@
    "simbolo": "MSTR",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "12 Technology Stocks Moving In Monday's Pre-Market Session"
+   "titular": "Stocks That Hit 52-Week Highs On Monday"
   },
   {
    "id": "2020-11-30-cri-cosecha-ethe",
@@ -401,6 +369,14 @@
    "categoria": "positiva",
    "mercado": "cripto",
    "titular": "Bitcoin Recovers From Thanksgiving Lows Above $18.5K, Ethereum Flirts With Crucial $600 Mark"
+  },
+  {
+   "id": "2020-12-15-cri-cosecha-mara",
+   "fecha": "2020-12-15",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Why Is It Moving? Looking At Marathon Patent Group's Price Action Today"
   },
   {
    "id": "2020-12-22-cri-cosecha-riot",
@@ -432,7 +408,7 @@
    "simbolo": "MARA",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "12 Information Technology Stocks Moving In Wednesday's After-Market Session"
+   "titular": "Coinbase Down For Many Users"
   },
   {
    "id": "2021-01-14-cri-cosecha-mstr",
@@ -499,12 +475,52 @@
    "titular": "Benzinga's Crypto Update: Bitcoin Trades Above $52K, Dogecoin Trades Above $0.053, Ethereum Trades Above $1.7K, Litecoin Trades Above $200"
   },
   {
+   "id": "2021-02-23-cri-cosecha-mara",
+   "fecha": "2021-02-23",
+   "simbolo": "MARA",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Tesla, Square Make $5B On Bitcoin Investment While Small Cap Crypto Stocks Surge"
+  },
+  {
+   "id": "2021-02-23-cri-cosecha-mstr",
+   "fecha": "2021-02-23",
+   "simbolo": "MSTR",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Tesla, Square Make $5B On Bitcoin Investment While Small Cap Crypto Stocks Surge"
+  },
+  {
+   "id": "2021-03-01-cri-cosecha-mara",
+   "fecha": "2021-03-01",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Top 20 Trending Stocks On WallStreetBets As Of Monday, March 1, 2021 (Via Swaggy Stocks)"
+  },
+  {
+   "id": "2021-03-09-cri-cosecha-mara",
+   "fecha": "2021-03-09",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Crypto/Bitcoin Stocks Quiet After Hours As Hearing Report Coinbase Has Been Valued At $90B In Private Auction"
+  },
+  {
    "id": "2021-03-09-cri-cosecha-riot",
    "fecha": "2021-03-09",
    "simbolo": "RIOT",
    "categoria": "positiva",
    "mercado": "cripto",
    "titular": "Crypto/Bitcoin Stocks Quiet After Hours As Hearing Report Coinbase Has Been Valued At $90B In Private Auction"
+  },
+  {
+   "id": "2021-04-13-cri-cosecha-ethe",
+   "fecha": "2021-04-13",
+   "simbolo": "ETHE",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Fed's Bullard Says The Public Prefers Standard Forex, Says But Crypto Is Heading In Wrong Direction"
   },
   {
    "id": "2021-05-03-cri-cosecha-ethe",
@@ -552,7 +568,7 @@
    "simbolo": "MSTR",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "6 Stocks To Watch Today As Bitcoin Regains Momentum"
+   "titular": "Why MicroStrategy Stock Is Surging Higher Today"
   },
   {
    "id": "2021-11-08-cri-cosecha-bito",
@@ -561,6 +577,14 @@
    "categoria": "positiva",
    "mercado": "cripto",
    "titular": "Why Bitcoin And Ethereum Are Rising Today"
+  },
+  {
+   "id": "2021-11-15-cri-cosecha-mara",
+   "fecha": "2021-11-15",
+   "simbolo": "MARA",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Marathon Digital Shares Fall To New Session Low On Spike In Volume As Traders Circulate Co. Disclosure In Earlier 10-Q Filing Show Co., Certain Execs Received Subpoena To Produce Docs, Communications Related To Hardin, Montana Data Center"
   },
   {
    "id": "2021-12-06-cri-cosecha-bito",
@@ -587,12 +611,20 @@
    "titular": "Top 10 Trending Cryptos for Thursday, Feb. 3, 2022 (Social Media Volume via Swaggy Stocks)"
   },
   {
+   "id": "2022-02-17-cri-cosecha-ethe",
+   "fecha": "2022-02-17",
+   "simbolo": "ETHE",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Top 10 Trending Cryptos for Wednesday, Feb. 16, 2022 (Social Media Volume via Swaggy Stocks)"
+  },
+  {
    "id": "2022-05-09-cri-cosecha-mstr",
    "fecha": "2022-05-09",
    "simbolo": "MSTR",
    "categoria": "negativa",
    "mercado": "cripto",
-   "titular": "20 Stocks Moving in Monday's Pre-Market Session"
+   "titular": "Back To McDonald's?: Michael Saylor Pokes Fun At Himself With Bitcoin Crashing"
   },
   {
    "id": "2022-05-09-cri-cosecha-ethe",
@@ -611,6 +643,14 @@
    "titular": "Coinbase Filing Shows Registration For Mixed Securities Shelf Offering, No Size Disclosed"
   },
   {
+   "id": "2022-05-31-cri-cosecha-mstr",
+   "fecha": "2022-05-31",
+   "simbolo": "MSTR",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Why Bitcoin-Related Stock MicroStrategy Is Surging"
+  },
+  {
    "id": "2022-06-13-cri-cosecha-mstr",
    "fecha": "2022-06-13",
    "simbolo": "MSTR",
@@ -625,6 +665,14 @@
    "categoria": "negativa",
    "mercado": "oro",
    "titular": "Stocks That Hit 52-Week Lows On Tuesday"
+  },
+  {
+   "id": "2022-07-07-cri-cosecha-mara",
+   "fecha": "2022-07-07",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Marathon Digital Says Produces 707 BTC In Q2 2022, Up 8% YoY"
   },
   {
    "id": "2022-07-19-cri-cosecha-mara",
@@ -667,6 +715,22 @@
    "titular": "Digging For Dividend Gold? Check Out These 2 High-Yield Mining Stocks"
   },
   {
+   "id": "2022-11-04-oro-cosecha-nem",
+   "fecha": "2022-11-04",
+   "simbolo": "NEM",
+   "categoria": "positiva",
+   "mercado": "oro",
+   "titular": "Barclays Maintains Equal-Weight on Newmont, Lowers Price Target to $55"
+  },
+  {
+   "id": "2022-11-08-cri-cosecha-mstr",
+   "fecha": "2022-11-08",
+   "simbolo": "MSTR",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Earlier Reported, 'U.S. Attorney Announces Historic $3.36B Cryptocurrency Seizure And Conviction In Connection With Silk Road Dark Web Fraud' -DoJ"
+  },
+  {
    "id": "2022-11-09-oro-cosecha-gold",
    "fecha": "2022-11-09",
    "simbolo": "GOLD",
@@ -675,12 +739,20 @@
    "titular": "Crypto Crash, Recession Fears Push Investors To Gold: A Look At The Commodity And This 2X Leveraged Fund"
   },
   {
-   "id": "2022-11-10-oro-cosecha-gdx",
-   "fecha": "2022-11-10",
-   "simbolo": "GDX",
+   "id": "2023-01-04-cri-cosecha-mara",
+   "fecha": "2023-01-04",
+   "simbolo": "MARA",
    "categoria": "positiva",
-   "mercado": "oro",
-   "titular": "Benzinga Pro's Top 5 Stocks To Watch For Wednesday, November 9, 2022: WMT, YETI, GDX, APPN, MULN"
+   "mercado": "cripto",
+   "titular": "Bitcoin- And Ethereum-Related Stocks Are Soaring: What's Going On?"
+  },
+  {
+   "id": "2023-01-12-cri-cosecha-mara",
+   "fecha": "2023-01-12",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Why Bitcoin- And Ethereum-Linked Stocks Are Rising Today"
   },
   {
    "id": "2023-02-02-cri-cosecha-coin",
@@ -707,6 +779,14 @@
    "titular": "NFT Tech Joins The Sandbox Metaverse (OTC US:NFTFF)"
   },
   {
+   "id": "2023-03-13-cri-cosecha-mara",
+   "fecha": "2023-03-13",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Marathon Digital Says Co Holds ~$142M In Cash Deposits As Signature Bridge"
+  },
+  {
    "id": "2023-03-23-cri-cosecha-bito",
    "fecha": "2023-03-23",
    "simbolo": "BITO",
@@ -731,12 +811,28 @@
    "titular": "Chat, Pay and Play All in One Place With Coinbase Wallet"
   },
   {
+   "id": "2023-08-29-cri-cosecha-mara",
+   "fecha": "2023-08-29",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin ETF Imminent? Grayscale Wins Years Long Fight Against SEC That May Open Floodgates"
+  },
+  {
+   "id": "2024-02-26-cri-cosecha-coin",
+   "fecha": "2024-02-26",
+   "simbolo": "COIN",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "What the Options Market Tells Us About Coinbase Glb"
+  },
+  {
    "id": "2024-03-04-cri-cosecha-mstr",
    "fecha": "2024-03-04",
    "simbolo": "MSTR",
    "categoria": "negativa",
    "mercado": "cripto",
-   "titular": "Super Micro Computer, Deckers Outdoor And Other Big Stocks Moving Higher In Monday's Pre-Market Session"
+   "titular": "What's Going On With MicroStrategy Stock As Bitcoin Soars?"
   },
   {
    "id": "2024-03-25-cri-cosecha-mstr",
@@ -763,6 +859,14 @@
    "titular": "US Stocks Brace For Negative Start Amid Tech Earnings Disappointments, Caution Ahead Of Data: 'Worst Of This Two-Week Decline Is Behind Us,' Says Analyst"
   },
   {
+   "id": "2024-05-10-oro-cosecha-gold",
+   "fecha": "2024-05-10",
+   "simbolo": "GOLD",
+   "categoria": "negativa",
+   "mercado": "oro",
+   "titular": "Barrick Gold CEO Says Mergers Won't Fix The Copper Shortage"
+  },
+  {
    "id": "2024-07-15-cri-cosecha-bito",
    "fecha": "2024-07-15",
    "simbolo": "BITO",
@@ -776,7 +880,7 @@
    "simbolo": "ETHE",
    "categoria": "negativa",
    "mercado": "cripto",
-   "titular": "Why Bitcoin, Ethereum ETFs Are Crashing Today In Premarket"
+   "titular": "Bitcoin, Ethereum ETFs Saw $528M Net Outflows Last Week As BTC Plunges To $51,000"
   },
   {
    "id": "2024-08-05-cri-cosecha-bito",
@@ -785,6 +889,14 @@
    "categoria": "negativa",
    "mercado": "cripto",
    "titular": "Crypto Stocks Plunge as Bitcoin Dips Below $50K, Triggers $270B Market Value Decline"
+  },
+  {
+   "id": "2024-08-30-oro-cosecha-gold",
+   "fecha": "2024-08-30",
+   "simbolo": "GOLD",
+   "categoria": "positiva",
+   "mercado": "oro",
+   "titular": "Argus Research Upgrades Barrick Gold to Buy, Announces $24 Price Target"
   },
   {
    "id": "2024-10-24-oro-cosecha-nem",
@@ -816,7 +928,15 @@
    "simbolo": "COIN",
    "categoria": "positiva",
    "mercado": "cripto",
-   "titular": "Why Revelation Biosciences Shares Are Trading Higher By Around 49%; Here Are 20 Stocks Moving Premarket"
+   "titular": "Market-Moving News for November 11th"
+  },
+  {
+   "id": "2024-11-11-cri-cosecha-mara",
+   "fecha": "2024-11-11",
+   "simbolo": "MARA",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "MARA Adds 372 Megawatts Of Capacity In Ohio; Acquires Two Data Centers OFfering A Combined 222 Megawatts Of Interconnect-Approved Capacity And Development Of Third Center Expected To Add 150 Megawatts Of Compute Capacity"
   },
   {
    "id": "2024-11-11-cri-cosecha-mstr",
@@ -841,6 +961,14 @@
    "categoria": "negativa",
    "mercado": "cripto",
    "titular": "New Meme Coin Cocoro Launched By Dogecoin's IP Rights Holder"
+  },
+  {
+   "id": "2025-04-04-oro-cosecha-nem",
+   "fecha": "2025-04-04",
+   "simbolo": "NEM",
+   "categoria": "negativa",
+   "mercado": "oro",
+   "titular": "RBC Capital Maintains Sector Perform on Newmont, Raises Price Target to $52"
   },
   {
    "id": "2025-04-09-oro-cosecha-gdx",
@@ -899,6 +1027,14 @@
    "titular": "Coinbase Stock Jumps Nearly 11% After-Hours Monday: Here's Why"
   },
   {
+   "id": "2025-08-01-cri-cosecha-coin",
+   "fecha": "2025-08-01",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Coinbase Q2 Earnings Highlights: Sales, EPS Miss, 40% Slide In Trading Volume"
+  },
+  {
    "id": "2025-10-21-oro-cosecha-gld",
    "fecha": "2025-10-21",
    "simbolo": "GLD",
@@ -937,6 +1073,14 @@
    "categoria": "positiva",
    "mercado": "oro",
    "titular": "Trump's Venezuela Move Reignites Geopolitical Angst — Gold And Silver ETFs Become The First Refuge"
+  },
+  {
+   "id": "2026-01-20-oro-cosecha-gld",
+   "fecha": "2026-01-20",
+   "simbolo": "GLD",
+   "categoria": "positiva",
+   "mercado": "oro",
+   "titular": "Global Stocks Slide, Gold Hits Record As Trump's Greenland Tariffs Rattle Markets"
   },
   {
    "id": "2026-01-20-oro-cosecha-iau",
@@ -1008,7 +1152,7 @@
    "simbolo": "GOLD",
    "categoria": "positiva",
    "mercado": "oro",
-   "titular": "Valaris, Oracle, Kroger And Other Big Stocks Moving Higher On Monday"
+   "titular": "A Look Into Gold.com Inc's Price Over Earnings"
   },
   {
    "id": "2026-02-12-oro-cosecha-gdx",
@@ -1059,6 +1203,14 @@
    "titular": "Bitcoin ETFs Inflows Soar Past $2 Billion While Gold ETFs Bleed—A Safe Haven Shift Unfolds"
   },
   {
+   "id": "2026-03-31-oro-cosecha-gld",
+   "fecha": "2026-03-31",
+   "simbolo": "GLD",
+   "categoria": "positiva",
+   "mercado": "oro",
+   "titular": "Market Bounces From Low Band Of Support Zone - Deal Narrative Takes Hold — Risk Mispriced"
+  },
+  {
    "id": "2026-04-21-oro-cosecha-iau",
    "fecha": "2026-04-21",
    "simbolo": "IAU",
@@ -1073,6 +1225,14 @@
    "categoria": "positiva",
    "mercado": "oro",
    "titular": "Newmont Approves $6B Expansion Of Share Buyback Program"
+  },
+  {
+   "id": "2026-05-15-oro-cosecha-gdx",
+   "fecha": "2026-05-15",
+   "simbolo": "GDX",
+   "categoria": "negativa",
+   "mercado": "oro",
+   "titular": "Peter Schiff Says Treasury Market Is 'Breaking Down' As Yields Surge, Calls Bond Crash 'Most Bullish' For Gold"
   },
   {
    "id": "2026-06-05-oro-cosecha-iau",
@@ -1113,6 +1273,14 @@
    "categoria": "negativa",
    "mercado": "oro",
    "titular": "Gold ETFs Just Saw Their Biggest Weekly Inflow Since April After $7.6 Billion Exodus"
+  },
+  {
+   "id": "2026-07-13-oro-cosecha-iau",
+   "fecha": "2026-07-13",
+   "simbolo": "IAU",
+   "categoria": "negativa",
+   "mercado": "oro",
+   "titular": "Peter Schiff Says Conditions Ripe for a 'Huge Rally' in Gold As Iran War Escalates, Here Are Some ETFs to Watch"
   }
  ]
 }

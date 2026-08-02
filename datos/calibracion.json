@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:30:52+00:00",
+ "generado": "2026-08-02T18:31:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1143,6 +1143,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3c52412263599763",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:31:31+00:00",
+   "titular": "Fed announces open-ended QE3 stimulus; stocks rally to multi-year highs",
+   "simbolos": "SPY",
+   "direccion_pct": 11.5,
+   "volatilidad_pct": 1.02,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.97,
+    "cierre_base": 144.39,
+    "cierre_final": 147.24,
+    "fecha_base": "2012-09-12",
+    "fecha_final": "2012-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

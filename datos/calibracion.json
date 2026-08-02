@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:32:12+00:00",
+ "generado": "2026-08-02T18:32:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1187,6 +1187,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dff59ce8addfe264",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:32:50+00:00",
+   "titular": "Stocks crater after S&P strips United States of AAA credit rating",
+   "simbolos": "SPY",
+   "direccion_pct": 9.12,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.17,
+    "cierre_base": 120.08,
+    "cierre_final": 117.48,
+    "fecha_base": "2011-08-05",
+    "fecha_final": "2011-08-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

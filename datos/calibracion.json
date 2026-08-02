@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:35:56+00:00",
+ "generado": "2026-08-02T22:36:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1602,6 +1602,28 @@
     "cierre_final": 65.51,
     "fecha_base": "2023-05-24",
     "fecha_final": "2023-05-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ab9b2a0194279612",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:36:32+00:00",
+   "titular": "Gold nears record high as US banking fears drive safe-haven demand",
+   "simbolos": "GLD",
+   "direccion_pct": 17.83,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.87,
+    "cierre_base": 189.11,
+    "cierre_final": 187.46,
+    "fecha_base": "2023-05-03",
+    "fecha_final": "2023-05-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

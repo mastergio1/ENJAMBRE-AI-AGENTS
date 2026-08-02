@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:22:39+00:00",
+ "generado": "2026-08-02T18:23:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -945,6 +945,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d65f409ed096d0e8",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:23:21+00:00",
+   "titular": "Dow plunges 1,175 points in biggest one-day point drop ever as volatility bets implode",
+   "simbolos": "SPY",
+   "direccion_pct": 0.19,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.29,
+    "cierre_base": 275.45,
+    "cierre_final": 269.13,
+    "fecha_base": "2018-02-02",
+    "fecha_final": "2018-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

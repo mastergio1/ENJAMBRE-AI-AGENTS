@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:31:32+00:00",
+ "generado": "2026-08-02T18:32:12+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1162,6 +1162,28 @@
     "cierre_final": 147.24,
     "fecha_base": "2012-09-12",
     "fecha_final": "2012-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "29b356b2c5aa1147",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:32:11+00:00",
+   "titular": "Major central banks act jointly to ease dollar funding strains; stocks soar",
+   "simbolos": "SPY",
+   "direccion_pct": 4.49,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 4.1,
+    "cierre_base": 120.05,
+    "cierre_final": 124.97,
+    "fecha_base": "2011-11-29",
+    "fecha_final": "2011-12-01",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       tanda:
-        description: "Cuántos exámenes rendir en esta tanda (máx 10)"
+        description: "Cuántos exámenes rendir en esta tanda (máx 20)"
         required: false
         default: "5"
 

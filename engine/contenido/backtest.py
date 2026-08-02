@@ -23,7 +23,9 @@ from contenido import persistencia
 
 RUTA_EVENTOS = Path(__file__).parent / "backtest_eventos.json"
 TANDA_DEFECTO = 5
-TANDA_MAXIMA = 10   # freno duro de presupuesto por corrida
+TANDA_MAXIMA = 20   # freno duro por corrida (el saldo alcanza de sobra; cada
+                    # examen se respalda al instante, así que si Render corta
+                    # una tanda larga, la siguiente continúa sin perder nada)
 RUEDAS = 2          # misma ventana de medición que el corrector en vivo
 
 

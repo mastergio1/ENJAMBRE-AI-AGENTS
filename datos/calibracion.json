@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:21:59+00:00",
+ "generado": "2026-08-02T18:22:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -923,6 +923,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8096814409caf267",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:22:39+00:00",
+   "titular": "Oil hits four-year high as markets brace for US sanctions on Iran",
+   "simbolos": "USO",
+   "direccion_pct": -2.32,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 2.26,
+    "cierre_base": 124.16,
+    "cierre_final": 126.96,
+    "fecha_base": "2018-09-28",
+    "fecha_final": "2018-10-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

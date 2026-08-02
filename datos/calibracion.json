@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T18:21:22+00:00",
+ "generado": "2026-08-02T18:21:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -901,6 +901,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "776fd630b1a496e8",
+   "origen": "historico",
+   "fecha": "2026-08-02T18:21:59+00:00",
+   "titular": "Stocks sink on Christmas Eve; S&P 500 teeters on the edge of a bear market",
+   "simbolos": "SPY",
+   "direccion_pct": 3.49,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 2.28,
+    "cierre_base": 240.7,
+    "cierre_final": 246.18,
+    "fecha_base": "2018-12-21",
+    "fecha_final": "2018-12-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

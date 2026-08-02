@@ -1504,3 +1504,16 @@ body.archivo-abierto .muro { display: none; }
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* ---------- tipo de mercado detectado en el reporte ---------- */
+.rep-mercado {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  border-radius: 999px;
+}

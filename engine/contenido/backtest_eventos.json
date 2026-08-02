@@ -112,6 +112,29 @@
     { "id": "2023-08-25-jacksonhole", "fecha": "2023-08-25", "simbolo": "SPY", "categoria": "neutra",
       "titular": "Powell at Jackson Hole: Fed will proceed carefully on any further rate moves" },
     { "id": "2024-06-12-cpi-inline", "fecha": "2024-06-12", "simbolo": "SPY", "categoria": "neutra",
-      "titular": "Consumer prices come in line with expectations; Fed keeps rates unchanged" }
+      "titular": "Consumer prices come in line with expectations; Fed keeps rates unchanged" },
+
+    { "id": "2020-08-06-oro-record-gld", "fecha": "2020-08-06", "simbolo": "GLD", "categoria": "positiva", "mercado": "oro",
+      "titular": "Gold smashes through $2,000 for the first time as investors seek safe haven" },
+    { "id": "2022-03-08-oro-guerra-gld", "fecha": "2022-03-08", "simbolo": "GLD", "categoria": "positiva", "mercado": "oro",
+      "titular": "Gold surges toward record high as Ukraine war fuels safe-haven demand" },
+    { "id": "2023-10-13-oro-refugio-gld", "fecha": "2023-10-13", "simbolo": "GLD", "categoria": "positiva", "mercado": "oro",
+      "titular": "Gold jumps as Middle East conflict drives investors to safety" },
+    { "id": "2024-02-13-oro-cpi-gld", "fecha": "2024-02-13", "simbolo": "GLD", "categoria": "negativa", "mercado": "oro",
+      "titular": "Gold slides after hot inflation data dims hopes of early rate cuts" },
+
+    { "id": "2021-04-14-cripto-coinbase-cbse", "fecha": "2021-04-14", "simbolo": "COIN", "categoria": "positiva", "mercado": "cripto",
+      "titular": "Bitcoin hits record above $64,000 as Coinbase makes market debut" },
+    { "id": "2021-05-19-cripto-crash-gbtc", "fecha": "2021-05-19", "simbolo": "GBTC", "categoria": "negativa", "mercado": "cripto",
+      "titular": "Bitcoin plunges 30% intraday as China crackdown sparks crypto rout" },
+    { "id": "2022-11-09-cripto-ftx-gbtc", "fecha": "2022-11-09", "simbolo": "GBTC", "categoria": "negativa", "mercado": "cripto",
+      "titular": "Crypto markets crater as FTX collapses in stunning bankruptcy" },
+    { "id": "2024-01-11-cripto-etf-gbtc", "fecha": "2024-01-11", "simbolo": "GBTC", "categoria": "positiva", "mercado": "cripto",
+      "titular": "Bitcoin rallies after SEC approves first US spot bitcoin ETFs" },
+
+    { "id": "2018-10-01-pet-sanciones-uso", "fecha": "2018-10-01", "simbolo": "USO", "categoria": "positiva", "mercado": "petroleo",
+      "titular": "Oil hits four-year high as markets brace for US sanctions on Iran" },
+    { "id": "2023-04-03-pet-opep-uso", "fecha": "2023-04-03", "simbolo": "USO", "categoria": "positiva", "mercado": "petroleo",
+      "titular": "Oil surges after surprise OPEC+ production cut of over 1 million barrels" }
   ]
 }

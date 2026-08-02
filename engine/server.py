@@ -218,10 +218,15 @@ async def canal(ws: WebSocket) -> None:
 async def _leer_titular_en_vivo(modelo, lideres, titular, candado, semilla) -> list[dict]:
     """Los líderes leen una noticia y se inyecta al modelo EN VIVO (sin
     frenar el latido). El candado evita chocar con el step en curso."""
+    from brains.mercado import clasificar_async, perfil_de
+
     consultas = [(_semilla_lider(semilla, lider.unique_id), lider.arquetipo) for lider in lideres]
-    respuestas = await analizar_titular_async(titular, consultas)  # lento: sin candado
+    respuestas, tipo = await asyncio.gather(  # lento: sin candado
+        analizar_titular_async(titular, consultas),
+        clasificar_async(titular),
+    )
     async with candado:
-        await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas)
+        await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas, perfil_de(tipo))
     return respuestas
 
 
@@ -318,15 +323,23 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
     modelo = await asyncio.to_thread(_crear_mercado, semilla)
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
 
-    # los 100 líderes leen el titular (en paralelo si hay API; si no, fallback);
-    # la semilla de la corrida entra a la mezcla: cada corrida, voces frescas
+    # los 100 líderes leen el titular Y se clasifica el tipo de mercado, en
+    # paralelo (la clasificación es 1 llamada barata a Haiku, sin latencia extra)
+    from brains.mercado import clasificar_async, perfil_de
+
     consultas = [(_semilla_lider(semilla, lider.unique_id), lider.arquetipo) for lider in lideres]
-    respuestas = await analizar_titular_async(titular, consultas)
+    respuestas, tipo_mercado = await asyncio.gather(
+        analizar_titular_async(titular, consultas),
+        clasificar_async(titular),
+    )
+    perfil = perfil_de(tipo_mercado)
 
     await ws.send_text(json.dumps({
         "tipo": "inicio",
         "titular": titular,
         "precio": modelo.historial_precios[-1],
+        "mercado": perfil["tipo"],
+        "mercado_etiqueta": perfil["etiqueta"],
         "lideres": [
             {"arquetipo": lider.arquetipo, **{k: r[k] for k in ("senal", "confianza", "frase", "fuente")}}
             for lider, r in zip(lideres, respuestas)
@@ -347,12 +360,14 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
 
     precio_previo = modelo.historial_precios[-1]
     contador_acciones.clear()
-    modelo.aplicar_titular(titular, respuestas=respuestas)
+    modelo.aplicar_titular(titular, respuestas=respuestas, perfil=perfil)
 
     for _ in range(TICKS_POSTERIORES):
         await transmitir_tick()
 
     reporte = _generar_reporte(modelo, precio_previo, respuestas, lideres, contador_acciones)
+    reporte["mercado"] = perfil["tipo"]
+    reporte["mercado_etiqueta"] = perfil["etiqueta"]
 
     # persistencia primero (CONTENIDO.md): TODA simulación se guarda
     sim_id = None

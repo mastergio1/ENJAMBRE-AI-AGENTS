@@ -176,6 +176,10 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
 
       const cabecera = extras.titular
         ? `<div class="rep-titular">${esc(extras.titular)}</div>` : ''
+      // el tipo de mercado que el enjambre razonó (índice, oro, cripto…)
+      const mercadoEt = reporte.mercado_etiqueta || extras.mercado_etiqueta
+      const mercadoHtml = mercadoEt
+        ? `<div class="rep-mercado">Mercado detectado · ${esc(mercadoEt)}</div>` : ''
       const compartir = extras.id
         ? `<button class="rep-compartir" data-id="${String(extras.id).replace(/[^0-9a-f]/g, '')}">Copiar enlace</button>` : ''
       // qué hacer después: el reporte nunca es un callejón sin salida
@@ -190,6 +194,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
         <button class="cerrar" aria-label="cerrar">×</button>
         <h2>Reporte del enjambre</h2>
         ${cabecera}
+        ${mercadoHtml}
         <div class="cifras">
           <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
           <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>

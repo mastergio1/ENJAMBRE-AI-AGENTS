@@ -134,6 +134,18 @@ def salud() -> dict:
     return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 10, "redaccion": True}
 
 
+@app.get("/api/estado")
+def api_estado(respuesta: Response) -> dict:
+    """Estado operativo público (no revela secretos): si el enjambre está en
+    pruebas privadas y si hay clave de IA. Sirve para monitoreo y para
+    confirmar de un vistazo que el candado quedó activo."""
+    respuesta.headers["Cache-Control"] = "no-store"
+    return {
+        "privado": seguridad.acceso_privado_activo(),
+        "ia_configurada": bool(os.environ.get("ANTHROPIC_API_KEY")),
+    }
+
+
 def _responder(ws: WebSocket, **campos) -> str:
     return json.dumps(campos, ensure_ascii=False)
 

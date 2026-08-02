@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-02T22:29:32+00:00",
+ "generado": "2026-08-02T22:30:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1539,6 +1539,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e9a53b7cc0730cc8",
+   "origen": "historico",
+   "fecha": "2026-08-02T22:30:09+00:00",
+   "titular": "Gold holds steady as investors await Federal Reserve meeting minutes",
+   "simbolos": "GLD",
+   "direccion_pct": 14.65,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.84,
+    "cierre_base": 177.06,
+    "cierre_final": 175.57,
+    "fecha_base": "2023-08-14",
+    "fecha_final": "2023-08-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

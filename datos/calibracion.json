@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:48:40+00:00",
+ "generado": "2026-08-03T05:49:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1215,16 +1215,16 @@
   {
    "sim_id": "b197123371360c7a",
    "origen": "historico",
-   "fecha": "2026-08-03T05:48:40+00:00",
+   "fecha": "2026-08-03T05:49:16+00:00",
    "titular": "Gold Sinks 5% On Worst Day In 5 Years, Dow Jones Hits Record Highs: What's Moving Markets Tuesday?",
-   "simbolos": "GDX",
-   "direccion_pct": 4.78,
-   "volatilidad_pct": 1.14,
+   "simbolos": "NEM",
+   "direccion_pct": -1.12,
+   "volatilidad_pct": 1.24,
    "reaccion_real": {
-    "simbolo": "GDX",
-    "pct_real": -9.22,
-    "cierre_base": 80.36,
-    "cierre_final": 72.95,
+    "simbolo": "NEM",
+    "pct_real": -8.3,
+    "cierre_base": 94.89,
+    "cierre_final": 87.01,
     "fecha_base": "2025-10-20",
     "fecha_final": "2025-10-22",
     "ruedas": 2,

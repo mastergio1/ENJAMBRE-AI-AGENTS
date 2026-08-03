@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:32:27+00:00",
+ "generado": "2026-08-03T08:33:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5913,6 +5913,28 @@
     "cierre_final": 13.76,
     "fecha_base": "2020-05-12",
     "fecha_final": "2020-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e6d3d5bfbfbb6823",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:33:01+00:00",
+   "titular": "Occidental Petroleum Q1 EPS $52.000 Does Not Compare To $(0.620) Estimate",
+   "simbolos": "OXY",
+   "direccion_pct": 5.69,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -9.4,
+    "cierre_base": 15.32,
+    "cierre_final": 13.88,
+    "fecha_base": "2020-05-05",
+    "fecha_final": "2020-05-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:20:13+00:00",
+ "generado": "2026-08-03T15:21:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -565,6 +565,28 @@
     "pct_real": 19.76,
     "cierre_base": 6.73,
     "cierre_final": 8.06,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4461a5550f3e6e0b",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:21:03+00:00",
+   "titular": "Crypto-Related Stocks Surge Following Thursday's Bloodbath",
+   "simbolos": "RIOT",
+   "direccion_pct": 13.79,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 24.13,
+    "cierre_base": 12.06,
+    "cierre_final": 14.97,
     "fecha_base": "2026-02-05",
     "fecha_final": "2026-02-09",
     "ruedas": 2,

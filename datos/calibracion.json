@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:43:45+00:00",
+ "generado": "2026-08-03T06:44:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2704,6 +2704,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a6aa4c9a776a22d7",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:44:20+00:00",
+   "titular": "Bitcoin Mining Stocks Are Rising Monday: What's Going On?",
+   "simbolos": "RIOT",
+   "direccion_pct": 0.97,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 29.79,
+    "cierre_base": 9.13,
+    "cierre_final": 11.85,
+    "fecha_base": "2024-04-19",
+    "fecha_final": "2024-04-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

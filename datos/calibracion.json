@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:37:13+00:00",
+ "generado": "2026-08-03T08:37:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6109,6 +6109,28 @@
     "pct_real": 3.2,
     "cierre_base": 12.2,
     "cierre_final": 12.59,
+    "fecha_base": "2020-04-16",
+    "fecha_final": "2020-04-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3921bb288b3838f2",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:37:45+00:00",
+   "titular": "Earnings Scheduled For April 17, 2020",
+   "simbolos": "SLB",
+   "direccion_pct": 0.66,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": 8.26,
+    "cierre_base": 14.05,
+    "cierre_final": 15.21,
     "fecha_base": "2020-04-16",
     "fecha_final": "2020-04-20",
     "ruedas": 2,

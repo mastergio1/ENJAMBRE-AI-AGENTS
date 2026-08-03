@@ -1,7 +1,15 @@
 {
- "generado": "2026-08-03T04:36:34+00:00",
+ "generado": "2026-08-03T04:45:55+00:00",
  "nota": "Eventos cosechados por El Enjambre: días de mayor movimiento reales (Yahoo) con su titular real (Benzinga). Alimentan el banco de exámenes de calibración.",
  "eventos": [
+  {
+   "id": "2016-01-14-pet-cosecha-xle",
+   "fecha": "2016-01-14",
+   "simbolo": "XLE",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Good Money Keeps Following Bad With Oil ETFs"
+  },
   {
    "id": "2016-01-21-acc-cosecha-amd",
    "fecha": "2016-01-21",
@@ -9,6 +17,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Advanced Micro Devices Back Under $2"
+  },
+  {
+   "id": "2016-01-22-pet-cosecha-uso",
+   "fecha": "2016-01-22",
+   "simbolo": "USO",
+   "categoria": "neutra",
+   "mercado": "petroleo",
+   "titular": "Crude Moves Over $30/Barrel"
   },
   {
    "id": "2016-01-27-acc-cosecha-aapl",
@@ -225,6 +241,14 @@
    "categoria": "positiva",
    "mercado": "oro",
    "titular": "Why Miners Can Double Or Triple Within Nine Months"
+  },
+  {
+   "id": "2016-09-28-pet-cosecha-xle",
+   "fecha": "2016-09-28",
+   "simbolo": "XLE",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Assessing Demand For Energy ETFs"
   },
   {
    "id": "2016-10-04-oro-cosecha-gdx",
@@ -651,6 +675,14 @@
    "titular": "Snap Shares Up 24.9% In After Hours Trading, Company Beat Q4 EPS And Sales Estimates"
   },
   {
+   "id": "2018-02-08-ind-cosecha-qqq",
+   "fecha": "2018-02-08",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Another Rough Day For The Markets"
+  },
+  {
    "id": "2018-02-16-cri-cosecha-riot",
    "fecha": "2018-02-16",
    "simbolo": "RIOT",
@@ -675,12 +707,36 @@
    "titular": "Roku Sees FY18 Loss $55M-$40M, Adj. EBITDA Loss $25M-$10M, Sales $660M-$690M vs $661.5M Est."
   },
   {
+   "id": "2018-03-22-ind-cosecha-dia",
+   "fecha": "2018-03-22",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "ICYMI: Helios And Matheson, Fed Rate Hike, Facebook Defended"
+  },
+  {
    "id": "2018-03-26-acc-cosecha-msft",
    "fecha": "2018-03-26",
    "simbolo": "MSFT",
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Morgan Stanley Raises Microsoft Price Target From $110 To $130  As Morgan Stanley Believes The Co. Is Positioning For Ramping Of Public Cloud Adoption; Says Distribution  Channels, Large Customer Base, And Improving Margins Supports Path To $1T Market Cap"
+  },
+  {
+   "id": "2018-03-26-ind-cosecha-spy",
+   "fecha": "2018-03-26",
+   "simbolo": "SPY",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "The Sectors Likely To Deliver Double-Digit Earnings Growth In Q1"
+  },
+  {
+   "id": "2018-03-26-ind-cosecha-qqq",
+   "fecha": "2018-03-26",
+   "simbolo": "QQQ",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "Friday Never Happened: Dow, S&P 500, Nasdaq Recover Losses In Afternoon Trading"
   },
   {
    "id": "2018-04-26-acc-cosecha-amd",
@@ -803,6 +859,22 @@
    "titular": "'...but also said that he has not talked to Fed Chair Jay Powell about it because he doesn't want to get involved.' -CNBC's Eamon Javers Tweets (2/2)"
   },
   {
+   "id": "2018-10-10-ind-cosecha-spy",
+   "fecha": "2018-10-10",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "US Secretary Of Agriculture Sonny Perdue Says Talks Related To Potential End Of Steel, Aluminum Tariffs On Mexico, Canada 'Just Beginning'"
+  },
+  {
+   "id": "2018-10-10-ind-cosecha-qqq",
+   "fecha": "2018-10-10",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Benzinga Pro Mid-Day Price Check For Major Averages: Nasdaq Flat, Russell 2000 Down 1 (0.1%), S&P 500 Down 4 (0.2%), Dow 30 Down 72 (0.3%)"
+  },
+  {
    "id": "2018-10-19-acc-cosecha-pypl",
    "fecha": "2018-10-19",
    "simbolo": "PYPL",
@@ -849,6 +921,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Earnings Scheduled For October 24, 2018"
+  },
+  {
+   "id": "2018-10-24-ind-cosecha-spy",
+   "fecha": "2018-10-24",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "'BREAKING: Trump criticizes Saudi operation to kill journalist, calls it one of 'worst cover-ups in the history of cover-ups.'' -Tweet From AP"
   },
   {
    "id": "2018-10-25-acc-cosecha-amd",
@@ -939,12 +1019,28 @@
    "titular": "Stocks That Will Be Trading Ex Dividend Tues., Nov. 20, 2018"
   },
   {
+   "id": "2018-11-20-pet-cosecha-uso",
+   "fecha": "2018-11-20",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "EIA Says US Total Shale Regions Oil Production For Dec. Expected Up 112K Barrels/Day To 7.943M Barrels/Day; Nov. Rise In Oil Production Was 105K Barrels/Day"
+  },
+  {
    "id": "2018-11-28-acc-cosecha-crm",
    "fecha": "2018-11-28",
    "simbolo": "CRM",
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "From Salesforce Q3 Earnings Conference Call: Remains On Track For FY22 Sales Guidance Of $21B-$23B"
+  },
+  {
+   "id": "2018-11-28-ind-cosecha-dia",
+   "fecha": "2018-11-28",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Benzinga Pro Mid-Day Price Check For Major Averages: S&P 500 Down 5 (0.2%), Dow 30 Down 67 (0.3%), Nasdaq Down 35 (0.4%), Russell 2000 Down 12 (0.8%)"
   },
   {
    "id": "2018-12-04-ind-cosecha-dia",
@@ -969,6 +1065,22 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Big deal or little deal? What's the deal with Trump's trade truce?"
+  },
+  {
+   "id": "2018-12-04-ind-cosecha-spy",
+   "fecha": "2018-12-04",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Benzinga Pro Afternoon Price Check For Major Averages: Nasdaq Up 103 (1.4%), Dow 30 Up 283 (1.1%), S&P 500 Up 28 (1.0%), Russell 2000 Up 13 (0.9%)"
+  },
+  {
+   "id": "2018-12-04-ind-cosecha-qqq",
+   "fecha": "2018-12-04",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Benzinga Pro Afternoon Price Check For Major Averages: Nasdaq Up 103 (1.4%), Dow 30 Up 283 (1.1%), S&P 500 Up 28 (1.0%), Russell 2000 Up 13 (0.9%)"
   },
   {
    "id": "2018-12-21-acc-cosecha-nke",
@@ -1043,6 +1155,14 @@
    "titular": "Market Strategist: Here's What Matters Most For Investors In 2019"
   },
   {
+   "id": "2018-12-26-pet-cosecha-uso",
+   "fecha": "2018-12-26",
+   "simbolo": "USO",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Novak Says No Proposal For Extraordinary Oil Meeting"
+  },
+  {
    "id": "2019-01-03-acc-cosecha-aapl",
    "fecha": "2019-01-03",
    "simbolo": "AAPL",
@@ -1073,6 +1193,22 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Benzinga Pro's Top 10 Most-Searched Tickers For Afternoon Of Thurs., Jan. 3, 2019"
+  },
+  {
+   "id": "2019-01-04-ind-cosecha-spy",
+   "fecha": "2019-01-04",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "'GREAT JOBS NUMBERS JUST ANNOUNCED!' -Tweet From Pres Trump"
+  },
+  {
+   "id": "2019-01-04-ind-cosecha-qqq",
+   "fecha": "2019-01-04",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Benzinga Pro Afternoon Price Check For Major Averages: Russell 2000 Down 12 (0.9%), S&P 500 Down 54 (2.2%), Dow 30 Down 600 (2.6%), Nasdaq Down 178 (2.7%)"
   },
   {
    "id": "2019-01-07-acc-cosecha-roku",
@@ -1331,6 +1467,22 @@
    "titular": "Hearing JP Morgan Commented On Mylan Amid Pfizer Upjohn News, Sees New Valuation $25-$32/Share Based On Higher Pro-Forma Multiple Warranted For NewCo., Combined Co. Will Have Less US Generics Exposure, Less Leverage But Improved Corporate Governance"
   },
   {
+   "id": "2019-08-05-ind-cosecha-spy",
+   "fecha": "2019-08-05",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "China Continues to Proceed With Signed U.S. Soybean Deals, According to State Planner"
+  },
+  {
+   "id": "2019-08-05-ind-cosecha-dia",
+   "fecha": "2019-08-05",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Market Sell-Off Accelerates Following China Trade War Retaliation"
+  },
+  {
    "id": "2019-08-08-acc-cosecha-amd",
    "fecha": "2019-08-08",
    "simbolo": "AMD",
@@ -1361,6 +1513,22 @@
    "categoria": "negativa",
    "mercado": "indice",
    "titular": "Benzinga Pro Mid-Day Price Check For Major Averages: Nasdaq Up 2%, S&P 500 Up 1.6,  Dow Jones Up 1.6%, Russell Up 1.2%"
+  },
+  {
+   "id": "2019-08-14-ind-cosecha-spy",
+   "fecha": "2019-08-14",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "'How the U.S. determined which China tariffs will be delayed' -Axios"
+  },
+  {
+   "id": "2019-08-14-pet-cosecha-slb",
+   "fecha": "2019-08-14",
+   "simbolo": "SLB",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Stocks That Hit 52-Week Lows Of Tuesday"
   },
   {
    "id": "2019-08-15-acc-cosecha-ge",
@@ -1470,6 +1638,14 @@
    "id": "2020-02-24-ind-cosecha-dia",
    "fecha": "2020-02-24",
    "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "S&P Futures -40, Dow Futures -334, Nasdaq Futures -146, Crude -1.28"
+  },
+  {
+   "id": "2020-02-24-ind-cosecha-qqq",
+   "fecha": "2020-02-24",
+   "simbolo": "QQQ",
    "categoria": "negativa",
    "mercado": "indice",
    "titular": "S&P Futures -40, Dow Futures -334, Nasdaq Futures -146, Crude -1.28"
@@ -2363,6 +2539,14 @@
    "titular": "DZ Bank Upgrades Coca-Cola to Buy, Announces $51 Price Target"
   },
   {
+   "id": "2020-03-27-pet-cosecha-uso",
+   "fecha": "2020-03-27",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "S&P Says Materially Lower Oil Prices In 2020 And 2021 Will Have Negative Economic And Fiscal Implications For Kuwait"
+  },
+  {
    "id": "2020-03-30-acc-cosecha-msft",
    "fecha": "2020-03-30",
    "simbolo": "MSFT",
@@ -2417,6 +2601,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Coronavirus Spawns Layoffs Across Freight, Logistics And Associated Industries In Texas"
+  },
+  {
+   "id": "2020-04-01-ind-cosecha-qqq",
+   "fecha": "2020-04-01",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Afternoon Market Stats in 5 Minutes"
   },
   {
    "id": "2020-04-02-pet-cosecha-uso",
@@ -2603,6 +2795,14 @@
    "titular": "JPMorgan Will Only Accept Small Business Loans Under Federal Scheme, Suspends All Others"
   },
   {
+   "id": "2020-04-09-pet-cosecha-uso",
+   "fecha": "2020-04-09",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Hearing OPEC Wants G20 Nations to Reduce Production by 5M Barrels/Day"
+  },
+  {
    "id": "2020-04-13-acc-cosecha-tsla",
    "fecha": "2020-04-13",
    "simbolo": "TSLA",
@@ -2617,6 +2817,22 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Hearing Caterpillar Shares Were Downgraded by Bank of America"
+  },
+  {
+   "id": "2020-04-14-ind-cosecha-spy",
+   "fecha": "2020-04-14",
+   "simbolo": "SPY",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "NY Governor Cuomo Says 'We Are Not There Yet' On Testing, Says Reopening Must Be Phased, Balanced"
+  },
+  {
+   "id": "2020-04-14-ind-cosecha-qqq",
+   "fecha": "2020-04-14",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Morning Market Stats in 5 Minutes"
   },
   {
    "id": "2020-04-17-pet-cosecha-xle",
@@ -2691,6 +2907,14 @@
    "titular": "Watching AMC, Cinemark Shares Amid Indication Phase 1 Of Economic Reopen Plan Could Include Movie Theaters Opening"
   },
   {
+   "id": "2020-04-17-ind-cosecha-dia",
+   "fecha": "2020-04-17",
+   "simbolo": "DIA",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "Morning Market Stats in 5 Minutes"
+  },
+  {
    "id": "2020-04-21-pet-cosecha-uso",
    "fecha": "2020-04-21",
    "simbolo": "USO",
@@ -2705,6 +2929,22 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Shares of several technology companies are trading lower amid overall market weakness following a collapse in oil prices. Oil has been negatively impacted by excess supply and low demand amid the coronavirus pandemic."
+  },
+  {
+   "id": "2020-04-21-ind-cosecha-spy",
+   "fecha": "2020-04-21",
+   "simbolo": "SPY",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "UPDATE: Air Canada Says Planning To Resume Service To US As Of May 22 Subject To Any Further Gov't. Restrictions Beyond That Date"
+  },
+  {
+   "id": "2020-04-21-ind-cosecha-qqq",
+   "fecha": "2020-04-21",
+   "simbolo": "QQQ",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "Afternoon Market Stats in 5 Minutes"
   },
   {
    "id": "2020-04-22-acc-cosecha-snap",
@@ -2803,6 +3043,14 @@
    "titular": "Daily Mail, Citing Sources, Reports Amazon Is 'Circling' AMC Theaters, Says 'The duo are said to have held talks about a potential takeover of AMC by Amazon'"
   },
   {
+   "id": "2020-05-13-pet-cosecha-oxy",
+   "fecha": "2020-05-13",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Occidental Petroleum Offering Its Employees Voluntary Buyouts Over the Next Two Weeks"
+  },
+  {
    "id": "2020-05-15-acc-cosecha-dkng",
    "fecha": "2020-05-15",
    "simbolo": "DKNG",
@@ -2865,6 +3113,22 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Moderna Announces 'Positive' Interim Phase 1 Data for its mRNA Vaccine Against Novel Coronavirus"
+  },
+  {
+   "id": "2020-05-18-ind-cosecha-spy",
+   "fecha": "2020-05-18",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Iran's Supreme Leader Says Americans Will Be Expelled from Iraq and Syria"
+  },
+  {
+   "id": "2020-05-18-pet-cosecha-oxy",
+   "fecha": "2020-05-18",
+   "simbolo": "OXY",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Occidental Petroleum Issues Statement Related To Deal With Total: Total Has Notified Co. It Will Not Be In A Position To Sell Interest In Algeria"
   },
   {
    "id": "2020-05-26-acc-cosecha-jpm",
@@ -3083,6 +3347,14 @@
    "titular": "'Uber exasperated with Grubhub sale process as deal slips away' -CNBC"
   },
   {
+   "id": "2020-06-11-pet-cosecha-uso",
+   "fecha": "2020-06-11",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Why The Energy Sector Is Trading Lower Today"
+  },
+  {
    "id": "2020-06-15-acc-cosecha-dkng",
    "fecha": "2020-06-15",
    "simbolo": "DKNG",
@@ -3105,6 +3377,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Nike Says Expects FY21 Revenue To Be Below Prior Year Levels"
+  },
+  {
+   "id": "2020-06-26-ind-cosecha-dia",
+   "fecha": "2020-06-26",
+   "simbolo": "DIA",
+   "categoria": "neutra",
+   "mercado": "indice",
+   "titular": "Afternoon Market Stats in 5 Minutes"
   },
   {
    "id": "2020-06-29-acc-cosecha-ba",
@@ -3195,6 +3475,14 @@
    "titular": "CORRECTION: Qualcomm Q3 Sales Of $4.89B Beat Estimate Of $4.81B"
   },
   {
+   "id": "2020-07-30-pet-cosecha-oxy",
+   "fecha": "2020-07-30",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Occidental Said to Discuss $4.5B Asset Sale to Pertamina"
+  },
+  {
    "id": "2020-07-31-acc-cosecha-aapl",
    "fecha": "2020-07-31",
    "simbolo": "AAPL",
@@ -3233,6 +3521,14 @@
    "categoria": "negativa",
    "mercado": "oro",
    "titular": "Morning Market Stats in 5 Minutes"
+  },
+  {
+   "id": "2020-08-11-pet-cosecha-oxy",
+   "fecha": "2020-08-11",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Occidental Petroleum Q2 Adj. EPS $(1.76) Misses $(1.68) Estimate, Combined Production 1.406B Barrels Of Oil Equivalent/Day"
   },
   {
    "id": "2020-08-19-acc-cosecha-tgt",
@@ -3411,6 +3707,14 @@
    "titular": "Recap: Intel Q3 Earnings"
   },
   {
+   "id": "2020-10-28-ind-cosecha-spy",
+   "fecha": "2020-10-28",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "What Happens To The MAGA ETF If Trump Loses The Presidential Election?"
+  },
+  {
    "id": "2020-11-04-acc-cosecha-cat",
    "fecha": "2020-11-04",
    "simbolo": "CAT",
@@ -3425,6 +3729,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Uber, Lyft Are Exempt From Classifying Drivers As Employees After Proposition 22 Ballot Victory"
+  },
+  {
+   "id": "2020-11-04-ind-cosecha-qqq",
+   "fecha": "2020-11-04",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "U.S Equity Futures Mixed; U.S. Presidential Election Still Undecided With Key States Remaining"
   },
   {
    "id": "2020-11-05-oro-cosecha-gdx",
@@ -3513,6 +3825,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Irrational Exuberance? Stocks Surging, Markets At All-Time Highs On Pfizer's COVID-19 Vaccine News"
+  },
+  {
+   "id": "2020-11-09-ind-cosecha-dia",
+   "fecha": "2020-11-09",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Resilient Corporate Profits, Post-Election Calm Could Put Bounce In Markets' Step"
   },
   {
    "id": "2020-11-11-acc-cosecha-pltr",
@@ -3883,6 +4203,14 @@
    "titular": "GameStop CFO To Resign"
   },
   {
+   "id": "2021-02-24-pet-cosecha-oxy",
+   "fecha": "2021-02-24",
+   "simbolo": "OXY",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Occidental Petroleum Says Does Not Anticipate Growing Production 'At Least This Year;' Says 25K Barrel/Day Impact To Permian Basin Production From Texas Winter Storm Is 'Temporary'"
+  },
+  {
    "id": "2021-02-26-acc-cosecha-abnb",
    "fecha": "2021-02-26",
    "simbolo": "ABNB",
@@ -3947,6 +4275,14 @@
    "titular": "'Not connecting Tesla cars to Starlink, as our terminal is much too big. This is for aircraft, ships, large trucks & RVs.' -Tweet From Elon Musk"
   },
   {
+   "id": "2021-03-09-ind-cosecha-qqq",
+   "fecha": "2021-03-09",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Top 20 Trending Stocks On WallStreetBets As Of Monday, Mar. 8, 2021 (Via Swaggy Stocks)"
+  },
+  {
    "id": "2021-03-10-acc-cosecha-dkng",
    "fecha": "2021-03-10",
    "simbolo": "DKNG",
@@ -3963,12 +4299,28 @@
    "titular": "Top 20 Trending Stocks On WallStreetBets As Of Monday, Mar. 15, 2021 (Via Swaggy Stocks)"
   },
   {
+   "id": "2021-03-18-pet-cosecha-uso",
+   "fecha": "2021-03-18",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "USA EIA Gasoline Inventories for Mar 12 Build 472K Barrels"
+  },
+  {
    "id": "2021-03-25-acc-cosecha-gme",
    "fecha": "2021-03-25",
    "simbolo": "GME",
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "GameStop Board To See Mass Departure Amid Reboot Led By Chewy Fame's Ryan Cohen"
+  },
+  {
+   "id": "2021-04-05-pet-cosecha-oxy",
+   "fecha": "2021-04-05",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "The S&P 500 Soared Today. Here's Why."
   },
   {
    "id": "2021-04-13-cri-cosecha-ethe",
@@ -3993,6 +4345,14 @@
    "categoria": "positiva",
    "mercado": "cripto",
    "titular": "3 Cryptocurrency Plays For Stock Investors"
+  },
+  {
+   "id": "2021-05-11-pet-cosecha-oxy",
+   "fecha": "2021-05-11",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Recap: Occidental Petroleum Q1 Earnings"
   },
   {
    "id": "2021-05-13-cri-cosecha-ethe",
@@ -4075,12 +4435,28 @@
    "titular": "GameStop Discloses SEC Probe Into Trading of Its And Stocks Of 'Other Companies,' AMC, Koss, BlackBerry Dip"
   },
   {
+   "id": "2021-06-17-pet-cosecha-oxy",
+   "fecha": "2021-06-17",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Occidental Petroleum Option Alert: Jan 21 $40 Calls Sweep (14) above Ask!: 250 @ $1.83 vs 16536 OI; Earnings 8/9 After Close [est] Ref=$30.025"
+  },
+  {
    "id": "2021-06-25-acc-cosecha-nke",
    "fecha": "2021-06-25",
    "simbolo": "NKE",
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Nike On China Says Began To See Recovery, Improving To Single-Digit Decline In May, Sequentially Improving Into June"
+  },
+  {
+   "id": "2021-07-19-pet-cosecha-uso",
+   "fecha": "2021-07-19",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "OPEC+ Countries Said to have Agreed to Boost Production Until End of September 2022 by 400K B/D"
   },
   {
    "id": "2021-07-23-acc-cosecha-snap",
@@ -4153,6 +4529,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Alibaba, Nvidia, Pfizer, GameStop, AMD, Tesla And More — Stocks Buzzing On WallStreetBets Today"
+  },
+  {
+   "id": "2021-09-20-pet-cosecha-xle",
+   "fecha": "2021-09-20",
+   "simbolo": "XLE",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Leading And Lagging Sectors For September 20, 2021"
   },
   {
    "id": "2021-09-21-acc-cosecha-uber",
@@ -4339,6 +4723,14 @@
    "titular": "Israeli, Who Returned from Malawi, Tested Positive for New Highly-Mutated Covid-19 Strain Reported in S. Africa"
   },
   {
+   "id": "2021-11-26-ind-cosecha-dia",
+   "fecha": "2021-11-26",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "U.S. Equity Futures Sharply Lower; Covid-Related Stocks Surge on Reports of New, Heavily-Mutated Strain, Feared to be More Infectious than Delta Variant"
+  },
+  {
    "id": "2021-12-01-acc-cosecha-crm",
    "fecha": "2021-12-01",
    "simbolo": "CRM",
@@ -4435,6 +4827,14 @@
    "titular": "10 Consumer Discretionary Stocks Whale Activity In Today's Session"
   },
   {
+   "id": "2022-01-04-pet-cosecha-oxy",
+   "fecha": "2022-01-04",
+   "simbolo": "OXY",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Societe Generale Maintains Buy on Occidental Petroleum, Raises Price Target to $43"
+  },
+  {
    "id": "2022-01-05-acc-cosecha-crm",
    "fecha": "2022-01-05",
    "simbolo": "CRM",
@@ -4473,6 +4873,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Why Peloton's Production Halt Could Cause Repercussions For Affirm"
+  },
+  {
+   "id": "2022-01-25-pet-cosecha-oxy",
+   "fecha": "2022-01-25",
+   "simbolo": "OXY",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Occidental CEO Sees 2022 U.S. Oil Output Rising To Over 12M Barrels/Day"
   },
   {
    "id": "2022-01-26-acc-cosecha-t",
@@ -4553,6 +4961,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Apple Sends Letter To US Senators Dick Durbin, Chuck Grassley Related To Recent App Store Bill; Apple Says Bill Would Allow Social Media Apps To Harm Consumers"
+  },
+  {
+   "id": "2022-02-03-ind-cosecha-qqq",
+   "fecha": "2022-02-03",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "U.S. Equity Futures Lower Following Disappointing Earnings Results from Meta; Nasdaq Futures Fall More than 300 Pts"
   },
   {
    "id": "2022-02-04-cri-cosecha-ethe",
@@ -4683,6 +5099,14 @@
    "titular": "Benzinga's Daily Brief On Trending Tickers For March 3, 2022: Tesla, Snowflake, AMC Entertainment And More"
   },
   {
+   "id": "2022-03-04-pet-cosecha-uso",
+   "fecha": "2022-03-04",
+   "simbolo": "USO",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Biden Administration Studying Whether Waiver On Biofuel Blending Mandates Could Help Stabilize Food Prices"
+  },
+  {
    "id": "2022-03-07-pet-cosecha-slb",
    "fecha": "2022-03-07",
    "simbolo": "SLB",
@@ -4697,6 +5121,22 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Argus Research Downgrades DraftKings to Hold"
+  },
+  {
+   "id": "2022-03-07-ind-cosecha-spy",
+   "fecha": "2022-03-07",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "CNBC's Final Trades: Palo Alto Networks, CSX And More"
+  },
+  {
+   "id": "2022-03-07-ind-cosecha-qqq",
+   "fecha": "2022-03-07",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Nasdaq, S&P 500 And Dow Jones Composite All Close Sharply Lower"
   },
   {
    "id": "2022-03-09-pet-cosecha-uso",
@@ -4739,6 +5179,14 @@
    "titular": "Stocks That Hit 52-Week Lows On Tuesday"
   },
   {
+   "id": "2022-03-16-ind-cosecha-qqq",
+   "fecha": "2022-03-16",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Markets Rise Following Drop In Oil Prices"
+  },
+  {
    "id": "2022-03-17-pet-cosecha-oxy",
    "fecha": "2022-03-17",
    "simbolo": "OXY",
@@ -4753,6 +5201,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "What Are Whales Doing With Roblox"
+  },
+  {
+   "id": "2022-03-17-pet-cosecha-uso",
+   "fecha": "2022-03-17",
+   "simbolo": "USO",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Fed's Powell Says Higher Commodity Costs, Oil Prices Will Weigh On Economic Outlook"
   },
   {
    "id": "2022-03-18-acc-cosecha-shop",
@@ -4785,6 +5241,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "These Are The Top 10 Stocks Held On Robinhood: Where Do Apple, Tesla, AMC And Sundial Rank?"
+  },
+  {
+   "id": "2022-03-28-pet-cosecha-uso",
+   "fecha": "2022-03-28",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "President Biden's Job Approval Falls To Lowest Point Amid Russia, Inflation: CNBC"
   },
   {
    "id": "2022-03-29-acc-cosecha-hood",
@@ -4825,6 +5289,22 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Looking Into Caterpillar Inc's Recent Short Interest"
+  },
+  {
+   "id": "2022-04-22-ind-cosecha-dia",
+   "fecha": "2022-04-22",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Markets Fall As Investors Weigh Earnings"
+  },
+  {
+   "id": "2022-04-25-pet-cosecha-slb",
+   "fecha": "2022-04-25",
+   "simbolo": "SLB",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Wells Fargo Maintains Overweight on Schlumberger, Lowers Price Target to $55"
   },
   {
    "id": "2022-04-26-acc-cosecha-ge",
@@ -4875,6 +5355,14 @@
    "titular": "Top WallStreetBets Mentions for Thursday April 28, 2022 After-Hours: AAPL, AMZN, HOOD, ROKU, TSLA, AMD, INTC, GME, MSFT, NFLX"
   },
   {
+   "id": "2022-04-29-ind-cosecha-dia",
+   "fecha": "2022-04-29",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Markets Surge Despite Drop In US GDP"
+  },
+  {
    "id": "2022-05-04-acc-cosecha-sbux",
    "fecha": "2022-05-04",
    "simbolo": "SBUX",
@@ -4905,6 +5393,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Top WallStreetBets Mentions for Wednesday May 4, 2022 After-Hours: AMD, TSLA, TWLO, GME, ETSY, MRO, SHOP, UVXY, SOFI, HOOD"
+  },
+  {
+   "id": "2022-05-05-ind-cosecha-dia",
+   "fecha": "2022-05-05",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Markets Stage Big Rally Following Historic 50 Basis Point Rate Hike"
   },
   {
    "id": "2022-05-09-cri-cosecha-mstr",
@@ -4987,6 +5483,14 @@
    "titular": "Loop Capital Maintains Buy on DraftKings, Lowers Price Target to $25"
   },
   {
+   "id": "2022-05-09-pet-cosecha-uso",
+   "fecha": "2022-05-09",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Saudi Minister Links Refining Capacity Crisis To Surging Fuel Price"
+  },
+  {
    "id": "2022-05-11-cri-cosecha-coin",
    "fecha": "2022-05-11",
    "simbolo": "COIN",
@@ -5049,6 +5553,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "10 Information Technology Stocks Whale Activity In Today's Session"
+  },
+  {
+   "id": "2022-05-13-ind-cosecha-qqq",
+   "fecha": "2022-05-13",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Markets Pare Intraday Losses, Still Finish Marginally Lower"
   },
   {
    "id": "2022-05-17-acc-cosecha-wmt",
@@ -5195,6 +5707,14 @@
    "titular": "Why Airbnb Stock Is Trading Lower Today"
   },
   {
+   "id": "2022-06-13-ind-cosecha-dia",
+   "fecha": "2022-06-13",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Stock Bloodbath Continues, Pushing S&P 500 Into Bear Market Ahead Of Critical Fed Meeting"
+  },
+  {
    "id": "2022-06-15-acc-cosecha-ba",
    "fecha": "2022-06-15",
    "simbolo": "BA",
@@ -5227,12 +5747,44 @@
    "titular": "Benchmark Lowers Price Target On Roblox From $45 To $21"
   },
   {
+   "id": "2022-06-16-pet-cosecha-slb",
+   "fecha": "2022-06-16",
+   "simbolo": "SLB",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Check Out What Whales Are Doing With SLB"
+  },
+  {
    "id": "2022-06-21-acc-cosecha-xom",
    "fecha": "2022-06-21",
    "simbolo": "XOM",
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Biden Says His Team Is Meeting Oil Company CEOs This Week; CEOs to Be Asked to Justify Their Profits"
+  },
+  {
+   "id": "2022-06-23-pet-cosecha-slb",
+   "fecha": "2022-06-23",
+   "simbolo": "SLB",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "As Exxon, Chevron Continue To Plunge, Here's A Look At The Direxion Energy Bull 2X Shares ETF Chart"
+  },
+  {
+   "id": "2022-06-24-ind-cosecha-spy",
+   "fecha": "2022-06-24",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "N. Korea To Boost Frontline Military Units' Action Plan, Vows To Strengthen War Deterrent; Kim Jong Un Says To Bolster Powerful Self-defence Capabilities To Overwhelm Hostile Forces"
+  },
+  {
+   "id": "2022-06-24-ind-cosecha-dia",
+   "fecha": "2022-06-24",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Market indexes were higher Thursday ahead of Fed Chair Powell's testimony as stocks attempt to recover from recent losses. Investors continue to assess the likelihood of an economic slowdown and weigh the impact of Fed policy tightening."
   },
   {
    "id": "2022-06-27-acc-cosecha-hood",
@@ -5275,6 +5827,14 @@
    "titular": "Needham Maintains Buy on Carvana, Lowers Price Target to $31"
   },
   {
+   "id": "2022-07-05-pet-cosecha-slb",
+   "fecha": "2022-07-05",
+   "simbolo": "SLB",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "So What's Going On With Schlumberger Shares Nosediving Today?"
+  },
+  {
    "id": "2022-07-07-cri-cosecha-mara",
    "fecha": "2022-07-07",
    "simbolo": "MARA",
@@ -5283,12 +5843,28 @@
    "titular": "Marathon Digital Says Produces 707 BTC In Q2 2022, Up 8% YoY"
   },
   {
+   "id": "2022-07-12-pet-cosecha-uso",
+   "fecha": "2022-07-12",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Top ETFs To Gain Access To Alternative Investments"
+  },
+  {
    "id": "2022-07-19-cri-cosecha-mara",
    "fecha": "2022-07-19",
    "simbolo": "MARA",
    "categoria": "positiva",
    "mercado": "cripto",
    "titular": "Why Bitcoin- And Ethereum-Related Stock Applied Blockchain Is Surging After Hours"
+  },
+  {
+   "id": "2022-07-19-ind-cosecha-iwm",
+   "fecha": "2022-07-19",
+   "simbolo": "IWM",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Market indexes were higher following better-than-expected Q2 earnings from Goldman Sachs, which lifted market sentiment going into the earnings season."
   },
   {
    "id": "2022-07-20-acc-cosecha-cvna",
@@ -5377,6 +5953,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Activist Elliott Management Has Stake in PayPal, Sources Say -"
+  },
+  {
+   "id": "2022-07-27-ind-cosecha-qqq",
+   "fecha": "2022-07-27",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Top 15 Trending Stocks On WallStreetBets As Of Tuesday, July 26, 2022 (Via Swaggy Stocks)"
   },
   {
    "id": "2022-07-29-acc-cosecha-amzn",
@@ -5483,6 +6067,22 @@
    "titular": "Ten Stocks Trending on Discord This Weekend: AMC, TSLA, AAPL, BBBY, GBNH, DNAA, NVDA, AFRM, UPRO, ENDP"
   },
   {
+   "id": "2022-08-26-ind-cosecha-spy",
+   "fecha": "2022-08-26",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "California Air Resources Board Votes To Approve Sweeping Regulations To Require All New Vehicles Sold In State By 2035 To Be Electric, Plug-In Hybrid Models"
+  },
+  {
+   "id": "2022-08-26-ind-cosecha-qqq",
+   "fecha": "2022-08-26",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Top 15 Trending Stocks On WallStreetBets As Of Thursday, August 25, 2022 (Via Swaggy Stocks)"
+  },
+  {
    "id": "2022-08-31-oro-cosecha-gold",
    "fecha": "2022-08-31",
    "simbolo": "GOLD",
@@ -5571,6 +6171,14 @@
    "titular": "Schlumberger Awarded Energy Data Project From Wintershall Dea"
   },
   {
+   "id": "2022-09-28-pet-cosecha-xle",
+   "fecha": "2022-09-28",
+   "simbolo": "XLE",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Find Out Why This Bear Thinks The S&P 500 Is Headed To 3,000; What He's Buying During The Downturn"
+  },
+  {
    "id": "2022-09-29-acc-cosecha-cvna",
    "fecha": "2022-09-29",
    "simbolo": "CVNA",
@@ -5619,6 +6227,22 @@
    "titular": "Why Rivian Stock Is Rallying After Hours"
   },
   {
+   "id": "2022-10-04-ind-cosecha-spy",
+   "fecha": "2022-10-04",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Japan's NHK Said N. Korea Appears to Have Fired Missile; Said Missile Flies Over Japan; Japan's  Coast Guard Said Could Be a Ballistic Missile"
+  },
+  {
+   "id": "2022-10-04-ind-cosecha-dia",
+   "fecha": "2022-10-04",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "The Short List Of Dow Jones Stocks That Are Actually Up This Year: Hint — It's Very Short"
+  },
+  {
    "id": "2022-10-07-acc-cosecha-amd",
    "fecha": "2022-10-07",
    "simbolo": "AMD",
@@ -5635,12 +6259,28 @@
    "titular": "What Are Whales Doing With Marvell Tech"
   },
   {
+   "id": "2022-10-07-ind-cosecha-qqq",
+   "fecha": "2022-10-07",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Top 15 Trending Stocks On WallStreetBets As Of Thursday, October 6, 2022 (Via Swaggy Stocks)"
+  },
+  {
    "id": "2022-10-11-acc-cosecha-uber",
    "fecha": "2022-10-11",
    "simbolo": "UBER",
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Uber Said Made Decision to Cease Operating the Uber App in Pakistan's Karachi, Multan, Faisalabad, Peshawar and Islamabad"
+  },
+  {
+   "id": "2022-10-13-ind-cosecha-dia",
+   "fecha": "2022-10-13",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "If You Invested $1,000 In The Dow Jones When Donald Trump Left White House, Here's How Much You'd Have Now"
   },
   {
    "id": "2022-10-17-acc-cosecha-rblx",
@@ -5747,6 +6387,14 @@
    "titular": "Ten Stocks Trending on Discord for Thursday October 27, 2022: AMZN, AAPL, META, EPIX, AGFS, INTC, VIEW, SHOP, UAVS, MSFT"
   },
   {
+   "id": "2022-10-28-ind-cosecha-dia",
+   "fecha": "2022-10-28",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Here's How Much You'd Have Now If You Invested $100 In Bitcoin, Ethereum And Dogecoin (DOGE) 5 Years Ago"
+  },
+  {
    "id": "2022-11-01-acc-cosecha-uber",
    "fecha": "2022-11-01",
    "simbolo": "UBER",
@@ -5841,6 +6489,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Top 15 Trending Stocks On WallStreetBets As Of Tuesday, Nov. 8, 2022 (Via Swaggy Stocks)"
+  },
+  {
+   "id": "2022-11-09-pet-cosecha-oxy",
+   "fecha": "2022-11-09",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "What's Happening With Occidental Petroleum Stock During Tuesday's After-Hours Session"
   },
   {
    "id": "2022-11-10-ind-cosecha-spy",
@@ -6009,6 +6665,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Top 15 Trending Stocks On WallStreetBets As Of Tuesday, Nov. 29, 2022 (Via Swaggy Stocks)"
+  },
+  {
+   "id": "2022-11-30-ind-cosecha-spy",
+   "fecha": "2022-11-30",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "USA Chicago PMI for Nov 37.200 vs 47.000 Est; Prior 45.200"
   },
   {
    "id": "2022-12-01-acc-cosecha-crm",
@@ -6305,6 +6969,22 @@
    "categoria": "positiva",
    "mercado": "cripto",
    "titular": "Everyone Wishes For Silver And Gold After Fed Meeting: Bitcoin, Stocks Tumble"
+  },
+  {
+   "id": "2023-04-03-pet-cosecha-xle",
+   "fecha": "2023-04-03",
+   "simbolo": "XLE",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Oil Prices Surge Over 5% In Asia Trade Following Surprise OPEC+ Production Cut: These ETFs Could Draw Interest"
+  },
+  {
+   "id": "2023-04-03-pet-cosecha-slb",
+   "fecha": "2023-04-03",
+   "simbolo": "SLB",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "SLB Option Alert: Apr 14 $55 Calls Sweep (19) near the Ask: 1045 @ $0.829 vs 81 OI; Ref=$53.42"
   },
   {
    "id": "2023-04-14-acc-cosecha-jpm",
@@ -6867,6 +7547,14 @@
    "titular": "Earnings Scheduled For January 29, 2024"
   },
   {
+   "id": "2024-01-30-pet-cosecha-slb",
+   "fecha": "2024-01-30",
+   "simbolo": "SLB",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "SLB, Coinbase And 2 Other Stocks Insiders Are Selling"
+  },
+  {
    "id": "2024-01-31-acc-cosecha-googl",
    "fecha": "2024-01-31",
    "simbolo": "GOOGL",
@@ -7315,6 +8003,14 @@
    "titular": "What's Going On With Bitcoin Mining Stocks Marathon Digital, CleanSpark, Coinbase, MicroStrategy, Riot Platforms On Monday?"
   },
   {
+   "id": "2024-07-16-ind-cosecha-iwm",
+   "fecha": "2024-07-16",
+   "simbolo": "IWM",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Rate-Sensitive Cyclical Stocks Poised For Rally As Fed Prepares To Cut Rates: 'We're On The Path To Goldilocks,' Says Bank Of America"
+  },
+  {
    "id": "2024-07-17-acc-cosecha-mrvl",
    "fecha": "2024-07-17",
    "simbolo": "MRVL",
@@ -7409,6 +8105,22 @@
    "categoria": "negativa",
    "mercado": "cripto",
    "titular": "Crypto Stocks Plunge as Bitcoin Dips Below $50K, Triggers $270B Market Value Decline"
+  },
+  {
+   "id": "2024-08-05-ind-cosecha-spy",
+   "fecha": "2024-08-05",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "As Global Markets Roil, Strategist Soothes Nerves: 'Some Normal Action Under The Surface' As 'Tech Got Way Ahead Of Itself' (CORRECTED)"
+  },
+  {
+   "id": "2024-08-05-ind-cosecha-dia",
+   "fecha": "2024-08-05",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Market Momentum: Your Weekly Financial Forecast"
   },
   {
    "id": "2024-08-06-acc-cosecha-uber",
@@ -7747,6 +8459,22 @@
    "titular": "10 Financials Stocks With Whale Alerts In Today's Session"
   },
   {
+   "id": "2024-12-18-ind-cosecha-spy",
+   "fecha": "2024-12-18",
+   "simbolo": "SPY",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "USA Housing Starts (MoM) For November; -1.8% Vs -3.2% YoY"
+  },
+  {
+   "id": "2024-12-18-ind-cosecha-dia",
+   "fecha": "2024-12-18",
+   "simbolo": "DIA",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "Stocks Slip Ahead Of Fed Meeting, Chipmakers Suffer From China's Threat, Bitcoin Spikes Above $107,000: What's Driving Markets Tuesday?"
+  },
+  {
    "id": "2024-12-19-acc-cosecha-mu",
    "fecha": "2024-12-19",
    "simbolo": "MU",
@@ -7923,6 +8651,14 @@
    "titular": "New Meme Coin Cocoro Launched By Dogecoin's IP Rights Holder"
   },
   {
+   "id": "2025-03-10-ind-cosecha-qqq",
+   "fecha": "2025-03-10",
+   "simbolo": "QQQ",
+   "categoria": "negativa",
+   "mercado": "indice",
+   "titular": "US Economic Slowdown 'Talk Of The Town,' Says Economist Mohamed El-Erian As Fed Chair Powell Reaffirms Growth At 'Solid Pace'"
+  },
+  {
    "id": "2025-03-13-acc-cosecha-intc",
    "fecha": "2025-03-13",
    "simbolo": "INTC",
@@ -8033,6 +8769,14 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Trump Tariffs Trigger Sell-Off: On Holding, AST SpaceMobile, Lululemon, Shopify, Robinhood Tank"
+  },
+  {
+   "id": "2025-04-03-pet-cosecha-uso",
+   "fecha": "2025-04-03",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "S&P 500 Futures, Crude Oil, Bitcoin Futures All Move Higher After President Trump Announces 10% Tariffs"
   },
   {
    "id": "2025-04-04-oro-cosecha-nem",
@@ -8459,6 +9203,14 @@
    "titular": "Citigroup Maintains Buy on Carvana, Lowers Price Target to $280"
   },
   {
+   "id": "2025-04-09-pet-cosecha-uso",
+   "fecha": "2025-04-09",
+   "simbolo": "USO",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "USA API Weekly Crude Oil Stock 1.057M Barrel Draw; 6.037M Barrel Build Prior"
+  },
+  {
    "id": "2025-04-16-oro-cosecha-iau",
    "fecha": "2025-04-16",
    "simbolo": "IAU",
@@ -8473,6 +9225,14 @@
    "categoria": "positiva",
    "mercado": "oro",
    "titular": "China's Central Bank's Gold Stash Spikes To 2,292 Tonnes And Beijing Is Still Buying"
+  },
+  {
+   "id": "2025-04-22-ind-cosecha-dia",
+   "fecha": "2025-04-22",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Tom Lee Says $1.4 Trillion Market Meltdown Matches Annual Trade Deficit, Presses White House To Fast-Track Deals"
   },
   {
    "id": "2025-05-01-acc-cosecha-msft",
@@ -8539,6 +9299,38 @@
    "titular": "Reported May 9, 2025: Shopify To Join The Nasdaq-100 Index Beginning May 19, 2025"
   },
   {
+   "id": "2025-05-12-ind-cosecha-spy",
+   "fecha": "2025-05-12",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Bill Ackman Slams Subsidies For Contributing To $37 Trillion National Debt, Hails Trump's Drug Price Order"
+  },
+  {
+   "id": "2025-05-12-ind-cosecha-qqq",
+   "fecha": "2025-05-12",
+   "simbolo": "QQQ",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Bill Ackman Slams Subsidies For Contributing To $37 Trillion National Debt, Hails Trump's Drug Price Order"
+  },
+  {
+   "id": "2025-05-12-ind-cosecha-dia",
+   "fecha": "2025-05-12",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Magnificent Seven Gain $700B After US-China Slash Tariffs, Gold Crashes: What's Driving Markets Monday?"
+  },
+  {
+   "id": "2025-05-12-ind-cosecha-iwm",
+   "fecha": "2025-05-12",
+   "simbolo": "IWM",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Magnificent Seven Gain $700B After US-China Slash Tariffs, Gold Crashes: What's Driving Markets Monday?"
+  },
+  {
    "id": "2025-05-13-cri-cosecha-coin",
    "fecha": "2025-05-13",
    "simbolo": "COIN",
@@ -8553,6 +9345,22 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Mullen Automotive, Applied Digital, MongoDB, Netflix, Tesla: Why These 5 Stocks Are On Investors' Radars Today"
+  },
+  {
+   "id": "2025-06-13-pet-cosecha-uso",
+   "fecha": "2025-06-13",
+   "simbolo": "USO",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "'Israel conducts airstrike in Iran'- Axios"
+  },
+  {
+   "id": "2025-06-23-pet-cosecha-uso",
+   "fecha": "2025-06-23",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Asia Markets Mixed, Europe Slips As Oil Hits $75 - Global Markets Today While US Slept"
   },
   {
    "id": "2025-06-27-acc-cosecha-nke",
@@ -8697,6 +9505,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "Pharma ETFs In A Tariff Storm: How Investors Can Hedge Risk"
+  },
+  {
+   "id": "2025-10-02-pet-cosecha-oxy",
+   "fecha": "2025-10-02",
+   "simbolo": "OXY",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Occidental Analyst Calls Possible OxyChem Sale A 'Big Bang' Move"
   },
   {
    "id": "2025-10-06-acc-cosecha-amd",
@@ -9243,6 +10059,22 @@
    "titular": "8 Information Technology Stocks With Whale Alerts In Today's Session"
   },
   {
+   "id": "2026-03-31-ind-cosecha-spy",
+   "fecha": "2026-03-31",
+   "simbolo": "SPY",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Fed's Williams Says Economic Growth Would Be Less Robust With Reduced AI Activity; Overall Household Balance Sheets Are In A Good Shape; Good Household Balance Sheets Largely Driven By Solid State Of Mortgage Market; Fed's 2024, 2025 Rate Cut Moves Were Very Constructive;  Monetary Policy Is In The Right Place"
+  },
+  {
+   "id": "2026-03-31-ind-cosecha-iwm",
+   "fecha": "2026-03-31",
+   "simbolo": "IWM",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Stocks Rise As Powell's Remarks Cool Rate Fears: What's Moving Markets Monday?"
+  },
+  {
    "id": "2026-04-01-acc-cosecha-nke",
    "fecha": "2026-04-01",
    "simbolo": "NKE",
@@ -9275,12 +10107,28 @@
    "titular": "Elon Musk Gives Intel The AI Foundry Stamp It's Been Chasing"
   },
   {
+   "id": "2026-04-08-ind-cosecha-dia",
+   "fecha": "2026-04-08",
+   "simbolo": "DIA",
+   "categoria": "positiva",
+   "mercado": "indice",
+   "titular": "Oil Surges To $115, Stocks Slide As Trump Deadline Looms: What's Moving Markets Tuesday?"
+  },
+  {
    "id": "2026-04-17-acc-cosecha-nflx",
    "fecha": "2026-04-17",
    "simbolo": "NFLX",
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Netflix, AMD, Navitas Semiconductor, Abbott Labs, And Nio: Why These 5 Stocks Are On Investors' Radars Today"
+  },
+  {
+   "id": "2026-04-17-pet-cosecha-uso",
+   "fecha": "2026-04-17",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "Hegseth Warns Iran To 'Choose Wisely,' But Gulf Officials Brace For 6-Month Slog To Reach Deal: What Do Prediction Markets Say?"
   },
   {
    "id": "2026-04-21-oro-cosecha-iau",
@@ -9363,6 +10211,14 @@
    "titular": "Robinhood Markets Expects To Invest Additional $100M This Year Over User Interface For Trump Accounts"
   },
   {
+   "id": "2026-04-29-pet-cosecha-uso",
+   "fecha": "2026-04-29",
+   "simbolo": "USO",
+   "categoria": "positiva",
+   "mercado": "petroleo",
+   "titular": "Bitcoin, Ethereum, XRP Slide, Dogecoin Flat As 'Fear' Sentiment Prevails: Analyst Expects BTC Bull Run Before 'Massive' Financial Crisis"
+  },
+  {
    "id": "2026-04-30-acc-cosecha-googl",
    "fecha": "2026-04-30",
    "simbolo": "GOOGL",
@@ -9433,6 +10289,14 @@
    "categoria": "positiva",
    "mercado": "accion",
    "titular": "AMD, Super Micro Computer, Intel, Arista Networks And Micron Technology: Why These 5 Stocks Are On Investors' Radars Today"
+  },
+  {
+   "id": "2026-05-06-pet-cosecha-uso",
+   "fecha": "2026-05-06",
+   "simbolo": "USO",
+   "categoria": "negativa",
+   "mercado": "petroleo",
+   "titular": "President Trump Posts On Truth Social \"..Great Progress has been made toward a Complete and Final Agreement with Representatives of Iran, we have mutually agreed that, while the Blockade will remain in full force and effect, Project Freedom (The Movement of Ships through the Strait of Hormuz) will be paused for a short period of time to see whether or not the Agreement can be finalized and signed...'"
   },
   {
    "id": "2026-05-08-acc-cosecha-intc",

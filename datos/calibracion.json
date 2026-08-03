@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:03:14+00:00",
+ "generado": "2026-08-03T06:03:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1621,6 +1621,28 @@
     "pct_real": -9.37,
     "cierre_base": 33.51,
     "cierre_final": 30.37,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d66d8a8f021121d9",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:03:55+00:00",
+   "titular": "A Look Into Southern Copper Inc's Price Over Earnings",
+   "simbolos": "SCCO",
+   "direccion_pct": 3.38,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "SCCO",
+    "pct_real": -8.45,
+    "cierre_base": 82.93,
+    "cierre_final": 75.92,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

@@ -1,5 +1,28 @@
 {
- "generado": "2026-08-03T10:47:14+00:00",
- "nota": "Libreta reiniciada para RE-VALIDAR los diales calibrados (volatilidad conectada). Los 449 casos con diales viejos quedaron en calibracion-diales-viejos.json.",
- "casos": []
+ "generado": "2026-08-03T14:54:47+00:00",
+ "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
+ "casos": [
+  {
+   "sim_id": "ed5caa741508d22a",
+   "origen": "historico",
+   "fecha": "2026-08-03T14:54:46+00:00",
+   "titular": "Peter Schiff Says Conditions Ripe for a 'Huge Rally' in Gold As Iran War Escalates, Here Are Some ETFs to Watch",
+   "simbolos": "IAU",
+   "direccion_pct": -2.1,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": -1.28,
+    "cierre_base": 77.26,
+    "cierre_final": 76.27,
+    "fecha_base": "2026-07-10",
+    "fecha_final": "2026-07-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  }
+ ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:09:19+00:00",
+ "generado": "2026-08-03T16:09:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1467,6 +1467,28 @@
     "pct_real": -9.79,
     "cierre_base": 43.37,
     "cierre_final": 39.12,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dc19c1cf3abcedcf",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:09:55+00:00",
+   "titular": "Is the Market Bullish or Bearish on Schlumberger?",
+   "simbolos": "SLB",
+   "direccion_pct": 13.15,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": -15.48,
+    "cierre_base": 39.21,
+    "cierre_final": 33.14,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

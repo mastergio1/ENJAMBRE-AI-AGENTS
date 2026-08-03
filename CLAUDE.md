@@ -7,7 +7,7 @@
 
 ## 1. VISIÓN
 
-**El Enjambre** es un simulador de escenarios del mercado bursátil: el usuario ingresa una noticia (ej. *"la Fed sube las tasas 50 puntos base"*) y observa en una escena 3D cómo 5.000 inversionistas simulados reaccionan — el pánico se contagia, las manadas se forman, el precio emerge. Al final recibe un reporte: dirección esperada, volatilidad y desglose de reacciones por tipo de inversionista.
+**El Enjambre** es un simulador de escenarios del mercado bursátil: el usuario ingresa una noticia (ej. *"la Fed sube las tasas 50 puntos base"*) y observa en una escena 3D cómo 10.000 inversionistas simulados reaccionan — el pánico se contagia, las manadas se forman, el precio emerge. Al final recibe un reporte: dirección esperada, volatilidad y desglose de reacciones por tipo de inversionista.
 
 - **Posicionamiento:** "el focus group sintético del mercado". Herramienta de simulación y educación. **NUNCA asesoría financiera** (restricción regulatoria CMF Chile — no usar lenguaje de recomendación de inversión en ninguna parte del producto).
 - **Cliente:** B2B — fintechs, educación financiera, medios económicos, gestores de activos.
@@ -22,7 +22,7 @@
 4. **Español primero.** Comentarios de código, mensajes de commit y explicaciones en español. Nombres de variables/funciones en inglés (convención estándar).
 5. **Simplicidad ante todo.** Prefiere la solución simple que funciona hoy sobre la arquitectura perfecta de mañana. Nada de microservicios, nada de sobre-ingeniería.
 6. **Performance 3D:** reutilizar geometrías y materiales (nunca crear objetos dentro de loops), vectores mutables con refs (`vec.lerp`, no `new Vector3` por frame), `pixelRatio` limitado a `Math.min(devicePixelRatio, 2)`. Objetivo: 60fps en móvil de gama media.
-7. **Presupuesto LLM:** máximo ~100-120 llamadas API por simulación. Si un diseño requiere más, rediseña.
+7. **Presupuesto LLM:** máximo ~100-120 llamadas API por simulación. Si un diseño requiere más, rediseña. *(Los 1.000 líderes NO llaman uno a uno: comparten ~110 "cerebros" —`engine/brains/reparto.py`— repartidos por arquetipo, así el costo por simulación se mantiene en el techo pase lo que pase.)*
 
 ## 3. ARQUITECTURA
 
@@ -46,29 +46,29 @@ enjambre/
 ```
 
 **Flujo de una simulación:**
-1. Usuario escribe titular → 2. Los 100 líderes LLM lo interpretan (paralelo, 1 llamada c/u) → 3. Cada líder emite señal ∈ [-1, +1] con justificación de una frase → 4. La señal se propaga por la red de influencia a los 4.900 agentes de reglas → 5. El motor corre N ticks; los agentes ponen órdenes; el precio emerge del libro de órdenes → 6. Cada tick se transmite por WebSocket al frontend → 7. Three.js anima el enjambre → 8. Al terminar, se genera el reporte.
+1. Usuario escribe titular → 2. Los 1.000 líderes LLM lo interpretan (compartiendo ~110 cerebros en paralelo) → 3. Cada líder emite señal ∈ [-1, +1] con justificación de una frase → 4. La señal se propaga por la red de influencia a los 9.000 agentes de reglas → 5. El motor corre N ticks; los agentes ponen órdenes; el precio emerge del libro de órdenes → 6. Cada tick se transmite por WebSocket al frontend → 7. Three.js anima el enjambre → 8. Al terminar, se genera el reporte.
 
 **Stack fijo:** Python + Mesa + FastAPI (motor) · API de Anthropic, modelo `claude-sonnet-5` (cerebros) + `claude-haiku-4-5` (portero) · Vite + Three.js + GSAP + Tailwind (frontend) · GitHub (`mastergio1`) + Vercel (deploy frontend).
 
-## 4. LA MEZCLA — 5.000 AGENTES
+## 4. LA MEZCLA — 10.000 AGENTES
 
-**Principio de diseño:** la *cantidad* de agentes representa personas; el *capital* representa poder de mercado. Los institucionales son pocos pero con capital ~50x, de modo que generen ~65-70% del volumen (calibrar). El retail domina en número (89%) pero pesa ~30-35% del volumen.
+**Principio de diseño:** la *cantidad* de agentes representa personas; el *capital* representa poder de mercado. Los institucionales son pocos pero con capital ~50x, de modo que generen ~65-70% del volumen (calibrar). El retail domina en número (~89%) pero pesa ~30-35% del volumen. *(La mezcla creció de 5.000 a 10.000 agentes —1.000 líderes + 9.000 resto— para un enjambre más impresionante y estadísticamente más estable; las proporciones se conservan. Ver §5 para cómo los 1.000 líderes respetan el presupuesto LLM.)*
 
 | # | Tipo | Cant. | Capital rel. | Rol |
 |---|------|------:|:---:|-----|
-| 1 | Fundamentalista / value institucional | 200 | 50x | Ancla el precio al valor "justo" |
-| 2 | Quant / momentum institucional | 120 | 40x | Sigue tendencias con disciplina |
-| 3 | Fondo pasivo / index | 80 | 60x | Compra constante, insensible a noticias |
-| 4 | Market maker | 5 | 100x | Liquidez: cotiza compra y venta siempre |
-| 5 | Ejecutor TWAP/VWAP | 15 | 30x | Ejecuta órdenes grandes en rebanadas |
-| 6 | Arbitrajista | 30 | 20x | Corrige ineficiencias rápido |
-| 7 | Noise trader retail | 2.000 | 1x | Ruido browniano de fondo |
-| 8 | Manada / imitador | 900 | 1x | Copia lo que hace su red |
-| 9 | FOMO / momentum retail | 600 | 1x | Persigue subidas, entra tarde |
-| 10 | Miedoso / aversión a pérdida | 500 | 1x | Vende rápido ante caídas |
-| 11 | Contrarian retail | 250 | 1.5x | Va contra la corriente |
-| 12 | Buy & hold pasivo | 200 | 2x | Casi nunca opera |
-| 13 | **Líder de opinión (LLM)** | **100** | 5x | Lee la noticia; su señal se propaga |
+| 1 | Fundamentalista / value institucional | 370 | 50x | Ancla el precio al valor "justo" |
+| 2 | Quant / momentum institucional | 220 | 40x | Sigue tendencias con disciplina |
+| 3 | Fondo pasivo / index | 150 | 60x | Compra constante, insensible a noticias |
+| 4 | Market maker | 9 | 100x | Liquidez: cotiza compra y venta siempre |
+| 5 | Ejecutor TWAP/VWAP | 28 | 30x | Ejecuta órdenes grandes en rebanadas |
+| 6 | Arbitrajista | 55 | 20x | Corrige ineficiencias rápido |
+| 7 | Noise trader retail | 3.670 | 1x | Ruido browniano de fondo |
+| 8 | Manada / imitador | 1.650 | 1x | Copia lo que hace su red |
+| 9 | FOMO / momentum retail | 1.100 | 1x | Persigue subidas, entra tarde |
+| 10 | Miedoso / aversión a pérdida | 920 | 1x | Vende rápido ante caídas |
+| 11 | Contrarian retail | 460 | 1.5x | Va contra la corriente |
+| 12 | Buy & hold pasivo | 368 | 2x | Casi nunca opera |
+| 13 | **Líder de opinión (LLM)** | **1.000** | 5x | Lee la noticia; su señal se propaga (comparten ~110 cerebros LLM) |
 
 ### Parámetros de comportamiento por tipo (agentes de reglas)
 
@@ -98,7 +98,9 @@ Cada agente se instancia con estos parámetros base ± ruido gaussiano (σ = 15%
 
 **12. Buy & hold (200):** Solo opera si el precio cae > 15% (compra "la oportunidad de la década") o ante necesidad aleatoria de liquidez (p≈0.001/tick). El resto del tiempo: nada. *Representa el capital dormido.*
 
-## 5. LOS 100 LÍDERES DE OPINIÓN (LLM) — ANÁLISIS DE PERSONALIDADES
+## 5. LOS 1.000 LÍDERES DE OPINIÓN (LLM) — ANÁLISIS DE PERSONALIDADES
+
+> **Presupuesto:** los 1.000 líderes se reparten ~110 cerebros LLM por arquetipo (`engine/brains/reparto.py`): cada cerebro es UNA llamada a la API, y los líderes de un mismo arquetipo la comparten en ronda. Así hay ~110 frases distintas (variedad de sobra para el hover) al costo de siempre (~$0.12/simulación). La diversidad vive en los 8 arquetipos + el muestreo del modelo, no en repetir 1.000 llamadas.
 
 Son los únicos agentes que leen la noticia real. Cada uno hace **una llamada** a la API con su prompt de personalidad + el titular, y responde SOLO con JSON:
 
@@ -189,9 +191,9 @@ Si un test falla, ajustar proporciones/parámetros de la sección 4, **no** hard
 ## 8. EL FRONTEND — REGLAS DE ORO
 
 - Estética Rubicón Lab: editorial, elegante, fondo tinta profunda, dorado como acento. Tipografías: Cormorant Garamond (display) + Jost (UI).
-- **Instanced rendering** para las partículas (1 draw call). El motor simula 5.000 agentes; la capa visual puede renderizar 10 partículas por agente (50.000) si el dispositivo lo permite — detectar capacidad y degradar elegante.
+- **Instanced rendering** para las partículas (1 draw call). El motor simula 10.000 agentes; la capa visual puede renderizar varias partículas por agente si el dispositivo lo permite — detectar capacidad y degradar elegante.
 - Mapeo visual: **color** = sentimiento (verde compra → rojo venta, con la paleta editorial, no colores puros saturados) · **posición/movimiento** = decisión y cluster de tipo · **tamaño** = capital.
-- Los 100 líderes se renderizan distintos (más grandes, con halo). Hover sobre un líder muestra su `frase`. *Este es el momento mágico del demo.*
+- Los 1.000 líderes se renderizan distintos (más grandes, con halo). Hover sobre un líder muestra su `frase`. *Este es el momento mágico del demo.*
 - 60fps en móvil gama media. Si baja de 45fps, reducir partículas automáticamente.
 - Accesibilidad: respetar `prefers-reduced-motion` (modo estático con gráfico 2D).
 

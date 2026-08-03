@@ -44,18 +44,18 @@ def test_flujo_completo_por_websocket():
         # 1) inicio: los 100 líderes con señal, confianza y frase
         inicio = json.loads(ws.receive_text())
         assert inicio["tipo"] == "inicio"
-        assert len(inicio["lideres"]) == 100
+        assert len(inicio["lideres"]) == 1000
         for lider in inicio["lideres"]:
             assert -1.0 <= lider["senal"] <= 1.0
             assert lider["frase"]
 
-        # 2) un frame binario por tick: cabecera (precio, tick) + 5000 bytes
+        # 2) un frame binario por tick: cabecera (precio, tick) + 10000 bytes
         total_ticks = server.TICKS_PREVIOS + server.TICKS_POSTERIORES
         precios = []
         for _ in range(total_ticks):
             frame = ws.receive_bytes()
             precio, tick = struct.unpack("<fI", frame[:8])
-            assert len(frame) == 8 + 5000
+            assert len(frame) == 8 + 10000
             precios.append(precio)
 
         # el titular negativo golpea el precio durante la reacción
@@ -84,5 +84,5 @@ def test_flujo_completo_por_websocket():
         conexion.close()
         assert guardada is not None
         assert guardada["titular"].startswith("Quiebra el segundo banco")
-        assert len(guardada["lideres"]) == 100
+        assert len(guardada["lideres"]) == 1000
         assert len(guardada["serie_precios"]) >= total_ticks

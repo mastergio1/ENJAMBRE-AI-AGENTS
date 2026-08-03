@@ -26,6 +26,7 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
 
     import server
     from agents.lider import LiderOpinion
+    from brains import reparto
     from brains.cerebro import analizar_titular
     from model import MercadoEnjambre
 
@@ -34,7 +35,9 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
     modelo = MercadoEnjambre(seed=seed, ticks_horizonte=server.TICKS_CALENTAMIENTO + server.TICKS_POSTERIORES)
     modelo.correr(server.TICKS_CALENTAMIENTO)
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
-    respuestas = analizar_titular(titular, [(l.unique_id, l.arquetipo) for l in lideres])
+    # 1000 líderes comparten ~110 cerebros (presupuesto de la biblia)
+    consultas, asignacion = reparto.planificar(lideres, lambda uid: uid)
+    respuestas = reparto.expandir(analizar_titular(titular, consultas), asignacion)
     # el enjambre razona el TIPO de mercado y aplica su personalidad
     perfil = perfil_de(clasificar(titular))
 

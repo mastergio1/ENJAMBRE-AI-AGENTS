@@ -5,7 +5,8 @@ corre el mercado real (5.000 agentes), hace que los 100 líderes lean la
 noticia (LLM con fallback) y transmite cada tick al frontend:
 
 - mensaje de texto "inicio": las respuestas de los líderes
-- un frame binario por tick: [precio f32][tick u32][sentimiento i8 × 5000]
+- un frame binario por tick: [precio f32][tick u32][sentimiento i8 × N_agentes]
+  (N_agentes es dinámico: len(agentes_ordenados) — hoy 10.000)
 - mensaje de texto "fin": el reporte de la simulación
 
 El sentimiento por agente viaja como un byte (-127..127): la escena 3D
@@ -230,13 +231,17 @@ async def canal(ws: WebSocket) -> None:
 async def _leer_titular_en_vivo(modelo, lideres, titular, candado, semilla) -> list[dict]:
     """Los líderes leen una noticia y se inyecta al modelo EN VIVO (sin
     frenar el latido). El candado evita chocar con el step en curso."""
+    from brains import reparto
     from brains.mercado import clasificar_async, perfil_de
 
-    consultas = [(_semilla_lider(semilla, lider.unique_id), lider.arquetipo) for lider in lideres]
-    respuestas, tipo = await asyncio.gather(  # lento: sin candado
+    # 1000 líderes comparten ~110 cerebros (presupuesto de la biblia)
+    consultas, asignacion = reparto.planificar(
+        lideres, lambda uid: _semilla_lider(semilla, uid))
+    respuestas_cerebros, tipo = await asyncio.gather(  # lento: sin candado
         analizar_titular_async(titular, consultas),
         clasificar_async(titular),
     )
+    respuestas = reparto.expandir(respuestas_cerebros, asignacion)
     async with candado:
         await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas, perfil_de(tipo))
     return respuestas
@@ -335,15 +340,19 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
     modelo = await asyncio.to_thread(_crear_mercado, semilla)
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
 
-    # los 100 líderes leen el titular Y se clasifica el tipo de mercado, en
-    # paralelo (la clasificación es 1 llamada barata a Haiku, sin latencia extra)
+    # los 1000 líderes leen el titular (compartiendo ~110 cerebros de IA, según
+    # el presupuesto de la biblia) Y se clasifica el tipo de mercado, en paralelo
+    # (la clasificación es 1 llamada barata a Haiku, sin latencia extra)
+    from brains import reparto
     from brains.mercado import clasificar_async, perfil_de
 
-    consultas = [(_semilla_lider(semilla, lider.unique_id), lider.arquetipo) for lider in lideres]
-    respuestas, tipo_mercado = await asyncio.gather(
+    consultas, asignacion = reparto.planificar(
+        lideres, lambda uid: _semilla_lider(semilla, uid))
+    respuestas_cerebros, tipo_mercado = await asyncio.gather(
         analizar_titular_async(titular, consultas),
         clasificar_async(titular),
     )
+    respuestas = reparto.expandir(respuestas_cerebros, asignacion)
     perfil = perfil_de(tipo_mercado)
 
     await ws.send_text(json.dumps({

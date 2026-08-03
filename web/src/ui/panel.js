@@ -48,7 +48,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
       <canvas id="sparkline" width="180" height="44"></canvas>
       <div class="hud-datos">
         <span id="hud-precio">100.00</span>
-        <span id="hud-detalle">5.000 inversionistas · 60 fps</span>
+        <span id="hud-detalle">10.000 inversionistas · 60 fps</span>
       </div>
     </div>
 
@@ -105,7 +105,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
     // muestra como parte del show, no como una pantalla colgada
     fijarLeyendo(activo) {
       btnSoltar.disabled = activo
-      if (activo) btnSoltar.textContent = 'Los 100 líderes están leyendo…'
+      if (activo) btnSoltar.textContent = 'Los 1.000 líderes están leyendo…'
       else btnSoltar.textContent = enObservatorio ? 'Soltar noticia encima' : 'Soltar al enjambre'
     },
     mostrarTooltip(lider, x, y) {

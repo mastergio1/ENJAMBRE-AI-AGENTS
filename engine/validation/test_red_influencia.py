@@ -13,21 +13,23 @@ def modelo():
 
 
 def test_lideres_tienen_seguidores_segun_arquetipo(modelo):
-    """Cada líder arrastra entre 20 y ~150 seguidores (más los mínimos
-    garantizados de manada/FOMO que exige la sección 4)."""
+    """Cada líder arrastra un puñado de seguidores (mínimo por arquetipo 12,
+    más los mínimos garantizados de manada/FOMO que exige la sección 4)."""
     lideres = [a for a in modelo.agents if isinstance(a, LiderOpinion)]
-    assert len(lideres) == 100
+    assert len(lideres) == 1000
     for lider in lideres:
-        assert len(lider.seguidores) >= 20
+        assert len(lider.seguidores) >= 12
 
 
 def test_red_scale_free_pocos_hubs(modelo):
-    """Pocos nodos muy conectados, muchos poco conectados."""
+    """Pocos nodos muy conectados, muchos poco conectados: el decil más
+    popular de líderes concentra bastante más audiencia que la cuota uniforme."""
     lideres = [a for a in modelo.agents if isinstance(a, LiderOpinion)]
     seguidores = sorted((len(l.seguidores) for l in lideres), reverse=True)
-    top10 = sum(seguidores[:10])
+    decil = max(1, len(lideres) // 10)
+    top = sum(seguidores[:decil])
     total = sum(seguidores)
-    assert top10 / total > 0.15  # el 10% más popular concentra audiencia
+    assert top / total > 0.15  # el 10% más popular concentra > su cuota (0.10)
 
 
 def test_retail_tiene_pares_horizontales(modelo):

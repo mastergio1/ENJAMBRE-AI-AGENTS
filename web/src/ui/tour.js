@@ -5,13 +5,13 @@ const CLAVE = 'enjambre-tour-visto'
 
 const PASOS = [
   { sel: '#form-noticia', titulo: 'Escribe una noticia',
-    texto: 'Cualquier titular del mercado. Los 5.000 inversionistas simulados la leerán y reaccionarán en vivo.' },
+    texto: 'Cualquier titular del mercado. Los 10.000 inversionistas simulados la leerán y reaccionarán en vivo.' },
   { sel: '.chips', titulo: 'O usa un ejemplo listo',
     texto: 'Escenarios preparados para soltar con un toque.' },
   { sel: '.hud', titulo: 'El pulso del mercado',
     texto: 'El precio simulado late aquí, con su mini-gráfico.' },
   { sel: '#escena', titulo: 'Los faros dorados', centrado: true,
-    texto: 'Son los 100 líderes de opinión con IA. Toca uno para leer su frase. Puedes girar la escena arrastrando y acercarte con dos dedos (o la rueda).' },
+    texto: 'Son los 1.000 líderes de opinión con IA. Toca uno para leer su frase. Puedes girar la escena arrastrando y acercarte con dos dedos (o la rueda).' },
   { sel: '.navegacion', titulo: 'Y para moverte',
     texto: 'El muro trae las noticias del día ya simuladas; el archivo guarda la historia; el duelo enfrenta dos escenarios.' },
 ]

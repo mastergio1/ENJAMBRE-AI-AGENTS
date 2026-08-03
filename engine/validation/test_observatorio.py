@@ -30,7 +30,7 @@ def test_el_enjambre_no_se_congela_tras_la_noticia():
     m = MercadoEnjambre(seed=42, ticks_horizonte=400)
     m.correr(80)
     m.aplicar_titular("Amazon sube 15% tras resultados excelentes",
-                      respuestas=[{"senal": 0.8, "confianza": 0.9, "frase": "x"}] * 100)
+                      respuestas=[{"senal": 0.8, "confianza": 0.9, "frase": "x"}] * 1000)
     m.correr(120)
     # el mercado sigue moviéndose bien pasada la reacción (no está estancado)
     retornos_tardios = m.retornos[-30:]
@@ -42,7 +42,7 @@ def test_el_animo_se_desvanece_hacia_la_calma():
     m = MercadoEnjambre(seed=7, ticks_horizonte=400)
     m.correr(60)
     m.aplicar_titular("Pánico: quiebra un banco enorme",
-                      respuestas=[{"senal": -0.9, "confianza": 0.9, "frase": "x"}] * 100)
+                      respuestas=[{"senal": -0.9, "confianza": 0.9, "frase": "x"}] * 1000)
     animo_inicial = abs(m.sentimiento)
     m.correr(80)
     assert abs(m.sentimiento) < animo_inicial * 0.2  # se desvaneció
@@ -53,11 +53,11 @@ def test_se_puede_soltar_una_segunda_noticia_encima():
     m = MercadoEnjambre(seed=3, ticks_horizonte=500)
     m.correr(60)
     m.aplicar_titular("Quiebra un banco; pánico en el mercado",
-                      respuestas=[{"senal": -0.8, "confianza": 0.9, "frase": "x"}] * 100)
+                      respuestas=[{"senal": -0.8, "confianza": 0.9, "frase": "x"}] * 1000)
     m.correr(60)  # se apaga
     assert abs(m.sentimiento) < 0.2
     m.aplicar_titular("La bolsa alcanza máximo histórico tras ganancias récord",
-                      respuestas=[{"senal": 0.9, "confianza": 0.9, "frase": "x"}] * 100)
+                      respuestas=[{"senal": 0.9, "confianza": 0.9, "frase": "x"}] * 1000)
     assert m.sentimiento > 0.3  # la nueva noticia lo reactivó
 
 
@@ -91,10 +91,10 @@ def test_observatorio_late_y_recibe_una_noticia_encima():
                     arranque_visto = True
                 elif dato["tipo"] == "inicio":
                     inicio_visto = True
-                    assert len(dato["lideres"]) == 100
+                    assert len(dato["lideres"]) == 1000
             elif m.get("bytes"):
                 frames += 1
-                assert len(m["bytes"]) == 8 + 5000
+                assert len(m["bytes"]) == 8 + 10000
             if arranque_visto and inicio_visto and frames > 8:
                 break
 

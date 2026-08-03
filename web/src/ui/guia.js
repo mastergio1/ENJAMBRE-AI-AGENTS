@@ -12,7 +12,7 @@ const CONTENIDO = `
   <p class="guia-eyebrow">Guía rápida · 1 minuto</p>
   <h2 id="guia-titulo">¿Cómo funciona El Enjambre?</h2>
   <p class="guia-intro">
-    El Enjambre es un <strong>simulador</strong>: 5.000 inversionistas de mentira
+    El Enjambre es un <strong>simulador</strong>: 10.000 inversionistas de mentira
     —hechos con inteligencia artificial— leen una noticia y reaccionan como lo
     haría una multitud real. No adivina el futuro del mercado: te muestra
     <strong>cómo se comporta una manada</strong> cuando llega una noticia.
@@ -25,7 +25,7 @@ const CONTENIDO = `
     <ol class="guia-pasos">
       <li><span class="n">1</span><span class="t">Escribe un titular abajo (o toca uno de los ejemplos). Ej: <em>«la Fed sube las tasas»</em>.</span></li>
       <li><span class="n">2</span><span class="t">Toca <strong>«Soltar al enjambre»</strong>.</span></li>
-      <li><span class="n">3</span><span class="t">Mira reaccionar a los 5.000 en vivo. Al terminar, aparece un pequeño reporte.</span></li>
+      <li><span class="n">3</span><span class="t">Mira reaccionar a los 10.000 en vivo. Al terminar, aparece un pequeño reporte.</span></li>
     </ol>
   </section>
 

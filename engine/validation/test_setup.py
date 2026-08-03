@@ -15,10 +15,10 @@ def cargar_config() -> dict:
         return json.load(f)
 
 
-def test_la_mezcla_suma_5000_agentes():
+def test_la_mezcla_suma_10000_agentes():
     config = cargar_config()
     total = sum(t["cantidad"] for t in config["tipos"])
-    assert total == config["total_agentes"] == 5000
+    assert total == config["total_agentes"] == 10000
 
 
 def test_hay_13_tipos_de_agentes():
@@ -26,11 +26,11 @@ def test_hay_13_tipos_de_agentes():
     assert len(config["tipos"]) == 13
 
 
-def test_los_arquetipos_de_lideres_suman_100():
+def test_los_arquetipos_de_lideres_suman_1000():
     config = cargar_config()
     lideres = next(t for t in config["tipos"] if t["id"] == "lider_opinion")
     total_arquetipos = sum(a["cantidad"] for a in lideres["arquetipos"])
-    assert total_arquetipos == lideres["cantidad"] == 100
+    assert total_arquetipos == lideres["cantidad"] == 1000
     assert len(lideres["arquetipos"]) == 8
 
 

@@ -7,7 +7,9 @@ import * as THREE from 'three'
 import { Enjambre } from '../swarm/enjambre.js'
 import { urlApi } from '../ui/conexion.js'
 
-const TAMANO_FRAME = 8 + 5000
+// Debe coincidir con el motor (engine/config/agentes.json): un i8 por agente.
+const N_AGENTES = 10000
+const TAMANO_FRAME = 8 + N_AGENTES
 const COLOR_A = '#6fa89e' // teal — el río (primer enjambre)
 const COLOR_B = '#d99a9a' // rosa — para distinguir el segundo enjambre
 
@@ -22,7 +24,7 @@ function framesDe(buffer) {
       const base = Math.min(i, total - 1) * TAMANO_FRAME
       return {
         precio: new DataView(buffer, base, 8).getFloat32(0, true),
-        sent: new Int8Array(buffer, base + 8, 5000),
+        sent: new Int8Array(buffer, base + 8, N_AGENTES),
       }
     },
   }

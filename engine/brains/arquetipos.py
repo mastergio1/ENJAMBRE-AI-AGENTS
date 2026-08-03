@@ -17,8 +17,8 @@ ARQUETIPOS = [
     {
         "id": "institucional_frio",
         "nombre": "El Institucional Frío",
-        "cantidad": 15,
-        "seguidores": (20, 60),
+        "cantidad": 150,
+        "seguidores": (12, 40),
         "sigue": ["buy_and_hold", "contrarian"],
         "prompt": (
             "Eres un director de inversiones institucional con décadas de experiencia. "
@@ -30,8 +30,8 @@ ARQUETIPOS = [
     {
         "id": "quant_esceptico",
         "nombre": "El Quant Escéptico",
-        "cantidad": 10,
-        "seguidores": (20, 50),
+        "cantidad": 100,
+        "seguidores": (12, 35),
         "sigue": ["contrarian", "noise_trader"],
         "prompt": (
             "Eres un quant escéptico, PhD en física. Tu tesis: el mercado sobre-reacciona "
@@ -43,8 +43,8 @@ ARQUETIPOS = [
     {
         "id": "fomo_evangelista",
         "nombre": "El FOMO Evangelista",
-        "cantidad": 15,
-        "seguidores": (80, 150),
+        "cantidad": 150,
+        "seguidores": (40, 90),
         "sigue": ["fomo", "manada"],
         "prompt": (
             "Eres un influencer financiero viral de 28 años con 500 mil seguidores. "
@@ -56,8 +56,8 @@ ARQUETIPOS = [
     {
         "id": "doomer",
         "nombre": "El Doomer",
-        "cantidad": 15,
-        "seguidores": (40, 100),
+        "cantidad": 150,
+        "seguidores": (25, 60),
         "sigue": ["miedoso"],
         "prompt": (
             "Eres un analista permanentemente bajista que predijo el 2008. En toda "
@@ -69,8 +69,8 @@ ARQUETIPOS = [
     {
         "id": "contrarian_sabio",
         "nombre": "El Contrarian Sabio",
-        "cantidad": 10,
-        "seguidores": (20, 60),
+        "cantidad": 100,
+        "seguidores": (12, 40),
         "sigue": ["contrarian"],
         "prompt": (
             "Eres un inversionista contrarian veterano, estilo Buffett/Marks. Ante cada "
@@ -82,8 +82,8 @@ ARQUETIPOS = [
     {
         "id": "macro_trader",
         "nombre": "El Macro Trader",
-        "cantidad": 10,
-        "seguidores": (30, 80),
+        "cantidad": 100,
+        "seguidores": (20, 50),
         "sigue": ["manada", "noise_trader"],
         "prompt": (
             "Eres un macro trader global, ex-banco central. Traduces toda noticia a: "
@@ -95,8 +95,8 @@ ARQUETIPOS = [
     {
         "id": "influencer_optimista",
         "nombre": "El Influencer Retail Optimista",
-        "cantidad": 15,
-        "seguidores": (80, 150),
+        "cantidad": 150,
+        "seguidores": (40, 90),
         "sigue": ["manada", "noise_trader"],
         "prompt": (
             "Eres un creador de contenido de finanzas personales optimista. Tu filosofía: "
@@ -108,8 +108,8 @@ ARQUETIPOS = [
     {
         "id": "value_paciente",
         "nombre": "El Value Paciente",
-        "cantidad": 10,
-        "seguidores": (20, 50),
+        "cantidad": 100,
+        "seguidores": (12, 35),
         "sigue": ["buy_and_hold"],
         "prompt": (
             "Eres un gestor value de cartera concentrada y rotación mínima. El 80% de "

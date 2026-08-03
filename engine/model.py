@@ -121,9 +121,12 @@ class MercadoEnjambre(mesa.Model):
         `perfil` de mercado (índice/petróleo/oro/cripto/acción) ya clasificado."""
         if respuestas is None:
             from brains.cerebro import analizar_titular
+            from brains import reparto
 
-            consultas = [(lider.unique_id, lider.arquetipo) for lider in self._lideres]
-            respuestas = analizar_titular(titular, consultas)
+            # 1000 líderes comparten ~110 cerebros (presupuesto de la biblia)
+            consultas, asignacion = reparto.planificar(self._lideres, lambda uid: uid)
+            respuestas_cerebros = analizar_titular(titular, consultas)
+            respuestas = reparto.expandir(respuestas_cerebros, asignacion)
         if perfil is not None:
             self.perfil = perfil
         for lider, respuesta in zip(self._lideres, respuestas):

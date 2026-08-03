@@ -26,7 +26,7 @@ def entorno_sin_api(monkeypatch, tmp_path):
     monkeypatch.setattr(cerebro, "RUTA_CACHE", tmp_path / "cache.json")
 
 
-def _cien_lideres() -> list[tuple[int, str]]:
+def _todos_los_lideres() -> list[tuple[int, str]]:
     consultas = []
     indice = 0
     for arquetipo in ARQUETIPOS:
@@ -36,9 +36,9 @@ def _cien_lideres() -> list[tuple[int, str]]:
     return consultas
 
 
-def test_fallback_responde_por_los_100_lideres():
-    respuestas = analizar_titular(TITULAR_NEGATIVO, _cien_lideres())
-    assert len(respuestas) == 100
+def test_fallback_responde_por_todos_los_lideres():
+    respuestas = analizar_titular(TITULAR_NEGATIVO, _todos_los_lideres())
+    assert len(respuestas) == 1000
     for r in respuestas:
         assert -1.0 <= r["senal"] <= 1.0
         assert 0.0 <= r["confianza"] <= 1.0
@@ -48,9 +48,9 @@ def test_fallback_responde_por_los_100_lideres():
 
 def test_los_arquetipos_tienen_personalidad():
     """Ante la misma noticia negativa, cada arquetipo reacciona a su manera."""
-    respuestas = analizar_titular(TITULAR_NEGATIVO, _cien_lideres())
+    respuestas = analizar_titular(TITULAR_NEGATIVO, _todos_los_lideres())
     por_arquetipo: dict[str, list[float]] = {}
-    for (_, arq), r in zip(_cien_lideres(), respuestas):
+    for (_, arq), r in zip(_todos_los_lideres(), respuestas):
         por_arquetipo.setdefault(arq, []).append(r["senal"])
     medias = {a: statistics.mean(s) for a, s in por_arquetipo.items()}
 
@@ -69,8 +69,8 @@ def test_cache_guarda_la_api_pero_no_el_fallback():
     from brains.cerebro import _clave_cache
 
     # sin API, la segunda corrida vuelve a intentar (fuente = fallback, no cache)…
-    primera = analizar_titular(TITULAR_NEGATIVO, _cien_lideres())
-    segunda = analizar_titular(TITULAR_NEGATIVO, _cien_lideres())
+    primera = analizar_titular(TITULAR_NEGATIVO, _todos_los_lideres())
+    segunda = analizar_titular(TITULAR_NEGATIVO, _todos_los_lideres())
     assert all(r["fuente"] == "fallback" for r in segunda)
     # …pero el fallback es determinístico por semilla: mismos valores
     assert [r["senal"] for r in primera] == [r["senal"] for r in segunda]

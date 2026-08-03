@@ -1,12 +1,12 @@
 {
-  "descripcion": "La mezcla de 5.000 agentes de El Enjambre. Cantidad = personas; capital relativo = poder de mercado. Ver CLAUDE.md sección 4.",
-  "total_agentes": 5000,
+  "descripcion": "La mezcla de 10.000 agentes de El Enjambre (1000 líderes + 9000 resto). Cantidad = personas; capital relativo = poder de mercado. Ver CLAUDE.md sección 4. Los 1000 líderes se reparten ~100 cerebros de IA (brains/reparto.py) para respetar el presupuesto de ~100-120 llamadas por simulación.",
+  "total_agentes": 10000,
   "ruido_parametros_sigma": 0.15,
   "tipos": [
     {
       "id": "fundamentalista",
       "nombre": "Fundamentalista / value institucional",
-      "cantidad": 200,
+      "cantidad": 370,
       "capital_relativo": 50,
       "en_red_social": false,
       "rol": "Ancla el precio al valor justo",
@@ -20,7 +20,7 @@
     {
       "id": "quant_momentum",
       "nombre": "Quant / momentum institucional",
-      "cantidad": 120,
+      "cantidad": 220,
       "capital_relativo": 40,
       "en_red_social": false,
       "rol": "Sigue tendencias con disciplina",
@@ -33,7 +33,7 @@
     {
       "id": "fondo_pasivo",
       "nombre": "Fondo pasivo / index",
-      "cantidad": 80,
+      "cantidad": 150,
       "capital_relativo": 60,
       "en_red_social": false,
       "rol": "Compra constante, insensible a noticias",
@@ -45,7 +45,7 @@
     {
       "id": "market_maker",
       "nombre": "Market maker",
-      "cantidad": 5,
+      "cantidad": 9,
       "capital_relativo": 100,
       "en_red_social": false,
       "rol": "Liquidez: cotiza compra y venta siempre",
@@ -57,7 +57,7 @@
     {
       "id": "ejecutor_twap",
       "nombre": "Ejecutor TWAP/VWAP",
-      "cantidad": 15,
+      "cantidad": 28,
       "capital_relativo": 30,
       "en_red_social": false,
       "rol": "Ejecuta órdenes grandes en rebanadas",
@@ -66,7 +66,7 @@
     {
       "id": "arbitrajista",
       "nombre": "Arbitrajista",
-      "cantidad": 30,
+      "cantidad": 55,
       "capital_relativo": 20,
       "en_red_social": false,
       "rol": "Corrige ineficiencias rápido",
@@ -77,7 +77,7 @@
     {
       "id": "noise_trader",
       "nombre": "Noise trader retail",
-      "cantidad": 2000,
+      "cantidad": 3670,
       "capital_relativo": 1,
       "en_red_social": true,
       "rol": "Ruido browniano de fondo",
@@ -90,7 +90,7 @@
     {
       "id": "manada",
       "nombre": "Manada / imitador",
-      "cantidad": 900,
+      "cantidad": 1650,
       "capital_relativo": 1,
       "en_red_social": true,
       "rol": "Copia lo que hace su red",
@@ -102,7 +102,7 @@
     {
       "id": "fomo",
       "nombre": "FOMO / momentum retail",
-      "cantidad": 600,
+      "cantidad": 1100,
       "capital_relativo": 1,
       "en_red_social": true,
       "rol": "Persigue subidas, entra tarde",
@@ -117,7 +117,7 @@
     {
       "id": "miedoso",
       "nombre": "Miedoso / aversión a pérdida",
-      "cantidad": 500,
+      "cantidad": 920,
       "capital_relativo": 1,
       "en_red_social": true,
       "rol": "Vende rápido ante caídas",
@@ -130,7 +130,7 @@
     {
       "id": "contrarian",
       "nombre": "Contrarian retail",
-      "cantidad": 250,
+      "cantidad": 460,
       "capital_relativo": 1.5,
       "en_red_social": true,
       "rol": "Va contra la corriente",
@@ -143,7 +143,7 @@
     {
       "id": "buy_and_hold",
       "nombre": "Buy & hold pasivo",
-      "cantidad": 200,
+      "cantidad": 368,
       "capital_relativo": 2,
       "en_red_social": false,
       "rol": "Casi nunca opera",
@@ -155,19 +155,19 @@
     {
       "id": "lider_opinion",
       "nombre": "Líder de opinión (LLM)",
-      "cantidad": 100,
+      "cantidad": 1000,
       "capital_relativo": 5,
       "en_red_social": true,
-      "rol": "Lee la noticia; su señal se propaga",
+      "rol": "Lee la noticia; su señal se propaga (1000 líderes, ~100 cerebros de IA — ver brains/reparto.py)",
       "arquetipos": [
-        { "id": "institucional_frio", "nombre": "El Institucional Frío", "cantidad": 15, "seguidores_rango": [20, 60] },
-        { "id": "quant_esceptico", "nombre": "El Quant Escéptico", "cantidad": 10, "seguidores_rango": [20, 50] },
-        { "id": "fomo_evangelista", "nombre": "El FOMO Evangelista", "cantidad": 15, "seguidores_rango": [80, 150] },
-        { "id": "doomer", "nombre": "El Doomer", "cantidad": 15, "seguidores_rango": [40, 100] },
-        { "id": "contrarian_sabio", "nombre": "El Contrarian Sabio", "cantidad": 10, "seguidores_rango": [20, 60] },
-        { "id": "macro_trader", "nombre": "El Macro Trader", "cantidad": 10, "seguidores_rango": [30, 80] },
-        { "id": "influencer_optimista", "nombre": "El Influencer Retail Optimista", "cantidad": 15, "seguidores_rango": [80, 150] },
-        { "id": "value_paciente", "nombre": "El Value Paciente", "cantidad": 10, "seguidores_rango": [20, 50] }
+        { "id": "institucional_frio", "nombre": "El Institucional Frío", "cantidad": 150, "seguidores_rango": [12, 40] },
+        { "id": "quant_esceptico", "nombre": "El Quant Escéptico", "cantidad": 100, "seguidores_rango": [12, 35] },
+        { "id": "fomo_evangelista", "nombre": "El FOMO Evangelista", "cantidad": 150, "seguidores_rango": [40, 90] },
+        { "id": "doomer", "nombre": "El Doomer", "cantidad": 150, "seguidores_rango": [25, 60] },
+        { "id": "contrarian_sabio", "nombre": "El Contrarian Sabio", "cantidad": 100, "seguidores_rango": [12, 40] },
+        { "id": "macro_trader", "nombre": "El Macro Trader", "cantidad": 100, "seguidores_rango": [20, 50] },
+        { "id": "influencer_optimista", "nombre": "El Influencer Retail Optimista", "cantidad": 150, "seguidores_rango": [40, 90] },
+        { "id": "value_paciente", "nombre": "El Value Paciente", "cantidad": 100, "seguidores_rango": [12, 35] }
       ]
     }
   ]

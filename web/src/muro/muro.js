@@ -6,7 +6,12 @@
 
 import { claveAcceso, urlApi } from '../ui/conexion.js'
 
-const TAMANO_FRAME = 8 + 5000 // [precio f32][tick u32][sentimiento i8 × 5000]
+// Debe coincidir con el motor (engine/config/agentes.json): un sentimiento
+// i8 por agente. Los frames guardados son efímeros (el disco de Render se
+// borra en cada deploy y el despertador los regenera al tamaño actual), así
+// que aquí siempre es el tamaño vigente.
+const N_AGENTES = 10000
+const TAMANO_FRAME = 8 + N_AGENTES // [precio f32][tick u32][sentimiento i8 × N]
 const TARJETAS_VISIBLES = 12
 
 // La firma de autoría "Creada por Rubicón Lab" (manual de marca §10).
@@ -61,7 +66,7 @@ export class ReproductorReplay {
       }
       const base = cuadro * TAMANO_FRAME
       const vista = new DataView(this.buffer, base, 8)
-      const sentimientos = new Int8Array(this.buffer, base + 8, 5000)
+      const sentimientos = new Int8Array(this.buffer, base + 8, N_AGENTES)
       this.enjambre.aplicarEstadoRemoto(vista.getFloat32(0, true), sentimientos)
       cuadro++
     }, 80)

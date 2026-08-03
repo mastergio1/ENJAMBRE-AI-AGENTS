@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:35:05+00:00",
+ "generado": "2026-08-03T08:35:42+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6026,6 +6026,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2d78dc2455f15367",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:35:41+00:00",
+   "titular": "Trump Says We're Looking At Putting As Much As 75M Barrels Into The Strategic Petroleum Reserves, That Would Top It Out",
+   "simbolos": "USO",
+   "direccion_pct": -5.04,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -33.07,
+    "cierre_base": 30.0,
+    "cierre_final": 20.08,
+    "fecha_base": "2020-04-20",
+    "fecha_final": "2020-04-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

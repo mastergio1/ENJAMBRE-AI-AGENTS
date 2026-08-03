@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:10:06+00:00",
+ "generado": "2026-08-03T15:10:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -355,28 +355,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "3287f0ad2210a5c0",
-   "origen": "historico",
-   "fecha": "2026-08-03T15:09:17+00:00",
-   "titular": "Market Bounces From Low Band Of Support Zone - Deal Narrative Takes Hold — Risk Mispriced",
-   "simbolos": "GLD",
-   "direccion_pct": -0.28,
-   "volatilidad_pct": 1.4,
-   "reaccion_real": {
-    "simbolo": "GLD",
-    "pct_real": 5.61,
-    "cierre_base": 414.58,
-    "cierre_final": 437.82,
-    "fecha_base": "2026-03-30",
-    "fecha_final": "2026-04-01",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "positiva",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "3099367b115d1933",
    "origen": "historico",
    "fecha": "2026-08-03T15:10:06+00:00",
@@ -389,6 +367,28 @@
     "pct_real": 11.91,
     "cierre_base": 85.79,
     "cierre_final": 96.01,
+    "fecha_base": "2026-03-30",
+    "fecha_final": "2026-04-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3287f0ad2210a5c0",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:10:46+00:00",
+   "titular": "Market Bounces From Low Band Of Support Zone - Deal Narrative Takes Hold — Risk Mispriced",
+   "simbolos": "SLV",
+   "direccion_pct": -0.28,
+   "volatilidad_pct": 1.4,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": 7.27,
+    "cierre_base": 63.52,
+    "cierre_final": 68.14,
     "fecha_base": "2026-03-30",
     "fecha_final": "2026-04-01",
     "ruedas": 2,

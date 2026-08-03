@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:38:30+00:00",
+ "generado": "2026-08-03T15:39:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -941,6 +941,28 @@
     "cierre_final": 356.59,
     "fecha_base": "2024-11-08",
     "fecha_final": "2024-11-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a6e644ba56d0156d",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:39:15+00:00",
+   "titular": "Robinhood's Election Contracts Hit 200 Million Trades On Election Day",
+   "simbolos": "COIN",
+   "direccion_pct": 3.88,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 31.77,
+    "cierre_base": 193.96,
+    "cierre_final": 255.58,
+    "fecha_base": "2024-11-05",
+    "fecha_final": "2024-11-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

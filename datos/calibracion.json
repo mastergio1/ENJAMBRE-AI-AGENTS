@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:34:23+00:00",
+ "generado": "2026-08-03T09:34:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7737,6 +7737,28 @@
     "pct_real": -3.54,
     "cierre_base": 189.67,
     "cierre_final": 182.96,
+    "fecha_base": "2022-09-12",
+    "fecha_final": "2022-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a321f05bede7a747",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:34:56+00:00",
+   "titular": "Stocks sink the most since June 2020 after hotter-than-expected inflation report",
+   "simbolos": "QQQ",
+   "direccion_pct": 3.37,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -4.73,
+    "cierre_base": 310.74,
+    "cierre_final": 296.03,
     "fecha_base": "2022-09-12",
     "fecha_final": "2022-09-14",
     "ruedas": 2,

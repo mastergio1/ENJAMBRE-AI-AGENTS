@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:04:38+00:00",
+ "generado": "2026-08-03T06:09:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1670,6 +1670,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d98f97cf1629b771",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:09:25+00:00",
+   "titular": "Peter Schiff Says 'Cutting Taxes Is Easy' But Reducing Spending Not So Simple, Warns Of Inflation Spike Under Trump",
+   "simbolos": "GOLD",
+   "direccion_pct": -0.16,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "GOLD",
+    "pct_real": -16.08,
+    "cierre_base": 37.63,
+    "cierre_final": 31.58,
+    "fecha_base": "2024-11-06",
+    "fecha_final": "2024-11-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

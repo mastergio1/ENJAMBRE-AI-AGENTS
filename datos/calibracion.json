@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:33:30+00:00",
+ "generado": "2026-08-03T05:34:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -856,6 +856,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "51ff76a6f86123d5",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:34:00+00:00",
+   "titular": "Gold ETFs Become Ground Zero As Spot Prices Whipsaw 10% In Hours",
+   "simbolos": "GLD",
+   "direccion_pct": 2.42,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -13.87,
+    "cierre_base": 495.9,
+    "cierre_final": 427.13,
+    "fecha_base": "2026-01-29",
+    "fecha_final": "2026-02-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

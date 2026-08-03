@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:18:37+00:00",
+ "generado": "2026-08-03T06:19:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1997,6 +1997,28 @@
     "cierre_final": 181.06,
     "fecha_base": "2026-02-24",
     "fecha_final": "2026-02-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8cd351df939efdc0",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:19:10+00:00",
+   "titular": "Coinbase, Apple, Applied Materials, Arista Networks And Rivian: Why These 5 Stocks Are On Investors' Radars Today (UPDATED)",
+   "simbolos": "COIN",
+   "direccion_pct": 1.41,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 17.67,
+    "cierre_base": 141.09,
+    "cierre_final": 166.02,
+    "fecha_base": "2026-02-12",
+    "fecha_final": "2026-02-17",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

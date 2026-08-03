@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:45:46+00:00",
+ "generado": "2026-08-03T08:46:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6422,6 +6422,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e2bef9560c235b7b",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:46:20+00:00",
+   "titular": "Tech Stocks Eye Third Day Of Losses, Walmart Sinks: What's Moving Markets Thursday?",
+   "simbolos": "IWM",
+   "direccion_pct": -5.71,
+   "volatilidad_pct": 1.44,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 2.83,
+    "cierre_base": 225.97,
+    "cierre_final": 232.36,
+    "fecha_base": "2025-08-21",
+    "fecha_final": "2025-08-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

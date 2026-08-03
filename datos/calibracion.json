@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:33:02+00:00",
+ "generado": "2026-08-03T05:33:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -834,6 +834,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2dc85d0d598b89da",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:33:30+00:00",
+   "titular": "UBS Maintains Sell on Southern Copper, Raises Price Target to $150",
+   "simbolos": "SCCO",
+   "direccion_pct": 1.9,
+   "volatilidad_pct": 1.44,
+   "reaccion_real": {
+    "simbolo": "SCCO",
+    "pct_real": 1.64,
+    "cierre_base": 189.38,
+    "cierre_final": 192.49,
+    "fecha_base": "2026-02-02",
+    "fecha_final": "2026-02-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

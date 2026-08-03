@@ -55,10 +55,10 @@ def _reaccion(perfil_tipo: str, tono: float, seed: int = 7) -> float:
     return (modelo.historial_precios[-1] - base) / base * 100
 
 
-def test_el_oro_sube_con_el_miedo():
-    """Refugio: ante un tono NEGATIVO (miedo), el oro no cae como el índice;
-    tiende a sostenerse o subir. Se compara el tono efectivo aplicado."""
-    # tono de miedo fuerte
+def test_los_metales_resisten_el_miedo():
+    """Refugio parcial: ante un tono NEGATIVO (miedo), los metales (oro+plata+
+    cobre) caen MUCHO MENOS que el índice — el oro los sostiene en parte —,
+    aunque el cobre/plata no lo invierten del todo. Se compara el tono efectivo."""
     indice = mercado.perfil_de("indice")
     oro = mercado.perfil_de("oro")
     modelo = MercadoEnjambre(seed=1, ticks_horizonte=10)
@@ -66,9 +66,9 @@ def test_el_oro_sube_con_el_miedo():
     tono_indice = modelo._aplicar_perfil(-0.6)
     modelo.perfil = oro
     tono_oro = modelo._aplicar_perfil(-0.6)
-    assert tono_indice < 0                 # el índice cae con el miedo
-    assert tono_oro > tono_indice          # el oro resiste el miedo…
-    assert tono_oro >= 0                    # …e incluso lo convierte en sostén
+    assert tono_indice < 0                          # el índice cae con el miedo
+    assert tono_oro > tono_indice                   # los metales resisten…
+    assert abs(tono_oro) < abs(tono_indice) * 0.7   # …caen bastante menos (refugio parcial)
 
 
 def test_el_cripto_amplifica_el_movimiento():

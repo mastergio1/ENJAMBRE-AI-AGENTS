@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:31:47+00:00",
+ "generado": "2026-08-03T16:32:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2063,6 +2063,28 @@
     "cierre_final": 959.48,
     "fecha_base": "2026-07-20",
     "fecha_final": "2026-07-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b8450e2ff45a3a19",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:32:21+00:00",
+   "titular": "AMC Enter Hldgs Q2 Adj. EPS $0.14 Beats $(0.06) Estimate, Sales $1.597B Beat $1.474B Estimate",
+   "simbolos": "AMC",
+   "direccion_pct": 40.8,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "AMC",
+    "pct_real": 13.4,
+    "cierre_base": 1.94,
+    "cierre_final": 2.2,
+    "fecha_base": "2026-07-17",
+    "fecha_final": "2026-07-21",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:32:29+00:00",
+ "generado": "2026-08-03T05:33:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -807,6 +807,28 @@
     "pct_real": -1.31,
     "cierre_base": 116.85,
     "cierre_final": 115.32,
+    "fecha_base": "2026-02-04",
+    "fecha_final": "2026-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b6225cab8dff459a",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:33:01+00:00",
+   "titular": "Retail Is Googling Gold, ETFs Are Where The Trade May Land",
+   "simbolos": "SLV",
+   "direccion_pct": 1.72,
+   "volatilidad_pct": 1.41,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": -11.35,
+    "cierre_base": 79.18,
+    "cierre_final": 70.19,
     "fecha_base": "2026-02-04",
     "fecha_final": "2026-02-06",
     "ruedas": 2,

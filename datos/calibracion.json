@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:39:24+00:00",
+ "generado": "2026-08-03T16:40:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2327,6 +2327,28 @@
     "cierre_final": 140.94,
     "fecha_base": "2026-06-17",
     "fecha_final": "2026-06-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bdb7a77434e95f45",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:40:07+00:00",
+   "titular": "Evercore ISI Group Maintains Outperform on Roku, Raises Price Target to $185",
+   "simbolos": "ROKU",
+   "direccion_pct": 15.03,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "ROKU",
+    "pct_real": 17.77,
+    "cierre_base": 119.64,
+    "cierre_final": 140.9,
+    "fecha_base": "2026-06-11",
+    "fecha_final": "2026-06-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

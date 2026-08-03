@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:30:29+00:00",
+ "generado": "2026-08-03T09:31:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7605,6 +7605,28 @@
     "pct_real": 3.2,
     "cierre_base": 169.29,
     "cierre_final": 174.7,
+    "fecha_base": "2022-10-03",
+    "fecha_final": "2022-10-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3f7db7c2fe7b48b9",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:31:04+00:00",
+   "titular": "Japan's NHK Said N. Korea Appears to Have Fired Missile; Said Missile Flies Over Japan; Japan's  Coast Guard Said Could Be a Ballistic Missile",
+   "simbolos": "SPY",
+   "direccion_pct": 3.69,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 2.86,
+    "cierre_base": 366.61,
+    "cierre_final": 377.09,
     "fecha_base": "2022-10-03",
     "fecha_final": "2022-10-05",
     "ruedas": 2,

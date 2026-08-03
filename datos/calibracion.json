@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:24:30+00:00",
+ "generado": "2026-08-03T08:25:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5735,6 +5735,28 @@
     "pct_real": -7.14,
     "cierre_base": 21.44,
     "cierre_final": 19.91,
+    "fecha_base": "2020-06-10",
+    "fecha_final": "2020-06-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f657b982b3d7fda8",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:25:01+00:00",
+   "titular": "MKM Partners Initiates Coverage On Occidental Petroleum with Neutral Rating, Announces Price Target of $20",
+   "simbolos": "OXY",
+   "direccion_pct": 2.47,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -10.89,
+    "cierre_base": 20.76,
+    "cierre_final": 18.5,
     "fecha_base": "2020-06-10",
     "fecha_final": "2020-06-12",
     "ruedas": 2,

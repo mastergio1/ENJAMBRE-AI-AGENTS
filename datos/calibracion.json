@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:02:37+00:00",
+ "generado": "2026-08-03T15:03:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -191,6 +191,28 @@
     "pct_real": -7.5,
     "cierre_base": 17.21,
     "cierre_final": 15.92,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ae3552f20a3d6456",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:03:22+00:00",
+   "titular": "NVIDIA CEO Says AI's Future Isn't Just Copper",
+   "simbolos": "COPX",
+   "direccion_pct": 10.92,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "COPX",
+    "pct_real": -9.9,
+    "cierre_base": 90.22,
+    "cierre_final": 81.29,
     "fecha_base": "2026-06-04",
     "fecha_final": "2026-06-08",
     "ruedas": 2,

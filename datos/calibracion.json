@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:35:06+00:00",
+ "generado": "2026-08-03T10:35:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9367,6 +9367,28 @@
     "cierre_final": 67.48,
     "fecha_base": "2026-01-29",
     "fecha_final": "2026-02-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9846e0fce7a9377b",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:35:36+00:00",
+   "titular": "Microsoft Executive Says Majority Of GPUs Purchased Are Under Contract For Their Useful Life",
+   "simbolos": "MSFT",
+   "direccion_pct": 4.97,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "MSFT",
+    "pct_real": -10.66,
+    "cierre_base": 481.63,
+    "cierre_final": 430.29,
+    "fecha_base": "2026-01-28",
+    "fecha_final": "2026-01-30",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

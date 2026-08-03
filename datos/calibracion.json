@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:07:36+00:00",
+ "generado": "2026-08-03T05:08:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -257,6 +257,28 @@
     "pct_real": -3.72,
     "cierre_base": 100.38,
     "cierre_final": 96.65,
+    "fecha_base": "2026-03-02",
+    "fecha_final": "2026-03-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6169d82cb72056d6",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:08:15+00:00",
+   "titular": "Unsustainable War Math - $20K Drones Vs. $4M Patriot Missiles; South Korean Rout Hammers US Stocks",
+   "simbolos": "GDX",
+   "direccion_pct": -4.55,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "GDX",
+    "pct_real": -8.2,
+    "cierre_base": 115.34,
+    "cierre_final": 105.88,
     "fecha_base": "2026-03-02",
     "fecha_final": "2026-03-04",
     "ruedas": 2,

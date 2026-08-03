@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:21:21+00:00",
+ "generado": "2026-08-03T08:21:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5605,6 +5605,28 @@
     "cierre_final": 14.92,
     "fecha_base": "2020-08-10",
     "fecha_final": "2020-08-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "29508b25e0b6ceb6",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:21:56+00:00",
+   "titular": "Occidental Said to Discuss $4.5B Asset Sale to Pertamina",
+   "simbolos": "OXY",
+   "direccion_pct": 0.03,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -7.57,
+    "cierre_base": 17.03,
+    "cierre_final": 15.74,
+    "fecha_base": "2020-07-29",
+    "fecha_final": "2020-07-31",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

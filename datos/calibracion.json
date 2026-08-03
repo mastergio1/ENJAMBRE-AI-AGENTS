@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:37:25+00:00",
+ "generado": "2026-08-03T05:37:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -983,6 +983,28 @@
     "pct_real": 5.3,
     "cierre_base": 421.29,
     "cierre_final": 443.6,
+    "fecha_base": "2026-01-16",
+    "fecha_final": "2026-01-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "39dfed580f06091e",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:37:55+00:00",
+   "titular": "Gold Hits Unthinkable $4,730 An Ounce As Investors Flee Global Chaos—Is Greenland The Hidden Trigger Behind The Rush?",
+   "simbolos": "IAU",
+   "direccion_pct": -7.69,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": 5.33,
+    "cierre_base": 86.27,
+    "cierre_final": 90.87,
     "fecha_base": "2026-01-16",
     "fecha_final": "2026-01-21",
     "ruedas": 2,

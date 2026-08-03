@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:32:58+00:00",
+ "generado": "2026-08-03T16:33:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2105,6 +2105,28 @@
     "pct_real": 19.76,
     "cierre_base": 47.37,
     "cierre_final": 56.73,
+    "fecha_base": "2026-07-14",
+    "fecha_final": "2026-07-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5ce9e7370490e3dc",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:33:31+00:00",
+   "titular": "IBM, CrowdStrike, SK Hynix, AEHR Test Systems and Lucid: Why These 5 Stocks Are on Investors' Radars Today",
+   "simbolos": "LCID",
+   "direccion_pct": 20.53,
+   "volatilidad_pct": 0.93,
+   "reaccion_real": {
+    "simbolo": "LCID",
+    "pct_real": 39.83,
+    "cierre_base": 4.62,
+    "cierre_final": 6.46,
     "fecha_base": "2026-07-14",
     "fecha_final": "2026-07-16",
     "ruedas": 2,

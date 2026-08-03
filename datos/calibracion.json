@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:57:10+00:00",
+ "generado": "2026-08-03T08:57:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6664,6 +6664,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "84e17f9e123367e0",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:57:49+00:00",
+   "titular": "Global Selloff Deepens, Oil Prices Tumble Amid Trump's Tariff Fallout - Global Markets Today While US Slept",
+   "simbolos": "SPY",
+   "direccion_pct": -0.04,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -6.02,
+    "cierre_base": 536.7,
+    "cierre_final": 504.38,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

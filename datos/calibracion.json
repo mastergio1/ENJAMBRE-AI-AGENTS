@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:30:20+00:00",
+ "generado": "2026-08-03T15:31:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -719,6 +719,28 @@
     "pct_real": 11.98,
     "cierre_base": 151.47,
     "cierre_final": 169.62,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "37789985dfee6ad2",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:31:07+00:00",
+   "titular": "Bitcoin 11% Away From Falling Below Strategy's Average Buying Price, But Michael Saylor's Confidence In Apex Crypto Remains Intact",
+   "simbolos": "MSTR",
+   "direccion_pct": 9.36,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 14.45,
+    "cierre_base": 237.95,
+    "cierre_final": 272.34,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

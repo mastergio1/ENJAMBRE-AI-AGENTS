@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:20:18+00:00",
+ "generado": "2026-08-03T07:21:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3733,6 +3733,28 @@
     "pct_real": 27.77,
     "cierre_base": 9.76,
     "cierre_final": 12.47,
+    "fecha_base": "2022-07-18",
+    "fecha_final": "2022-07-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "65eeb3853be4b708",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:21:01+00:00",
+   "titular": "Crypto.com Receives Italy Regulatory Green Light As Cryptocurrency Operator",
+   "simbolos": "MSTR",
+   "direccion_pct": 8.78,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 27.98,
+    "cierre_base": 22.56,
+    "cierre_final": 28.88,
     "fecha_base": "2022-07-18",
     "fecha_final": "2022-07-20",
     "ruedas": 2,

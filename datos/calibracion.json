@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:01:51+00:00",
+ "generado": "2026-08-03T05:02:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -83,6 +83,28 @@
     "cierre_final": 78.67,
     "fecha_base": "2026-06-04",
     "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dab74febe54c23a6",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:02:31+00:00",
+   "titular": "Peter Schiff Says Treasury Market Is 'Breaking Down' As Yields Surge, Calls Bond Crash 'Most Bullish' For Gold",
+   "simbolos": "GDX",
+   "direccion_pct": 0.98,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "GDX",
+    "pct_real": -7.25,
+    "cierre_base": 93.95,
+    "cierre_final": 87.14,
+    "fecha_base": "2026-05-14",
+    "fecha_final": "2026-05-18",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

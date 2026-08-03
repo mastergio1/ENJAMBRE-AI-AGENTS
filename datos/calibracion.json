@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:57:07+00:00",
+ "generado": "2026-08-03T06:57:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3053,6 +3053,28 @@
     "cierre_final": 83.83,
     "fecha_base": "2023-08-28",
     "fecha_final": "2023-08-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4ed8a77a095b793b",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:57:41+00:00",
+   "titular": "Chat, Pay and Play All in One Place With Coinbase Wallet",
+   "simbolos": "COIN",
+   "direccion_pct": -3.59,
+   "volatilidad_pct": 1.46,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 22.52,
+    "cierre_base": 85.95,
+    "cierre_final": 105.31,
+    "fecha_base": "2023-07-12",
+    "fecha_final": "2023-07-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:20:57+00:00",
+ "generado": "2026-08-03T06:21:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2088,6 +2088,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cdb3793330f81552",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:21:32+00:00",
+   "titular": "Google's Jaw-Dropping Capex – AI Story Has More Gas; Unstable Market Structures Hit Silver, Gold, Bitcoin, And Stocks",
+   "simbolos": "BITO",
+   "direccion_pct": 0.56,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "BITO",
+    "pct_real": -4.53,
+    "cierre_base": 10.15,
+    "cierre_final": 9.69,
+    "fecha_base": "2026-02-04",
+    "fecha_final": "2026-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

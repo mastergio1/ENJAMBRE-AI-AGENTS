@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:56:47+00:00",
+ "generado": "2026-08-03T08:57:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6603,28 +6603,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "024ebc23cb1905dd",
-   "origen": "historico",
-   "fecha": "2026-08-03T08:55:24+00:00",
-   "titular": "Benzinga Market Summary: S&P Falls Below 5,000 Amid US-China Trade Tensions Ahead Of China Tariff Deadline, Chip Stocks Fall, Health Insurers Spike On Increased Payment Rates To Medicare Insurers",
-   "simbolos": "QQQ",
-   "direccion_pct": -4.57,
-   "volatilidad_pct": 1.2,
-   "reaccion_real": {
-    "simbolo": "QQQ",
-    "pct_real": 7.24,
-    "cierre_base": 416.06,
-    "cierre_final": 446.18,
-    "fecha_base": "2025-04-08",
-    "fecha_final": "2025-04-10",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "positiva",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "621cf7913d5f7391",
    "origen": "historico",
    "fecha": "2026-08-03T08:56:06+00:00",
@@ -6659,6 +6637,28 @@
     "pct_real": 3.94,
     "cierre_base": 174.82,
     "cierre_final": 181.71,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "024ebc23cb1905dd",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:57:10+00:00",
+   "titular": "Benzinga Market Summary: S&P Falls Below 5,000 Amid US-China Trade Tensions Ahead Of China Tariff Deadline, Chip Stocks Fall, Health Insurers Spike On Increased Payment Rates To Medicare Insurers",
+   "simbolos": "VTI",
+   "direccion_pct": -4.57,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "VTI",
+    "pct_real": 5.61,
+    "cierre_base": 243.75,
+    "cierre_final": 257.43,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

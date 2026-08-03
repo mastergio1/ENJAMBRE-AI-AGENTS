@@ -57,7 +57,7 @@ UMBRAL_POR_MERCADO = {
     "accion": 6.0,
     "petroleo": 4.0,
     "oro": 2.5,
-    "cripto": 7.0,
+    "cripto": 6.0,
 }
 UMBRAL_DEFECTO = 4.0
 
@@ -76,8 +76,10 @@ RUEDAS = 2
 WATCHLIST_DEFECTO: dict[str, str] = {
     # índices
     "SPY": "indice", "QQQ": "indice", "DIA": "indice", "IWM": "indice",
-    # oro y mineras de oro
+    "VTI": "indice", "VOO": "indice", "MDY": "indice", "RSP": "indice", "EFA": "indice",
+    # metales: oro y mineras + plata, platino, paladio y cobre
     "GLD": "oro", "IAU": "oro", "GDX": "oro", "NEM": "oro", "GOLD": "oro",
+    "SLV": "oro", "PPLT": "oro", "PALL": "oro", "FCX": "oro", "SCCO": "oro", "COPX": "oro",
     # cripto (proxies bursátiles: ETFs, exchange y mineras)
     "GBTC": "cripto", "COIN": "cripto", "MARA": "cripto", "RIOT": "cripto",
     "MSTR": "cripto", "ETHE": "cripto", "BITO": "cripto",

@@ -14,10 +14,10 @@ name: Calibrar el enjambre (render completo)
 on:
   workflow_dispatch:
     inputs:
-      tope_accion:
-        description: "Máx. de acciones a rendir (presupuesto; el resto va completo)"
+      cupo:
+        description: "Exámenes EXACTOS por mercado (oro, cripto, petróleo, índices, acciones)"
         required: false
-        default: "380"
+        default: "100"
       tanda:
         description: "Exámenes por tanda (máx 40)"
         required: false
@@ -46,7 +46,7 @@ jobs:
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           TANDA: ${{ github.event.inputs.tanda || '40' }}
-          TOPE_ACCION: ${{ github.event.inputs.tope_accion || '380' }}
+          CUPO: ${{ github.event.inputs.cupo || '100' }}
         run: |
           set -u
           BASE="https://enjambre-motor.onrender.com/api/backtest"
@@ -63,8 +63,7 @@ jobs:
           }
 
           for MERCADO in oro cripto petroleo indice accion; do
-            CAP=100000
-            [ "$MERCADO" = "accion" ] && CAP="$TOPE_ACCION"
+            CAP="$CUPO"   # exactamente $CUPO exámenes por mercado
             echo "════════ Mercado: $MERCADO (cupo $CAP) ════════"
             while true; do
               HECHOS=$(hechos "$MERCADO"); PEND=$(pendientes "$MERCADO")
@@ -72,11 +71,15 @@ jobs:
               [ "$PEND" -le 0 ] && { echo "  ✔ $MERCADO completo"; break; }
               [ "$HECHOS" -ge "$CAP" ] && { echo "  ✔ $MERCADO llegó al cupo ($CAP)"; break; }
 
-              # cuánto debería avanzar esta tanda (el mínimo entre el tamaño y lo que falta)
-              ESPERADO=$TANDA; [ "$PEND" -lt "$TANDA" ] && ESPERADO=$PEND
-              TARGET=$((HECHOS + ESPERADO))
+              # esta tanda rinde el mínimo entre el tamaño, lo pendiente y lo
+              # que falta para el cupo (así no se pasa de $CAP exactos)
+              ESTA_TANDA=$TANDA
+              [ "$PEND" -lt "$ESTA_TANDA" ] && ESTA_TANDA=$PEND
+              FALTAN=$((CAP - HECHOS))
+              [ "$FALTAN" -lt "$ESTA_TANDA" ] && ESTA_TANDA=$FALTAN
+              TARGET=$((HECHOS + ESTA_TANDA))
 
-              curl -sf -m 60 -X POST "$BASE?tanda=$TANDA&mercado=$MERCADO" -H "$H" >/dev/null \
+              curl -sf -m 60 -X POST "$BASE?tanda=$ESTA_TANDA&mercado=$MERCADO" -H "$H" >/dev/null \
                 || { echo "  POST falló, reintento en 30s"; sleep 30; continue; }
 
               # esperar a que la tanda de fondo complete su cupo, o se estanque

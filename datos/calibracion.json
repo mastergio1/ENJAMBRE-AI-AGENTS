@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:32:43+00:00",
+ "generado": "2026-08-03T07:33:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4112,6 +4112,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5ae7ad1841694681",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:33:28+00:00",
+   "titular": "Hegseth Warns Iran To 'Choose Wisely,' But Gulf Officials Brace For 6-Month Slog To Reach Deal: What Do Prediction Markets Say?",
+   "simbolos": "USO",
+   "direccion_pct": -3.47,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -3.59,
+    "cierre_base": 125.84,
+    "cierre_final": 121.32,
+    "fecha_base": "2026-04-16",
+    "fecha_final": "2026-04-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

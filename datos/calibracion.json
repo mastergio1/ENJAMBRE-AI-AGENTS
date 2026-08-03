@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:37:50+00:00",
+ "generado": "2026-08-03T07:38:34+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4263,6 +4263,28 @@
     "cierre_final": 104.33,
     "fecha_base": "2026-03-05",
     "fecha_final": "2026-03-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4f6e8f3687896ad7",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:38:33+00:00",
+   "titular": "Caravana, Figma, DoorDash, Occidental Petroleum And Rackspace Technology: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "OXY",
+   "direccion_pct": 6.91,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 10.04,
+    "cierre_base": 47.11,
+    "cierre_final": 51.84,
+    "fecha_base": "2026-02-18",
+    "fecha_final": "2026-02-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

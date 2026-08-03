@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:41:27+00:00",
+ "generado": "2026-08-03T16:42:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2391,6 +2391,28 @@
     "pct_real": -1.35,
     "cierre_base": 111.78,
     "cierre_final": 110.27,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4c63d28525b7588d",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:42:08+00:00",
+   "titular": "Broadcom's Selloff Didn't Break The AI Trade, Says Dan Niles: 'Semiconductor Bulls Should Be Thrilled'",
+   "simbolos": "MU",
+   "direccion_pct": 10.42,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": -4.69,
+    "cierre_base": 996.0,
+    "cierre_final": 949.28,
     "fecha_base": "2026-06-04",
     "fecha_final": "2026-06-08",
     "ruedas": 2,

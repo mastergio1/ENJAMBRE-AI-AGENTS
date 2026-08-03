@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:30:57+00:00",
+ "generado": "2026-08-03T08:31:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5845,6 +5845,28 @@
     "pct_real": 9.16,
     "cierre_base": 22.39,
     "cierre_final": 24.44,
+    "fecha_base": "2020-05-15",
+    "fecha_final": "2020-05-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "60baf75d474b10b5",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:31:20+00:00",
+   "titular": "Morning Market Stats in 5 Minutes",
+   "simbolos": "XLE",
+   "direccion_pct": -1.65,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "XLE",
+    "pct_real": 5.14,
+    "cierre_base": 18.0,
+    "cierre_final": 18.92,
     "fecha_base": "2020-05-15",
     "fecha_final": "2020-05-19",
     "ruedas": 2,

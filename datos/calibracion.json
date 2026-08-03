@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:30:24+00:00",
+ "generado": "2026-08-03T08:30:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5825,6 +5825,28 @@
     "cierre_final": 24.4,
     "fecha_base": "2020-06-04",
     "fecha_final": "2020-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "26932d28c947338a",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:30:57+00:00",
+   "titular": "Iran's Supreme Leader Says Americans Will Be Expelled from Iraq and Syria",
+   "simbolos": "USO",
+   "direccion_pct": 1.33,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 9.16,
+    "cierre_base": 22.39,
+    "cierre_final": 24.44,
+    "fecha_base": "2020-05-15",
+    "fecha_final": "2020-05-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

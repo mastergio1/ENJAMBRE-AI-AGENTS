@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:38:48+00:00",
+ "generado": "2026-08-03T16:39:24+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2308,6 +2308,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8ce073115b239ba3",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:39:23+00:00",
+   "titular": "Jim Cramer Names Intel His Favorite Stock, Says Chipmaker 'Will Work' Because Of This Reason",
+   "simbolos": "INTC",
+   "direccion_pct": 18.06,
+   "volatilidad_pct": 0.95,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 16.38,
+    "cierre_base": 121.1,
+    "cierre_final": 140.94,
+    "fecha_base": "2026-06-17",
+    "fecha_final": "2026-06-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:05:01+00:00",
+ "generado": "2026-08-03T16:05:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1315,6 +1315,28 @@
     "cierre_final": 44.85,
     "fecha_base": "2025-10-01",
     "fecha_final": "2025-10-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f2731d22002d8fea",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:05:34+00:00",
+   "titular": "Asia Markets Mixed, Europe Slips As Oil Hits $75 - Global Markets Today While US Slept",
+   "simbolos": "USO",
+   "direccion_pct": 5.72,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -12.18,
+    "cierre_base": 83.12,
+    "cierre_final": 73.0,
+    "fecha_base": "2025-06-20",
+    "fecha_final": "2025-06-24",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

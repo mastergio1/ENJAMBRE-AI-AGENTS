@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:38:41+00:00",
+ "generado": "2026-08-03T10:39:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9521,6 +9521,28 @@
     "cierre_final": 11.47,
     "fecha_base": "2026-01-20",
     "fecha_final": "2026-01-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f12a3d41fe28adbc",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:39:10+00:00",
+   "titular": "Moderna Stock Jumps, Then Turns Negative: What's Happening?",
+   "simbolos": "MRNA",
+   "direccion_pct": 6.88,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "MRNA",
+    "pct_real": 19.92,
+    "cierre_base": 33.84,
+    "cierre_final": 40.58,
+    "fecha_base": "2026-01-12",
+    "fecha_final": "2026-01-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

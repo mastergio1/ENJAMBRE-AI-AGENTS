@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:46:42+00:00",
+ "generado": "2026-08-03T05:47:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1161,6 +1161,28 @@
     "cierre_final": 66.01,
     "fecha_base": "2025-12-24",
     "fecha_final": "2025-12-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "56ace0db570d7e63",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:47:21+00:00",
+   "titular": "Forget Gold— Platinum, Palladium ETFs Are Stealing The Spotlight In 2025",
+   "simbolos": "PALL",
+   "direccion_pct": 2.41,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "PALL",
+    "pct_real": 3.97,
+    "cierre_base": 33.84,
+    "cierre_final": 35.18,
+    "fecha_base": "2025-12-23",
+    "fecha_final": "2025-12-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

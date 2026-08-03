@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:05:52+00:00",
+ "generado": "2026-08-03T09:06:34+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6879,6 +6879,28 @@
     "pct_real": 5.42,
     "cierre_base": 224.23,
     "cierre_final": 236.38,
+    "fecha_base": "2024-11-05",
+    "fecha_final": "2024-11-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "691ef69feb38944c",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:06:33+00:00",
+   "titular": "Stocks surge to records after decisive US election result removes uncertainty",
+   "simbolos": "SPY",
+   "direccion_pct": 1.2,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 3.28,
+    "cierre_base": 576.7,
+    "cierre_final": 595.61,
     "fecha_base": "2024-11-05",
     "fecha_final": "2024-11-07",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:16:26+00:00",
+ "generado": "2026-08-03T08:17:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5429,6 +5429,28 @@
     "cierre_final": 25.35,
     "fecha_base": "2021-04-01",
     "fecha_final": "2021-04-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4a123d3a7599ea6f",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:17:01+00:00",
+   "titular": "USA EIA Gasoline Inventories for Mar 12 Build 472K Barrels",
+   "simbolos": "USO",
+   "direccion_pct": 0.72,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -4.68,
+    "cierre_base": 43.82,
+    "cierre_final": 41.77,
+    "fecha_base": "2021-03-17",
+    "fecha_final": "2021-03-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

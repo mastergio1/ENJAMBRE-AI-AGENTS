@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:16:42+00:00",
+ "generado": "2026-08-03T06:17:17+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1931,6 +1931,28 @@
     "cierre_final": 220.95,
     "fecha_base": "2024-04-11",
     "fecha_final": "2024-04-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "67aca3da48fcdedb",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:17:16+00:00",
+   "titular": "Barrick Gold's Options: A Look at What the Big Money is Thinking",
+   "simbolos": "GOLD",
+   "direccion_pct": 2.01,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "GOLD",
+    "pct_real": 15.31,
+    "cierre_base": 32.73,
+    "cierre_final": 37.74,
+    "fecha_base": "2024-04-05",
+    "fecha_final": "2024-04-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:50:39+00:00",
+ "generado": "2026-08-03T05:51:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1274,6 +1274,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "58a1c465e5374630",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:51:20+00:00",
+   "titular": "Freeport-McMoRan Confronts Hard Questions After Fatal Mud Rush In Indonesia",
+   "simbolos": "SCCO",
+   "direccion_pct": 1.11,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SCCO",
+    "pct_real": 6.98,
+    "cierre_base": 107.44,
+    "cierre_final": 114.95,
+    "fecha_base": "2025-09-23",
+    "fecha_final": "2025-09-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

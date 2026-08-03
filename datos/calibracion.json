@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:41:17+00:00",
+ "generado": "2026-08-03T09:41:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7849,6 +7849,28 @@
     "cierre_final": 406.07,
     "fecha_base": "2022-07-26",
     "fecha_final": "2022-07-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "34d4c50fb721e82f",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:41:50+00:00",
+   "titular": "Market indexes were higher following better-than-expected Q2 earnings from Goldman Sachs, which lifted market sentiment going into the earnings season.",
+   "simbolos": "IWM",
+   "direccion_pct": 3.97,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 5.15,
+    "cierre_base": 172.6,
+    "cierre_final": 181.49,
+    "fecha_base": "2022-07-18",
+    "fecha_final": "2022-07-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

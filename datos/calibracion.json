@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:00:14+00:00",
+ "generado": "2026-08-03T08:00:49+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5011,6 +5011,28 @@
     "cierre_final": 74.53,
     "fecha_base": "2022-05-06",
     "fecha_final": "2022-05-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ed8ae8b0bd6280ea",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:00:48+00:00",
+   "titular": "Wells Fargo Maintains Overweight on Schlumberger, Lowers Price Target to $55",
+   "simbolos": "SLB",
+   "direccion_pct": -0.45,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": -5.07,
+    "cierre_base": 41.65,
+    "cierre_final": 39.54,
+    "fecha_base": "2022-04-22",
+    "fecha_final": "2022-04-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

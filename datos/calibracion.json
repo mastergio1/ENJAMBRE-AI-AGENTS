@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:13:47+00:00",
+ "generado": "2026-08-03T08:14:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5344,6 +5344,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "301f96ef297ffb77",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:14:27+00:00",
+   "titular": "Schlumberger Announces Enterprise-Scale Deployment Of Advanced Digital Solutions For PETRONAS",
+   "simbolos": "SLB",
+   "direccion_pct": 1.74,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": 10.9,
+    "cierre_base": 32.93,
+    "cierre_final": 36.52,
+    "fecha_base": "2021-06-01",
+    "fecha_final": "2021-06-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -16,6 +16,7 @@ Reglas de diseño:
   próxima tanda lo reintenta. Nunca lanza.
 """
 
+import gc
 import json
 from pathlib import Path
 
@@ -183,6 +184,13 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
                 ultimo_respaldo = respaldo.respaldar(conexion)
             except Exception:
                 ultimo_respaldo = None
+
+            # liberar la memoria del modelo de 10.000 agentes ANTES del próximo
+            # examen: los agentes y el modelo se referencian en ciclo, así que
+            # sin un gc.collect() explícito la basura se acumula y en el plan
+            # Starter (512 MB) puede desbordar y reiniciar el motor.
+            del reporte, lideres, serie
+            gc.collect()
 
         resultado = {"hechas": hechas, "sin_datos": sin_datos, "sin_ia": sin_ia,
                      "pendientes": len(pendientes) - len(hechas)}

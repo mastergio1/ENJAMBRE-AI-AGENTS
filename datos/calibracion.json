@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:21:52+00:00",
+ "generado": "2026-08-03T15:22:43+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -609,6 +609,28 @@
     "pct_real": -4.53,
     "cierre_base": 10.15,
     "cierre_final": 9.69,
+    "fecha_base": "2026-02-04",
+    "fecha_final": "2026-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4c4f558fccbc6753",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:22:43+00:00",
+   "titular": "CME Group Eyes 'CME Coin' After JPMorgan Success—Chart Shows Breakout To $320",
+   "simbolos": "COIN",
+   "direccion_pct": 13.79,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -2.08,
+    "cierre_base": 168.62,
+    "cierre_final": 165.12,
     "fecha_base": "2026-02-04",
     "fecha_final": "2026-02-06",
     "ruedas": 2,

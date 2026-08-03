@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T14:55:28+00:00",
+ "generado": "2026-08-03T14:56:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -37,6 +37,28 @@
     "pct_real": -2.09,
     "cierre_base": 77.33,
     "cierre_final": 75.71,
+    "fecha_base": "2026-06-23",
+    "fecha_final": "2026-06-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e92bb7ffed3b283c",
+   "origen": "historico",
+   "fecha": "2026-08-03T14:56:11+00:00",
+   "titular": "Gold Is Under Pressure Today: What's Going On?",
+   "simbolos": "GLD",
+   "direccion_pct": -1.86,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -2.08,
+    "cierre_base": 377.32,
+    "cierre_final": 369.46,
     "fecha_base": "2026-06-23",
     "fecha_final": "2026-06-25",
     "ruedas": 2,

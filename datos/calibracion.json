@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:36:52+00:00",
+ "generado": "2026-08-03T05:37:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -963,6 +963,28 @@
     "cierre_final": 98.34,
     "fecha_base": "2026-01-22",
     "fecha_final": "2026-01-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "89d6762618355128",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:37:24+00:00",
+   "titular": "Global Stocks Slide, Gold Hits Record As Trump's Greenland Tariffs Rattle Markets",
+   "simbolos": "GLD",
+   "direccion_pct": -8.49,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": 5.3,
+    "cierre_base": 421.29,
+    "cierre_final": 443.6,
+    "fecha_base": "2026-01-16",
+    "fecha_final": "2026-01-21",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

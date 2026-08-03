@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:06:53+00:00",
+ "generado": "2026-08-03T05:07:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -235,6 +235,28 @@
     "pct_real": -3.71,
     "cierre_base": 490.0,
     "cierre_final": 471.8,
+    "fecha_base": "2026-03-02",
+    "fecha_final": "2026-03-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bf29c9797eb5b00b",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:07:35+00:00",
+   "titular": "Is Bitcoin Still A Hedge In Times of War? Gold And Treasuries Tell a Different Story",
+   "simbolos": "IAU",
+   "direccion_pct": -8.87,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": -3.72,
+    "cierre_base": 100.38,
+    "cierre_final": 96.65,
     "fecha_base": "2026-03-02",
     "fecha_final": "2026-03-04",
     "ruedas": 2,

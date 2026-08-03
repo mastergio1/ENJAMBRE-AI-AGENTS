@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:40:08+00:00",
+ "generado": "2026-08-03T16:40:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2349,6 +2349,28 @@
     "cierre_final": 140.9,
     "fecha_base": "2026-06-11",
     "fecha_final": "2026-06-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "31eda8067e33fb32",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:40:49+00:00",
+   "titular": "10 Information Technology Stocks With Whale Alerts In Today's Session",
+   "simbolos": "MU",
+   "direccion_pct": 10.04,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": 10.06,
+    "cierre_base": 891.88,
+    "cierre_final": 981.61,
+    "fecha_base": "2026-06-10",
+    "fecha_final": "2026-06-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

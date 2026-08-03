@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:44:54+00:00",
+ "generado": "2026-08-03T09:45:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7981,6 +7981,28 @@
     "cierre_final": 373.87,
     "fecha_base": "2022-06-10",
     "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bfcc814626a4fa33",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:45:37+00:00",
+   "titular": "Baird Downgrades Caterpillar to Neutral, Lowers Price Target to $900",
+   "simbolos": "CAT",
+   "direccion_pct": -0.72,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "CAT",
+    "pct_real": -3.77,
+    "cierre_base": 840.85,
+    "cierre_final": 809.14,
+    "fecha_base": "2026-07-28",
+    "fecha_final": "2026-07-30",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

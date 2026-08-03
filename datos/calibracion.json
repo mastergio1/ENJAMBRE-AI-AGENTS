@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:45:25+00:00",
+ "generado": "2026-08-03T05:46:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1115,6 +1115,28 @@
     "pct_real": -4.28,
     "cierre_base": 416.74,
     "cierre_final": 398.89,
+    "fecha_base": "2025-12-26",
+    "fecha_final": "2025-12-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "34997a373fff602c",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:46:03+00:00",
+   "titular": "Metals Acting Like Meme Stocks—Unconfirmed Rumor Of Major Silver Margin Call",
+   "simbolos": "PPLT",
+   "direccion_pct": 7.27,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "PPLT",
+    "pct_real": -9.78,
+    "cierre_base": 22.01,
+    "cierre_final": 19.86,
     "fecha_base": "2025-12-26",
     "fecha_final": "2025-12-30",
     "ruedas": 2,

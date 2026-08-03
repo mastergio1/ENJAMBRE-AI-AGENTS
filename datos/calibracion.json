@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:40:47+00:00",
+ "generado": "2026-08-03T10:41:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9609,6 +9609,28 @@
     "cierre_final": 22.45,
     "fecha_base": "2025-12-17",
     "fecha_final": "2025-12-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d9007db54dd00303",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:41:18+00:00",
+   "titular": "Boeing Stock Breaks Free From Turbulence As Airbus Hits Recall Storm",
+   "simbolos": "BA",
+   "direccion_pct": 0.56,
+   "volatilidad_pct": 1.65,
+   "reaccion_real": {
+    "simbolo": "BA",
+    "pct_real": 8.62,
+    "cierre_base": 186.46,
+    "cierre_final": 202.54,
+    "fecha_base": "2025-12-01",
+    "fecha_final": "2025-12-03",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

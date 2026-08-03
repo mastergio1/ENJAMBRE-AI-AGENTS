@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:08:55+00:00",
+ "generado": "2026-08-03T08:09:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5185,6 +5185,28 @@
     "pct_real": 15.98,
     "cierre_base": 47.75,
     "cierre_final": 55.38,
+    "fecha_base": "2022-03-03",
+    "fecha_final": "2022-03-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6367975d26ad63bc",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:09:38+00:00",
+   "titular": "Biden Administration Studying Whether Waiver On Biofuel Blending Mandates Could Help Stabilize Food Prices",
+   "simbolos": "USO",
+   "direccion_pct": 1.55,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 10.52,
+    "cierre_base": 74.53,
+    "cierre_final": 82.37,
     "fecha_base": "2022-03-03",
     "fecha_final": "2022-03-07",
     "ruedas": 2,

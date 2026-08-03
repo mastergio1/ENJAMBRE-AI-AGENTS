@@ -104,4 +104,71 @@ de abrir al público (pasar las frases por el mismo filtro).
 
 ---
 
+## 5. Producción, escala y economía unitaria (escenario público)
+
+> Pregunta del dueño: con **1.000 clientes**, plan gratis = **1 simulación/día**,
+> y **900 activos al día**, ¿cuánto cuesta sostenerlo y cuántos pagos lo cubren?
+
+### Dos cargas MUY distintas (no confundirlas)
+
+- **Los correos (El Pulso):** los reparte **Resend**, no el motor. El servidor
+  solo hace mensajitos a la API de Resend, **una vez de madrugada**. No es
+  riesgo de servidor. Techo = plan de Resend (gratis 3.000/mes; ~US$20/mes
+  por 50.000). Escala sin drama.
+- **Las simulaciones:** aquí está el costo. Dos tipos:
+  - **Compartida** (las destacadas del muro): se calcula **una vez al día** y
+    la ven los 1.000 clientes → costo marginal por persona **~US$0**.
+  - **Personal** (el usuario suelta SU titular): ~108 llamadas LLM →
+    **~US$0,15** cada una (medido: 110 exámenes de calibración = ~US$16).
+    Sube a ~US$0,20 cuando termine el precio intro de Sonnet-5 (fin de agosto).
+
+### Costo del plan gratis, si "gratis" = 1 simulación PERSONAL/día
+
+| | Cálculo | Costo |
+|---|---|---|
+| Por día | 900 × US$0,15 | **US$135** |
+| **Por mes** | 900 × 30 × US$0,15 | **~US$4.050** |
+| Por año | | ~US$49.000 |
+
+Servidor (US$25–85) + Resend (US$20) son calderilla al lado. **El costo es IA.**
+
+### ¿Cuántas suscripciones pagas cubren esos ~US$4.050/mes?
+
+Clave: un usuario pago **también gasta IA**; cuenta lo que SOBRA de su pago.
+
+| Precio pago | Su uso | Sobra | Pagos necesarios |
+|---|---|---|---|
+| US$10/mes | 1/día (US$4,5) | US$5,5 | **~740** (inviable) |
+| US$20/mes | 2/día (US$9) | US$11 | ~370 |
+| US$50/mes | 5/día (US$22) | US$28 | ~145 |
+| US$100/mes | 10/día (US$45) | US$55 | ~74 |
+| US$300/mes (B2B) | moderado (US$45) | US$255 | **~16** |
+
+### Conclusiones de negocio
+
+1. **Freemium consumidor barato NO funciona:** a US$10 necesitas ~740 de 900
+   pagando (74%). El freemium real convierte 2-5%. Te desangra.
+2. **B2B SÍ funciona** (y es la biblia del proyecto): **16–75 clientes** a
+   US$100–300/mes cubren a los 900 gratis. Alcanzable.
+3. **El verdadero dial: cómo se define "gratis".** Lo caro es la simulación
+   *personal y fresca*; lo barato es la *compartida ya calculada* (el muro ya
+   lo hace). Si el plan gratis es **"mirar los destacados del día + El Pulso"**
+   (compartido, ~US$0) y **"soltar tu propio titular" es el gancho de pago**,
+   el costo de los gratis casi desaparece y cada suscripción es ganancia.
+
+### Recomendación de infraestructura para abrir al público
+
+| | Hoy (pruebas privadas) | Público |
+|---|---|---|
+| Render | Starter US$7 (512 MB, ½ CPU) | **Standard US$25 (2 GB, 1 CPU)** |
+| Simulaciones simultáneas | 2 (arriesga OOM) | 3–4 (con la RAM del Standard) |
+| Tope de gasto | en memoria (se reinicia con deploys) | **persistirlo** (bug #1) — es el control de la billetera |
+| Plan gratis | 1 simulación personal/día (~US$4.050/mes) | **contenido compartido** (~US$0) + personal como pago |
+
+**En una frase:** el servidor no se cae (tiene frenos), pero el costo real es la
+IA, no la máquina. El modelo B2B + un plan gratis basado en contenido compartido
+es lo que hace el negocio sostenible.
+
+---
+
 *Rubicón Lab · El Enjambre · Análisis de código · 3 de agosto de 2026*

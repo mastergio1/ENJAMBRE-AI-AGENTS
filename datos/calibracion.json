@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:58:56+00:00",
+ "generado": "2026-08-03T05:59:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1511,6 +1511,28 @@
     "pct_real": 13.66,
     "cierre_base": 41.5,
     "cierre_final": 47.17,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a08ee89e0bc5a8c7",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:59:38+00:00",
+   "titular": "Top 10 Trending Stocks On WallStreetBets As Of April 8, 2025 (Via Swaggy Stocks)",
+   "simbolos": "GLD",
+   "direccion_pct": 5.41,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": 6.23,
+    "cierre_base": 275.2,
+    "cierre_final": 292.35,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

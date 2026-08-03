@@ -32,7 +32,7 @@ services:
       # orígenes permitidos por CORS: el dominio de Vercel de producción.
       # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
       - key: ENJAMBRE_ORIGENES
-        value: "https://enjambre.vercel.app"
+        value: "https://enjambre-ai-agents.vercel.app"
       # la base vive en el disco PERSISTENTE montado arriba (/app/datos):
       # sobrevive a los redeploys (plan Starter). El pipeline la puebla.
       - key: ENJAMBRE_DB
@@ -46,7 +46,7 @@ services:
       - key: PULSO_REMITENTE
         value: "El Enjambre <pulso@tudominio.cl>"
       - key: ENJAMBRE_WEB_URL
-        value: "https://enjambre.vercel.app"
+        value: "https://enjambre-ai-agents.vercel.app"
       - key: ENJAMBRE_API_URL
         value: "https://enjambre-motor.onrender.com"
       # aviso a Giorgio por Telegram (opcional):

@@ -19,7 +19,7 @@ _esc = html.escape
 
 URL_RESEND = "https://api.resend.com/emails"
 REMITENTE = os.environ.get("PULSO_REMITENTE", "El Enjambre <pulso@rubiconlab.cl>")
-BASE_WEB = os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre.vercel.app")
+BASE_WEB = os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre-ai-agents.vercel.app")
 BASE_API = os.environ.get("ENJAMBRE_API_URL", "https://enjambre-motor.onrender.com")
 
 # paleta oficial del manual de marca (§05)

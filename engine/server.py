@@ -740,7 +740,7 @@ p{{max-width:420px;line-height:1.5;color:#a8a291;}}</style></head>
 
 
 def boletin_base_web() -> str:
-    return os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre.vercel.app")
+    return os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre-ai-agents.vercel.app")
 
 
 @app.post("/api/suscribir")

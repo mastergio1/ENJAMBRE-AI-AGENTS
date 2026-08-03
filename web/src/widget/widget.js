@@ -14,7 +14,7 @@ const N_AGENTES = 10000
 const TAMANO_FRAME = 8 + N_AGENTES
 const DISCLAIMER =
   'Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.'
-const WEB = (urlApi() || '').replace(/\/$/, '') && (import.meta.env.VITE_WEB_URL || 'https://enjambre.vercel.app')
+const WEB = (urlApi() || '').replace(/\/$/, '') && (import.meta.env.VITE_WEB_URL || 'https://enjambre-ai-agents.vercel.app')
 
 const raiz = document.getElementById('widget')
 const canvas = document.getElementById('wcanvas')

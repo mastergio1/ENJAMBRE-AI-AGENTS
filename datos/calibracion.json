@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:59:39+00:00",
+ "generado": "2026-08-03T06:00:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1533,6 +1533,28 @@
     "pct_real": 6.23,
     "cierre_base": 275.2,
     "cierre_final": 292.35,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1749e148dfcad498",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:00:23+00:00",
+   "titular": "Peering Into Newmont's Recent Short Interest",
+   "simbolos": "NEM",
+   "direccion_pct": -2.02,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": 13.3,
+    "cierre_base": 44.96,
+    "cierre_final": 50.94,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:15:57+00:00",
+ "generado": "2026-08-03T06:16:42+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1909,6 +1909,28 @@
     "cierre_final": 42.73,
     "fecha_base": "2024-04-24",
     "fecha_final": "2024-04-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "881ef1f77bd46499",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:16:41+00:00",
+   "titular": "Gold climbs to another record as Middle East tensions escalate",
+   "simbolos": "GLD",
+   "direccion_pct": 2.99,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": 0.52,
+    "cierre_base": 219.8,
+    "cierre_final": 220.95,
+    "fecha_base": "2024-04-11",
+    "fecha_final": "2024-04-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

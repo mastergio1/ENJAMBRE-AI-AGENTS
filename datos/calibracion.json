@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:22:35+00:00",
+ "generado": "2026-08-03T08:23:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5647,6 +5647,28 @@
     "pct_real": 4.74,
     "cierre_base": 18.04,
     "cierre_final": 18.9,
+    "fecha_base": "2020-07-20",
+    "fecha_final": "2020-07-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "14f186123ea4cbb4",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:23:06+00:00",
+   "titular": "Barclays Maintains Equal-Weight on Occidental Petroleum, Lowers Price Target to $20",
+   "simbolos": "OXY",
+   "direccion_pct": 0.67,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 8.03,
+    "cierre_base": 15.69,
+    "cierre_final": 16.95,
     "fecha_base": "2020-07-20",
     "fecha_final": "2020-07-22",
     "ruedas": 2,

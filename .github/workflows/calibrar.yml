@@ -22,6 +22,10 @@ on:
         description: "Exámenes por tanda (máx 40)"
         required: false
         default: "40"
+      reiniciar:
+        description: "Borrar la calibración local antes de rendir (para re-validar diales nuevos)"
+        required: false
+        default: "false"
 
 jobs:
   calibrar:
@@ -47,10 +51,18 @@ jobs:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           TANDA: ${{ github.event.inputs.tanda || '40' }}
           CUPO: ${{ github.event.inputs.cupo || '100' }}
+          REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
         run: |
           set -u
           BASE="https://enjambre-motor.onrender.com/api/backtest"
           H="X-Pipeline-Token: $TOKEN"
+
+          # opcional: borrar la calibración local (disco persistente) para
+          # re-validar sobre diales nuevos desde cero
+          if [ "$REINICIAR" = "true" ]; then
+            echo "Reiniciando la calibración local…"
+            curl -sf -m 60 -X POST "$BASE/reiniciar" -H "$H" && echo "  base local reiniciada"
+          fi
 
           # hechos rendidos de un mercado (via GET)
           hechos() {

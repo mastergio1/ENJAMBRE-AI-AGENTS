@@ -974,6 +974,28 @@ def api_backtest_estado(mercado: str = "", x_pipeline_token: str = Header(defaul
     return {k: v for k, v in avance.items() if not k.startswith("_")}
 
 
+@app.post("/api/backtest/reiniciar")
+def api_backtest_reiniciar(x_pipeline_token: str = Header(default="")) -> dict:
+    """Borra los exámenes de calibración de la base LOCAL (fuente='backtest'),
+    para re-validar tras cambiar los diales. El disco persistente del plan
+    Starter guarda los casos entre deploys, así que sin esto el motor cree que
+    ya están todos rendidos y no re-rinde. NO toca las destacadas en vivo.
+    También conviene reiniciar la caja fuerte de GitHub aparte."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import persistencia
+
+    conexion = persistencia.conectar()
+    try:
+        antes = conexion.execute(
+            "SELECT COUNT(*) FROM simulaciones WHERE fuente = 'backtest'").fetchone()[0]
+        conexion.execute("DELETE FROM simulaciones WHERE fuente = 'backtest'")
+        conexion.commit()
+    finally:
+        conexion.close()
+    return {"reiniciado": True, "examenes_borrados": antes}
+
+
 def _correr_cosecha(mercados, desde, hasta, tope, reemplazar) -> None:
     from contenido import cosechador
 

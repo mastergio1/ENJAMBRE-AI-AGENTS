@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:11:06+00:00",
+ "generado": "2026-08-03T08:11:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5256,6 +5256,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1ef5f219dbcffb88",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:11:44+00:00",
+   "titular": "Elon Musk Tweets 'It has always been Tesla's view that all subsidies should be eliminated, but that must include the massive subsidies for oil & gas. \n\nFor some reason, governments don't want to do that …'",
+   "simbolos": "USO",
+   "direccion_pct": 11.8,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -10.22,
+    "cierre_base": 55.88,
+    "cierre_final": 50.17,
+    "fecha_base": "2021-11-24",
+    "fecha_final": "2021-11-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

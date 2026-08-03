@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:26:39+00:00",
+ "generado": "2026-08-03T16:27:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1885,6 +1885,28 @@
     "pct_real": 3.74,
     "cierre_base": 381.62,
     "cierre_final": 395.91,
+    "fecha_base": "2025-04-21",
+    "fecha_final": "2025-04-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fc9d7fde2b4e3801",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:27:19+00:00",
+   "titular": "Top Fed Voices Defend Powell, Slam Trump's Attack On Central Bank Independence",
+   "simbolos": "SPY",
+   "direccion_pct": 4.29,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 4.19,
+    "cierre_base": 513.88,
+    "cierre_final": 535.42,
     "fecha_base": "2025-04-21",
     "fecha_final": "2025-04-23",
     "ruedas": 2,

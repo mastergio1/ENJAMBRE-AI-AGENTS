@@ -43,8 +43,13 @@ services:
       # La Redacción — capa de datos de mercado (Barchart) para el análisis:
       - key: BARCHART_API_KEY
         sync: false
+      # Modo prueba de Resend (sin dominio propio): el ÚNICO remitente válido
+      # es onboarding@resend.dev, y solo entrega al correo dueño de la cuenta.
+      # Cuando el dominio (ej. rubiconlab.cl) esté verificado, cambiar a
+      # "El Enjambre <pulso@rubiconlab.cl>". Se deja el valor aquí para que el
+      # blueprint NO lo pise con un ejemplo roto en cada deploy.
       - key: PULSO_REMITENTE
-        value: "El Enjambre <pulso@tudominio.cl>"
+        value: "El Enjambre <onboarding@resend.dev>"
       - key: ENJAMBRE_WEB_URL
         value: "https://enjambre-ai-agents.vercel.app"
       - key: ENJAMBRE_API_URL

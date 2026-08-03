@@ -1,0 +1,103 @@
+# Calibración completa y balanceada — rinde el banco de exámenes solo.
+#
+# Recorre los mercados (oro, cripto, petróleo, índices y acciones) y rinde
+# tandas hasta llegar al cupo de cada uno. Las acciones son mayoría, así que
+# tienen un tope (presupuesto). Cada tanda corre en segundo plano en el motor
+# (~1 min por examen); este workflow espera a que termine antes de disparar la
+# siguiente, para no rendir dos veces el mismo examen. Se detiene solo cuando
+# no queda saldo de IA (los exámenes dejan de avanzar) o cuando termina.
+#
+# Se dispara a mano (Actions → Run workflow). Una sola corrida basta.
+
+name: Calibrar el enjambre (render completo)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tope_accion:
+        description: "Máx. de acciones a rendir (presupuesto; el resto va completo)"
+        required: false
+        default: "380"
+      tanda:
+        description: "Exámenes por tanda (máx 40)"
+        required: false
+        default: "40"
+
+jobs:
+  calibrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          [ -z "$TOKEN" ] && { echo "::error::Falta ENJAMBRE_PIPELINE_TOKEN."; exit 1; } || true
+
+      - name: Despertar el motor
+        run: |
+          for i in $(seq 1 20); do
+            curl -sf -m 20 https://enjambre-motor.onrender.com/salud >/dev/null && exit 0
+            echo "despertando… ($i/20)"; sleep 15
+          done
+          echo "::error::el motor no despertó"; exit 1
+
+      - name: Rendir la calibración por mercado
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          TANDA: ${{ github.event.inputs.tanda || '40' }}
+          TOPE_ACCION: ${{ github.event.inputs.tope_accion || '380' }}
+        run: |
+          set -u
+          BASE="https://enjambre-motor.onrender.com/api/backtest"
+          H="X-Pipeline-Token: $TOKEN"
+
+          # hechos rendidos de un mercado (via GET)
+          hechos() {
+            curl -sf -m 30 "$BASE?mercado=$1" -H "$H" \
+              | python3 -c "import sys,json;print(json.load(sys.stdin).get('hechos',0))" 2>/dev/null || echo 0
+          }
+          pendientes() {
+            curl -sf -m 30 "$BASE?mercado=$1" -H "$H" \
+              | python3 -c "import sys,json;print(json.load(sys.stdin).get('pendientes',0))" 2>/dev/null || echo 0
+          }
+
+          for MERCADO in oro cripto petroleo indice accion; do
+            CAP=100000
+            [ "$MERCADO" = "accion" ] && CAP="$TOPE_ACCION"
+            echo "════════ Mercado: $MERCADO (cupo $CAP) ════════"
+            while true; do
+              HECHOS=$(hechos "$MERCADO"); PEND=$(pendientes "$MERCADO")
+              echo "  $MERCADO: $HECHOS rendidos, $PEND pendientes"
+              [ "$PEND" -le 0 ] && { echo "  ✔ $MERCADO completo"; break; }
+              [ "$HECHOS" -ge "$CAP" ] && { echo "  ✔ $MERCADO llegó al cupo ($CAP)"; break; }
+
+              # cuánto debería avanzar esta tanda (el mínimo entre el tamaño y lo que falta)
+              ESPERADO=$TANDA; [ "$PEND" -lt "$TANDA" ] && ESPERADO=$PEND
+              TARGET=$((HECHOS + ESPERADO))
+
+              curl -sf -m 60 -X POST "$BASE?tanda=$TANDA&mercado=$MERCADO" -H "$H" >/dev/null \
+                || { echo "  POST falló, reintento en 30s"; sleep 30; continue; }
+
+              # esperar a que la tanda de fondo complete su cupo, o se estanque
+              QUIETO=0; ULTIMO=$HECHOS
+              for _ in $(seq 1 70); do   # hasta ~35 min por tanda
+                sleep 30
+                AHORA=$(hechos "$MERCADO")
+                [ "$AHORA" -ge "$TARGET" ] && break
+                if [ "$AHORA" -eq "$ULTIMO" ]; then QUIETO=$((QUIETO+1)); else QUIETO=0; fi
+                ULTIMO=$AHORA
+                [ "$QUIETO" -ge 6 ] && break   # 3 min sin cambio: la tanda ya terminó/paró
+              done
+
+              AHORA=$(hechos "$MERCADO")
+              if [ "$AHORA" -le "$HECHOS" ]; then
+                echo "  ⚠ sin avance (¿sin saldo de IA?). Deteniendo la calibración."
+                break 2
+              fi
+            done
+          done
+          echo "════════ Calibración terminada ════════"
+          for M in oro cripto petroleo indice accion; do
+            echo "  $M: $(hechos $M) rendidos"
+          done

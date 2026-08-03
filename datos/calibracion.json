@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:54:22+00:00",
+ "generado": "2026-08-03T07:54:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4769,6 +4769,28 @@
     "cierre_final": 39.68,
     "fecha_base": "2022-09-30",
     "fecha_final": "2022-10-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b99d51a1e9a6cd75",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:54:54+00:00",
+   "titular": "Find Out Why This Bear Thinks The S&P 500 Is Headed To 3,000; What He's Buying During The Downturn",
+   "simbolos": "XLE",
+   "direccion_pct": -6.4,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "XLE",
+    "pct_real": 4.43,
+    "cierre_base": 34.76,
+    "cierre_final": 36.3,
+    "fecha_base": "2022-09-27",
+    "fecha_final": "2022-09-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

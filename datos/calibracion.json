@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:42:23+00:00",
+ "generado": "2026-08-03T10:42:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9675,6 +9675,28 @@
     "cierre_final": 207.37,
     "fecha_base": "2025-11-19",
     "fecha_final": "2025-11-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6ecfb174ad70b7cc",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:42:54+00:00",
+   "titular": "Home Depot Q3 Preview: Will Housing Weakness And Costly Mortgages Pressure The Retailer?",
+   "simbolos": "HD",
+   "direccion_pct": -6.45,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "HD",
+    "pct_real": -6.57,
+    "cierre_base": 358.03,
+    "cierre_final": 334.5,
+    "fecha_base": "2025-11-17",
+    "fecha_final": "2025-11-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:19:39+00:00",
+ "generado": "2026-08-03T10:20:24+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8969,6 +8969,28 @@
     "pct_real": 9.6,
     "cierre_base": 305.33,
     "cierre_final": 334.63,
+    "fecha_base": "2026-04-23",
+    "fecha_final": "2026-04-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7cb6f9dd40629512",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:20:24+00:00",
+   "titular": "Trump Administration's Intel Stake Is Now Up 290% In Less Than A Year",
+   "simbolos": "INTC",
+   "direccion_pct": -6.88,
+   "volatilidad_pct": 1.49,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 27.27,
+    "cierre_base": 66.78,
+    "cierre_final": 84.99,
     "fecha_base": "2026-04-23",
     "fecha_final": "2026-04-27",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:15:37+00:00",
+ "generado": "2026-08-03T16:16:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1665,6 +1665,28 @@
     "pct_real": 3.68,
     "cierre_base": 631.97,
     "cierre_final": 655.24,
+    "fecha_base": "2026-03-30",
+    "fecha_final": "2026-04-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "31582c1acd57113a",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:16:12+00:00",
+   "titular": "Billionaire Investor Shares Two-Step Approach To Positive Returns: 'I Think I Finally Solved The Stock Market'",
+   "simbolos": "QQQ",
+   "direccion_pct": -3.46,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 4.66,
+    "cierre_base": 558.28,
+    "cierre_final": 584.31,
     "fecha_base": "2026-03-30",
     "fecha_final": "2026-04-01",
     "ruedas": 2,

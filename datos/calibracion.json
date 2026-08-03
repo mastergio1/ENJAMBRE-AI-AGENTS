@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:40:50+00:00",
+ "generado": "2026-08-03T16:41:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2374,6 +2374,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f318df4386090c51",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:41:25+00:00",
+   "titular": "Trump Administration Explores Government Stakes In OpenAI, Other AI Companies Days After Bernie Sanders Proposal: Report",
+   "simbolos": "INTC",
+   "direccion_pct": 8.03,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": -1.35,
+    "cierre_base": 111.78,
+    "cierre_final": 110.27,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

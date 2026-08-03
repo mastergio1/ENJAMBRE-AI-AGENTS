@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:03:55+00:00",
+ "generado": "2026-08-03T10:04:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8509,6 +8509,28 @@
     "cierre_final": 94.3,
     "fecha_base": "2026-05-27",
     "fecha_final": "2026-05-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "afa08245cfc9545d",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:04:38+00:00",
+   "titular": "7 Small-Cap Stocks More Than Doubled In May: Micron Did Only 46%",
+   "simbolos": "MU",
+   "direccion_pct": 4.74,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": 23.62,
+    "cierre_base": 751.0,
+    "cierre_final": 928.41,
+    "fecha_base": "2026-05-22",
+    "fecha_final": "2026-05-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

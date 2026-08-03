@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:56:48+00:00",
+ "generado": "2026-08-03T05:57:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1447,6 +1447,28 @@
     "cierre_final": 311.11,
     "fecha_base": "2025-04-17",
     "fecha_final": "2025-04-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cd390e411868b284",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:57:30+00:00",
+   "titular": "Gold Fund Inflows Smash Record With $80 Billion In 2025 — These ETFs Are Riding The $3,300 Surge",
+   "simbolos": "IAU",
+   "direccion_pct": -2.74,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": 2.77,
+    "cierre_base": 60.94,
+    "cierre_final": 62.63,
+    "fecha_base": "2025-04-15",
+    "fecha_final": "2025-04-17",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

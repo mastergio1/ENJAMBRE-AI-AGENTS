@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:13:22+00:00",
+ "generado": "2026-08-03T16:13:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1599,6 +1599,28 @@
     "pct_real": -3.31,
     "cierre_base": 740.61,
     "cierre_final": 716.07,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5deabe58ec606cb9",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:13:58+00:00",
+   "titular": "Stock Market Today: Nasdaq 100 Slips As Broadcom Plunges, Bitcoin Hits 4-Month Lows",
+   "simbolos": "IWM",
+   "direccion_pct": -5.7,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": -2.71,
+    "cierre_base": 292.01,
+    "cierre_final": 284.11,
     "fecha_base": "2026-06-04",
     "fecha_final": "2026-06-08",
     "ruedas": 2,

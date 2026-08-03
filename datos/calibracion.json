@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:50:56+00:00",
+ "generado": "2026-08-03T06:51:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2965,6 +2965,28 @@
     "cierre_final": 64.63,
     "fecha_base": "2024-02-07",
     "fecha_final": "2024-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7c535fc82d70a643",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:51:31+00:00",
+   "titular": "Bitcoin rallies after SEC approves first US spot bitcoin ETFs",
+   "simbolos": "GBTC",
+   "direccion_pct": 9.78,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -4.73,
+    "cierre_base": 36.58,
+    "cierre_final": 34.85,
+    "fecha_base": "2024-01-10",
+    "fecha_final": "2024-01-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

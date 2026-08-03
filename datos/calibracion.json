@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:03:49+00:00",
+ "generado": "2026-08-03T16:04:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1271,6 +1271,28 @@
     "cierre_final": 51.84,
     "fecha_base": "2026-02-18",
     "fecha_final": "2026-02-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "49dcce8249783101",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:04:23+00:00",
+   "titular": "Check Out What Whales Are Doing With SLB",
+   "simbolos": "SLB",
+   "direccion_pct": 13.45,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": 8.53,
+    "cierre_base": 40.2,
+    "cierre_final": 43.63,
+    "fecha_base": "2026-01-02",
+    "fecha_final": "2026-01-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

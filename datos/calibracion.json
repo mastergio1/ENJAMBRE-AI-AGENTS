@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:44:32+00:00",
+ "generado": "2026-08-03T15:45:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -988,6 +988,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "55561c3094070caa",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:45:36+00:00",
+   "titular": "Thomas Massie Says Iran War Has 'Weakened' US, Points to Depleted Oil Reserves, Missile Defenses—Araghchi Says Zelenskyy Is Dragging Europe Into War for Israel",
+   "simbolos": "USO",
+   "direccion_pct": -14.14,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -11.85,
+    "cierre_base": 136.69,
+    "cierre_final": 120.49,
+    "fecha_base": "2026-07-24",
+    "fecha_final": "2026-07-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

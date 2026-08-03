@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:16:46+00:00",
+ "generado": "2026-08-03T16:17:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1714,6 +1714,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "34029a92dedb7d92",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:17:25+00:00",
+   "titular": "'BLS Recalls Staff to Ready September CPI Report by Month's End'- Bloomberg",
+   "simbolos": "SPY",
+   "direccion_pct": 2.67,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -1.21,
+    "cierre_base": 671.16,
+    "cierre_final": 663.04,
+    "fecha_base": "2025-10-09",
+    "fecha_final": "2025-10-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

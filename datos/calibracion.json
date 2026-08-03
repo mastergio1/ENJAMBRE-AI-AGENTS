@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:43:58+00:00",
+ "generado": "2026-08-03T08:44:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6353,6 +6353,28 @@
     "cierre_final": 584.31,
     "fecha_base": "2026-03-30",
     "fecha_final": "2026-04-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "acd7dea3731fe873",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:44:36+00:00",
+   "titular": "Software's Freefall Continues, Bitcoin Dips To 16-Month Lows: What's Moving Markets Thursday?",
+   "simbolos": "IWM",
+   "direccion_pct": -5.89,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 4.32,
+    "cierre_base": 255.83,
+    "cierre_final": 266.88,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

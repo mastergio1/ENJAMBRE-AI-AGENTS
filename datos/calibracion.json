@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:25:17+00:00",
+ "generado": "2026-08-03T09:25:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7434,6 +7434,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e0ec843a4128305a",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:25:51+00:00",
+   "titular": "Major indices were lower after the ADP National Employment Report shower private sector employment in October rose by 239,000 jobs, which has added to concerns of a tight labor market. The Fed will announce its interest rate decision at 2:00 p.m. ET today.",
+   "simbolos": "SPY",
+   "direccion_pct": -0.35,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -3.51,
+    "cierre_base": 384.52,
+    "cierre_final": 371.01,
+    "fecha_base": "2022-11-01",
+    "fecha_final": "2022-11-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

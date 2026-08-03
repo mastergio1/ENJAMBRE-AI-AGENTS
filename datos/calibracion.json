@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:10:22+00:00",
+ "generado": "2026-08-03T07:10:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3508,6 +3508,28 @@
    "simbolos": "GBTC",
    "direccion_pct": -10.42,
    "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -8.65,
+    "cierre_base": 9.54,
+    "cierre_final": 8.72,
+    "fecha_base": "2022-11-08",
+    "fecha_final": "2022-11-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a55aa9cca65aae9a",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:10:53+00:00",
+   "titular": "Crypto markets crater as FTX collapses in stunning bankruptcy",
+   "simbolos": "GBTC",
+   "direccion_pct": -11.67,
+   "volatilidad_pct": 1.14,
    "reaccion_real": {
     "simbolo": "GBTC",
     "pct_real": -8.65,

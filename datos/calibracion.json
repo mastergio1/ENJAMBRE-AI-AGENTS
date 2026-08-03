@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:27:42+00:00",
+ "generado": "2026-08-03T15:28:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -658,6 +658,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6fa8c8040217c899",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:28:34+00:00",
+   "titular": "Coinbase Eyes SEC Nod For Blockchain-Based Stocks— Legal Head Paul Grewal Says It's A 'Huge Priority'",
+   "simbolos": "COIN",
+   "direccion_pct": 15.67,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 21.48,
+    "cierre_base": 253.85,
+    "cierre_final": 308.38,
+    "fecha_base": "2025-06-17",
+    "fecha_final": "2025-06-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

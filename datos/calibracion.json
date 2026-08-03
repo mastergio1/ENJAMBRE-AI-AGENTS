@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:49:42+00:00",
+ "generado": "2026-08-03T06:50:17+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2921,6 +2921,28 @@
     "cierre_final": 165.67,
     "fecha_base": "2024-02-13",
     "fecha_final": "2024-02-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4fa79f5418aaaa47",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:50:16+00:00",
+   "titular": "Bitcoin Halving Prompts Record Miner Selling: Bitfinex Report",
+   "simbolos": "MARA",
+   "direccion_pct": 2.69,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 36.2,
+    "cierre_base": 17.54,
+    "cierre_final": 23.89,
+    "fecha_base": "2024-02-07",
+    "fecha_final": "2024-02-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:36:21+00:00",
+ "generado": "2026-08-03T05:36:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -944,6 +944,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "281942868db4c6ef",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:36:52+00:00",
+   "titular": "Intel Rockets As Wall Street Wakes Up To CPU Demand; Strong Economic Data; Greenland Relief Rally",
+   "simbolos": "SLV",
+   "direccion_pct": 10.05,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": 12.87,
+    "cierre_base": 87.13,
+    "cierre_final": 98.34,
+    "fecha_base": "2026-01-22",
+    "fecha_final": "2026-01-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

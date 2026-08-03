@@ -1,0 +1,466 @@
+// El Enjambre — Etapa 3: el enjambre 3D con datos falsos.
+// Un solo loop, tres draw calls, gobernador de fps para móvil.
+
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { abrirArchivo } from './archivo/archivo.js'
+import { abrirDuelo } from './duelo/duelo.js'
+import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
+import { Enjambre } from './swarm/enjambre.js'
+import { MotorRemoto, urlApi } from './ui/conexion.js'
+import { montarGuia } from './ui/guia.js'
+import { montarNavegacion } from './ui/navegacion.js'
+import { iniciarTour, tourVisto } from './ui/tour.js'
+import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
+
+// el JS llegó y va a arrancar: se retira la señal de vida de index.html
+// (si este módulo nunca llega — 4G débil, error — el mensaje queda visible
+// en vez de una pantalla negra muda)
+document.getElementById('cargando')?.remove()
+
+const canvas = document.getElementById('escena')
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setSize(window.innerWidth, window.innerHeight)
+
+const escena = new THREE.Scene()
+escena.background = new THREE.Color('#1b1916')
+// niebla contenida: da profundidad sin velar la escena (antes 0.022 la
+// dejaba "nublada" — observación de Giorgio en producción)
+escena.fog = new THREE.FogExp2('#1b1916', 0.014)
+
+const camara = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120)
+camara.position.set(0, 7, 30)
+camara.lookAt(0, 0, 0)
+
+// controles de cámara: arrastrar gira, rueda/pellizco acerca. Hasta que el
+// visitante toma el mando, la cámara sigue con su parallax sutil; doble
+// clic (o doble toque) devuelve el mando al parallax.
+const controles = new OrbitControls(camara, document.getElementById('escena'))
+controles.enablePan = false
+controles.enableDamping = true
+controles.dampingFactor = 0.08
+controles.minDistance = 14
+controles.maxDistance = 55
+controles.maxPolarAngle = 1.5 // nunca por debajo del "suelo" del enjambre
+let camaraManual = false
+controles.addEventListener('start', () => { camaraManual = true })
+document.getElementById('escena').addEventListener('dblclick', () => { camaraManual = false })
+
+const enjambre = new Enjambre(7)
+escena.add(enjambre.grupo)
+
+// ---------- estela de movimiento (afterimage) + tinte de pánico ----------
+// La estela es una realimentación de cuadro: cada frame mezcla el anterior
+// atenuado con el nuevo. En calma es sutil (hipnótica); en un shock fuerte
+// se alarga y el fondo se entibia hacia el rosa-arcilla (turbulencia).
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(escena, camara))
+// bloom contenido: brillan SOLO los faros dorados y las emociones fuertes.
+// (0.85/0.55/0.5 hacía brillar media escena: el origen de la "nubosidad")
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.5,   // fuerza
+  0.3,   // radio
+  0.72,  // umbral alto: el fondo y la masa gris quedan nítidos
+)
+composer.addPass(bloom)
+const estela = new AfterimagePass(0.82)
+composer.addPass(estela)
+composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+composer.setSize(window.innerWidth, window.innerHeight)
+
+const FONDO_CALMA = new THREE.Color('#1b1916')
+const FONDO_PANICO = new THREE.Color('#241216') // tinta cálida entintada de rosa
+const _fondo = new THREE.Color() // reutilizado por frame (nada nuevo en el loop)
+
+// ---------- interacción ----------
+
+const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// el motor real (WebSocket): configurable por entorno; en localhost se
+// asume el uvicorn de desarrollo; si no responde, demo local en el navegador
+const urlMotor =
+  import.meta.env.VITE_WS_URL ||
+  (['localhost', '127.0.0.1'].includes(location.hostname) ? 'ws://localhost:8000/ws' : null)
+let motor = urlMotor ? new MotorRemoto(urlMotor) : null
+let modo = 'demo local'
+
+let muroCtl = { recargar: async () => {}, detenerReplay: () => {} }
+let observatorio = null // el mando cuando el enjambre está "dejado corriendo"
+
+// ¿Los líderes respondieron con IA real o con el respaldo léxico? Se lee
+// del campo `fuente` que manda el motor — y se muestra en el HUD.
+function evaluarCerebros(lideres) {
+  const total = (lideres || []).length || 1
+  const ia = (lideres || []).filter((l) => l.fuente === 'api' || l.fuente === 'cache').length
+  return ia > total / 2
+}
+
+async function soltarTitular(titular, titularId = null) {
+  if (reducirMovimiento) {
+    correrEstatico(titular)
+    return
+  }
+  // si el observatorio está activo, la noticia se suelta ENCIMA (no reinicia)
+  if (observatorio) {
+    if (titular) {
+      panel.fijarLeyendo(true)
+      observatorio.soltarNoticia(titular)
+    }
+    return
+  }
+  muroCtl.detenerReplay() // la portada cede el escenario a la simulación en vivo
+  if (motor) {
+    try {
+      panel.fijarLeyendo(true) // los 100 líderes leen (~10-15 s con IA real)
+      await motor.simular(titular, {
+        alInicio: (mensaje) => {
+          panel.fijarLeyendo(false)
+          enjambre.fijarLideresRemotos(mensaje.lideres)
+          const conIA = evaluarCerebros(mensaje.lideres)
+          modo = conIA ? 'motor real · IA' : 'motor real · respaldo'
+          if (!conIA) {
+            panel.avisar('Los líderes respondieron con el cerebro de respaldo (sin IA). ' +
+              'Revisa la clave de Anthropic en Render: valor y saldo.')
+          }
+        },
+        alTick: (precio, _tick, sentimientos) => enjambre.aplicarEstadoRemoto(precio, sentimientos),
+        alFin: (reporte) => {
+          panel.mostrarReporte(reporte)
+          muroCtl.recargar() // la tarjeta recién simulada pasa a Estado A
+        },
+        alLimite: (mensaje) => {
+          panel.fijarLeyendo(false)
+          panel.avisar(mensaje)
+        },
+        alDespertar: () => panel.avisar(
+          'El motor estaba descansando y está despertando (hasta 1 minuto). El enjambre reaccionará en cuanto abra los ojos…'),
+      }, titularId ? { titular_id: titularId } : {})
+      enjambre.modoRemoto = true
+      return
+    } catch {
+      // el motor no respondió ESTA vez (dormido o redesplegando): esta corrida
+      // va en demo local, pero el próximo intento vuelve a buscar el motor
+      panel.fijarLeyendo(false)
+      panel.avisar('No se pudo alcanzar el motor; esta corrida es una demostración local. Vuelve a intentarlo en un momento.')
+    }
+  }
+  panel.fijarLeyendo(false)
+  enjambre.modoRemoto = false
+  modo = 'demo local'
+  enjambre.aplicarTitular(titular, reloj.getElapsedTime())
+}
+
+// Modo observatorio: el enjambre sigue vivo y recibe noticias encima
+async function alternarObservatorio(titular) {
+  if (observatorio) {
+    observatorio.detener()
+    observatorio = null
+    enjambre.modoRemoto = false
+    modo = 'demo local'
+    panel.fijarModoObservatorio(false)
+    return
+  }
+  if (reducirMovimiento || !motor) {
+    panel.avisar('El modo observatorio necesita el motor en vivo.')
+    return
+  }
+  try {
+    muroCtl.detenerReplay()
+    observatorio = await motor.observatorio(titular, {
+      alInicio: (m) => {
+        panel.fijarLeyendo(false)
+        enjambre.fijarLideresRemotos(m.lideres)
+        modo = evaluarCerebros(m.lideres) ? 'observatorio · IA' : 'observatorio · respaldo'
+      },
+      alTick: (precio, _t, sent) => enjambre.aplicarEstadoRemoto(precio, sent),
+      alLimite: (m) => {
+        panel.fijarLeyendo(false)
+        panel.avisar(m)
+      },
+      alDespertar: () => panel.avisar(
+        'El motor estaba descansando y está despertando (hasta 1 minuto)…'),
+      alFin: () => {
+        observatorio = null
+        enjambre.modoRemoto = false
+        panel.fijarModoObservatorio(false)
+        panel.avisar('El observatorio descansó. Puedes reabrirlo cuando quieras.')
+      },
+    })
+    enjambre.modoRemoto = true
+    modo = 'observatorio'
+    panel.fijarModoObservatorio(true)
+  } catch {
+    observatorio = null
+    panel.avisar('No se pudo abrir el observatorio.')
+  }
+}
+
+const panel = crearPanel(soltarTitular, alternarObservatorio, {
+  // "⚔ Armar un duelo" desde el reporte: la hemeroteca abre lista para elegir
+  alDuelo: () => { cerrarOverlays(); mostrarArchivo({ enDuelo: true }) },
+})
+
+// la guía "¿Cómo funciona?": botón flotante + panel; se abre sola la 1ª visita
+montarGuia()
+
+// ---------- el archivo + enlaces compartibles (?sim=<id>) ----------
+
+const reproductorArchivo = new ReproductorReplay(enjambre)
+
+/** Abre una simulación guardada: replay + reporte con las 8 voces y epílogo. */
+async function abrirSimulacion(id) {
+  const api = urlApi()
+  if (!api || !/^[0-9a-f]{16}$/.test(id)) return
+  muroCtl.detenerReplay()
+  reproductorArchivo.detener()
+  panel.avisar('Abriendo la simulación…') // estado de carga: nunca silencio
+  try {
+    const d = await (await fetch(`${api}/api/simulacion/${id}`)).json()
+    enjambre.fijarLideresRemotos(d.lideres || [])
+    panel.mostrarReporte(d.resumen, {
+      voces: d.voces, epilogo: d.epilogo, titular: d.titular, id: d.id,
+      simbolos: d.simbolos,  // habilita la comparación con el gráfico real
+    })
+    history.replaceState({}, '', `?sim=${id}`)
+    if (d.tiene_replay && !reducirMovimiento) {
+      await reproductorArchivo.cargar(`${api}/api/simulacion/${id}/replay`)
+      reproductorArchivo.reproducir({})
+    }
+  } catch {
+    panel.avisar('No se pudo cargar esa simulación.')
+  }
+}
+
+let archivoCtl = null
+let dueloCtl = null
+
+/** Cierra archivo y duelo (para que la navegación nunca deje atrapado a nadie). */
+function cerrarOverlays() {
+  try { archivoCtl?.cerrar() } catch { /* ya cerrado */ }
+  try { dueloCtl?.cerrar() } catch { /* ya cerrado */ }
+  archivoCtl = null
+  dueloCtl = null
+}
+
+async function mostrarArchivo({ enDuelo = false } = {}) {
+  history.pushState({}, '', '/archivo')
+  const control = await abrirArchivo({
+    enDuelo,
+    alAbrirSim: (id) => {
+      control?.cerrar()          // la hemeroteca cede el paso al reporte
+      abrirSimulacion(id)
+    },
+    alDuelo: (idA, idB) => {
+      control?.cerrar()
+      mostrarDuelo(idA, idB)
+    },
+    alCerrar: () => history.pushState({}, '', '/'),
+  })
+  archivoCtl = control
+}
+
+async function mostrarDuelo(idA, idB) {
+  if (!/^[0-9a-f]{16}$/.test(idA) || !/^[0-9a-f]{16}$/.test(idB)) return
+  muroCtl.detenerReplay()
+  reproductorArchivo.detener()
+  history.pushState({}, '', `/duelo/${idA}-vs-${idB}`)
+  dueloCtl = await abrirDuelo({
+    idA, idB, reducirMovimiento,
+    alCerrar: () => history.pushState({}, '', '/'),
+  })
+}
+
+// ---------- la barra de navegación ----------
+montarNavegacion({
+  inicio: () => {
+    cerrarOverlays()
+    muroCtl.plegar?.()           // el muro cede el escenario al enjambre
+    history.pushState({}, '', '/')
+  },
+  muro: () => {
+    cerrarOverlays()
+    muroCtl.abrir?.()
+    history.pushState({}, '', '/')
+  },
+  archivo: () => { cerrarOverlays(); mostrarArchivo() },
+  duelo: () => { cerrarOverlays(); mostrarArchivo({ enDuelo: true }) },
+  pulso: () => {
+    cerrarOverlays()
+    history.pushState({}, '', '/')
+    muroCtl.irAlPulso?.()
+  },
+})
+
+// el muro de noticias: la nueva portada (carga en paralelo, nunca bloquea)
+inicializarMuro({
+  enjambre,
+  panel,
+  correrTitular: soltarTitular,
+  reducirMovimiento,
+  fijarModo: (nuevo) => { modo = nuevo },
+  abrirArchivo: mostrarArchivo,
+})
+  .then((control) => { muroCtl = control })
+  .catch(() => {})
+  .finally(() => {
+    // el tour de bienvenida: primera visita, sin enlaces profundos, y con
+    // el muro plegado para que la escena sea la protagonista
+    const profundo = new URLSearchParams(location.search).get('sim') ||
+      location.pathname.startsWith('/duelo') || location.pathname.startsWith('/archivo')
+    if (!tourVisto() && !profundo && !reducirMovimiento) {
+      setTimeout(() => {
+        muroCtl.plegar?.()
+        iniciarTour()
+      }, 1100)
+    }
+  })
+
+// enrutamiento inicial: enlace compartible, duelo o la hemeroteca
+const paramsIniciales = new URLSearchParams(location.search)
+const dueloRuta = location.pathname.match(/^\/duelo\/([0-9a-f]{16})-vs-([0-9a-f]{16})/)
+if (paramsIniciales.get('sim')) {
+  abrirSimulacion(paramsIniciales.get('sim'))
+} else if (dueloRuta) {
+  mostrarDuelo(dueloRuta[1], dueloRuta[2])
+} else if (location.pathname.startsWith('/archivo')) {
+  mostrarArchivo()
+}
+
+// parallax sutil con el puntero (vectores reutilizados, nada nuevo por frame)
+const punteroMeta = new THREE.Vector2()
+const rayo = new THREE.Raycaster()
+const punteroNDC = new THREE.Vector2()
+let ultimoRaycast = 0
+
+/** Raycast contra los halos de líderes; muestra el tooltip si acierta. */
+function buscarLider(evento) {
+  punteroNDC.set(
+    (evento.clientX / window.innerWidth) * 2 - 1,
+    -((evento.clientY / window.innerHeight) * 2 - 1),
+  )
+  rayo.setFromCamera(punteroNDC, camara)
+  const impactos = rayo.intersectObject(enjambre.mallaHalos)
+  if (impactos.length > 0) {
+    const lider = enjambre.lideres[impactos[0].instanceId]
+    panel.mostrarTooltip(lider, evento.clientX, evento.clientY)
+    canvas.style.cursor = 'pointer'
+    return true
+  }
+  panel.ocultarTooltip()
+  canvas.style.cursor = 'default'
+  return false
+}
+
+window.addEventListener('pointermove', (evento) => {
+  punteroMeta.set(
+    (evento.clientX / window.innerWidth) * 2 - 1,
+    (evento.clientY / window.innerHeight) * 2 - 1,
+  )
+  // hover sobre líderes: raycast acotado (cada 80 ms, solo contra los halos)
+  const ahora = performance.now()
+  if (ahora - ultimoRaycast < 80) return
+  ultimoRaycast = ahora
+  buscarLider(evento)
+})
+
+// en pantallas táctiles el "hover" no existe: un toque sobre un faro dorado
+// muestra su frase (el tooltip se despide solo a los segundos)
+canvas.addEventListener('pointerdown', (evento) => {
+  if (evento.pointerType === 'touch') buscarLider(evento)
+})
+
+window.addEventListener('resize', () => {
+  camara.aspect = window.innerWidth / window.innerHeight
+  camara.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  composer.setSize(window.innerWidth, window.innerHeight)
+})
+
+// ---------- gobernador de fps: bajo 45 recorta partículas ----------
+
+let fpsSuavizado = 60
+let proporcion = 1
+let ultimoAjuste = 0
+
+function gobernarFps(dt, t) {
+  fpsSuavizado += (1 / Math.max(dt, 1e-4) - fpsSuavizado) * 0.05
+  if (t - ultimoAjuste < 1.5) return
+  if (fpsSuavizado < 45 && proporcion > 0.3) {
+    proporcion = Math.max(0.3, proporcion - 0.15)
+    enjambre.fijarProporcion(proporcion)
+    ultimoAjuste = t
+  } else if (fpsSuavizado > 57 && proporcion < 1) {
+    proporcion = Math.min(1, proporcion + 0.1)
+    enjambre.fijarProporcion(proporcion)
+    ultimoAjuste = t
+  }
+}
+
+// ---------- loop principal ----------
+
+const reloj = new THREE.Clock()
+let ultimoHud = 0
+
+function cuadro() {
+  const dt = Math.min(reloj.getDelta(), 0.05)
+  const t = reloj.getElapsedTime()
+
+  enjambre.actualizar(t, dt)
+  if (camaraManual) {
+    controles.update() // el visitante manda: damping suave de OrbitControls
+  } else {
+    // parallax sutil por defecto (y regreso elegante tras el doble clic)
+    camara.position.x += (punteroMeta.x * 2.5 - camara.position.x) * 0.03
+    camara.position.y += (7 - punteroMeta.y * 2 - camara.position.y) * 0.03
+    camara.position.z += (30 - camara.position.z) * 0.03
+    camara.lookAt(0, 0, 0)
+  }
+  gobernarFps(dt, t)
+
+  if (t - ultimoHud > 0.25) {
+    ultimoHud = t
+    panel.actualizarHUD(enjambre.precio, fpsSuavizado, enjambre.malla.count + enjambre.lideres.length, modo)
+    panel.dibujarSparkline(enjambre.seriePrecio)
+  }
+
+  // estela y tinte según el pánico de la masa (0..1). En calma es corta y
+  // la escena se ve despejada; solo el pánico la alarga (la ola dramática)
+  const panico = enjambre.panico || 0
+  estela.uniforms.damp.value = 0.55 + panico * 0.35 // 0.55 (nítida) → 0.90 (larga)
+  _fondo.copy(FONDO_CALMA).lerp(FONDO_PANICO, panico)
+  escena.background.copy(_fondo)
+  escena.fog.color.copy(_fondo)
+  // en equipos lentos, los efectos se apagan para recuperar cuadros
+  estela.enabled = fpsSuavizado > 38
+  bloom.enabled = fpsSuavizado > 38
+  composer.render()
+}
+
+// ---------- modo estático (prefers-reduced-motion) ----------
+
+function correrEstatico(titular) {
+  // simula 25 segundos "fuera de línea" y muestra una sola imagen + gráfico
+  if (titular) enjambre.aplicarTitular(titular, 0)
+  let t = 0
+  const paso = 1 / 30
+  for (let i = 0; i < 25 * 30; i++) {
+    t += paso
+    enjambre.actualizar(t, paso)
+  }
+  renderer.render(escena, camara)
+  panel.actualizarHUD(enjambre.precio, 0, enjambre.malla.count + enjambre.lideres.length)
+  dibujarGraficoEstatico(enjambre.seriePrecio)
+  document.getElementById('aviso-estatico').hidden = false
+}
+
+if (reducirMovimiento) {
+  correrEstatico(null)
+} else {
+  renderer.setAnimationLoop(cuadro)
+}

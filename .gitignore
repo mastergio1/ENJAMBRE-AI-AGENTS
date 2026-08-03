@@ -1,4 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Entorno y secretos (la clave de Anthropic NUNCA se sube)
+.env
+.env.*
+!.env.example
+
+# Sistema
+.DS_Store
+
+# Caché de respuestas LLM (se regenera)
+engine/brains/cache/
+
+# Base de datos local (en Render vive en el disco persistente)
+engine/datos/
+
+# Obsidian (notas en docs/): estado de sesión local, no versionar
 .obsidian/workspace.json
 .obsidian/app.json
-.DS_Store
 .vault.db

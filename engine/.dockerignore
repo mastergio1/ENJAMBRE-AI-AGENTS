@@ -1,0 +1,17 @@
+# Nada de esto entra en la imagen de producción.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# datos locales y artefactos que se regeneran
+datos/
+frames/
+brains/cache/
+# secretos (jamás en la imagen)
+.env
+.env.*
+!.env.example
+# dev-only
+requirements-dev.txt
+validation/
+*.md

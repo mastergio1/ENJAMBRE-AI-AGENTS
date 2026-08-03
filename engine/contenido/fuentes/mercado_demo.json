@@ -1,0 +1,8 @@
+[
+  { "simbolo": "$SPX", "nombre": "S&P 500", "ultimo": 5218.4, "variacion_pct": -0.62 },
+  { "simbolo": "$IUXX", "nombre": "Nasdaq 100", "ultimo": 18140.2, "variacion_pct": -0.88 },
+  { "simbolo": "CLZ25", "nombre": "Petróleo WTI", "ultimo": 84.7, "variacion_pct": 2.1 },
+  { "simbolo": "GCZ25", "nombre": "Oro", "ultimo": 2331.5, "variacion_pct": -0.9 },
+  { "simbolo": "NVDA", "nombre": "Nvidia", "ultimo": 128.3, "variacion_pct": 3.4 },
+  { "simbolo": "AAPL", "nombre": "Apple", "ultimo": 214.1, "variacion_pct": 0.4 }
+]

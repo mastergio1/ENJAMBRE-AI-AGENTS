@@ -1,0 +1,72 @@
+# El cosechador — llena el banco de exámenes con noticias REALES.
+#
+# Busca los días de mayor movimiento de cada símbolo (Yahoo) y les pega el
+# titular real de ese día (Benzinga/Alpaca). Solo suma eventos que tengan
+# noticia real: nunca inventa. Los eventos nuevos quedan en la rama
+# respaldo-datos (datos/cosecha.json) y las tandas de backtest los rinden
+# después. Se dispara a mano (Actions → Run workflow, o app móvil).
+
+name: Cosechar exámenes (noticias reales)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mercados:
+        description: "Mercados a cosechar, separados por coma (vacío = todos). Ej: oro,cripto"
+        required: false
+        default: ""
+      desde:
+        description: "Fecha inicial (AAAA-MM-DD)"
+        required: false
+        default: "2016-01-01"
+      tope:
+        description: "Máx. eventos por símbolo (1-20)"
+        required: false
+        default: "8"
+      reemplazar:
+        description: "Purgar la cosecha anterior y reescribir limpia (true/false)"
+        required: false
+        default: "false"
+
+jobs:
+  cosechar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Cosechar
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          MERCADOS: ${{ github.event.inputs.mercados }}
+          DESDE: ${{ github.event.inputs.desde || '2016-01-01' }}
+          TOPE: ${{ github.event.inputs.tope || '8' }}
+          REEMPLAZAR: ${{ github.event.inputs.reemplazar || 'false' }}
+        run: |
+          respuesta=$(curl -sf -m 60 -X POST \
+            "https://enjambre-motor.onrender.com/api/cosechar?mercados=$MERCADOS&desde=$DESDE&tope=$TOPE&reemplazar=$REEMPLAZAR" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "Respuesta del motor: $respuesta"
+          echo "La cosecha corre en segundo plano. Los eventos nuevos quedan en"
+          echo "la rama respaldo-datos (datos/cosecha.json) y las tandas de"
+          echo "backtest los rinden después."

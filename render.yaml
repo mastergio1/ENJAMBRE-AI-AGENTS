@@ -1,0 +1,78 @@
+# Blueprint de Render para el motor de El Enjambre.
+# En render.com: New → Blueprint → apuntar a este repositorio.
+services:
+  - type: web
+    name: enjambre-motor
+    runtime: docker
+    rootDir: engine
+    dockerfilePath: ./Dockerfile
+    plan: starter          # $7/mes: no se duerme + 0.5 CPU (5x vs free) + disco
+    healthCheckPath: /salud
+    # disco persistente: la base (muro, replays, calibración) sobrevive a los
+    # redeploys en vez de regenerarse cada vez. Montado donde vive ENJAMBRE_DB.
+    disk:
+      name: enjambre-datos
+      mountPath: /app/datos
+      sizeGB: 1
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false # se pega a mano en el panel (nunca al repo)
+      - key: ALPACA_API_KEY_ID
+        sync: false
+      - key: ALPACA_API_SECRET_KEY
+        sync: false
+      # ⚠️ FASE DE PRUEBAS: topes abiertos para que Giorgio teste sin frenos.
+      # ANTES DEL LANZAMIENTO PÚBLICO volver a: DIA="5" e IP_HORA="3"
+      # (cada simulación ≈ 100 llamadas LLM; estos topes son la muralla
+      # de la billetera cuando la URL sea pública).
+      - key: ENJAMBRE_MAX_SIM_DIA
+        value: "500"
+      - key: ENJAMBRE_MAX_SIM_IP_HORA
+        value: "100"
+      # orígenes permitidos por CORS: el dominio de Vercel de producción.
+      # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
+      - key: ENJAMBRE_ORIGENES
+        value: "https://enjambre.vercel.app"
+      # la base vive en el disco PERSISTENTE montado arriba (/app/datos):
+      # sobrevive a los redeploys (plan Starter). El pipeline la puebla.
+      - key: ENJAMBRE_DB
+        value: "/app/datos/enjambre.db"
+      # El Pulso (Etapa 8) — se pegan a mano cuando el dominio esté verificado:
+      - key: RESEND_API_KEY
+        sync: false
+      # La Redacción — capa de datos de mercado (Barchart) para el análisis:
+      - key: BARCHART_API_KEY
+        sync: false
+      - key: PULSO_REMITENTE
+        value: "El Enjambre <pulso@tudominio.cl>"
+      - key: ENJAMBRE_WEB_URL
+        value: "https://enjambre.vercel.app"
+      - key: ENJAMBRE_API_URL
+        value: "https://enjambre-motor.onrender.com"
+      # aviso a Giorgio por Telegram (opcional):
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      # token que autoriza al cron a disparar el ritual (mismo valor en ambos)
+      - key: ENJAMBRE_PIPELINE_TOKEN
+        generateValue: true
+      # 🔒 PRUEBAS PRIVADAS: mientras esta clave esté puesta, SOLO quien la
+      # traiga (?acceso=CLAVE en la URL) puede soltar titulares al enjambre
+      # (que gastan IA). El muro, el archivo y los replays siguen abiertos.
+      # Para abrir al público: borrar esta variable. Se pega a mano.
+      - key: ENJAMBRE_ACCESO
+        sync: false
+      # respaldo de la calibración a GitHub (rama respaldo-datos, nunca main):
+      # token fine-grained con permiso Contents (RW) SOLO sobre este repo.
+      # El disco free de Render es efímero; sin este token, los casos del
+      # corrector se pierden en cada redeploy.
+      - key: GITHUB_RESPALDO_TOKEN
+        sync: false
+
+# ─────────────────────────────────────────────────────────────────────────
+# El cron del correo diario (El Pulso) se agrega DESPUÉS, cuando esté lista
+# la cuenta de Resend. Requiere pegar en el cron el mismo ENJAMBRE_PIPELINE_TOKEN
+# que Render genera en el servicio web. Bloque de referencia en docs/despliegue.md
+# (sección "El cron enjambre-pulso"). Se omite ahora para un primer deploy simple.
+# ─────────────────────────────────────────────────────────────────────────

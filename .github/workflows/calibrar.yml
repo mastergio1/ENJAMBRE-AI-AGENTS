@@ -1,0 +1,118 @@
+# Calibración completa y balanceada — rinde el banco de exámenes solo.
+#
+# Recorre los mercados (oro, cripto, petróleo, índices y acciones) y rinde
+# tandas hasta llegar al cupo de cada uno. Las acciones son mayoría, así que
+# tienen un tope (presupuesto). Cada tanda corre en segundo plano en el motor
+# (~1 min por examen); este workflow espera a que termine antes de disparar la
+# siguiente, para no rendir dos veces el mismo examen. Se detiene solo cuando
+# no queda saldo de IA (los exámenes dejan de avanzar) o cuando termina.
+#
+# Se dispara a mano (Actions → Run workflow). Una sola corrida basta.
+
+name: Calibrar el enjambre (render completo)
+
+on:
+  workflow_dispatch:
+    inputs:
+      cupo:
+        description: "Exámenes EXACTOS por mercado (oro, cripto, petróleo, índices, acciones)"
+        required: false
+        default: "100"
+      tanda:
+        description: "Exámenes por tanda (máx 40)"
+        required: false
+        default: "40"
+      reiniciar:
+        description: "Borrar la calibración local antes de rendir (para re-validar diales nuevos)"
+        required: false
+        default: "false"
+
+jobs:
+  calibrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          [ -z "$TOKEN" ] && { echo "::error::Falta ENJAMBRE_PIPELINE_TOKEN."; exit 1; } || true
+
+      - name: Despertar el motor
+        run: |
+          for i in $(seq 1 20); do
+            curl -sf -m 20 https://enjambre-motor.onrender.com/salud >/dev/null && exit 0
+            echo "despertando… ($i/20)"; sleep 15
+          done
+          echo "::error::el motor no despertó"; exit 1
+
+      - name: Rendir la calibración por mercado
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          TANDA: ${{ github.event.inputs.tanda || '40' }}
+          CUPO: ${{ github.event.inputs.cupo || '100' }}
+          REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
+        run: |
+          set -u
+          BASE="https://enjambre-motor.onrender.com/api/backtest"
+          H="X-Pipeline-Token: $TOKEN"
+
+          # opcional: borrar la calibración local (disco persistente) para
+          # re-validar sobre diales nuevos desde cero
+          if [ "$REINICIAR" = "true" ]; then
+            echo "Reiniciando la calibración local…"
+            curl -sf -m 60 -X POST "$BASE/reiniciar" -H "$H" && echo "  base local reiniciada"
+          fi
+
+          # hechos rendidos de un mercado (via GET)
+          hechos() {
+            curl -sf -m 30 "$BASE?mercado=$1" -H "$H" \
+              | python3 -c "import sys,json;print(json.load(sys.stdin).get('hechos',0))" 2>/dev/null || echo 0
+          }
+          pendientes() {
+            curl -sf -m 30 "$BASE?mercado=$1" -H "$H" \
+              | python3 -c "import sys,json;print(json.load(sys.stdin).get('pendientes',0))" 2>/dev/null || echo 0
+          }
+
+          for MERCADO in oro cripto petroleo indice accion; do
+            CAP="$CUPO"   # exactamente $CUPO exámenes por mercado
+            echo "════════ Mercado: $MERCADO (cupo $CAP) ════════"
+            while true; do
+              HECHOS=$(hechos "$MERCADO"); PEND=$(pendientes "$MERCADO")
+              echo "  $MERCADO: $HECHOS rendidos, $PEND pendientes"
+              [ "$PEND" -le 0 ] && { echo "  ✔ $MERCADO completo"; break; }
+              [ "$HECHOS" -ge "$CAP" ] && { echo "  ✔ $MERCADO llegó al cupo ($CAP)"; break; }
+
+              # esta tanda rinde el mínimo entre el tamaño, lo pendiente y lo
+              # que falta para el cupo (así no se pasa de $CAP exactos)
+              ESTA_TANDA=$TANDA
+              [ "$PEND" -lt "$ESTA_TANDA" ] && ESTA_TANDA=$PEND
+              FALTAN=$((CAP - HECHOS))
+              [ "$FALTAN" -lt "$ESTA_TANDA" ] && ESTA_TANDA=$FALTAN
+              TARGET=$((HECHOS + ESTA_TANDA))
+
+              curl -sf -m 60 -X POST "$BASE?tanda=$ESTA_TANDA&mercado=$MERCADO" -H "$H" >/dev/null \
+                || { echo "  POST falló, reintento en 30s"; sleep 30; continue; }
+
+              # esperar a que la tanda de fondo complete su cupo, o se estanque
+              QUIETO=0; ULTIMO=$HECHOS
+              for _ in $(seq 1 70); do   # hasta ~35 min por tanda
+                sleep 30
+                AHORA=$(hechos "$MERCADO")
+                [ "$AHORA" -ge "$TARGET" ] && break
+                if [ "$AHORA" -eq "$ULTIMO" ]; then QUIETO=$((QUIETO+1)); else QUIETO=0; fi
+                ULTIMO=$AHORA
+                [ "$QUIETO" -ge 6 ] && break   # 3 min sin cambio: la tanda ya terminó/paró
+              done
+
+              AHORA=$(hechos "$MERCADO")
+              if [ "$AHORA" -le "$HECHOS" ]; then
+                echo "  ⚠ sin avance (¿sin saldo de IA?). Deteniendo la calibración."
+                break 2
+              fi
+            done
+          done
+          echo "════════ Calibración terminada ════════"
+          for M in oro cripto petroleo indice accion; do
+            echo "  $M: $(hechos $M) rendidos"
+          done

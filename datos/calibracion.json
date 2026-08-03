@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:04:01+00:00",
+ "generado": "2026-08-03T05:04:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -152,6 +152,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3287f0ad2210a5c0",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:04:43+00:00",
+   "titular": "Market Bounces From Low Band Of Support Zone - Deal Narrative Takes Hold — Risk Mispriced",
+   "simbolos": "GLD",
+   "direccion_pct": 1.18,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": 5.61,
+    "cierre_base": 414.58,
+    "cierre_final": 437.82,
+    "fecha_base": "2026-03-30",
+    "fecha_final": "2026-04-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

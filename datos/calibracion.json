@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:25:10+00:00",
+ "generado": "2026-08-03T06:25:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2237,6 +2237,28 @@
     "pct_real": 14.45,
     "cierre_base": 237.95,
     "cierre_final": 272.34,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "802d31ffc66149a4",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:25:56+00:00",
+   "titular": "Bitwise Turns Crypto Volatility Into Yield With New ETF Trio",
+   "simbolos": "MARA",
+   "direccion_pct": 5.9,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 11.6,
+    "cierre_base": 10.52,
+    "cierre_final": 11.74,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

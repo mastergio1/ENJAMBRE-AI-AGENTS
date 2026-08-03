@@ -932,10 +932,10 @@ def api_libreta(x_pipeline_token: str = Header(default="")) -> dict:
     return corrector.libreta()
 
 
-def _correr_backtest(tanda: int) -> None:
+def _correr_backtest(tanda: int, mercado: str | None = None) -> None:
     from contenido import backtest
 
-    resultado = backtest.correr_tanda(tamano=tanda)
+    resultado = backtest.correr_tanda(tamano=tanda, mercado=mercado)
     print(f"backtest: {len(resultado['hechas'])} exámenes rendidos, "
           f"{resultado['pendientes']} pendientes, sin datos: {resultado['sin_datos']}, "
           f"sin IA (¿saldo?): {resultado.get('sin_ia')}, "
@@ -944,29 +944,33 @@ def _correr_backtest(tanda: int) -> None:
 
 
 @app.post("/api/backtest")
-def api_backtest(tareas: BackgroundTasks, tanda: int = 5,
+def api_backtest(tareas: BackgroundTasks, tanda: int = 5, mercado: str = "",
                  x_pipeline_token: str = Header(default="")) -> dict:
     """Rinde una tanda de exámenes históricos (protegido, freno de
-    presupuesto: máx 10 por corrida). Corre en segundo plano — cada
-    simulación toma ~1 minuto."""
+    presupuesto). Corre en segundo plano — cada simulación toma ~1 minuto.
+    Con `mercado` (oro/cripto/petroleo/indice/accion) rinde solo ese mercado
+    (calibración balanceada, 100+/mercado)."""
     if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
     from contenido import backtest
 
-    avance = backtest.estado()
-    tareas.add_task(_correr_backtest, tanda)
-    return {"estado": "iniciado", "tanda": max(1, min(int(tanda), backtest.TANDA_MAXIMA)),
+    merc = mercado.strip() or None
+    avance = backtest.estado(mercado=merc)
+    tareas.add_task(_correr_backtest, tanda, merc)
+    return {"estado": "iniciado", "mercado": merc or "todos",
+            "tanda": max(1, min(int(tanda), backtest.TANDA_MAXIMA)),
             "hechos": avance["hechos"], "pendientes": avance["pendientes"]}
 
 
 @app.get("/api/backtest")
-def api_backtest_estado(x_pipeline_token: str = Header(default="")) -> dict:
-    """El avance del backtest: cuántos exámenes rendidos y cuántos faltan."""
+def api_backtest_estado(mercado: str = "", x_pipeline_token: str = Header(default="")) -> dict:
+    """El avance del backtest: cuántos exámenes rendidos y cuántos faltan.
+    Con `mercado` filtra a ese mercado."""
     if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
     from contenido import backtest
 
-    avance = backtest.estado()
+    avance = backtest.estado(mercado=mercado.strip() or None)
     return {k: v for k, v in avance.items() if not k.startswith("_")}
 
 

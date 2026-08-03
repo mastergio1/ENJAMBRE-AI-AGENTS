@@ -23,9 +23,10 @@ from contenido import persistencia
 
 RUTA_EVENTOS = Path(__file__).parent / "backtest_eventos.json"
 TANDA_DEFECTO = 5
-TANDA_MAXIMA = 20   # freno duro por corrida (el saldo alcanza de sobra; cada
-                    # examen se respalda al instante, así que si Render corta
-                    # una tanda larga, la siguiente continúa sin perder nada)
+TANDA_MAXIMA = 40   # freno duro por corrida. Con Starter (no se duerme) + disco
+                    # persistente, tandas grandes son seguras; y cada examen se
+                    # respalda al instante, así que si Render corta una tanda
+                    # larga, la siguiente continúa sin perder nada.
 RUEDAS = 2          # misma ventana de medición que el corrector en vivo
 
 
@@ -68,8 +69,32 @@ def _sim_id(evento: dict) -> str:
     return persistencia.id_simulacion(evento["titular"], _seed(evento))
 
 
-def estado(conexion=None) -> dict:
+# para eventos sin campo "mercado" (curados viejos), se infiere del símbolo
+_SIMBOLOS_MERCADO = {
+    "oro": {"GLD", "IAU", "GDX", "NEM", "GOLD"},
+    "cripto": {"GBTC", "COIN", "MARA", "RIOT", "MSTR", "ETHE", "BITO", "BTC-USD"},
+    "petroleo": {"USO", "XLE", "OXY", "SLB"},
+    "indice": {"SPY", "QQQ", "DIA", "IWM"},
+}
+
+
+def _mercado_de(evento: dict) -> str:
+    """El mercado de un evento: su campo `mercado`, o inferido del símbolo."""
+    if evento.get("mercado"):
+        return evento["mercado"]
+    simbolo = (evento.get("simbolo") or "").upper()
+    for mercado, simbolos in _SIMBOLOS_MERCADO.items():
+        if simbolo in simbolos:
+            return mercado
+    return "accion"
+
+
+def estado(conexion=None, mercado: str | None = None) -> dict:
     """Cuántos exámenes están rendidos (con nota real) y cuántos faltan.
+
+    Con `mercado` (oro/cripto/petroleo/indice/accion) cuenta y rinde SOLO
+    ese mercado — clave para calibrar de forma balanceada (100+/mercado) en
+    vez de que las acciones, que son mayoría, se lleven todas las tandas.
 
     Cuenta lo local Y lo ya respaldado en GitHub: el disco de Render se
     borra con cada deploy, pero un examen en la caja fuerte no se repite
@@ -80,6 +105,8 @@ def estado(conexion=None) -> dict:
     conexion = conexion or persistencia.conectar()
     try:
         eventos = cargar_eventos()
+        if mercado:
+            eventos = [e for e in eventos if _mercado_de(e) == mercado]
         respaldados = {c.get("sim_id") for c in respaldo.casos_remotos()}
         pendientes = []
         for evento in eventos:
@@ -98,9 +125,10 @@ def estado(conexion=None) -> dict:
 
 
 def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
-                 simular=None, obtener_variacion=None) -> dict:
+                 simular=None, obtener_variacion=None, mercado: str | None = None) -> dict:
     """Rinde una tanda de exámenes históricos. Devuelve el detalle.
 
+    Con `mercado` rinde SOLO ese mercado (calibración balanceada).
     `simular` y `obtener_variacion` son inyectables para los tests;
     en producción usan el pipeline real y las barras de Alpaca.
     """
@@ -118,7 +146,7 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
     try:
         from contenido.corrector import cerebros_ia
 
-        pendientes = estado(conexion)["_lista_pendiente"]
+        pendientes = estado(conexion, mercado=mercado)["_lista_pendiente"]
         # los recientes primero: sus datos (Alpaca) son los más confiables,
         # y así el avance no se atasca si la fuente antigua no responde
         pendientes.sort(key=lambda e: e["fecha"], reverse=True)

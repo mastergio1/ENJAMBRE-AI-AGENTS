@@ -15,6 +15,10 @@ on:
         description: "Cuántos exámenes rendir en esta tanda (máx 20)"
         required: false
         default: "5"
+      mercado:
+        description: "Mercado a rendir (oro/cripto/petroleo/indice/accion; vacío = todos)"
+        required: false
+        default: ""
 
 jobs:
   rendir-tanda:
@@ -47,9 +51,10 @@ jobs:
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           TANDA: ${{ github.event.inputs.tanda || '5' }}
+          MERCADO: ${{ github.event.inputs.mercado }}
         run: |
           respuesta=$(curl -sf -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/backtest?tanda=$TANDA" \
+            "https://enjambre-motor.onrender.com/api/backtest?tanda=$TANDA&mercado=$MERCADO" \
             -H "X-Pipeline-Token: $TOKEN")
           echo "Respuesta del motor: $respuesta"
           echo "La tanda corre en segundo plano (~1 minuto por examen)."

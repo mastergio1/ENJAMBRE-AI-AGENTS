@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:27:41+00:00",
+ "generado": "2026-08-03T05:28:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -611,6 +611,28 @@
     "cierre_final": 63.44,
     "fecha_base": "2026-03-25",
     "fecha_final": "2026-03-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7fd3974d79505f97",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:28:10+00:00",
+   "titular": "Why Are Newmont Shares Sliding On Thursday?",
+   "simbolos": "NEM",
+   "direccion_pct": -0.14,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": -10.08,
+    "cierre_base": 106.54,
+    "cierre_final": 95.8,
+    "fecha_base": "2026-03-18",
+    "fecha_final": "2026-03-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

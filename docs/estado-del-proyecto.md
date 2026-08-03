@@ -1,7 +1,7 @@
 # El Enjambre — Estado del proyecto
 
 > Documento de contexto para Giorgio (Rubicón Lab).
-> Escrito en lenguaje simple, sin tecnicismos. Fecha: **3 de agosto de 2026**.
+> Escrito en lenguaje simple, sin tecnicismos. Fecha: **3 de agosto de 2026** (tarde).
 > Este archivo es una foto de "cómo va todo" — no toca el código, solo lo explica.
 
 ---
@@ -26,7 +26,7 @@ Es **"el focus group sintético del mercado"**: una herramienta de simulación y
 **El producto está vivo y funcionando en internet.** No es una maqueta: es un sistema real,
 publicado, que cualquiera puede usar desde un link.
 
-- 🌐 **La web (lo que ve el público):** https://enjambre.vercel.app
+- 🌐 **La web (lo que ve el público):** https://enjambre-ai-agents.vercel.app
 - ⚙️ **El motor (el cerebro que simula):** corriendo en un servidor 24/7.
 
 Las etapas grandes del plan (0 a 10) **están completas**. Resumen de lo que ya existe y funciona:
@@ -36,7 +36,7 @@ Las etapas grandes del plan (0 a 10) **están completas**. Resumen de lo que ya 
 | **El motor** | Simula los 10.000 inversionistas y arma el precio | ✅ Funcionando |
 | **El enjambre 3D** | La escena hipnótica que reacciona en vivo | ✅ Funcionando |
 | **El muro** | La portada: las 3 noticias del día ya simuladas | ✅ Funcionando |
-| **El Pulso** | La newsletter diaria por correo (ritual de madrugada) | ✅ Lista (falta cuenta de correo, ver §6) |
+| **El Pulso** | La newsletter diaria por correo (ritual de madrugada) | ✅ Funcionando (Resend conectado y probado) |
 | **El archivo** | La hemeroteca: todas las noticias pasadas, buscables | ✅ Funcionando |
 | **La Redacción** | Análisis de mercado investigado y verificado para el Pulso | ✅ Funcionando |
 | **El duelo** | Enfrenta dos escenarios lado a lado (+ export a video vertical) | ✅ Funcionando |
@@ -60,9 +60,12 @@ son los más calmados. Antes el enjambre trataba a todos por igual; ahora distin
 —de las que ya sabemos qué pasó de verdad con el precio— y comparamos su reacción contra la
 realidad. Es como tomarle una prueba con las respuestas ya en la mano.
 
-**Estado ahora mismo:** re-validación en curso. Estamos rindiendo ~25 exámenes por mercado
-sobre las perillas nuevas, para comparar antes vs. después. Cada examen queda guardado a
-medida que avanza, así que aunque se corte, no se pierde nada.
+**Estado ahora mismo (tarde del 3 de agosto):** re-validación **en curso y avanzando bien**.
+Vamos por **~60 exámenes rendidos** sobre las perillas nuevas (de una meta de ~125 en esta
+tanda: 25 por mercado), a un ritmo de uno cada ~35-40 segundos. El motor aguanta sin caerse,
+y cada examen se guarda en la caja fuerte apenas termina, así que aunque se corte por saldo
+o por un reinicio, no se pierde nada. **La comparación completa antes vs. después estará
+lista cuando termine la tanda** (o cuando se agote el saldo de IA, ~US$21).
 
 **Nota de la prueba anterior (perillas viejas)** — para comparar:
 
@@ -169,9 +172,40 @@ Faltan dos cosas menores para dejarlo "de producción":
 
 > *El Enjambre está vivo en internet y funcionando de punta a punta. Esta semana lo hicimos
 > más grande (10.000 inversionistas), le enseñamos a distinguir tipos de mercado, lo estamos
-> afinando con exámenes contra la realidad, y eliminamos la única amenaza real que tenía.
-> Falta conectar las cuentas de correo y datos de Giorgio, y terminar de afinarlo, para el
-> lanzamiento público.*
+> afinando con exámenes contra la realidad, conectamos el correo de la newsletter (El Pulso ya
+> envía de verdad) y eliminamos la única amenaza real que tenía. Falta el dominio propio, las
+> cuentas de datos de Giorgio y terminar de afinarlo, para el lanzamiento público.*
 
 ---
-*Rubicón Lab · El Enjambre · Estado del proyecto · 3 de agosto de 2026*
+
+## 9. Marca y dominio (decisión en curso)
+
+**El nombre "El Enjambre" se mantiene.** Es un acierto: apuesta por el diferenciador (la
+visualización del enjambre), es memorable y visual, y describe con precisión lo que hace
+(comportamiento de manada). Su única limitación: por sí solo no dice "mercado", así que
+**siempre debe ir con su bajada de línea** ("el focus group sintético del mercado"). Para
+público internacional, la versión en inglés sería *The Swarm*.
+
+**Se decidió comprar un dominio propio para El Enjambre como producto** (no el corporativo de
+Rubicón). Rubicón queda como la firma ("by Rubicón Lab"). Un dominio propio le da cara pública
+memorable, correos con identidad (`pulso@…`) e independencia como marca. Cuesta poco y de paso
+resuelve dos cosas a la vez: el correo deja de caer a spam **y** la web tiene dirección corta.
+
+**Lista corta de dominios a revisar** (verificar disponibilidad y precio en el registrador —
+nic.cl para `.cl`; Namecheap o Cloudflare para el resto):
+
+| Dominio | Terminación | Precio aprox./año | Para qué / pros |
+|---|---|---|---|
+| **elenjambre.cl** / **enjambre.cl** | `.cl` (Chile) | ~US$10 | Ancla local; confianza para clientes chilenos y contexto CMF. Barato. |
+| **elenjambre.ai** / **enjambre.ai** | `.ai` | ~US$60–100 | Ángulo de inteligencia artificial (encaja: son agentes de IA). Moderno, caro. |
+| **enjambre.market** | `.market` | ~US$25–35 | Se lee como frase ("enjambre · market"); temático y claro. |
+| **elenjambre.com** | `.com` | ~US$12 | El estándar universal (`enjambre.com` casi seguro tomado; probar la variante). |
+| **elenjambre.app** | `.app` | ~US$14 | Sensación de producto/herramienta; requiere HTTPS (ya lo tenemos). |
+
+**Recomendación:** un dominio "de marca" como cara principal (**enjambre.market** o
+**elenjambre.ai**, según si se quiere resaltar el mercado o la IA) **+** el **`.cl` barato** como
+ancla local. Con ese dominio se verifica en Resend (correo a la bandeja, no a spam) y se apunta
+la web para tener dirección corta.
+
+---
+*Rubicón Lab · El Enjambre · Estado del proyecto · 3 de agosto de 2026 (tarde)*

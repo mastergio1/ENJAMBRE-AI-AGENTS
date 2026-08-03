@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:17:01+00:00",
+ "generado": "2026-08-03T08:17:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5454,6 +5454,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "88c3d4bdf84588ba",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:17:35+00:00",
+   "titular": "Occidental Petroleum Says Does Not Anticipate Growing Production 'At Least This Year;' Says 25K Barrel/Day Impact To Permian Basin Production From Texas Winter Storm Is 'Temporary'",
+   "simbolos": "OXY",
+   "direccion_pct": -1.68,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 2.65,
+    "cierre_base": 26.06,
+    "cierre_final": 26.75,
+    "fecha_base": "2021-02-23",
+    "fecha_final": "2021-02-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:53:27+00:00",
+ "generado": "2026-08-03T05:54:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1362,6 +1362,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4424fa31e829d628",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:54:07+00:00",
+   "titular": "Stocks Rally To New Highs, Dollar Tumbles To 40-Month Lows: What's Driving Markets Thursday?",
+   "simbolos": "SCCO",
+   "direccion_pct": -1.16,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SCCO",
+    "pct_real": 5.59,
+    "cierre_base": 93.66,
+    "cierre_final": 98.9,
+    "fecha_base": "2025-06-25",
+    "fecha_final": "2025-06-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

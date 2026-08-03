@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:09:18+00:00",
+ "generado": "2026-08-03T15:10:06+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -367,6 +367,28 @@
     "pct_real": 5.61,
     "cierre_base": 414.58,
     "cierre_final": 437.82,
+    "fecha_base": "2026-03-30",
+    "fecha_final": "2026-04-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3099367b115d1933",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:10:06+00:00",
+   "titular": "Stocks Rise As Powell's Remarks Cool Rate Fears: What's Moving Markets Monday?",
+   "simbolos": "GDX",
+   "direccion_pct": -0.14,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "GDX",
+    "pct_real": 11.91,
+    "cierre_base": 85.79,
+    "cierre_final": 96.01,
     "fecha_base": "2026-03-30",
     "fecha_final": "2026-04-01",
     "ruedas": 2,

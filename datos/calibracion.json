@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:36:40+00:00",
+ "generado": "2026-08-03T08:37:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6087,6 +6087,28 @@
     "pct_real": 7.17,
     "cierre_base": 15.35,
     "cierre_final": 16.44,
+    "fecha_base": "2020-04-16",
+    "fecha_final": "2020-04-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "65d08a9e97742c09",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:37:13+00:00",
+   "titular": "Activist Investors Go Dormant As COVID-19 Depresses Economy",
+   "simbolos": "OXY",
+   "direccion_pct": -0.81,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 3.2,
+    "cierre_base": 12.2,
+    "cierre_final": 12.59,
     "fecha_base": "2020-04-16",
     "fecha_final": "2020-04-20",
     "ruedas": 2,

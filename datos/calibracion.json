@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:18:02+00:00",
+ "generado": "2026-08-03T06:18:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1975,6 +1975,28 @@
     "cierre_final": 205.71,
     "fecha_base": "2026-03-03",
     "fecha_final": "2026-03-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bddbf10db655f99f",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:18:36+00:00",
+   "titular": "Bitcoin, Ethereum, XRP, Dogecoin Recover But 'Extreme Fear' Sentiment Lingers: Analyst Says Markets Will Remain 'Boring' Until This Day",
+   "simbolos": "COIN",
+   "direccion_pct": -7.75,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 11.74,
+    "cierre_base": 162.03,
+    "cierre_final": 181.06,
+    "fecha_base": "2026-02-24",
+    "fecha_final": "2026-02-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

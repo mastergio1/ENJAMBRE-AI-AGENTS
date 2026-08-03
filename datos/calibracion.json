@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:25:12+00:00",
+ "generado": "2026-08-03T05:25:42+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -504,6 +504,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9ff90aeeb5d156a0",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:25:42+00:00",
+   "titular": "These Five Stocks Are Winning The Space Race",
+   "simbolos": "FCX",
+   "direccion_pct": -1.08,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "FCX",
+    "pct_real": -13.23,
+    "cierre_base": 70.36,
+    "cierre_final": 61.05,
+    "fecha_base": "2026-04-22",
+    "fecha_final": "2026-04-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

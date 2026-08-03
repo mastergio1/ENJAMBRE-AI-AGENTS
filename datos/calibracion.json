@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:19:46+00:00",
+ "generado": "2026-08-03T06:20:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2039,6 +2039,28 @@
     "pct_real": 29.4,
     "cierre_base": 106.99,
     "cierre_final": 138.44,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "50f503744b4fcb9e",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:20:21+00:00",
+   "titular": "The Software-Crypto Trade Is Crumbling – Could Strategy Be Forced To Sell Bitcoin?",
+   "simbolos": "MARA",
+   "direccion_pct": -2.94,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 19.76,
+    "cierre_base": 6.73,
+    "cierre_final": 8.06,
     "fecha_base": "2026-02-05",
     "fecha_final": "2026-02-09",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:10:01+00:00",
+ "generado": "2026-08-03T06:10:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1711,6 +1711,28 @@
     "cierre_final": 249.65,
     "fecha_base": "2024-11-05",
     "fecha_final": "2024-11-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4388595311d764a1",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:10:46+00:00",
+   "titular": "Gold Miner Newmont Corp Stock Falls After Q3 Results: Details",
+   "simbolos": "NEM",
+   "direccion_pct": -7.1,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": -16.14,
+    "cierre_base": 57.74,
+    "cierre_final": 48.42,
+    "fecha_base": "2024-10-23",
+    "fecha_final": "2024-10-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

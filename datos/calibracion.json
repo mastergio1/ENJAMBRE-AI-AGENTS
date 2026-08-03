@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:09:39+00:00",
+ "generado": "2026-08-03T08:10:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5209,6 +5209,28 @@
     "cierre_final": 82.37,
     "fecha_base": "2022-03-03",
     "fecha_final": "2022-03-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3fc6fe168654ec09",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:10:22+00:00",
+   "titular": "Occidental CEO Sees 2022 U.S. Oil Output Rising To Over 12M Barrels/Day",
+   "simbolos": "OXY",
+   "direccion_pct": -0.72,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 8.97,
+    "cierre_base": 34.01,
+    "cierre_final": 37.06,
+    "fecha_base": "2022-01-24",
+    "fecha_final": "2022-01-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

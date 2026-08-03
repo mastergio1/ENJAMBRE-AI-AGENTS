@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:21:04+00:00",
+ "generado": "2026-08-03T09:21:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7277,6 +7277,28 @@
     "cierre_final": 179.58,
     "fecha_base": "2023-06-01",
     "fecha_final": "2023-06-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f2f899d2bbfad0fb",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:21:35+00:00",
+   "titular": "Jim Cramer Says Mistaken Selling Creates Opportunities To Buy Dips: Bears 'Still Don't Know What Hit Them'",
+   "simbolos": "QQQ",
+   "direccion_pct": 0.76,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 1.75,
+    "cierre_base": 300.92,
+    "cierre_final": 306.18,
+    "fecha_base": "2023-02-01",
+    "fecha_final": "2023-02-03",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

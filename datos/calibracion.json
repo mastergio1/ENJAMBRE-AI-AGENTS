@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:29:55+00:00",
+ "generado": "2026-08-03T05:30:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -702,6 +702,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e609a6ceb8b1dc3f",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:30:21+00:00",
+   "titular": "Gold, Silver Prices Tumble On Weak Chinese Buying Amid Lunar New Year Holiday— Analyst Warns Of Broader Impact",
+   "simbolos": "GLD",
+   "direccion_pct": 8.09,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.94,
+    "cierre_base": 462.62,
+    "cierre_final": 458.28,
+    "fecha_base": "2026-02-13",
+    "fecha_final": "2026-02-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

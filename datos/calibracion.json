@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:23:30+00:00",
+ "generado": "2026-08-03T09:24:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7365,6 +7365,28 @@
     "cierre_final": 407.38,
     "fecha_base": "2022-11-29",
     "fecha_final": "2022-12-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "af8f5cb592287b98",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:24:06+00:00",
+   "titular": "Larry Summers Says Have To Go Back To JFK To Find Democratic President With 1st Midterms Going As Well As Biden's",
+   "simbolos": "SPY",
+   "direccion_pct": 0.59,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 6.52,
+    "cierre_base": 374.13,
+    "cierre_final": 398.51,
+    "fecha_base": "2022-11-09",
+    "fecha_final": "2022-11-11",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:25:37+00:00",
+ "generado": "2026-08-03T10:26:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9150,6 +9150,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2cfbc07292d3fad0",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:26:22+00:00",
+   "titular": "CrowdStrike, Mobix Labs, Micron Technology, Target And Moderna: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "MRNA",
+   "direccion_pct": 7.47,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "MRNA",
+    "pct_real": 8.03,
+    "cierre_base": 49.83,
+    "cierre_final": 53.83,
+    "fecha_base": "2026-03-03",
+    "fecha_final": "2026-03-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

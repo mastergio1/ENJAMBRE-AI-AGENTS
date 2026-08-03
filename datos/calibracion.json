@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:42:53+00:00",
+ "generado": "2026-08-03T08:43:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6309,6 +6309,28 @@
     "cierre_final": 481.9,
     "fecha_base": "2026-04-07",
     "fecha_final": "2026-04-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7bbdd958fbb60dc6",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:43:24+00:00",
+   "titular": "Fed's Williams Says Economic Growth Would Be Less Robust With Reduced AI Activity; Overall Household Balance Sheets Are In A Good Shape; Good Household Balance Sheets Largely Driven By Solid State Of Mortgage Market; Fed's 2024, 2025 Rate Cut Moves Were Very Constructive;  Monetary Policy Is In The Right Place",
+   "simbolos": "SPY",
+   "direccion_pct": 9.21,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 3.68,
+    "cierre_base": 631.97,
+    "cierre_final": 655.24,
+    "fecha_base": "2026-03-30",
+    "fecha_final": "2026-04-01",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

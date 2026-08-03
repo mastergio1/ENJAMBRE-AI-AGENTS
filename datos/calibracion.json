@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:01:59+00:00",
+ "generado": "2026-08-03T16:02:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1208,6 +1208,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "21045715f4b539ea",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:02:35+00:00",
+   "titular": "SLB Sounds Alarm On Middle East Crisis, Warns Of Q1 Profit Hit",
+   "simbolos": "SLB",
+   "direccion_pct": -37.41,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": -7.16,
+    "cierre_base": 48.17,
+    "cierre_final": 44.72,
+    "fecha_base": "2026-03-11",
+    "fecha_final": "2026-03-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:23:31+00:00",
+ "generado": "2026-08-03T16:24:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1797,6 +1797,28 @@
     "pct_real": 5.66,
     "cierre_base": 487.97,
     "cierre_final": 515.59,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5e55f60f2a112973",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:24:08+00:00",
+   "titular": "Magnificent Seven Gain $700B After US-China Slash Tariffs, Gold Crashes: What's Driving Markets Monday?",
+   "simbolos": "DIA",
+   "direccion_pct": -10.4,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 2.2,
+    "cierre_base": 412.42,
+    "cierre_final": 421.51,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

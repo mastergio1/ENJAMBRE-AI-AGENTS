@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:36:20+00:00",
+ "generado": "2026-08-03T15:37:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -878,6 +878,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9b62766304ecdb68",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:37:03+00:00",
+   "titular": "Market-Moving News for November 11th",
+   "simbolos": "COIN",
+   "direccion_pct": 6.93,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 17.87,
+    "cierre_base": 270.74,
+    "cierre_final": 319.13,
+    "fecha_base": "2024-11-08",
+    "fecha_final": "2024-11-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

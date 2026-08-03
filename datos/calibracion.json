@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:18:56+00:00",
+ "generado": "2026-08-03T08:19:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5517,6 +5517,28 @@
     "cierre_final": 18.24,
     "fecha_base": "2020-11-13",
     "fecha_final": "2020-11-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ad931c3058e23913",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:19:28+00:00",
+   "titular": "Earnings Scheduled For November 9, 2020",
+   "simbolos": "OXY",
+   "direccion_pct": 3.07,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 23.68,
+    "cierre_base": 10.01,
+    "cierre_final": 12.38,
+    "fecha_base": "2020-11-06",
+    "fecha_final": "2020-11-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

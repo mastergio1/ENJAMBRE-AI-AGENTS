@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:39:16+00:00",
+ "generado": "2026-08-03T15:44:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -961,6 +961,28 @@
     "pct_real": 31.77,
     "cierre_base": 193.96,
     "cierre_final": 255.58,
+    "fecha_base": "2024-11-05",
+    "fecha_final": "2024-11-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6d77d2cb93aa00f7",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:44:30+00:00",
+   "titular": "Bitcoin Mining Stocks MARA Holdings, Riot Platforms And CleanSpark Are Charging Higher Wednesday: What's Going On?",
+   "simbolos": "MARA",
+   "direccion_pct": 11.94,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 18.9,
+    "cierre_base": 16.24,
+    "cierre_final": 19.31,
     "fecha_base": "2024-11-05",
     "fecha_final": "2024-11-07",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:06:09+00:00",
+ "generado": "2026-08-03T08:06:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5102,6 +5102,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aedc67ed0928547e",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:06:53+00:00",
+   "titular": "API Reports Oil Inventories For Week Ended Mar. 4, 2022: Crude Oil Inventories Build 2.811M Barrels, Distillates Inventories Draw 5.485M Barrels, Gasoline Draw 1.988M Barrels",
+   "simbolos": "USO",
+   "direccion_pct": 2.37,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -13.31,
+    "cierre_base": 85.43,
+    "cierre_final": 74.06,
+    "fecha_base": "2022-03-08",
+    "fecha_final": "2022-03-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

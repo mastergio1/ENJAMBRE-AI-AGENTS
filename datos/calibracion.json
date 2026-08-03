@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:07:33+00:00",
+ "generado": "2026-08-03T08:08:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5141,6 +5141,28 @@
     "pct_real": 15.77,
     "cierre_base": 38.94,
     "cierre_final": 45.08,
+    "fecha_base": "2022-03-04",
+    "fecha_final": "2022-03-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "af2fcc8c3b73f052",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:08:15+00:00",
+   "titular": "Oil surges above $130 as US weighs ban on Russian crude imports",
+   "simbolos": "USO",
+   "direccion_pct": 5.41,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 7.51,
+    "cierre_base": 79.46,
+    "cierre_final": 85.43,
     "fecha_base": "2022-03-04",
     "fecha_final": "2022-03-08",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:09:22+00:00",
+ "generado": "2026-08-03T09:10:06+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6983,6 +6983,28 @@
    "titular": "Global sell-off deepens as yen carry trade unwinds; Nikkei posts worst day since 1987",
    "simbolos": "SPY",
    "direccion_pct": 0.92,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.02,
+    "cierre_base": 532.9,
+    "cierre_final": 522.15,
+    "fecha_base": "2024-08-02",
+    "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "60e315857a5f8fdc",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:10:05+00:00",
+   "titular": "Global stocks tumble as yen carry-trade unwind sparks worldwide selloff",
+   "simbolos": "SPY",
+   "direccion_pct": 3.23,
    "volatilidad_pct": 1.22,
    "reaccion_real": {
     "simbolo": "SPY",

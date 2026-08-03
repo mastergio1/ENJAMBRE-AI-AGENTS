@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:28:40+00:00",
+ "generado": "2026-08-03T09:29:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7544,6 +7544,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9378786dff7d8fc1",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:29:14+00:00",
+   "titular": "Deputy Prime Minister Of Russia Novak Says We Will See The Same Oil Prices Next Year",
+   "simbolos": "SPY",
+   "direccion_pct": 1.8,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 0.3,
+    "cierre_base": 356.56,
+    "cierre_final": 357.63,
+    "fecha_base": "2022-10-12",
+    "fecha_final": "2022-10-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

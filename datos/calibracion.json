@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:18:18+00:00",
+ "generado": "2026-08-03T08:18:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5495,6 +5495,28 @@
     "cierre_final": 22.33,
     "fecha_base": "2021-01-11",
     "fecha_final": "2021-01-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "08f70ac289b5a6ce",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:18:56+00:00",
+   "titular": "OptionMonster Co-Founder Pete Najarian On CNBC: 'Banks And Tanks' Are What's Working Right Now",
+   "simbolos": "XLE",
+   "direccion_pct": 4.34,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "XLE",
+    "pct_real": 7.67,
+    "cierre_base": 16.94,
+    "cierre_final": 18.24,
+    "fecha_base": "2020-11-13",
+    "fecha_final": "2020-11-17",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

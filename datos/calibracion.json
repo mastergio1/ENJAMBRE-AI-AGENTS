@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:34:47+00:00",
+ "generado": "2026-08-03T16:35:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2176,6 +2176,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "108f851091c55869",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:35:21+00:00",
+   "titular": "More Bark, More Beta: Corgi Debuts 31 Single-Stock ETFs Covering Nvidia, Tesla And More",
+   "simbolos": "META",
+   "direccion_pct": 13.57,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "META",
+    "pct_real": 3.48,
+    "cierre_base": 563.29,
+    "cierre_final": 582.9,
+    "fecha_base": "2026-06-30",
+    "fecha_final": "2026-07-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

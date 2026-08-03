@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:51:21+00:00",
+ "generado": "2026-08-03T05:52:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1293,6 +1293,28 @@
     "cierre_final": 114.95,
     "fecha_base": "2025-09-23",
     "fecha_final": "2025-09-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cdeacdf78cd53a7c",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:52:01+00:00",
+   "titular": "World's Largest Gold Miner Newmont Reports Q2 Results Above Estimates: Details",
+   "simbolos": "NEM",
+   "direccion_pct": 5.64,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": 3.5,
+    "cierre_base": 61.51,
+    "cierre_final": 63.66,
+    "fecha_base": "2025-07-24",
+    "fecha_final": "2025-07-28",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

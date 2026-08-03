@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:32:12+00:00",
+ "generado": "2026-08-03T09:32:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7676,6 +7676,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "54a1202d9ad89154",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:32:44+00:00",
+   "titular": "President Biden Speaking \"Biden delivers remarks on 'Cancer Moonshot'\" - Washington Post",
+   "simbolos": "SPY",
+   "direccion_pct": 1.45,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -3.98,
+    "cierre_base": 410.97,
+    "cierre_final": 394.6,
+    "fecha_base": "2022-09-12",
+    "fecha_final": "2022-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

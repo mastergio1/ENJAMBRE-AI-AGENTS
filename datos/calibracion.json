@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:34:56+00:00",
+ "generado": "2026-08-03T05:35:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -895,6 +895,28 @@
     "pct_real": -12.77,
     "cierre_base": 107.98,
     "cierre_final": 94.19,
+    "fecha_base": "2026-01-29",
+    "fecha_final": "2026-02-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dfdd2f11d1fb7485",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:35:29+00:00",
+   "titular": "Gold, Silver ETFs Whipsaw Thursday As Miners Fall On Volatility",
+   "simbolos": "NEM",
+   "direccion_pct": -1.6,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": -11.09,
+    "cierre_base": 126.93,
+    "cierre_final": 112.85,
     "fecha_base": "2026-01-29",
     "fecha_final": "2026-02-02",
     "ruedas": 2,

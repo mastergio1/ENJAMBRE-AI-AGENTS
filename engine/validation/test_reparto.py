@@ -28,7 +28,7 @@ def test_mil_lideres_no_superan_el_presupuesto():
     assert len(lideres) == 1000
     # el techo de la biblia: nunca más de ~120 llamadas a la IA
     assert len(consultas) <= 120
-    assert len(consultas) >= 90  # pero sí suficientes para variedad de frases
+    assert len(consultas) >= 60  # pero sí suficientes para variedad de frases
 
 
 def test_cada_lider_recibe_un_cerebro_de_su_arquetipo():
@@ -55,8 +55,8 @@ def test_expandir_devuelve_una_respuesta_por_lider():
 
 
 def test_pocos_lideres_es_uno_a_uno_como_antes():
-    """Con 100 líderes o menos (config vieja) cada uno es su propio cerebro."""
-    lideres = [_Lider(i, "doomer") for i in range(100)]
+    """Con pocos líderes (por debajo del objetivo) cada uno es su propio cerebro."""
+    lideres = [_Lider(i, "doomer") for i in range(50)]
     consultas, asignacion = reparto.planificar(lideres, lambda uid: uid)
-    assert len(consultas) == 100
-    assert sorted(asignacion) == list(range(100))
+    assert len(consultas) == 50
+    assert sorted(asignacion) == list(range(50))

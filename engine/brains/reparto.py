@@ -14,7 +14,11 @@ Si hay 110 líderes o menos (p. ej. la configuración vieja de 100), cada
 líder es su propio cerebro y el comportamiento es idéntico al de antes.
 """
 
-CEREBROS_OBJETIVO = 110  # dentro del presupuesto de la biblia (~100-120)
+CEREBROS_OBJETIVO = 80  # cerebros LLM por simulación. Bajarlo de 110 a 80
+                        # acelera la lectura de una noticia (~2 tandas con
+                        # concurrencia 45) y abarata cada examen ~27%, sin
+                        # perder variedad de frases (80 voces distintas). Sigue
+                        # holgado dentro del presupuesto de la biblia (~100-120).
 
 
 def _cerebros_por_arquetipo(conteo: dict[str, int], objetivo: int) -> dict[str, int]:

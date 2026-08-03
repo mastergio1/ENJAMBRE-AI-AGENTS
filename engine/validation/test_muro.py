@@ -38,7 +38,7 @@ def test_pipeline_prepara_el_dia(dia_preparado):
     for publicada in dia_preparado["publicadas"]:
         frames = persistencia.leer_frames(publicada["sim_id"])
         assert frames is not None
-        assert len(frames) == (server.TICKS_PREVIOS + server.TICKS_POSTERIORES) * (8 + 5000)
+        assert len(frames) == (server.TICKS_PREVIOS + server.TICKS_POSTERIORES) * (8 + 10000)
 
 
 def test_pipeline_es_idempotente(dia_preparado):
@@ -86,7 +86,7 @@ def test_api_simulacion_y_replay(dia_preparado):
 
     replay = cliente.get(f"/api/simulacion/{sim_id}/replay")
     assert replay.status_code == 200
-    assert len(replay.content) == 150 * 5008
+    assert len(replay.content) == 150 * 10008
 
     assert cliente.get("/api/simulacion/no-existe").status_code == 404
     assert cliente.get("/api/simulacion/no-existe/replay").status_code == 404

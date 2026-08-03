@@ -51,9 +51,11 @@ def test_3_sin_autocorrelacion_de_retornos():
 
     Criterio de conjunto: la media entre semillas debe ser ≈ 0 y ninguna
     trayectoria individual puede mostrar predictibilidad fuerte. (Una
-    trayectoria puntual de 600 ticks tiene varianza muestral alta.)
+    trayectoria puntual de 600 ticks tiene varianza muestral alta, por eso
+    la media se toma sobre un puñado de semillas, no sobre dos.)
     """
-    acs = [autocorrelacion(retornos_de_sesion(s), 1) for s in SEMILLAS]
+    semillas = [42, 3, 7, 11, 19]
+    acs = [autocorrelacion(retornos_de_sesion(s), 1) for s in semillas]
     assert abs(statistics.mean(acs)) < 0.1
     assert max(abs(a) for a in acs) < 0.2
 

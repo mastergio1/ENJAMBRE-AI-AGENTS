@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:08:15+00:00",
+ "generado": "2026-08-03T08:08:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5165,6 +5165,28 @@
     "cierre_final": 85.43,
     "fecha_base": "2022-03-04",
     "fecha_final": "2022-03-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ef6a0d7416979692",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:08:54+00:00",
+   "titular": "Benzinga's Daily Brief On Trending Tickers For March 3, 2022: Tesla, Snowflake, AMC Entertainment And More",
+   "simbolos": "OXY",
+   "direccion_pct": 1.39,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 15.98,
+    "cierre_base": 47.75,
+    "cierre_final": 55.38,
+    "fecha_base": "2022-03-03",
+    "fecha_final": "2022-03-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:47:21+00:00",
+ "generado": "2026-08-03T05:47:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1186,6 +1186,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4fbe2b5d8ff3eb21",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:47:59+00:00",
+   "titular": "Investors Go All-In On Stocks And That Might Be A Sell Signal",
+   "simbolos": "GLD",
+   "direccion_pct": 1.1,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -6.42,
+    "cierre_base": 403.15,
+    "cierre_final": 377.28,
+    "fecha_base": "2025-10-20",
+    "fecha_final": "2025-10-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

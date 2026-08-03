@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T14:54:47+00:00",
+ "generado": "2026-08-03T14:55:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -17,6 +17,28 @@
     "cierre_final": 76.27,
     "fecha_base": "2026-07-10",
     "fecha_final": "2026-07-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "40eae82709221b31",
+   "origen": "historico",
+   "fecha": "2026-08-03T14:55:28+00:00",
+   "titular": "Gold ETFs Just Saw Their Biggest Weekly Inflow Since April After $7.6 Billion Exodus",
+   "simbolos": "IAU",
+   "direccion_pct": 2.28,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": -2.09,
+    "cierre_base": 77.33,
+    "cierre_final": 75.71,
+    "fecha_base": "2026-06-23",
+    "fecha_final": "2026-06-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:38:08+00:00",
+ "generado": "2026-08-03T10:38:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9497,6 +9497,28 @@
     "pct_real": 20.63,
     "cierre_base": 43.0,
     "cierre_final": 51.87,
+    "fecha_base": "2026-01-20",
+    "fecha_final": "2026-01-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3c26a439087f6b37",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:38:40+00:00",
+   "titular": "CORRECTION: Lucid Group Ticker Is \"LCID\" Not \"ROK\"",
+   "simbolos": "LCID",
+   "direccion_pct": -2.59,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "LCID",
+    "pct_real": 17.88,
+    "cierre_base": 9.73,
+    "cierre_final": 11.47,
     "fecha_base": "2026-01-20",
     "fecha_final": "2026-01-22",
     "ruedas": 2,

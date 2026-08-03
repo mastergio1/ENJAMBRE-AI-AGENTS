@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:37:03+00:00",
+ "generado": "2026-08-03T15:37:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -895,6 +895,28 @@
     "pct_real": 17.87,
     "cierre_base": 270.74,
     "cierre_final": 319.13,
+    "fecha_base": "2024-11-08",
+    "fecha_final": "2024-11-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f9680c8ee3745bc0",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:37:47+00:00",
+   "titular": "MARA Adds 372 Megawatts Of Capacity In Ohio; Acquires Two Data Centers OFfering A Combined 222 Megawatts Of Interconnect-Approved Capacity And Development Of Third Center Expected To Add 150 Megawatts Of Compute Capacity",
+   "simbolos": "MARA",
+   "direccion_pct": 18.19,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 31.06,
+    "cierre_base": 19.25,
+    "cierre_final": 25.23,
     "fecha_base": "2024-11-08",
     "fecha_final": "2024-11-12",
     "ruedas": 2,

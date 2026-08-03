@@ -113,14 +113,26 @@ noticias** — solo usa hechos que de verdad ocurrieron.
   se configura para que guarde en un cuaderno aparte, nunca encima del enjambre.)
 - ✅ **Servidor mejorado** al plan pago con disco propio, para que las simulaciones queden
   guardadas y el motor aguante más.
+- ✅ **El Pulso ya envía correos de verdad (Resend conectado).** Se creó la cuenta de Resend,
+  se cargó la llave en el servidor y se blindó el remitente para que un deploy no lo rompa.
+  Prueba completa exitosa: suscripción → correo de confirmación → llegó al Gmail → confirmado
+  (el "double opt-in" completo). *Único pendiente cosmético: sin dominio propio el correo cae
+  a la carpeta de spam; se cura al verificar un dominio (ver §6).*
+- ✅ **Dirección web corregida.** `enjambre.vercel.app` quedó tomada por un proyecto ajeno;
+  la web oficial y estable es ahora **enjambre-ai-agents.vercel.app** (todo el proyecto ya
+  apunta ahí).
 
 ---
 
 ## 6. Lo que falta (pendientes)
 
-**Para que El Pulso (la newsletter) mande correos de verdad:**
-- Giorgio debe crear una cuenta en **Resend** (el servicio que envía los correos) y pegar su
-  clave en el servidor. Es un trámite de 10 minutos; te acompaño cuando quieras.
+**El Pulso — correos:** ✅ **Resuelto.** Resend está conectado y probado de punta a punta.
+Faltan dos cosas menores para dejarlo "de producción":
+- **Dominio propio** (ej. `rubiconlab.cl`): hoy el correo sale desde `onboarding@resend.dev`
+  (remitente de prueba) y por eso cae a spam. Con un dominio verificado llega a la bandeja y
+  además arregla la dirección web bonita — dos pájaros de un tiro (~US$10/año en nic.cl).
+- **El "cron" del envío diario:** el reloj que dispara El Pulso cada madrugada. Se agrega
+  cuando el dominio esté listo (bloque de referencia en `docs/despliegue.md`).
 
 **Cuentas de datos con las llaves de Giorgio (para dejar todo "en producción real"):**
 - **Alpaca** (titulares históricos) y **Barchart** (datos de mercado): hoy funcionan en modo

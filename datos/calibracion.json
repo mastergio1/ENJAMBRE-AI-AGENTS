@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:34:57+00:00",
+ "generado": "2026-08-03T09:35:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7761,6 +7761,28 @@
     "cierre_final": 296.03,
     "fecha_base": "2022-09-12",
     "fecha_final": "2022-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8f9d0d23432e7748",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:35:29+00:00",
+   "titular": "California Air Resources Board Votes To Approve Sweeping Regulations To Require All New Vehicles Sold In State By 2035 To Be Electric, Plug-In Hybrid Models",
+   "simbolos": "SPY",
+   "direccion_pct": 0.73,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -4.02,
+    "cierre_base": 419.51,
+    "cierre_final": 402.63,
+    "fecha_base": "2022-08-25",
+    "fecha_final": "2022-08-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:38:25+00:00",
+ "generado": "2026-08-03T05:43:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1029,6 +1029,28 @@
     "cierre_final": 83.32,
     "fecha_base": "2026-01-13",
     "fecha_final": "2026-01-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "20c96a91af23c0cf",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:43:20+00:00",
+   "titular": "Venezuela Winners Are 12 Stocks And 1 ETF – Losers Are 2 Stocks And China; Gold And Silver Win; Nvidia Keynote",
+   "simbolos": "SLV",
+   "direccion_pct": -1.89,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": 2.72,
+    "cierre_base": 69.08,
+    "cierre_final": 70.96,
+    "fecha_base": "2026-01-05",
+    "fecha_final": "2026-01-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

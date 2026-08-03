@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:29:15+00:00",
+ "generado": "2026-08-03T09:29:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7566,6 +7566,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5854883f1118ee01",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:29:53+00:00",
+   "titular": "Top 15 Trending Stocks On WallStreetBets As Of Thursday, October 6, 2022 (Via Swaggy Stocks)",
+   "simbolos": "QQQ",
+   "direccion_pct": -0.79,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -4.77,
+    "cierre_base": 279.76,
+    "cierre_final": 266.41,
+    "fecha_base": "2022-10-06",
+    "fecha_final": "2022-10-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

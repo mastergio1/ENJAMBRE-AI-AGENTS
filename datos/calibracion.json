@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:35:42+00:00",
+ "generado": "2026-08-03T08:36:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6045,6 +6045,28 @@
     "cierre_final": 20.08,
     "fecha_base": "2020-04-20",
     "fecha_final": "2020-04-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "10b6d9c349ee8627",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:36:16+00:00",
+   "titular": "US oil futures crash below zero for the first time in history",
+   "simbolos": "USO",
+   "direccion_pct": -7.46,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -33.25,
+    "cierre_base": 33.68,
+    "cierre_final": 22.48,
+    "fecha_base": "2020-04-17",
+    "fecha_final": "2020-04-21",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

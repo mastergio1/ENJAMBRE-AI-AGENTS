@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:06:00+00:00",
+ "generado": "2026-08-03T10:06:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8578,6 +8578,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "44e4dcd494e24d27",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:06:45+00:00",
+   "titular": "Higher Gas Prices Have Consumers Visiting Costco, Sam's Club More: What The Data Shows",
+   "simbolos": "WMT",
+   "direccion_pct": -5.96,
+   "volatilidad_pct": 1.49,
+   "reaccion_real": {
+    "simbolo": "WMT",
+    "pct_real": -8.09,
+    "cierre_base": 130.85,
+    "cierre_final": 120.27,
+    "fecha_base": "2026-05-20",
+    "fecha_final": "2026-05-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

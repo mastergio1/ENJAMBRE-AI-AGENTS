@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:44:21+00:00",
+ "generado": "2026-08-03T06:45:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2723,6 +2723,28 @@
     "cierre_final": 11.85,
     "fecha_base": "2024-04-19",
     "fecha_final": "2024-04-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5afc07114d894c93",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:45:01+00:00",
+   "titular": "MicroStrategy's Michael Saylor Sees Bitcoin's Volatility As Market Vitality: 'Bitcoin Is Winning'",
+   "simbolos": "MSTR",
+   "direccion_pct": -2.21,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 23.24,
+    "cierre_base": 152.3,
+    "cierre_final": 187.7,
+    "fecha_base": "2024-03-22",
+    "fecha_final": "2024-03-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:29:26+00:00",
+ "generado": "2026-08-03T05:29:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -680,6 +680,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "780bf10f3c186f60",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:29:55+00:00",
+   "titular": "Here's How Much $100 Invested In iShares Silver Trust 5 Years Ago Would Be Worth Today",
+   "simbolos": "SLV",
+   "direccion_pct": 6.55,
+   "volatilidad_pct": 1.42,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": 13.46,
+    "cierre_base": 71.01,
+    "cierre_final": 80.57,
+    "fecha_base": "2026-02-19",
+    "fecha_final": "2026-02-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

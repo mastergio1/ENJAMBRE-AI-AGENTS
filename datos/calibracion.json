@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:31:56+00:00",
+ "generado": "2026-08-03T08:32:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5894,6 +5894,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "335298775fb306bb",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:32:26+00:00",
+   "titular": "Occidental Petroleum Offering Its Employees Voluntary Buyouts Over the Next Two Weeks",
+   "simbolos": "OXY",
+   "direccion_pct": -4.7,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -5.62,
+    "cierre_base": 14.58,
+    "cierre_final": 13.76,
+    "fecha_base": "2020-05-12",
+    "fecha_final": "2020-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

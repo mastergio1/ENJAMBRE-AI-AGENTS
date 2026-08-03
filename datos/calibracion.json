@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:44:43+00:00",
+ "generado": "2026-08-03T05:45:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1095,6 +1095,28 @@
     "cierre_final": 65.75,
     "fecha_base": "2025-12-30",
     "fecha_final": "2026-01-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1e38464f8472d1f4",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:45:24+00:00",
+   "titular": "Gold Pulls Back From Records As Metal Shock Redefines Global Finance",
+   "simbolos": "GLD",
+   "direccion_pct": 7.34,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -4.28,
+    "cierre_base": 416.74,
+    "cierre_final": 398.89,
+    "fecha_base": "2025-12-26",
+    "fecha_final": "2025-12-30",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:29:05+00:00",
+ "generado": "2026-08-03T05:29:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -665,16 +665,16 @@
   {
    "sim_id": "653e6f59b1ab9d13",
    "origen": "historico",
-   "fecha": "2026-08-03T05:29:05+00:00",
+   "fecha": "2026-08-03T05:29:25+00:00",
    "titular": "The Market's Iran Blind Spot And Positioning Risk",
-   "simbolos": "NEM",
+   "simbolos": "SLV",
    "direccion_pct": 0.13,
    "volatilidad_pct": 1.21,
    "reaccion_real": {
-    "simbolo": "NEM",
-    "pct_real": -7.27,
-    "cierre_base": 128.73,
-    "cierre_final": 119.37,
+    "simbolo": "SLV",
+    "pct_real": -7.64,
+    "cierre_base": 81.57,
+    "cierre_final": 75.34,
     "fecha_base": "2026-03-02",
     "fecha_final": "2026-03-04",
     "ruedas": 2,

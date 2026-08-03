@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:12:17+00:00",
+ "generado": "2026-08-03T09:13:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7079,6 +7079,28 @@
     "cierre_final": 222.25,
     "fecha_base": "2024-07-15",
     "fecha_final": "2024-07-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "79dacc14111f378a",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:13:03+00:00",
+   "titular": "Indexes are higher following softer-than-expected June CPI figures.",
+   "simbolos": "IWM",
+   "direccion_pct": 5.38,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 4.8,
+    "cierre_base": 203.37,
+    "cierre_final": 213.14,
+    "fecha_base": "2024-07-10",
+    "fecha_final": "2024-07-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

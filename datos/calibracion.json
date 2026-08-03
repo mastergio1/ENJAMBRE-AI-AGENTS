@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:20:02+00:00",
+ "generado": "2026-08-03T08:20:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5561,6 +5561,28 @@
     "cierre_final": 15.01,
     "fecha_base": "2020-10-15",
     "fecha_final": "2020-10-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e0a122df22b3947d",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:20:43+00:00",
+   "titular": "MKM Partners Upgrades Occidental Petroleum to Buy, Lowers Price Target to $17",
+   "simbolos": "OXY",
+   "direccion_pct": 1.87,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -9.63,
+    "cierre_base": 12.25,
+    "cierre_final": 11.07,
+    "fecha_base": "2020-09-04",
+    "fecha_final": "2020-09-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

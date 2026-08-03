@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:11:25+00:00",
+ "generado": "2026-08-03T06:12:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1755,6 +1755,28 @@
     "cierre_final": 21.81,
     "fecha_base": "2024-10-23",
     "fecha_final": "2024-10-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "14b4138f618064b1",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:12:01+00:00",
+   "titular": "Marjorie Taylor Greene Stays Loyal To Trump, Keeps DJT Stock, Buys Into Warren Buffett's Berkshire In Latest Trades",
+   "simbolos": "SCCO",
+   "direccion_pct": 0.89,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SCCO",
+    "pct_real": 6.83,
+    "cierre_base": 105.76,
+    "cierre_final": 112.98,
+    "fecha_base": "2024-09-25",
+    "fecha_final": "2024-09-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

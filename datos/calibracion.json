@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:30:58+00:00",
+ "generado": "2026-08-03T10:31:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9194,6 +9194,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "156357583a107dc6",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:31:26+00:00",
+   "titular": "DraftKings Stock Drops On Q4 Results Despite Earnings Beat",
+   "simbolos": "DKNG",
+   "direccion_pct": -6.85,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "DKNG",
+    "pct_real": -10.21,
+    "cierre_base": 25.16,
+    "cierre_final": 22.59,
+    "fecha_base": "2026-02-12",
+    "fecha_final": "2026-02-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

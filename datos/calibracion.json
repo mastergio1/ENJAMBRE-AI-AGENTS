@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:37:56+00:00",
+ "generado": "2026-08-03T05:38:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1007,6 +1007,28 @@
     "cierre_final": 90.87,
     "fecha_base": "2026-01-16",
     "fecha_final": "2026-01-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3106995d45529a41",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:38:24+00:00",
+   "titular": "Silver: 'Poor Man's Gold' No More?",
+   "simbolos": "SLV",
+   "direccion_pct": 3.97,
+   "volatilidad_pct": 1.43,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": 6.01,
+    "cierre_base": 78.6,
+    "cierre_final": 83.32,
+    "fecha_base": "2026-01-13",
+    "fecha_final": "2026-01-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

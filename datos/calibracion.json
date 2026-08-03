@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:46:14+00:00",
+ "generado": "2026-08-03T09:46:49+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8028,6 +8028,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "38fe5874aabaf085",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:46:48+00:00",
+   "titular": "Google-Parent Alphabet, Tesla, ServiceNow, IBM and Texas Instruments: Why These 5 Stocks are on Investors' Radars Today",
+   "simbolos": "TSLA",
+   "direccion_pct": 5.15,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "TSLA",
+    "pct_real": -16.3,
+    "cierre_base": 374.01,
+    "cierre_final": 313.03,
+    "fecha_base": "2026-07-22",
+    "fecha_final": "2026-07-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

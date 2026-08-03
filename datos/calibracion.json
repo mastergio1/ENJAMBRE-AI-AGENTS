@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:45:34+00:00",
+ "generado": "2026-08-03T10:46:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9810,6 +9810,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "51f81cd99023295f",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:46:06+00:00",
+   "titular": "Belden, Caterpillar, Foxconn, Lucid Motors, Toyota, TSMC And Wistron Build Omniverse Factory Digital Twins To Accelerate AI-Driven Manufacturing",
+   "simbolos": "CAT",
+   "direccion_pct": 1.45,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "CAT",
+    "pct_real": 11.19,
+    "cierre_base": 524.47,
+    "cierre_final": 583.15,
+    "fecha_base": "2025-10-28",
+    "fecha_final": "2025-10-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

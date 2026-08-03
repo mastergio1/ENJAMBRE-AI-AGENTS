@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:06:11+00:00",
+ "generado": "2026-08-03T16:06:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1362,6 +1362,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "45412f269044f546",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:06:44+00:00",
+   "titular": "Leading And Lagging Sectors For April 8, 2025",
+   "simbolos": "XLE",
+   "direccion_pct": 5.94,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "XLE",
+    "pct_real": 0.71,
+    "cierre_base": 38.22,
+    "cierre_final": 38.49,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

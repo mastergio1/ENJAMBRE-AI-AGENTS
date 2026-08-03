@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:00:38+00:00",
+ "generado": "2026-08-03T07:01:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3188,6 +3188,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "93f208b51f96f0aa",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:01:13+00:00",
+   "titular": "SEC Targets Coinbase With Wells Notice And Threatens Enforcement Actions, CEO Brian Armstrong Fights Back",
+   "simbolos": "COIN",
+   "direccion_pct": 1.47,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -12.07,
+    "cierre_base": 77.14,
+    "cierre_final": 67.83,
+    "fecha_base": "2023-03-22",
+    "fecha_final": "2023-03-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

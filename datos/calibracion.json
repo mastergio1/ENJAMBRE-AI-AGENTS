@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:28:58+00:00",
+ "generado": "2026-08-03T06:32:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2352,6 +2352,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8d7f68065ead1643",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:32:56+00:00",
+   "titular": "Michael Saylor's MicroStrategy Takes Wall Street By Storm, Becomes Second-Most Traded Stock After Nvidia",
+   "simbolos": "MSTR",
+   "direccion_pct": 0.27,
+   "volatilidad_pct": 1.44,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -10.96,
+    "cierre_base": 473.83,
+    "cierre_final": 421.88,
+    "fecha_base": "2024-11-20",
+    "fecha_final": "2024-11-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

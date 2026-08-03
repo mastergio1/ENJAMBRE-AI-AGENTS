@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:38:42+00:00",
+ "generado": "2026-08-03T08:39:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6175,6 +6175,28 @@
     "pct_real": 5.7,
     "cierre_base": 16.04,
     "cierre_final": 16.95,
+    "fecha_base": "2020-04-07",
+    "fecha_final": "2020-04-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cdf2bd06ce74b92b",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:39:15+00:00",
+   "titular": "Occidental Petroleum Opposes Texas Oil And Gas Regulators Imposing Production Limits",
+   "simbolos": "OXY",
+   "direccion_pct": 7.02,
+   "volatilidad_pct": 1.56,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 10.98,
+    "cierre_base": 13.84,
+    "cierre_final": 15.36,
     "fecha_base": "2020-04-07",
     "fecha_final": "2020-04-09",
     "ruedas": 2,

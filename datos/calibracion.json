@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:15:24+00:00",
+ "generado": "2026-08-03T06:15:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1890,6 +1890,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b27f6eb5a6d1f43f",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:15:56+00:00",
+   "titular": "US Stocks Brace For Negative Start Amid Tech Earnings Disappointments, Caution Ahead Of Data: 'Worst Of This Two-Week Decline Is Behind Us,' Says Analyst",
+   "simbolos": "NEM",
+   "direccion_pct": -0.69,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": 10.7,
+    "cierre_base": 38.6,
+    "cierre_final": 42.73,
+    "fecha_base": "2024-04-24",
+    "fecha_final": "2024-04-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

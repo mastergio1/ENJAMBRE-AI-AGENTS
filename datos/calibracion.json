@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:44:27+00:00",
+ "generado": "2026-08-03T10:44:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9763,6 +9763,28 @@
     "cierre_final": 15.22,
     "fecha_base": "2025-11-04",
     "fecha_final": "2025-11-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cdca4e04da9af107",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:44:59+00:00",
+   "titular": "Amazon Q3 FY2025 Earnings Call Transcript",
+   "simbolos": "AMZN",
+   "direccion_pct": 2.84,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": 13.97,
+    "cierre_base": 222.86,
+    "cierre_final": 254.0,
+    "fecha_base": "2025-10-30",
+    "fecha_final": "2025-11-03",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:05:30+00:00",
+ "generado": "2026-08-03T08:06:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5075,6 +5075,28 @@
     "pct_real": 6.13,
     "cierre_base": 52.99,
     "cierre_final": 56.24,
+    "fecha_base": "2022-03-16",
+    "fecha_final": "2022-03-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0c5121db94c1e2a7",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:06:09+00:00",
+   "titular": "Fed's Powell Says Higher Commodity Costs, Oil Prices Will Weigh On Economic Outlook",
+   "simbolos": "USO",
+   "direccion_pct": 3.09,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 9.31,
+    "cierre_base": 68.28,
+    "cierre_final": 74.64,
     "fecha_base": "2022-03-16",
     "fecha_final": "2022-03-18",
     "ruedas": 2,

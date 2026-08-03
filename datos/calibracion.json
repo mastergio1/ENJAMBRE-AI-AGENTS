@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:28:10+00:00",
+ "generado": "2026-08-03T05:28:38+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -633,6 +633,28 @@
     "cierre_final": 95.8,
     "fecha_base": "2026-03-18",
     "fecha_final": "2026-03-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7565cd73279172a1",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:28:37+00:00",
+   "titular": "Stocks Fall, Treasury Yields Jump As Iran Conflict Fires Up Oil To $80: What's Moving Markets Thursday?",
+   "simbolos": "SCCO",
+   "direccion_pct": 2.5,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SCCO",
+    "pct_real": -10.5,
+    "cierre_base": 204.61,
+    "cierre_final": 183.14,
+    "fecha_base": "2026-03-04",
+    "fecha_final": "2026-03-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

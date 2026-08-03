@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:52:01+00:00",
+ "generado": "2026-08-03T05:52:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1315,6 +1315,28 @@
     "cierre_final": 63.66,
     "fecha_base": "2025-07-24",
     "fecha_final": "2025-07-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "490f5ecf87a30468",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:52:41+00:00",
+   "titular": "Gold Isn't The Only Game In Town—Precious Metals ETFs Are Casting A Wider Net",
+   "simbolos": "PPLT",
+   "direccion_pct": -2.16,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "PPLT",
+    "pct_real": 1.31,
+    "cierre_base": 12.35,
+    "cierre_final": 12.51,
+    "fecha_base": "2025-07-01",
+    "fecha_final": "2025-07-03",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

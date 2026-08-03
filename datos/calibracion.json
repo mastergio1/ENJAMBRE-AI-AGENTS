@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:53:15+00:00",
+ "generado": "2026-08-03T09:53:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8267,6 +8267,28 @@
     "cierre_final": 25.8,
     "fecha_base": "2026-06-25",
     "fecha_final": "2026-06-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bb131ed9dc99c1f5",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:53:50+00:00",
+   "titular": "Micron Earnings Call Expectations And Reality: Here's What Prediction Market Punters Were Hoping The Firm Would Say And What Got Said",
+   "simbolos": "MU",
+   "direccion_pct": -0.84,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": 7.99,
+    "cierre_base": 1048.51,
+    "cierre_final": 1132.33,
+    "fecha_base": "2026-06-24",
+    "fecha_final": "2026-06-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

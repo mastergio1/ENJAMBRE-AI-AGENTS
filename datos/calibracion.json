@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:17:30+00:00",
+ "generado": "2026-08-03T10:18:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8908,6 +8908,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bc6e14e4e149fe43",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:18:13+00:00",
+   "titular": "SoFi Techs Q1 Adj. EPS $0.12, Inline, Sales $1.087B Beat $1.051B Estimate",
+   "simbolos": "SOFI",
+   "direccion_pct": 1.35,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "SOFI",
+    "pct_real": -12.31,
+    "cierre_base": 18.36,
+    "cierre_final": 16.1,
+    "fecha_base": "2026-04-28",
+    "fecha_final": "2026-04-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

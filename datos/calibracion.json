@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:43:21+00:00",
+ "generado": "2026-08-03T05:44:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1051,6 +1051,28 @@
     "cierre_final": 70.96,
     "fecha_base": "2026-01-05",
     "fecha_final": "2026-01-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f16f36731dcf390a",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:44:01+00:00",
+   "titular": "Trump's Venezuela Move Reignites Geopolitical Angst — Gold And Silver ETFs Become The First Refuge",
+   "simbolos": "IAU",
+   "direccion_pct": -2.35,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": 3.75,
+    "cierre_base": 81.56,
+    "cierre_final": 84.62,
+    "fecha_base": "2026-01-02",
+    "fecha_final": "2026-01-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

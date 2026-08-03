@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:09:00+00:00",
+ "generado": "2026-08-03T10:09:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8651,16 +8651,16 @@
   {
    "sim_id": "1d4296070a0609fc",
    "origen": "historico",
-   "fecha": "2026-08-03T10:08:59+00:00",
+   "fecha": "2026-08-03T10:09:33+00:00",
    "titular": "'OpenAI's AI Chip Deal With Broadcom Hits $18 Billion Financing Snag' - The Information",
-   "simbolos": "INTC",
+   "simbolos": "MU",
    "direccion_pct": 2.17,
    "volatilidad_pct": 1.2,
    "reaccion_real": {
-    "simbolo": "INTC",
-    "pct_real": 18.08,
-    "cierre_base": 109.62,
-    "cierre_final": 129.44,
+    "simbolo": "MU",
+    "pct_real": 23.0,
+    "cierre_base": 646.63,
+    "cierre_final": 795.33,
     "fecha_base": "2026-05-07",
     "fecha_final": "2026-05-11",
     "ruedas": 2,

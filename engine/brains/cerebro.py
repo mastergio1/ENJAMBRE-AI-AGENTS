@@ -20,7 +20,8 @@ MODELO = "claude-sonnet-5"
 # Nota: claude-sonnet-5 ya no acepta `temperature` (devuelve 400 si se envía).
 # La variabilidad intra-arquetipo viene del propio modelo y de la semilla del caché.
 MAX_CONCURRENTES = 45   # llamadas simultáneas (más paralelismo = menos espera
-                        # al leer una noticia; ~80 cerebros caben en ~2 tandas)
+                        # al leer una noticia; los ~110 cerebros caben en ~2-3
+                        # tandas en vez de ~5, sin recortar la riqueza de voces)
 TIMEOUT_SEGUNDOS = 12.0
 RUTA_CACHE = Path(__file__).parent / "cache" / "respuestas.json"
 

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:48:02+00:00",
+ "generado": "2026-08-03T06:48:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2853,6 +2853,28 @@
     "pct_real": 20.03,
     "cierre_base": 165.98,
     "cierre_final": 199.22,
+    "fecha_base": "2024-02-23",
+    "fecha_final": "2024-02-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "29bc85930d846e8e",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:48:35+00:00",
+   "titular": "Top 10 Trending Stocks On WallStreetBets As Of February 26, 2024 (Via Swaggy Stocks)",
+   "simbolos": "MARA",
+   "direccion_pct": 3.78,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 26.34,
+    "cierre_base": 23.99,
+    "cierre_final": 30.31,
     "fecha_base": "2024-02-23",
     "fecha_final": "2024-02-27",
     "ruedas": 2,

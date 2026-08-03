@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:37:45+00:00",
+ "generado": "2026-08-03T08:38:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6136,6 +6136,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "03d2adbad8e4798b",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:38:20+00:00",
+   "titular": "Hearing OPEC Wants G20 Nations to Reduce Production by 5M Barrels/Day",
+   "simbolos": "USO",
+   "direccion_pct": 1.05,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -8.19,
+    "cierre_base": 42.96,
+    "cierre_final": 39.44,
+    "fecha_base": "2020-04-08",
+    "fecha_final": "2020-04-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:23:11+00:00",
+ "generado": "2026-08-03T05:23:43+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -416,6 +416,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "661f0b06fad69f2b",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:23:43+00:00",
+   "titular": "Bank of America's June Seasonal Playbook Says Sell Stocks, Buy Greenback",
+   "simbolos": "SLV",
+   "direccion_pct": -5.42,
+   "volatilidad_pct": 1.46,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": -8.06,
+    "cierre_base": 66.98,
+    "cierre_final": 61.58,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

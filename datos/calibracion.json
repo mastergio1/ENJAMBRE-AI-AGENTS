@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:39:43+00:00",
+ "generado": "2026-08-03T10:40:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9568,6 +9568,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7b992b35c6ee7f58",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:40:15+00:00",
+   "titular": "NIKE Says While Sportswear Is Not Growing They've Done A Really Nice Job Of Rightsizing Sportswear And Starting To Diversify The Portfolio",
+   "simbolos": "NKE",
+   "direccion_pct": -3.98,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "NKE",
+    "pct_real": -12.81,
+    "cierre_base": 65.63,
+    "cierre_final": 57.22,
+    "fecha_base": "2025-12-18",
+    "fecha_final": "2025-12-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

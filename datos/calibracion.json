@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:23:23+00:00",
+ "generado": "2026-08-03T10:24:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9084,6 +9084,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "635ed56f1b5658fd",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:24:05+00:00",
+   "titular": "Nike, Beyond Meat, Coinbase, RH, And Tesla: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "NKE",
+   "direccion_pct": 2.77,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "NKE",
+    "pct_real": -16.34,
+    "cierre_base": 52.82,
+    "cierre_final": 44.19,
+    "fecha_base": "2026-03-31",
+    "fecha_final": "2026-04-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

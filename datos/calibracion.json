@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:46:39+00:00",
+ "generado": "2026-08-03T10:47:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9851,6 +9851,28 @@
     "cierre_final": 181.03,
     "fecha_base": "2025-10-24",
     "fecha_final": "2025-10-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1e1d735a0e6f301b",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:47:13+00:00",
+   "titular": "Intel, Scienture Holdings, Ford, Deckers, And Super Micro Computer: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "F",
+   "direccion_pct": 4.33,
+   "volatilidad_pct": 1.46,
+   "reaccion_real": {
+    "simbolo": "F",
+    "pct_real": 7.46,
+    "cierre_base": 12.34,
+    "cierre_final": 13.26,
+    "fecha_base": "2025-10-23",
+    "fecha_final": "2025-10-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

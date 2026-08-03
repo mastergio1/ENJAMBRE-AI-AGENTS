@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:35:51+00:00",
+ "generado": "2026-08-03T05:36:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -917,6 +917,28 @@
     "pct_real": -31.38,
     "cierre_base": 105.57,
     "cierre_final": 72.44,
+    "fecha_base": "2026-01-29",
+    "fecha_final": "2026-02-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "203af612b763f2e7",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:36:20+00:00",
+   "titular": "Copper Surges But Constraints Threaten $200 Billion Merger",
+   "simbolos": "COPX",
+   "direccion_pct": 3.61,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "COPX",
+    "pct_real": -9.58,
+    "cierre_base": 94.23,
+    "cierre_final": 85.2,
     "fecha_base": "2026-01-29",
     "fecha_final": "2026-02-02",
     "ruedas": 2,

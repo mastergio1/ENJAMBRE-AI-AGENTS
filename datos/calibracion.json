@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:09:38+00:00",
+ "generado": "2026-08-03T05:10:20+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -325,6 +325,28 @@
     "cierre_final": 62.59,
     "fecha_base": "2026-02-06",
     "fecha_final": "2026-02-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "257811fe94d4646d",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:10:20+00:00",
+   "titular": "3 Metals Stocks to Buy on the Dip",
+   "simbolos": "IAU",
+   "direccion_pct": 6.38,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": 5.63,
+    "cierre_base": 90.53,
+    "cierre_final": 95.63,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

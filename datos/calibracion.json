@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:51:23+00:00",
+ "generado": "2026-08-03T09:52:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8204,6 +8204,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "27acb895b739c42f",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:52:02+00:00",
+   "titular": "Roblox Stock Is Surging Monday: What's Driving The Action?",
+   "simbolos": "RBLX",
+   "direccion_pct": 4.72,
+   "volatilidad_pct": 1.49,
+   "reaccion_real": {
+    "simbolo": "RBLX",
+    "pct_real": 14.34,
+    "cierre_base": 47.56,
+    "cierre_final": 54.38,
+    "fecha_base": "2026-06-26",
+    "fecha_final": "2026-06-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

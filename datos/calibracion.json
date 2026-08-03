@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:56:33+00:00",
+ "generado": "2026-08-03T06:57:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3029,6 +3029,28 @@
     "pct_real": 12.12,
     "cierre_base": 15.88,
     "cierre_final": 17.8,
+    "fecha_base": "2023-08-28",
+    "fecha_final": "2023-08-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3b50b896c241c5ca",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:57:06+00:00",
+   "titular": "Coinbase Global Inc Says Customers Of Coinbase Wallet May Experience Issues Trying To Sign In Or Onboard To CB Wallet; Customers May Also Be Seeing A Display Issue Showing A 0 Balance Within Some Wallet Assets",
+   "simbolos": "COIN",
+   "direccion_pct": 7.21,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 13.73,
+    "cierre_base": 73.71,
+    "cierre_final": 83.83,
     "fecha_base": "2023-08-28",
     "fecha_final": "2023-08-30",
     "ruedas": 2,

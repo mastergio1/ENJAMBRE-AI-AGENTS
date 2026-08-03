@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:21:36+00:00",
+ "generado": "2026-08-03T09:22:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7302,6 +7302,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "45e67f3cfa2e9549",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:22:09+00:00",
+   "titular": "Cramer Says Investors Acting Very Rashly After Fed's Hawkish Stance: 'If Powell Felt Things Weren't Going His Way…'",
+   "simbolos": "QQQ",
+   "direccion_pct": 2.06,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -4.28,
+    "cierre_base": 286.51,
+    "cierre_final": 274.25,
+    "fecha_base": "2022-12-14",
+    "fecha_final": "2022-12-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

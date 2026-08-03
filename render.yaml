@@ -6,8 +6,14 @@ services:
     runtime: docker
     rootDir: engine
     dockerfilePath: ./Dockerfile
-    plan: free
+    plan: starter          # $7/mes: no se duerme + 0.5 CPU (5x vs free) + disco
     healthCheckPath: /salud
+    # disco persistente: la base (muro, replays, calibración) sobrevive a los
+    # redeploys en vez de regenerarse cada vez. Montado donde vive ENJAMBRE_DB.
+    disk:
+      name: enjambre-datos
+      mountPath: /app/datos
+      sizeGB: 1
     envVars:
       - key: ANTHROPIC_API_KEY
         sync: false # se pega a mano en el panel (nunca al repo)
@@ -27,9 +33,8 @@ services:
       # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
       - key: ENJAMBRE_ORIGENES
         value: "https://enjambre.vercel.app"
-      # la base vive en el disco del contenedor (efímera en el plan free;
-      # el pipeline la regenera). Para persistir entre reinicios, subir de
-      # plan y montar un disco en /app/datos (ver docs/despliegue.md).
+      # la base vive en el disco PERSISTENTE montado arriba (/app/datos):
+      # sobrevive a los redeploys (plan Starter). El pipeline la puebla.
       - key: ENJAMBRE_DB
         value: "/app/datos/enjambre.db"
       # El Pulso (Etapa 8) — se pegan a mano cuando el dominio esté verificado:

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:22:36+00:00",
+ "generado": "2026-08-03T10:23:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9062,6 +9062,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5f7546b47119c33d",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:23:21+00:00",
+   "titular": "Elon Musk Gives Intel The AI Foundry Stamp It's Been Chasing",
+   "simbolos": "INTC",
+   "direccion_pct": 2.44,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 16.65,
+    "cierre_base": 52.91,
+    "cierre_final": 61.72,
+    "fecha_base": "2026-04-07",
+    "fecha_final": "2026-04-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

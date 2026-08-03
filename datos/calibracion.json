@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:50:21+00:00",
+ "generado": "2026-08-03T07:50:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4613,6 +4613,28 @@
     "pct_real": 2.63,
     "cierre_base": 41.42,
     "cierre_final": 42.51,
+    "fecha_base": "2023-03-31",
+    "fecha_final": "2023-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3cfdc067c2435272",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:50:51+00:00",
+   "titular": "SLB Option Alert: Apr 14 $55 Calls Sweep (19) near the Ask: 1045 @ $0.829 vs 81 OI; Ref=$53.42",
+   "simbolos": "SLB",
+   "direccion_pct": 7.01,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": 2.77,
+    "cierre_base": 49.1,
+    "cierre_final": 50.46,
     "fecha_base": "2023-03-31",
     "fecha_final": "2023-04-04",
     "ruedas": 2,

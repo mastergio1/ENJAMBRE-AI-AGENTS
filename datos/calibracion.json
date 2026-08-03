@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:21:50+00:00",
+ "generado": "2026-08-03T10:22:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9037,6 +9037,28 @@
     "cierre_final": 178.16,
     "fecha_base": "2026-04-22",
     "fecha_final": "2026-04-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3479eb753cab7b1f",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:22:35+00:00",
+   "titular": "Netflix, AMD, Navitas Semiconductor, Abbott Labs, And Nio: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "NFLX",
+   "direccion_pct": 0.96,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "NFLX",
+    "pct_real": -12.02,
+    "cierre_base": 107.79,
+    "cierre_final": 94.83,
+    "fecha_base": "2026-04-16",
+    "fecha_final": "2026-04-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

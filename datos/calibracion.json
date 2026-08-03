@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:24:44+00:00",
+ "generado": "2026-08-03T16:25:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1819,6 +1819,28 @@
     "pct_real": 3.89,
     "cierre_base": 200.81,
     "cierre_final": 208.63,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "067310186157d71f",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:25:21+00:00",
+   "titular": "Benzinga Market Summary: S&P Rises On US-China Tariff Easing, Gold Pulls Back, Oil Surges",
+   "simbolos": "VTI",
+   "direccion_pct": 2.33,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "VTI",
+    "pct_real": 4.05,
+    "cierre_base": 277.97,
+    "cierre_final": 289.22,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

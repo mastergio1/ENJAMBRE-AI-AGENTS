@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:41:50+00:00",
+ "generado": "2026-08-03T10:42:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9656,6 +9656,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "691126d5466e67c0",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:42:22+00:00",
+   "titular": "Behind the Scenes of Micron Technology's Latest Options Trends",
+   "simbolos": "MU",
+   "direccion_pct": 2.22,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": -8.21,
+    "cierre_base": 225.92,
+    "cierre_final": 207.37,
+    "fecha_base": "2025-11-19",
+    "fecha_final": "2025-11-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

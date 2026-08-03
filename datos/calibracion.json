@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:31:58+00:00",
+ "generado": "2026-08-03T05:32:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -790,6 +790,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "62850350ae65e28d",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:32:29+00:00",
+   "titular": "Here's How Much $1000 Invested In Newmont 10 Years Ago Would Be Worth Today",
+   "simbolos": "NEM",
+   "direccion_pct": -0.32,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": -1.31,
+    "cierre_base": 116.85,
+    "cierre_final": 115.32,
+    "fecha_base": "2026-02-04",
+    "fecha_final": "2026-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -89,23 +89,22 @@ def construir_red(model) -> None:
 
 
 def _muestra_preferencial(rng, candidatos, cuantos, popularidad) -> list:
-    """Muestra sin reemplazo, con peso 1 + popularidad actual del candidato."""
+    """Muestra sin reemplazo con peso 1 + popularidad (los populares atraen más).
+
+    Usa el muestreo por reservorio ponderado de Efraimidis-Spirakis: a cada
+    candidato se le asigna la clave u**(1/peso) y se toman las `cuantos` mayores.
+    Da la misma probabilidad de selección ∝ peso, pero en UNA pasada + orden
+    (O(n log n)) en vez del bucle cuadrático anterior (O(cuantos·n)) — clave
+    para que construir la red de 10.000 agentes no tarde varios segundos."""
     if cuantos >= len(candidatos):
         return list(candidatos)
-    pesos = [1 + popularidad.get(c.unique_id, 0) for c in candidatos]
-    elegidos: list = []
-    indices = list(range(len(candidatos)))
-    for _ in range(cuantos):
-        total = sum(pesos[i] for i in indices)
-        objetivo = rng.random() * total
-        acumulado = 0.0
-        for pos, i in enumerate(indices):
-            acumulado += pesos[i]
-            if acumulado >= objetivo:
-                elegidos.append(candidatos[i])
-                indices.pop(pos)
-                break
-    return elegidos
+    claves = []
+    for c in candidatos:
+        peso = 1 + popularidad.get(c.unique_id, 0)
+        u = rng.random() or 1e-12  # evita log(0)
+        claves.append((u ** (1.0 / peso), c))
+    claves.sort(key=lambda t: t[0], reverse=True)
+    return [c for _, c in claves[:cuantos]]
 
 
 def _eleccion_preferencial(rng, poblacion, excluido):

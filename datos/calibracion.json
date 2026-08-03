@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:09:26+00:00",
+ "generado": "2026-08-03T06:10:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1689,6 +1689,28 @@
     "cierre_final": 31.58,
     "fecha_base": "2024-11-06",
     "fecha_final": "2024-11-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bdf0b4a7bed61aa3",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:10:00+00:00",
+   "titular": "Here Is How Investors Can Capture Opportunities From The Election",
+   "simbolos": "GLD",
+   "direccion_pct": -3.08,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -1.48,
+    "cierre_base": 253.4,
+    "cierre_final": 249.65,
+    "fecha_base": "2024-11-05",
+    "fecha_final": "2024-11-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

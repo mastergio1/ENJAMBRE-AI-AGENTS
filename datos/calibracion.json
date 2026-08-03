@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:44:59+00:00",
+ "generado": "2026-08-03T10:45:34+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9788,6 +9788,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cf8458b5acf510f4",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:45:33+00:00",
+   "titular": "Mark Zuckerberg Is A 'Wartime CEO' And Leading Meta Into Next Stage Of AI Revolution, Says Dan Ives — Stock Sell-Off Is Short-Sighted",
+   "simbolos": "META",
+   "direccion_pct": -5.53,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "META",
+    "pct_real": -13.75,
+    "cierre_base": 751.67,
+    "cierre_final": 648.35,
+    "fecha_base": "2025-10-29",
+    "fecha_final": "2025-10-31",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

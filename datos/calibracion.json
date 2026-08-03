@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:05:26+00:00",
+ "generado": "2026-08-03T05:06:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -196,6 +196,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "984cd7bdef3ee5eb",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:06:07+00:00",
+   "titular": "Powell Warns Oil Shock Could Test The Fed: These 7 Stocks Tumbled",
+   "simbolos": "GLD",
+   "direccion_pct": -8.39,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -7.05,
+    "cierre_base": 444.74,
+    "cierre_final": 413.38,
+    "fecha_base": "2026-03-18",
+    "fecha_final": "2026-03-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

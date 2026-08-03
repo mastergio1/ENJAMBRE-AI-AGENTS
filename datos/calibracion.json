@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:59:35+00:00",
+ "generado": "2026-08-03T09:00:12+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6725,6 +6725,28 @@
     "pct_real": -6.18,
     "cierre_base": 263.96,
     "cierre_final": 247.66,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "277cf2ced7489709",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:00:11+00:00",
+   "titular": "JPMorgan Raises Recession Risk To 60% As 'Largest US Tax Hike' In 60 Years Hits Global Economy",
+   "simbolos": "VOO",
+   "direccion_pct": -2.21,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "VOO",
+    "pct_real": -6.19,
+    "cierre_base": 494.16,
+    "cierre_final": 463.56,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

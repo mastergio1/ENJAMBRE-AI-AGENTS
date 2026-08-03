@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:44:16+00:00",
+ "generado": "2026-08-03T09:44:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7962,6 +7962,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "29934eb4577692f4",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:44:53+00:00",
+   "titular": "Why Rice Prices Could Shoot Up Further Despite Bountiful Production",
+   "simbolos": "SPY",
+   "direccion_pct": -2.74,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -4.09,
+    "cierre_base": 389.8,
+    "cierre_final": 373.87,
+    "fecha_base": "2022-06-10",
+    "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

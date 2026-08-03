@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:41:51+00:00",
+ "generado": "2026-08-03T09:42:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7869,6 +7869,28 @@
     "pct_real": 5.15,
     "cierre_base": 172.6,
     "cierre_final": 181.49,
+    "fecha_base": "2022-07-18",
+    "fecha_final": "2022-07-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0cdb53adf2639068",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:42:26+00:00",
+   "titular": "Analysts Predicted The Demise Of The 60/40 Portfolio — But It's Making A Comeback",
+   "simbolos": "SPY",
+   "direccion_pct": 10.98,
+   "volatilidad_pct": 1.45,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 3.36,
+    "cierre_base": 381.95,
+    "cierre_final": 394.77,
     "fecha_base": "2022-07-18",
     "fecha_final": "2022-07-20",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:18:13+00:00",
+ "generado": "2026-08-03T10:18:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8925,6 +8925,28 @@
     "pct_real": -12.31,
     "cierre_base": 18.36,
     "cierre_final": 16.1,
+    "fecha_base": "2026-04-28",
+    "fecha_final": "2026-04-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "25a7e2eb708451ef",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:18:56+00:00",
+   "titular": "Robinhood Markets Expects To Invest Additional $100M This Year Over User Interface For Trump Accounts",
+   "simbolos": "HOOD",
+   "direccion_pct": -1.39,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "HOOD",
+    "pct_real": -11.19,
+    "cierre_base": 82.07,
+    "cierre_final": 72.89,
     "fecha_base": "2026-04-28",
     "fecha_final": "2026-04-30",
     "ruedas": 2,

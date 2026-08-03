@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:25:46+00:00",
+ "generado": "2026-08-03T07:26:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3914,6 +3914,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "63d8ba89967d4b03",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:26:22+00:00",
+   "titular": "Coinbase Filing Shows Registration For Mixed Securities Shelf Offering, No Size Disclosed",
+   "simbolos": "COIN",
+   "direccion_pct": 2.48,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -19.85,
+    "cierre_base": 72.99,
+    "cierre_final": 58.5,
+    "fecha_base": "2022-05-10",
+    "fecha_final": "2022-05-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

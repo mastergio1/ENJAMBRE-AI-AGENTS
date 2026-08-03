@@ -60,12 +60,27 @@ son los más calmados. Antes el enjambre trataba a todos por igual; ahora distin
 —de las que ya sabemos qué pasó de verdad con el precio— y comparamos su reacción contra la
 realidad. Es como tomarle una prueba con las respuestas ya en la mano.
 
-**Estado ahora mismo (tarde del 3 de agosto):** re-validación **en curso y avanzando bien**.
-Vamos por **~60 exámenes rendidos** sobre las perillas nuevas (de una meta de ~125 en esta
-tanda: 25 por mercado), a un ritmo de uno cada ~35-40 segundos. El motor aguanta sin caerse,
-y cada examen se guarda en la caja fuerte apenas termina, así que aunque se corte por saldo
-o por un reinicio, no se pierde nada. **La comparación completa antes vs. después estará
-lista cuando termine la tanda** (o cuando se agote el saldo de IA, ~US$21).
+**Resultado de la re-validación (tanda de 110 exámenes, terminada el 3 de agosto):**
+El problema de la fuerza quedó **en gran parte resuelto**. Comparación pareada (mismos 110
+eventos, diales viejos vs. nuevos):
+
+| | Antes | Ahora | Ideal |
+|---|---|---|---|
+| Fuerza del movimiento (mediana) | 2,4% | **8,2%** | ~real (8,0%) |
+| Ratio de fuerza | 0,32 | **0,89** | 0,7–1,3 |
+| Dirección (acierto) | 58% | 56% | ≥55% |
+
+Por mercado: **Acciones** el mejor (dirección 56%→70%, fuerza 0,20→0,90); **Cripto** arreglado
+(fuerza 0,20→0,80, dirección 59%→62%); **Oro** fuerza bien pero dirección floja (~50%, es el
+más difícil por la lógica de refugio); **Petróleo** fuerza perfecta pero dirección bajó (muestra
+chica); **Índices/SPY** ahora se pasa de fuerte (ratio 1,68, hay que bajarlo un toque).
+
+**Decisión de foco del producto (3 de agosto):** concentrar El Enjambre en la **bolsa USA —
+acciones individuales** (donde es más creíble y tiene mejores datos), con el **índice (SPY)**
+como "ánimo general" y la **cripto** como extra opcional/viral. **Oro y petróleo** quedan a la
+banca (experimentales) hasta que el núcleo esté sólido. La próxima tanda (con saldo nuevo, fin
+de mes) irá **profunda solo en acciones USA**, mezclando días normales con días extremos —
+vale más 500 exámenes sobre lo que importa que 100 sobre cinco mercados a medias.
 
 **Nota de la prueba anterior (perillas viejas)** — para comparar:
 

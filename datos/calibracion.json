@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:34:30+00:00",
+ "generado": "2026-08-03T08:35:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6004,6 +6004,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bc212741fce380a9",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:35:05+00:00",
+   "titular": "Shares of several energy companies are trading higher as oil prices potentially stabilize following recent crash.",
+   "simbolos": "SLB",
+   "direccion_pct": -4.78,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "SLB",
+    "pct_real": 5.02,
+    "cierre_base": 15.34,
+    "cierre_final": 16.11,
+    "fecha_base": "2020-04-22",
+    "fecha_final": "2020-04-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

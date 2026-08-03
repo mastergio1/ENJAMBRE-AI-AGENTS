@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:31:30+00:00",
+ "generado": "2026-08-03T05:31:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -768,6 +768,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0b88d9837476ffef",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:31:58+00:00",
+   "titular": "4 Ways to Trade the Metals Momentum Wave",
+   "simbolos": "GLD",
+   "direccion_pct": 5.7,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": 5.69,
+    "cierre_base": 441.88,
+    "cierre_final": 467.03,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

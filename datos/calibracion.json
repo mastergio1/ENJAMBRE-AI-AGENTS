@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:21:06+00:00",
+ "generado": "2026-08-03T10:21:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9018,6 +9018,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "54074114a0a1549b",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:21:49+00:00",
+   "titular": "Salesforce Advances AI Strategy With Google Cloud Partnership",
+   "simbolos": "CRM",
+   "direccion_pct": -3.09,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "CRM",
+    "pct_real": -6.13,
+    "cierre_base": 189.8,
+    "cierre_final": 178.16,
+    "fecha_base": "2026-04-22",
+    "fecha_final": "2026-04-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

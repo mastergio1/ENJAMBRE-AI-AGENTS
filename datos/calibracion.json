@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:27:13+00:00",
+ "generado": "2026-08-03T05:27:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -592,6 +592,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6eac386eda2521f7",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:27:41+00:00",
+   "titular": "Markets Trust Trump Victory Declaration – Maximalist Demands From Both Sides; Reality Check – Weak Treasury Auction",
+   "simbolos": "SLV",
+   "direccion_pct": 0.2,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": -2.71,
+    "cierre_base": 65.21,
+    "cierre_final": 63.44,
+    "fecha_base": "2026-03-25",
+    "fecha_final": "2026-03-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

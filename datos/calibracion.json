@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:01:23+00:00",
+ "generado": "2026-08-03T08:05:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5058,6 +5058,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8d8f024b94ca8cfb",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:05:29+00:00",
+   "titular": "SEC Rejects Occidental Petroleum's Request To Throw Out Motion To Change Emissions Goals",
+   "simbolos": "OXY",
+   "direccion_pct": 3.95,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 6.13,
+    "cierre_base": 52.99,
+    "cierre_final": 56.24,
+    "fecha_base": "2022-03-16",
+    "fecha_final": "2022-03-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

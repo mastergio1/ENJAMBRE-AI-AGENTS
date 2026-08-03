@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:20:44+00:00",
+ "generado": "2026-08-03T08:21:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5583,6 +5583,28 @@
     "cierre_final": 11.07,
     "fecha_base": "2020-09-04",
     "fecha_final": "2020-09-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e5abba87041360d3",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:21:20+00:00",
+   "titular": "Occidental Petroleum Q2 Adj. EPS $(1.76) Misses $(1.68) Estimate, Combined Production 1.406B Barrels Of Oil Equivalent/Day",
+   "simbolos": "OXY",
+   "direccion_pct": -3.86,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -9.47,
+    "cierre_base": 16.48,
+    "cierre_final": 14.92,
+    "fecha_base": "2020-08-10",
+    "fecha_final": "2020-08-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

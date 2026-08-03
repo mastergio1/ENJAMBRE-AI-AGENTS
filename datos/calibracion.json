@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:29:54+00:00",
+ "generado": "2026-08-03T09:30:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7588,6 +7588,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5a45b296fa7aa598",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:30:28+00:00",
+   "titular": "EXCLUSIVE: Top 10 Stocks Searched On Benzinga Pro In September: Where Do Tesla, Apple, Bed Bath & Beyond Rank?",
+   "simbolos": "IWM",
+   "direccion_pct": 3.55,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 3.2,
+    "cierre_base": 169.29,
+    "cierre_final": 174.7,
+    "fecha_base": "2022-10-03",
+    "fecha_final": "2022-10-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:34:41+00:00",
+ "generado": "2026-08-03T06:35:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2413,6 +2413,28 @@
     "pct_real": 31.06,
     "cierre_base": 19.25,
     "cierre_final": 25.23,
+    "fecha_base": "2024-11-08",
+    "fecha_final": "2024-11-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "af2cf96571804fbd",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:35:15+00:00",
+   "titular": "Michael Saylor's MicroStrategy Racks Up Over $10B In Unrealized Profit As Bitcoin Blows Past $82K",
+   "simbolos": "MSTR",
+   "direccion_pct": 14.38,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 31.87,
+    "cierre_base": 270.42,
+    "cierre_final": 356.59,
     "fecha_base": "2024-11-08",
     "fecha_final": "2024-11-12",
     "ruedas": 2,

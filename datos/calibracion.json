@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:16:49+00:00",
+ "generado": "2026-08-03T10:17:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8881,6 +8881,28 @@
     "pct_real": 11.78,
     "cierre_base": 84.52,
     "cierre_final": 94.48,
+    "fecha_base": "2026-04-28",
+    "fecha_final": "2026-04-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a36d7a3747196d73",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:17:29+00:00",
+   "titular": "Starbucks Q2 2026 Earnings Call: Complete Transcript",
+   "simbolos": "SBUX",
+   "direccion_pct": -1.93,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "SBUX",
+    "pct_real": 8.28,
+    "cierre_base": 97.28,
+    "cierre_final": 105.33,
     "fecha_base": "2026-04-28",
     "fecha_final": "2026-04-30",
     "ruedas": 2,

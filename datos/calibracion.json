@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:37:27+00:00",
+ "generado": "2026-08-03T06:38:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2506,6 +2506,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "598a2995c75986fb",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:38:02+00:00",
+   "titular": "Meta, Microsoft, Robinhood, Super Micro, And Coinbase: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "COIN",
+   "direccion_pct": -0.71,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -13.63,
+    "cierre_base": 211.74,
+    "cierre_final": 182.88,
+    "fecha_base": "2024-10-30",
+    "fecha_final": "2024-11-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

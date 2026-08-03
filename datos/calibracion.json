@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:37:04+00:00",
+ "generado": "2026-08-03T10:37:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9458,6 +9458,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9e8cfb13ebfb955a",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:37:36+00:00",
+   "titular": "Intel CEO Says Some Customers Engaged With Co. On PDK And Running Test Chips On New Manufacturing Tech",
+   "simbolos": "INTC",
+   "direccion_pct": 5.4,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": -21.78,
+    "cierre_base": 54.32,
+    "cierre_final": 42.49,
+    "fecha_base": "2026-01-22",
+    "fecha_final": "2026-01-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

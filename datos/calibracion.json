@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:38:38+00:00",
+ "generado": "2026-08-03T06:39:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2550,6 +2550,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "821ac085ccfd261a",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:39:10+00:00",
+   "titular": "Bitcoin, Ethereum ETFs Saw $528M Net Outflows Last Week As BTC Plunges To $51,000",
+   "simbolos": "ETHE",
+   "direccion_pct": -9.7,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": -17.16,
+    "cierre_base": 25.47,
+    "cierre_final": 21.1,
+    "fecha_base": "2024-08-02",
+    "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

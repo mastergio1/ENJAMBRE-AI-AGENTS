@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:26:36+00:00",
+ "generado": "2026-08-03T06:27:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2271,16 +2271,16 @@
   {
    "sim_id": "a9435d2bc872cf58",
    "origen": "historico",
-   "fecha": "2026-08-03T06:26:35+00:00",
+   "fecha": "2026-08-03T06:27:00+00:00",
    "titular": "New Meme Coin Cocoro Launched By Dogecoin's IP Rights Holder",
-   "simbolos": "COIN",
-   "direccion_pct": 3.48,
-   "volatilidad_pct": 1.24,
+   "simbolos": "BITO",
+   "direccion_pct": 0.32,
+   "volatilidad_pct": 1.4,
    "reaccion_real": {
-    "simbolo": "COIN",
-    "pct_real": -11.85,
-    "cierre_base": 217.45,
-    "cierre_final": 191.69,
+    "simbolo": "BITO",
+    "pct_real": -4.64,
+    "cierre_base": 19.39,
+    "cierre_final": 18.49,
     "fecha_base": "2025-03-07",
     "fecha_final": "2025-03-11",
     "ruedas": 2,

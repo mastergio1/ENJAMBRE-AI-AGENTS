@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:04:10+00:00",
+ "generado": "2026-08-03T15:04:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -240,6 +240,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9f4c59c819afe8ed",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:04:58+00:00",
+   "titular": "Bonds In Danger Zone; Market Resilient Despite Iran's Ceasefire Violations",
+   "simbolos": "GLD",
+   "direccion_pct": 1.83,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": 3.21,
+    "cierre_base": 418.27,
+    "cierre_final": 431.68,
+    "fecha_base": "2026-05-05",
+    "fecha_final": "2026-05-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

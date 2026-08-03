@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T14:57:46+00:00",
+ "generado": "2026-08-03T14:58:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -108,6 +108,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ee69f10601560daf",
+   "origen": "historico",
+   "fecha": "2026-08-03T14:58:31+00:00",
+   "titular": "The Late-Stage Debt Cycle Is A Hidden Gold Tailwind",
+   "simbolos": "GLD",
+   "direccion_pct": 0.79,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -1.14,
+    "cierre_base": 390.78,
+    "cierre_final": 386.32,
+    "fecha_base": "2026-06-09",
+    "fecha_final": "2026-06-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

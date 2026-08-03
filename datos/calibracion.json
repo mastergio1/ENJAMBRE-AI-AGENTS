@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:13:12+00:00",
+ "generado": "2026-08-03T10:13:53+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8776,6 +8776,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a9b65c349e8be8a9",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:13:53+00:00",
+   "titular": "'Anthropic Considering Funding Offers at Over $900B Value'- Bloomberg",
+   "simbolos": "GOOGL",
+   "direccion_pct": 1.39,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "GOOGL",
+    "pct_real": 10.22,
+    "cierre_base": 349.94,
+    "cierre_final": 385.69,
+    "fecha_base": "2026-04-29",
+    "fecha_final": "2026-05-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

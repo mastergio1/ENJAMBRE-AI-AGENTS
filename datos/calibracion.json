@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T14:56:11+00:00",
+ "generado": "2026-08-03T14:57:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -59,6 +59,28 @@
     "pct_real": -2.08,
     "cierre_base": 377.32,
     "cierre_final": 369.46,
+    "fecha_base": "2026-06-23",
+    "fecha_final": "2026-06-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0b25781c300010b4",
+   "origen": "historico",
+   "fecha": "2026-08-03T14:57:03+00:00",
+   "titular": "Silver’s 50% Crash Reaches 'Oversold' Levels: Should You Buy The Dip?",
+   "simbolos": "SLV",
+   "direccion_pct": -5.39,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "SLV",
+    "pct_real": -6.05,
+    "cierre_base": 55.73,
+    "cierre_final": 52.36,
     "fecha_base": "2026-06-23",
     "fecha_final": "2026-06-25",
     "ruedas": 2,

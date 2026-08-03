@@ -209,7 +209,7 @@ def _titular_de(simbolo: str, fecha: str) -> dict | None:
                 "APCA-API-KEY-ID": os.environ["ALPACA_API_KEY_ID"],
                 "APCA-API-SECRET-KEY": os.environ["ALPACA_API_SECRET_KEY"],
             },
-            timeout=15,
+            timeout=8,
         )
         respuesta.raise_for_status()
         noticias = [n for n in respuesta.json().get("news", []) if n.get("headline")]
@@ -253,19 +253,24 @@ def cosechar(watchlist: dict[str, str], desde: str, hasta: str,
     por_mercado: dict[str, int] = {}
     for simbolo, mercado in watchlist.items():
         candidatos = dias_de_movimiento(simbolo, mercado, desde, hasta)
-        # los de mayor movimiento primero, hasta el tope por símbolo
+        # los de mayor movimiento primero, y descartar los que ya están
         candidatos.sort(key=lambda c: abs(c["_cambio_dia"]), reverse=True)
+        nuevos = [c for c in candidatos
+                  if _id_evento(simbolo, c["fecha"], mercado) not in ids_existentes]
+        # ACOTAR cuántos días se consultan a Alpaca: un símbolo volátil puede
+        # tener 50+ días de movimiento en 10 años; consultarlos TODOS hace la
+        # cosecha eterna. Con un poco de holgura sobre el tope basta (los días
+        # de gran movimiento casi siempre tienen noticia real).
+        a_revisar = nuevos[:tope_por_simbolo + 8]
         tomados = 0
-        for cand in candidatos:
+        for cand in a_revisar:
             if tomados >= tope_por_simbolo:
                 break
-            id_evento = _id_evento(simbolo, cand["fecha"], mercado)
-            if id_evento in ids_existentes:
-                continue
             titular = _titular_de(simbolo, cand["fecha"])
             if titular is None:
                 sin_titular.append({"simbolo": simbolo, "fecha": cand["fecha"]})
                 continue
+            id_evento = _id_evento(simbolo, cand["fecha"], mercado)
             eventos.append({
                 "id": id_evento,
                 "fecha": cand["fecha"],

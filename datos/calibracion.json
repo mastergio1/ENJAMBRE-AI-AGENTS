@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:13:06+00:00",
+ "generado": "2026-08-03T08:13:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5319,6 +5319,28 @@
     "cierre_final": 46.51,
     "fecha_base": "2021-07-16",
     "fecha_final": "2021-07-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fb37ca140c285d90",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:13:47+00:00",
+   "titular": "Occidental Petroleum Option Alert: Jan 21 $40 Calls Sweep (14) above Ask!: 250 @ $1.83 vs 16536 OI; Earnings 8/9 After Close [est] Ref=$30.025",
+   "simbolos": "OXY",
+   "direccion_pct": 0.81,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -8.35,
+    "cierre_base": 30.54,
+    "cierre_final": 27.99,
+    "fecha_base": "2021-06-16",
+    "fecha_final": "2021-06-18",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

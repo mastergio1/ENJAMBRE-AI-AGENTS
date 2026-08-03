@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:14:28+00:00",
+ "generado": "2026-08-03T15:15:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -411,6 +411,28 @@
     "pct_real": -0.38,
     "cierre_base": 85.27,
     "cierre_final": 84.95,
+    "fecha_base": "2026-03-25",
+    "fecha_final": "2026-03-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3133869415a559a1",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:15:13+00:00",
+   "titular": "SPDR Gold Shares Surge On Supposed Easing Of U.S.-Iran Conflict",
+   "simbolos": "GLD",
+   "direccion_pct": 3.37,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.38,
+    "cierre_base": 416.29,
+    "cierre_final": 414.7,
     "fecha_base": "2026-03-25",
     "fecha_final": "2026-03-27",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:31:11+00:00",
+ "generado": "2026-08-03T16:31:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2044,6 +2044,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0316d5216b45286f",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:31:46+00:00",
+   "titular": "Chip Rebound Lifts Nasdaq 100, Micron Rallies 5%: Stock Market Today",
+   "simbolos": "MU",
+   "direccion_pct": 3.08,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": 10.86,
+    "cierre_base": 865.46,
+    "cierre_final": 959.48,
+    "fecha_base": "2026-07-20",
+    "fecha_final": "2026-07-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:29:52+00:00",
+ "generado": "2026-08-03T16:30:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1997,6 +1997,28 @@
     "cierre_final": 395.68,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4a15f8449a07efb3",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:30:31+00:00",
+   "titular": "Lucid Group 13G Filing Shows Prince Alwaleed Bin Talal Reports 5% Ownership Stake In Co As Of July 23, 2026",
+   "simbolos": "LCID",
+   "direccion_pct": 14.05,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "LCID",
+    "pct_real": 22.46,
+    "cierre_base": 6.5,
+    "cierre_final": 7.96,
+    "fecha_base": "2026-07-27",
+    "fecha_final": "2026-07-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

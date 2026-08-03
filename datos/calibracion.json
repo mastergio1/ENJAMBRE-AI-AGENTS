@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:22:41+00:00",
+ "generado": "2026-08-03T05:23:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -394,6 +394,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "903dc49fefb4b03e",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:23:11+00:00",
+   "titular": "Stock Market Today: Nasdaq 100 Rallies, Oil Sinks 5% As U.S.-Iran Deal Reopens Hormuz",
+   "simbolos": "GDX",
+   "direccion_pct": 3.76,
+   "volatilidad_pct": 1.43,
+   "reaccion_real": {
+    "simbolo": "GDX",
+    "pct_real": 9.01,
+    "cierre_base": 80.03,
+    "cierre_final": 87.24,
+    "fecha_base": "2026-06-12",
+    "fecha_final": "2026-06-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

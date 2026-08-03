@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:54:08+00:00",
+ "generado": "2026-08-03T08:54:49+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6573,6 +6573,28 @@
     "cierre_final": 535.42,
     "fecha_base": "2025-04-21",
     "fecha_final": "2025-04-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0a87b63c83c5a272",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:54:49+00:00",
+   "titular": "USA Wholesale Trade Sales (MoM) For February 2.4% Vs -0.9% Prior",
+   "simbolos": "SPY",
+   "direccion_pct": -3.52,
+   "volatilidad_pct": 1.42,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 5.66,
+    "cierre_base": 496.48,
+    "cierre_final": 524.58,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

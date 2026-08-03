@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:57:38+00:00",
+ "generado": "2026-08-03T09:58:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8419,6 +8419,28 @@
     "pct_real": -4.69,
     "cierre_base": 996.0,
     "cierre_final": 949.28,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c23aa4cfe803d606",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:58:12+00:00",
+   "titular": "9 Information Technology Stocks Whale Activity In Today's Session",
+   "simbolos": "QCOM",
+   "direccion_pct": -0.7,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "QCOM",
+    "pct_real": -10.22,
+    "cierre_base": 242.57,
+    "cierre_final": 217.77,
     "fecha_base": "2026-06-04",
     "fecha_final": "2026-06-08",
     "ruedas": 2,

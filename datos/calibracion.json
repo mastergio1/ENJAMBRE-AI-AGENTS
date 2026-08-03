@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:09:56+00:00",
+ "generado": "2026-08-03T16:10:34+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1491,6 +1491,28 @@
     "cierre_final": 33.14,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1f2ce844267ebd43",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:10:34+00:00",
+   "titular": "S&P 500 Futures, Crude Oil, Bitcoin Futures All Move Higher After President Trump Announces 10% Tariffs",
+   "simbolos": "USO",
+   "direccion_pct": 6.71,
+   "volatilidad_pct": 1.05,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -12.63,
+    "cierre_base": 77.74,
+    "cierre_final": 67.92,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

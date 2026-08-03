@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:42:26+00:00",
+ "generado": "2026-08-03T06:43:06+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2657,6 +2657,28 @@
     "cierre_final": 144.0,
     "fecha_base": "2024-05-14",
     "fecha_final": "2024-05-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b99fae9fbd6ae5a0",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:43:06+00:00",
+   "titular": "Will Earnings Cheer Continue This Week? All Eyes On Disney, Palantir, Robinhood While Reddit Gears Up For Debut Quarterly Report",
+   "simbolos": "MARA",
+   "direccion_pct": 5.43,
+   "volatilidad_pct": 1.44,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 15.35,
+    "cierre_base": 17.52,
+    "cierre_final": 20.21,
+    "fecha_base": "2024-05-03",
+    "fecha_final": "2024-05-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

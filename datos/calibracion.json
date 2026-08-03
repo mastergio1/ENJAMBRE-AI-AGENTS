@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:08:56+00:00",
+ "generado": "2026-08-03T05:09:38+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -306,6 +306,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0e5a3cde41f9edfb",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:09:37+00:00",
+   "titular": "A Look Into Gold.com Inc's Price Over Earnings",
+   "simbolos": "GOLD",
+   "direccion_pct": 1.17,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "GOLD",
+    "pct_real": 13.14,
+    "cierre_base": 55.32,
+    "cierre_final": 62.59,
+    "fecha_base": "2026-02-06",
+    "fecha_final": "2026-02-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

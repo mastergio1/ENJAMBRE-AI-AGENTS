@@ -29,31 +29,36 @@ import os
 # refugio:      fracción en que el MIEDO se convierte en compra (oro)
 # etiqueta:     nombre legible para el reporte/UI
 
+# Diales CALIBRADOS con 500 exámenes reales (100 por mercado). La calibración
+# mostró que el enjambre acertaba la DIRECCIÓN pero se quedaba corto en MAGNITUD
+# en los mercados volátiles (movía ~3-5% cuando la realidad movía 7-17%). El
+# índice (S&P 500) ya calzaba (~3.9%), así que es la base (volatilidad 1.0); los
+# demás suben su volatilidad según el ratio realidad/enjambre observado.
 PERFILES = {
     "indice": {
         "etiqueta": "Índice / mercado amplio",
         "sensibilidad": 1.0, "volatilidad": 1.0, "refugio": 0.0,
-        "nota": "El mercado accionario amplio (S&P 500). Perfil equilibrado.",
+        "nota": "El mercado accionario amplio (S&P 500). Perfil equilibrado (base de calibración).",
     },
     "accion": {
         "etiqueta": "Acción individual",
-        "sensibilidad": 1.35, "volatilidad": 1.3, "refugio": 0.0,
-        "nota": "Una empresa concreta: reacciona fuerte a su propia noticia.",
+        "sensibilidad": 1.4, "volatilidad": 4.0, "refugio": 0.0,
+        "nota": "Una empresa concreta: reacciona MUY fuerte a su propia noticia (earnings, guidance).",
     },
     "petroleo": {
         "etiqueta": "Petróleo / energía",
-        "sensibilidad": 1.2, "volatilidad": 1.25, "refugio": 0.0,
-        "nota": "Sensible a geopolítica y oferta; poco ligado a tasas.",
+        "sensibilidad": 1.2, "volatilidad": 2.6, "refugio": 0.0,
+        "nota": "Sensible a geopolítica y oferta; volatilidad alta, poco ligado a tasas.",
     },
     "oro": {
-        "etiqueta": "Oro / metales refugio",
-        "sensibilidad": 0.8, "volatilidad": 0.7, "refugio": 0.5,
-        "nota": "Activo refugio: el miedo del mercado tiende a sostenerlo.",
+        "etiqueta": "Metales (oro, plata, cobre)",
+        "sensibilidad": 0.9, "volatilidad": 2.2, "refugio": 0.25,
+        "nota": "Metales: el oro es refugio (el miedo lo sostiene en parte); plata y cobre suman volatilidad y sí caen con malas noticias.",
     },
     "cripto": {
         "etiqueta": "Cripto",
-        "sensibilidad": 1.6, "volatilidad": 1.8, "refugio": 0.0,
-        "nota": "Puro sentimiento de masas: FOMO y pánico amplificados.",
+        "sensibilidad": 1.7, "volatilidad": 3.6, "refugio": 0.0,
+        "nota": "Puro sentimiento de masas: FOMO y pánico amplificados, la mayor volatilidad.",
     },
 }
 

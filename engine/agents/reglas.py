@@ -18,18 +18,25 @@ class Fundamentalista(AgenteBase):
         self.proximo_tick = self.model.random.randint(0, self.periodo)
 
     def step(self):
-        # la noticia actualiza el valor fundamental lentamente (ponderación 0.3):
+        # la personalidad del mercado (calibrada): la volatilidad ensancha la
+        # banda de anclaje y acelera cuánto la noticia mueve el valor justo.
+        # En un mercado volátil (cripto, acción) el "precio justo" es difuso y
+        # se mueve mucho más que en un índice amplio — por eso el enjambre debe
+        # permitir desviaciones mayores en vez de capar todo a ±5%.
+        vol = self.model.perfil.get("volatilidad", 1.0)
+        # la noticia actualiza el valor fundamental (ponderación 0.3 × volatilidad):
         # una noticia grave no solo asusta — cambia cuánto valen los negocios
         if abs(self.model.sentimiento) > 0.01:
-            self.valor *= 1 + 0.3 * self.model.sentimiento * 0.02
+            self.valor *= 1 + 0.3 * self.model.sentimiento * 0.02 * vol
         if self.model.tick < self.proximo_tick:
             return
         self.proximo_tick = self.model.tick + self.periodo
         # opera solo cuando el precio se aleja de su valor: es el freno del sistema
+        banda = 0.05 * vol   # ±5% en índice; mucho más ancha en cripto/acción
         self.model.libro.cancelar_ordenes(self.unique_id)
-        if self.precio < self.valor * 0.95:
+        if self.precio < self.valor * (1 - banda):
             self.colocar_orden("compra", self.precio * 1.002, 0.25 * self.efectivo / self.precio)
-        elif self.precio > self.valor * 1.05:
+        elif self.precio > self.valor * (1 + banda):
             self.colocar_orden("venta", self.precio * 0.998, 0.25 * self.acciones)
 
 

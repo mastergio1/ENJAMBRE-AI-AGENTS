@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:15:52+00:00",
+ "generado": "2026-08-03T08:16:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5407,6 +5407,28 @@
     "cierre_final": 25.12,
     "fecha_base": "2021-05-10",
     "fecha_final": "2021-05-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1b723edb9da09685",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:16:26+00:00",
+   "titular": "The S&P 500 Soared Today. Here's Why.",
+   "simbolos": "OXY",
+   "direccion_pct": -2.65,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": -7.41,
+    "cierre_base": 27.38,
+    "cierre_final": 25.35,
+    "fecha_base": "2021-04-01",
+    "fecha_final": "2021-04-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:52:07+00:00",
+ "generado": "2026-08-03T08:52:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6505,6 +6505,28 @@
     "pct_real": 4.05,
     "cierre_base": 277.97,
     "cierre_final": 289.22,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "54f67e925f57d4ff",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:52:47+00:00",
+   "titular": "S&P 500 Q1 Earnings Jump 13.4% - SPY Investors Just Got Their Second Straight Double-Digit Surprise",
+   "simbolos": "VOO",
+   "direccion_pct": 1.87,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "VOO",
+    "pct_real": 4.01,
+    "cierre_base": 518.65,
+    "cierre_final": 539.44,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

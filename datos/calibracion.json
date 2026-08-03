@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:42:59+00:00",
+ "generado": "2026-08-03T09:43:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7913,6 +7913,28 @@
     "pct_real": 2.79,
     "cierre_base": 378.06,
     "cierre_final": 388.59,
+    "fecha_base": "2022-06-23",
+    "fecha_final": "2022-06-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "eb1d7cd33edc3c58",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:43:39+00:00",
+   "titular": "Market indexes were higher Thursday ahead of Fed Chair Powell's testimony as stocks attempt to recover from recent losses. Investors continue to assess the likelihood of an economic slowdown and weigh the impact of Fed policy tightening.",
+   "simbolos": "DIA",
+   "direccion_pct": -0.09,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 2.48,
+    "cierre_base": 306.74,
+    "cierre_final": 314.36,
     "fecha_base": "2022-06-23",
     "fecha_final": "2022-06-27",
     "ruedas": 2,

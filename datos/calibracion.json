@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:40:26+00:00",
+ "generado": "2026-08-03T06:41:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2616,6 +2616,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2ef193e3b98df835",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:41:00+00:00",
+   "titular": "What's Going On With Bitcoin Mining Stocks Marathon Digital, CleanSpark, Coinbase, MicroStrategy, Riot Platforms On Monday?",
+   "simbolos": "BITO",
+   "direccion_pct": 5.5,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "BITO",
+    "pct_real": 13.01,
+    "cierre_base": 20.22,
+    "cierre_final": 22.85,
+    "fecha_base": "2024-07-12",
+    "fecha_final": "2024-07-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

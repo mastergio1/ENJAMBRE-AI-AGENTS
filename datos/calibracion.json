@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:40:38+00:00",
+ "generado": "2026-08-03T09:41:17+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7825,6 +7825,28 @@
     "pct_real": 5.25,
     "cierre_base": 294.37,
     "cierre_final": 309.81,
+    "fecha_base": "2022-07-26",
+    "fecha_final": "2022-07-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8dfff7ef3f30db69",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:41:16+00:00",
+   "titular": "Fed's Powell Says Reducing Balance Sheet Plays Important Role",
+   "simbolos": "SPY",
+   "direccion_pct": -3.39,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 3.88,
+    "cierre_base": 390.89,
+    "cierre_final": 406.07,
     "fecha_base": "2022-07-26",
     "fecha_final": "2022-07-28",
     "ruedas": 2,

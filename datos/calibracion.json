@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:31:21+00:00",
+ "generado": "2026-08-03T08:31:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5867,6 +5867,28 @@
     "pct_real": 5.14,
     "cierre_base": 18.0,
     "cierre_final": 18.92,
+    "fecha_base": "2020-05-15",
+    "fecha_final": "2020-05-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1b9833ec15632deb",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:31:55+00:00",
+   "titular": "Occidental Petroleum Issues Statement Related To Deal With Total: Total Has Notified Co. It Will Not Be In A Position To Sell Interest In Algeria",
+   "simbolos": "OXY",
+   "direccion_pct": 5.35,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "OXY",
+    "pct_real": 3.98,
+    "cierre_base": 13.82,
+    "cierre_final": 14.37,
     "fecha_base": "2020-05-15",
     "fecha_final": "2020-05-19",
     "ruedas": 2,

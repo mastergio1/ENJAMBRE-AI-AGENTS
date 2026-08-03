@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:46:57+00:00",
+ "generado": "2026-08-03T08:47:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6451,16 +6451,16 @@
   {
    "sim_id": "43c468f08d422509",
    "origen": "historico",
-   "fecha": "2026-08-03T08:46:56+00:00",
+   "fecha": "2026-08-03T08:47:21+00:00",
    "titular": "Bill Ackman Slams Subsidies For Contributing To $37 Trillion National Debt, Hails Trump's Drug Price Order",
-   "simbolos": "SPY",
-   "direccion_pct": 0.57,
-   "volatilidad_pct": 1.28,
+   "simbolos": "QQQ",
+   "direccion_pct": -1.16,
+   "volatilidad_pct": 1.3,
    "reaccion_real": {
-    "simbolo": "SPY",
-    "pct_real": 3.99,
-    "cierre_base": 564.34,
-    "cierre_final": 586.84,
+    "simbolo": "QQQ",
+    "pct_real": 5.66,
+    "cierre_base": 487.97,
+    "cierre_final": 515.59,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

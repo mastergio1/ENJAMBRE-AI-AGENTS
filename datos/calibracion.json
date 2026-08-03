@@ -1,5 +1,28 @@
 {
- "generado": "2026-08-02T22:39:01+00:00",
- "nota": "Libreta reiniciada para calibrar sobre el modelo de 10.000 agentes (los casos previos eran del modelo de 5.000). Registro educativo.",
- "casos": []
+ "generado": "2026-08-03T04:58:35+00:00",
+ "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
+ "casos": [
+  {
+   "sim_id": "ed5caa741508d22a",
+   "origen": "historico",
+   "fecha": "2026-08-03T04:58:34+00:00",
+   "titular": "Peter Schiff Says Conditions Ripe for a 'Huge Rally' in Gold As Iran War Escalates, Here Are Some ETFs to Watch",
+   "simbolos": "IAU",
+   "direccion_pct": 0.59,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "IAU",
+    "pct_real": -1.28,
+    "cierre_base": 77.26,
+    "cierre_final": 76.27,
+    "fecha_base": "2026-07-10",
+    "fecha_final": "2026-07-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  }
+ ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:33:57+00:00",
+ "generado": "2026-08-03T09:34:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7727,16 +7727,16 @@
   {
    "sim_id": "3e32c79c3f722487",
    "origen": "historico",
-   "fecha": "2026-08-03T09:33:56+00:00",
+   "fecha": "2026-08-03T09:34:23+00:00",
    "titular": "It's The Worst Day Of 2022 For The Major Indexes",
-   "simbolos": "DIA",
-   "direccion_pct": -5.55,
-   "volatilidad_pct": 1.17,
+   "simbolos": "IWM",
+   "direccion_pct": 3.72,
+   "volatilidad_pct": 1.15,
    "reaccion_real": {
-    "simbolo": "DIA",
-    "pct_real": -3.85,
-    "cierre_base": 324.57,
-    "cierre_final": 312.06,
+    "simbolo": "IWM",
+    "pct_real": -3.54,
+    "cierre_base": 189.67,
+    "cierre_final": 182.96,
     "fecha_base": "2022-09-12",
     "fecha_final": "2022-09-14",
     "ruedas": 2,

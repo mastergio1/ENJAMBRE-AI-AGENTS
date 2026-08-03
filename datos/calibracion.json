@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:00:23+00:00",
+ "generado": "2026-08-03T06:01:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1555,6 +1555,28 @@
     "pct_real": 13.3,
     "cierre_base": 44.96,
     "cierre_final": 50.94,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "eb1d835cce2dfe53",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:01:11+00:00",
+   "titular": "Copper's Rout Sees A Massive Intraday Price Swing, 'Fundamentals Haven't Changed,' Expert Says",
+   "simbolos": "FCX",
+   "direccion_pct": 3.99,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "FCX",
+    "pct_real": 7.33,
+    "cierre_base": 29.21,
+    "cierre_final": 31.35,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

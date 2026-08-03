@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:45:09+00:00",
+ "generado": "2026-08-03T08:45:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6395,6 +6395,28 @@
     "pct_real": -1.21,
     "cierre_base": 671.16,
     "cierre_final": 663.04,
+    "fecha_base": "2025-10-09",
+    "fecha_final": "2025-10-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "13eb106cfacbf299",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:45:45+00:00",
+   "titular": "Stocks Ease, Delta Air Lines, Pepsi Jump On Strong Earnings: What's Moving Markets Thursday?",
+   "simbolos": "QQQ",
+   "direccion_pct": 1.08,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -1.42,
+    "cierre_base": 610.7,
+    "cierre_final": 602.01,
     "fecha_base": "2025-10-09",
     "fecha_final": "2025-10-13",
     "ruedas": 2,

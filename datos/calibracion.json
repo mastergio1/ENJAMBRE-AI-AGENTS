@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T10:46:07+00:00",
+ "generado": "2026-08-03T10:46:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9829,6 +9829,28 @@
     "cierre_final": 583.15,
     "fecha_base": "2025-10-28",
     "fecha_final": "2025-10-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "41d31c487cff4e62",
+   "origen": "historico",
+   "fecha": "2026-08-03T10:46:38+00:00",
+   "titular": "Qualcomm Says Co. Unveils AI200 and AI250, Says Redefining Rack-Scale Data Center Inference Performance for the AI Era",
+   "simbolos": "QCOM",
+   "direccion_pct": -1.58,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "QCOM",
+    "pct_real": 7.16,
+    "cierre_base": 168.94,
+    "cierre_final": 181.03,
+    "fecha_base": "2025-10-24",
+    "fecha_final": "2025-10-28",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

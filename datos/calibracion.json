@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:02:31+00:00",
+ "generado": "2026-08-03T06:03:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1599,6 +1599,28 @@
     "pct_real": -7.18,
     "cierre_base": 48.33,
     "cierre_final": 44.86,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c7d609a31aa4250f",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:03:14+00:00",
+   "titular": "Looking Into Freeport-McMoRan's Recent Short Interest",
+   "simbolos": "FCX",
+   "direccion_pct": 5.31,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "FCX",
+    "pct_real": -9.37,
+    "cierre_base": 33.51,
+    "cierre_final": 30.37,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:48:00+00:00",
+ "generado": "2026-08-03T09:48:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8091,6 +8091,28 @@
     "cierre_final": 2.2,
     "fecha_base": "2026-07-17",
     "fecha_final": "2026-07-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d32b3857109799e7",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:48:36+00:00",
+   "titular": "'Stripe, Advent Offer To Buy PayPal For More Than $53 Billion, Sources Say' - Reuters Exclusive",
+   "simbolos": "PYPL",
+   "direccion_pct": 4.07,
+   "volatilidad_pct": 1.01,
+   "reaccion_real": {
+    "simbolo": "PYPL",
+    "pct_real": 19.76,
+    "cierre_base": 47.37,
+    "cierre_final": 56.73,
+    "fecha_base": "2026-07-14",
+    "fecha_final": "2026-07-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

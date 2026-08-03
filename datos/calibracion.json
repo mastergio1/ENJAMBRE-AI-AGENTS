@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:55:24+00:00",
+ "generado": "2026-08-03T08:56:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6615,6 +6615,28 @@
     "pct_real": 7.24,
     "cierre_base": 416.06,
     "cierre_final": 446.18,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "621cf7913d5f7391",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:56:06+00:00",
+   "titular": "US Companies Stick With China As Trump Tariffs Take Effect: Report",
+   "simbolos": "DIA",
+   "direccion_pct": -3.33,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 5.1,
+    "cierre_base": 376.48,
+    "cierre_final": 395.68,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

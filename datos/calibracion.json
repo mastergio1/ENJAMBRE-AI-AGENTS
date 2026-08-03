@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:51:26+00:00",
+ "generado": "2026-08-03T07:52:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4662,6 +4662,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fe90799fcbac4163",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:52:02+00:00",
+   "titular": "Biden The Master Oil Trader Part Deux? Crude Prices Plummet. Is A Government Windfall Coming?",
+   "simbolos": "XLE",
+   "direccion_pct": 0.25,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "XLE",
+    "pct_real": -4.34,
+    "cierre_base": 40.88,
+    "cierre_final": 39.1,
+    "fecha_base": "2023-03-14",
+    "fecha_final": "2023-03-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

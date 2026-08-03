@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:29:25+00:00",
+ "generado": "2026-08-03T15:30:20+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -699,6 +699,28 @@
     "cierre_final": 263.41,
     "fecha_base": "2025-05-12",
     "fecha_final": "2025-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "77a803147af64db6",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:30:20+00:00",
+   "titular": "Cathie Wood Loads Up On $18.2 Million Worth Of Nvidia Stock, Adds $5.8 Million Worth Of Amazon Shares To Her Shopping Cart Amid Trump Tariff Upheaval",
+   "simbolos": "COIN",
+   "direccion_pct": -20.71,
+   "volatilidad_pct": 1.45,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 11.98,
+    "cierre_base": 151.47,
+    "cierre_final": 169.62,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

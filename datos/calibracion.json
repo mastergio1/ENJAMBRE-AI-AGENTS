@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:30:21+00:00",
+ "generado": "2026-08-03T05:30:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -724,6 +724,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d327d170417f96e3",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:30:51+00:00",
+   "titular": "10 Materials Stocks Whale Activity In Today's Session",
+   "simbolos": "NEM",
+   "direccion_pct": -3.11,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "NEM",
+    "pct_real": 3.55,
+    "cierre_base": 118.12,
+    "cierre_final": 122.31,
+    "fecha_base": "2026-02-12",
+    "fecha_final": "2026-02-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:49:09+00:00",
+ "generado": "2026-08-03T06:49:42+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2899,6 +2899,28 @@
     "cierre_final": 87.18,
     "fecha_base": "2024-02-23",
     "fecha_final": "2024-02-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "25770d4a83b22f5e",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:49:42+00:00",
+   "titular": "10 Financials Stocks With Whale Alerts In Today's Session",
+   "simbolos": "COIN",
+   "direccion_pct": -4.99,
+   "volatilidad_pct": 1.44,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 18.01,
+    "cierre_base": 140.39,
+    "cierre_final": 165.67,
+    "fecha_base": "2024-02-13",
+    "fecha_final": "2024-02-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

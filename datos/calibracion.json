@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T06:23:22+00:00",
+ "generado": "2026-08-03T06:23:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2173,6 +2173,28 @@
     "cierre_final": 308.38,
     "fecha_base": "2025-06-17",
     "fecha_final": "2025-06-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "45d9dc33f154cfe2",
+   "origen": "historico",
+   "fecha": "2026-08-03T06:23:55+00:00",
+   "titular": "Coinbase Stock Jumps Nearly 11% After-Hours Monday: Here's Why",
+   "simbolos": "COIN",
+   "direccion_pct": 8.25,
+   "volatilidad_pct": 1.43,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 27.12,
+    "cierre_base": 207.22,
+    "cierre_final": 263.41,
+    "fecha_base": "2025-05-12",
+    "fecha_final": "2025-05-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:52:38+00:00",
+ "generado": "2026-08-03T09:53:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8243,6 +8243,28 @@
     "pct_real": 27.15,
     "cierre_base": 5.12,
     "cierre_final": 6.51,
+    "fecha_base": "2026-06-25",
+    "fecha_final": "2026-06-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fa4428ca382b41a2",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:53:14+00:00",
+   "titular": "Why Is DraftKings Stock Falling On Thursday?",
+   "simbolos": "DKNG",
+   "direccion_pct": 1.47,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "DKNG",
+    "pct_real": 11.69,
+    "cierre_base": 23.1,
+    "cierre_final": 25.8,
     "fecha_base": "2026-06-25",
     "fecha_final": "2026-06-29",
     "ruedas": 2,

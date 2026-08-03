@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:52:47+00:00",
+ "generado": "2026-08-03T08:53:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6529,6 +6529,28 @@
     "cierre_final": 539.44,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "37c3c1642d92b7b6",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:53:27+00:00",
+   "titular": "Tom Lee Says $1.4 Trillion Market Meltdown Matches Annual Trade Deficit, Presses White House To Fast-Track Deals",
+   "simbolos": "DIA",
+   "direccion_pct": 6.96,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 3.74,
+    "cierre_base": 381.62,
+    "cierre_final": 395.91,
+    "fecha_base": "2025-04-21",
+    "fecha_final": "2025-04-23",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

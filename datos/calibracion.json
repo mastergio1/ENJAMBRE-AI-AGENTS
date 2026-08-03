@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:34:12+00:00",
+ "generado": "2026-08-03T07:34:53+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4156,6 +4156,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bf7a22dff54adeb8",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:34:53+00:00",
+   "titular": "The Mother Of All Energy Crises Is Just Beginning, IEA Warns — April Will Be 'Much Worse'",
+   "simbolos": "USO",
+   "direccion_pct": -1.26,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 11.97,
+    "cierre_base": 124.09,
+    "cierre_final": 138.94,
+    "fecha_base": "2026-04-01",
+    "fecha_final": "2026-04-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

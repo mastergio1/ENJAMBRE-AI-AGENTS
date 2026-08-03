@@ -1,0 +1,24 @@
+{
+  "id": "conv-1785764515090-pp8w6brj1",
+  "providerId": "claude",
+  "title": "Resumir notas del vault",
+  "titleGenerationStatus": "success",
+  "createdAt": 1785764515098,
+  "updatedAt": 1785765177250,
+  "lastResponseAt": 1785765177250,
+  "sessionId": "682b9838-bb8d-4aef-9be6-90dc031fd6ad",
+  "selectedModel": "sonnet",
+  "providerState": {
+    "providerSessionId": "682b9838-bb8d-4aef-9be6-90dc031fd6ad"
+  },
+  "currentNote": "Bienvenido.md",
+  "usage": {
+    "model": "sonnet",
+    "inputTokens": 2,
+    "cacheCreationInputTokens": 400,
+    "cacheReadInputTokens": 23087,
+    "contextWindow": 1000000,
+    "contextTokens": 23489,
+    "percentage": 2
+  }
+}

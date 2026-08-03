@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1785764515090-pp8w6brj1",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1785764515189-h0jhg0n",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1785764515076-73z72f8",
+      "timestamp": 1785764515076,
+      "rawDisplayText": "Hola, ¿puedes ver las notas que hay en mi vault? Resume lo que hay.",
+      "canonicalText": "Hola, ¿puedes ver las notas que hay en mi vault? Resume lo que hay.",
+      "context": {
+        "currentNote": {
+          "path": "Bienvenido.md"
+        }
+      },
+      "images": [],
+      "contentDigest": "5ceabe0dc091e6490f47d8a252dcd0d30a983be31d350030287206fea55ba567",
+      "providerUserMessageId": "4390ef3d-fc4e-4182-b15a-4ee7ffdbdb66",
+      "providerAssistantMessageId": "e27b023a-e2ec-4774-a798-9ac127c052b6"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1785765166762-ubrimwi",
+      "userTurnOrdinal": 2,
+      "state": "accepted",
+      "localMessageId": "msg-1785765166758-t7ao9dz",
+      "timestamp": 1785765166758,
+      "rawDisplayText": "ayudame mostrandome donde esta mi vault",
+      "canonicalText": "ayudame mostrandome donde esta mi vault",
+      "images": [],
+      "contentDigest": "3d9b4c6dd1b7651282577a61166c7417d8ab7c9a6ca5c364660362fa6341873f",
+      "providerUserMessageId": "adc1cde8-de8b-4427-a1ca-12723a17e403",
+      "providerAssistantMessageId": "cceb9b72-223f-451f-8e25-61da1b4ca3ca"
+    }
+  ]
+}

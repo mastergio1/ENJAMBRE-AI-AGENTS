@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:13:50+00:00",
+ "generado": "2026-08-03T07:14:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3647,6 +3647,28 @@
     "cierre_final": 88.9,
     "fecha_base": "2022-08-02",
     "fecha_final": "2022-08-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cc789a96290a6369",
+   "origen": "historico",
+   "fecha": "2026-08-03T07:14:25+00:00",
+   "titular": "Cathie Wood Shares How Bitcoin Miners Can Harness Harmful Methane Emissions",
+   "simbolos": "MARA",
+   "direccion_pct": -4.17,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 30.56,
+    "cierre_base": 10.11,
+    "cierre_final": 13.2,
+    "fecha_base": "2022-07-26",
+    "fecha_final": "2022-07-28",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

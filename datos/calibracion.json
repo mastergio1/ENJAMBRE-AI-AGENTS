@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T07:59:41+00:00",
+ "generado": "2026-08-03T08:00:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4987,6 +4987,28 @@
     "pct_real": -8.52,
     "cierre_base": 64.94,
     "cierre_final": 59.41,
+    "fecha_base": "2022-05-06",
+    "fecha_final": "2022-05-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c6db3358bdc768ac",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:00:13+00:00",
+   "titular": "Saudi Minister Links Refining Capacity Crisis To Surging Fuel Price",
+   "simbolos": "USO",
+   "direccion_pct": -3.83,
+   "volatilidad_pct": 1.43,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -9.25,
+    "cierre_base": 82.13,
+    "cierre_final": 74.53,
     "fecha_base": "2022-05-06",
     "fecha_final": "2022-05-10",
     "ruedas": 2,

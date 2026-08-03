@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:34:22+00:00",
+ "generado": "2026-08-03T05:34:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -873,6 +873,28 @@
     "pct_real": -13.78,
     "cierre_base": 101.57,
     "cierre_final": 87.57,
+    "fecha_base": "2026-01-29",
+    "fecha_final": "2026-02-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9f35b9b97460ea6c",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:34:55+00:00",
+   "titular": "Trump Calls For Lower Rates, Says Powell Is 'Hurting Our National Security' – Gold And Silver Reply",
+   "simbolos": "GDX",
+   "direccion_pct": 2.65,
+   "volatilidad_pct": 1.58,
+   "reaccion_real": {
+    "simbolo": "GDX",
+    "pct_real": -12.77,
+    "cierre_base": 107.98,
+    "cierre_final": 94.19,
     "fecha_base": "2026-01-29",
     "fecha_final": "2026-02-02",
     "ruedas": 2,

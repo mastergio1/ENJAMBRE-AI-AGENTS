@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:16:03+00:00",
+ "generado": "2026-08-03T15:17:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -460,6 +460,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7e827981f9a698bf",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:17:00+00:00",
+   "titular": "Jamie Dimon Fires Back At Coinbase: 'If You Want To Be A Bank, Be A Bank'",
+   "simbolos": "COIN",
+   "direccion_pct": 10.02,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 12.8,
+    "cierre_base": 182.36,
+    "cierre_final": 205.71,
+    "fecha_base": "2026-03-03",
+    "fecha_final": "2026-03-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

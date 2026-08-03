@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:12:26+00:00",
+ "generado": "2026-08-03T08:13:06+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5297,6 +5297,28 @@
     "cierre_final": 23.67,
     "fecha_base": "2021-09-17",
     "fecha_final": "2021-09-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ad1ada14a02b538d",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:13:06+00:00",
+   "titular": "OPEC+ Countries Said to have Agreed to Boost Production Until End of September 2022 by 400K B/D",
+   "simbolos": "USO",
+   "direccion_pct": 7.33,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -5.35,
+    "cierre_base": 49.14,
+    "cierre_final": 46.51,
+    "fecha_base": "2021-07-16",
+    "fecha_final": "2021-07-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

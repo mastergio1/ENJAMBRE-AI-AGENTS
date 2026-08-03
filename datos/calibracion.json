@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T08:00:49+00:00",
+ "generado": "2026-08-03T08:01:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5033,6 +5033,28 @@
     "cierre_final": 39.54,
     "fecha_base": "2022-04-22",
     "fecha_final": "2022-04-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7ae81b89b2975176",
+   "origen": "historico",
+   "fecha": "2026-08-03T08:01:22+00:00",
+   "titular": "President Biden's Job Approval Falls To Lowest Point Amid Russia, Inflation: CNBC",
+   "simbolos": "USO",
+   "direccion_pct": -2.66,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": -5.68,
+    "cierre_base": 80.74,
+    "cierre_final": 76.15,
+    "fecha_base": "2022-03-25",
+    "fecha_final": "2022-03-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

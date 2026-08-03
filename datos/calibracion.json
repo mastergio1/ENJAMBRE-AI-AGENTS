@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:33:31+00:00",
+ "generado": "2026-08-03T16:34:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2132,6 +2132,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4ad6a9ec251b2050",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:34:09+00:00",
+   "titular": "Micron, AMD, SanDisk, IREN and Rivian: Why These 5 Stocks Are on Investors' Radars Today?",
+   "simbolos": "RIVN",
+   "direccion_pct": 9.28,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "RIVN",
+    "pct_real": -17.28,
+    "cierre_base": 20.14,
+    "cierre_final": 16.66,
+    "fecha_base": "2026-07-06",
+    "fecha_final": "2026-07-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

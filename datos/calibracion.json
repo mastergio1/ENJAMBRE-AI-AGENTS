@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T05:25:42+00:00",
+ "generado": "2026-08-03T05:26:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -526,6 +526,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0a7998d81e83ae3b",
+   "origen": "historico",
+   "fecha": "2026-08-03T05:26:10+00:00",
+   "titular": "What's Going On With Planet Labs Stock Today?",
+   "simbolos": "COPX",
+   "direccion_pct": 2.97,
+   "volatilidad_pct": 1.44,
+   "reaccion_real": {
+    "simbolo": "COPX",
+    "pct_real": 6.28,
+    "cierre_base": 76.74,
+    "cierre_final": 81.56,
+    "fecha_base": "2026-04-07",
+    "fecha_final": "2026-04-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

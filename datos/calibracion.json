@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T09:04:50+00:00",
+ "generado": "2026-08-03T09:05:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6862,6 +6862,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "df874e8da24e7291",
+   "origen": "historico",
+   "fecha": "2026-08-03T09:05:26+00:00",
+   "titular": "Wall Street Rallies On Election Day, Palantir Skyrockets, Bitcoin Tops $70,000: What's Driving Markets Tuesday?",
+   "simbolos": "DIA",
+   "direccion_pct": 5.78,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 3.57,
+    "cierre_base": 422.3,
+    "cierre_final": 437.39,
+    "fecha_base": "2024-11-05",
+    "fecha_final": "2024-11-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

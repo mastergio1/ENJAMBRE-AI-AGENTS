@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:00:32+00:00",
+ "generado": "2026-08-03T15:01:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -137,16 +137,16 @@
   {
    "sim_id": "164d6022a100c247",
    "origen": "historico",
-   "fecha": "2026-08-03T15:00:31+00:00",
+   "fecha": "2026-08-03T15:01:08+00:00",
    "titular": "Gold Price Sits At Critical Technical Support: History Says Buy The Breakdown",
-   "simbolos": "GDX",
+   "simbolos": "GLD",
    "direccion_pct": -2.55,
    "volatilidad_pct": 1.36,
    "reaccion_real": {
-    "simbolo": "GDX",
-    "pct_real": -8.95,
-    "cierre_base": 86.4,
-    "cierre_final": 78.67,
+    "simbolo": "GLD",
+    "pct_real": -3.4,
+    "cierre_base": 411.27,
+    "cierre_final": 397.27,
     "fecha_base": "2026-06-04",
     "fecha_final": "2026-06-08",
     "ruedas": 2,

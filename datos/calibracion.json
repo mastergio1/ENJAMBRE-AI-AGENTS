@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T15:18:43+00:00",
+ "generado": "2026-08-03T15:19:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -523,6 +523,28 @@
     "cierre_final": 166.02,
     "fecha_base": "2026-02-12",
     "fecha_final": "2026-02-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d571dc7d173bfb58",
+   "origen": "historico",
+   "fecha": "2026-08-03T15:19:28+00:00",
+   "titular": "Amazon, IREN, Roblox, Reddit And Strategy: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "MSTR",
+   "direccion_pct": 11.87,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 29.4,
+    "cierre_base": 106.99,
+    "cierre_final": 138.44,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

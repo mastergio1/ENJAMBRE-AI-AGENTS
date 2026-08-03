@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-03T16:12:48+00:00",
+ "generado": "2026-08-03T16:13:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -1582,6 +1582,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6a2232f65cb6fa79",
+   "origen": "historico",
+   "fecha": "2026-08-03T16:13:22+00:00",
+   "titular": "SpaceX Halo Effect? NASA ETF Emerges As May's Third Hottest Thematic Bet With $2 Billion Inflows",
+   "simbolos": "QQQ",
+   "direccion_pct": -4.14,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -3.31,
+    "cierre_base": 740.61,
+    "cierre_final": 716.07,
+    "fecha_base": "2026-06-04",
+    "fecha_final": "2026-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

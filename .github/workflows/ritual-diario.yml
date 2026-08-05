@@ -15,10 +15,16 @@
 name: El ritual del día
 
 on:
-  schedule:
-    # 10:00 UTC = 6:00 en Chile (invierno) — antes de la apertura de EE.UU.
-    - cron: "0 10 * * 1-5"
-  workflow_dispatch: {}
+  # ⏸️ PAUSADO (5 de agosto de 2026): el envío diario de El Pulso queda en
+  # pausa hasta que el enjambre esté 100% calibrado en acciones y cripto.
+  # No sale contenido automático (ni correo ni muro) sin decisión de Giorgio.
+  # Para REACTIVAR: descomentar el bloque `schedule` de abajo.
+  #   antes de reactivar, conviene además exigir aprobación humana del brief
+  #   (hoy el envío NO revisa el visto bueno — ver docs/analisis-codigo.md).
+  # schedule:
+  #   # 10:00 UTC = 6:00 en Chile (invierno) — antes de la apertura de EE.UU.
+  #   - cron: "0 10 * * 1-5"
+  workflow_dispatch: {}  # disparo manual: Actions → este workflow → Run workflow
 
 jobs:
   despertar-y-preparar:

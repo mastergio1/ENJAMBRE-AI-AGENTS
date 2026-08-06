@@ -5,7 +5,45 @@ prohibidos pero conserva los limpios, y la validación arma bien la estructura.
 Ninguno gasta una llamada a Anthropic.
 """
 
+from datetime import datetime, timezone
+
 from contenido import redaccion_ia
+
+
+def test_contexto_temporal_sabado_de_manana():
+    """El 8 de agosto de 2026 es sábado; 13:00 UTC ≈ mañana en Chile."""
+    momento = datetime(2026, 8, 8, 13, 0, tzinfo=timezone.utc)
+    ctx = redaccion_ia.contexto_temporal(momento)
+    assert ctx["dia_semana"] == "sábado"
+    assert ctx["es_finde"] is True
+    assert "8 de agosto de 2026" in ctx["fecha"]
+    assert ctx["momento"] in ("mañana", "madrugada")  # según horario de verano/invierno
+
+
+def test_momentos_del_dia():
+    assert redaccion_ia._momento(3) == "madrugada"
+    assert redaccion_ia._momento(9) == "mañana"
+    assert redaccion_ia._momento(15) == "tarde"
+    assert redaccion_ia._momento(22) == "noche"
+
+
+def test_mensaje_incluye_dia_fecha_y_momento():
+    """El redactor recibe el día/fecha/momento como hecho — no los adivina."""
+    brief = {"mercado": [{"nombre": "Nvidia", "variacion_pct": 3.4}]}
+    cuando = {"dia_semana": "miércoles", "fecha": "5 de agosto de 2026",
+              "momento": "mañana", "es_finde": False}
+    msg = redaccion_ia._mensaje_del_dia(brief, None, cuando)
+    assert "miércoles" in msg
+    assert "5 de agosto de 2026" in msg
+    assert "mañana" in msg
+
+
+def test_mensaje_marca_fin_de_semana():
+    brief = {"mercado": [{"nombre": "Nvidia", "variacion_pct": 3.4}]}
+    cuando = {"dia_semana": "sábado", "fecha": "8 de agosto de 2026",
+              "momento": "mañana", "es_finde": True}
+    msg = redaccion_ia._mensaje_del_dia(brief, None, cuando)
+    assert "FIN DE SEMANA" in msg
 
 
 def test_sin_clave_cae_al_fallback(monkeypatch):

@@ -18,8 +18,47 @@ None y el boletín cae a su plantilla de siempre. El Pulso NUNCA se cae por esto
 import json
 import os
 import re
+from datetime import datetime, timezone
 
 from contenido.vocabulario import es_publicable
+
+# los lectores viven en Chile/LatAm; el saludo se calcula en hora local de
+# Chile (zoneinfo maneja el horario de verano solo). Si no está la zona
+# (entornos mínimos), cae a UTC sin romperse.
+ZONA_LECTOR = "America/Santiago"
+_DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+_MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+          "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+
+
+def _ahora_local(ahora: datetime | None = None) -> datetime:
+    base = ahora or datetime.now(timezone.utc)
+    try:
+        from zoneinfo import ZoneInfo
+        return base.astimezone(ZoneInfo(ZONA_LECTOR))
+    except Exception:
+        return base  # sin tzdata: el UTC sirve igual para el momento del día
+
+
+def _momento(hora: int) -> str:
+    if hora < 6:
+        return "madrugada"
+    if hora < 12:
+        return "mañana"
+    if hora < 20:
+        return "tarde"
+    return "noche"
+
+
+def contexto_temporal(ahora: datetime | None = None) -> dict:
+    """Qué día es, la fecha y el momento — para que el redactor NO los invente."""
+    t = _ahora_local(ahora)
+    return {
+        "dia_semana": _DIAS[t.weekday()],
+        "fecha": f"{t.day} de {_MESES[t.month - 1]} de {t.year}",
+        "momento": _momento(t.hour),
+        "es_finde": t.weekday() >= 5,
+    }
 
 MODELO = "claude-sonnet-5"   # calidad de escritura; sin temperature (Sonnet-5 la rechaza)
 MAX_TOKENS = 1500
@@ -64,6 +103,16 @@ B. Integridad de datos:
 - Los titulares de prensa se citan como CONTEXTO, nunca como causa confirmada.
 - No inventas fuentes ni enlaces.
 
+EL DÍA DE HOY (te lo doy yo — NO lo inventes)
+Al inicio te digo qué día es, la fecha y el momento (madrugada/mañana/tarde/
+noche). Úsalos:
+- Saluda según el momento: "Buenos días" en la mañana, "Buenas tardes" en la
+  tarde, "Buenas noches" de noche. En la madrugada, algo como "Antes de que
+  abra Wall Street".
+- Menciona el día y la fecha que te doy. NUNCA inventes una fecha ni un día.
+- Si te digo que es fin de semana o feriado (sin sesión de mercado), NO
+  inventes movimientos de precio: escribe una edición de repaso/calma acorde.
+
 EL SELLO DEL ENJAMBRE
 La historia principal SIEMPRE cierra contando cómo reaccionó el enjambre a esa
 noticia, con los datos de simulación que te paso. Lo narras como una escena y
@@ -87,11 +136,17 @@ diario corto vale más que uno largo y relleno. Nunca inventes para llenar espac
 
 # ---------- armado del mensaje del día (los hechos verificados) ----------
 
-def _mensaje_del_dia(brief: dict, enjambre: dict | None) -> str:
+def _mensaje_del_dia(brief: dict, enjambre: dict | None, cuando: dict | None = None) -> str:
     """Serializa los hechos verificados para pasárselos al redactor.
     Solo hechos con cifra/fuente; el redactor no ve nada que pueda inventar."""
-    lineas = ["Estos son los HECHOS VERIFICADOS de hoy. Escríbelos con tu voz,",
-              "sin cambiar ningún número ni agregar datos que no estén aquí.\n"]
+    cuando = cuando or contexto_temporal()
+    finde = " (FIN DE SEMANA: sin sesión de mercado)" if cuando.get("es_finde") else ""
+    lineas = [
+        f'HOY es {cuando["dia_semana"]} {cuando["fecha"]}, es de {cuando["momento"]}{finde}.',
+        "Saluda según el momento y usa esta fecha; NO inventes otra.\n",
+        "Estos son los HECHOS VERIFICADOS de hoy. Escríbelos con tu voz,",
+        "sin cambiar ningún número ni agregar datos que no estén aquí.\n",
+    ]
 
     mercado = brief.get("mercado") or []
     if mercado:
@@ -170,11 +225,12 @@ def _extraer_json(texto: str) -> dict | None:
 
 # ---------- punto de entrada ----------
 
-def redactar(brief: dict, enjambre: dict | None = None) -> dict | None:
+def redactar(brief: dict, enjambre: dict | None = None, cuando: dict | None = None) -> dict | None:
     """Reescribe el brief del día con la voz de El Pulso. Devuelve el dict
     {buenos_dias, historia_estrella, historias} o None si no se puede (sin
     clave, API caída, JSON roto, todo filtrado por CMF) — el boletín cae a
-    su plantilla. NUNCA lanza."""
+    su plantilla. `cuando` (día/fecha/momento) se calcula solo si no se pasa.
+    NUNCA lanza."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return None
     if not brief or not (brief.get("mercado") or enjambre):
@@ -187,7 +243,7 @@ def redactar(brief: dict, enjambre: dict | None = None) -> dict | None:
             model=MODELO,
             max_tokens=MAX_TOKENS,
             system=PROMPT_MAESTRO,
-            messages=[{"role": "user", "content": _mensaje_del_dia(brief, enjambre)}],
+            messages=[{"role": "user", "content": _mensaje_del_dia(brief, enjambre, cuando)}],
         )
         datos = _extraer_json(respuesta.content[0].text)
         return _validar(datos) if datos else None

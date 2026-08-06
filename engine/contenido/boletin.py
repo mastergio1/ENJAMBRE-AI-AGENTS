@@ -61,6 +61,17 @@ def _voz(frase: dict) -> str:
     return f"«{_limpiar(frase.get('frase', ''))}» — {nombre}"
 
 
+def _parrafos(texto: str, color: str = TEXTO_2, size: int = 15) -> str:
+    """Convierte el texto con voz (párrafos separados por línea en blanco) en
+    <p> escapados. El texto ya viene filtrado por CMF desde redaccion_ia."""
+    if not texto:
+        return ""
+    return "".join(
+        f'<p style="margin:0 0 12px;color:{color};font-size:{size}px;line-height:1.55;">{_esc(p.strip())}</p>'
+        for p in texto.split("\n\n") if p.strip()
+    )
+
+
 def asunto_del_dia(destacada: dict) -> str:
     palabras = destacada["titular"].split()
     resumen = " ".join(palabras[:6]) + ("…" if len(palabras) > 6 else "")
@@ -140,6 +151,34 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     )
     signo = '+' if direccion > 0 else ''
 
+    # --- la VOZ del redactor de IA (si la hay); si no, la plantilla ---
+    red = (brief or {}).get("redactado") or {}
+
+    buenos_html = ""
+    if red.get("buenos_dias"):
+        buenos_html = f"""
+  <tr><td style="padding:22px 32px 2px;">
+    <div style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:{TEXTO};">☀️ Buenos días</div>
+    {_parrafos(red["buenos_dias"])}
+  </td></tr>"""
+
+    estrella = red.get("historia_estrella")
+    if estrella:
+        reaccion_titular = f'{_esc(estrella.get("emoji", ""))} {_esc(estrella["titular"])}'.strip()
+        reaccion_cuerpo = _parrafos(estrella["cuerpo"])
+    else:
+        reaccion_titular = _limpiar(principal['titular'])
+        reaccion_cuerpo = (f'<div style="color:{TEXTO_2};font-size:15px;line-height:1.5;">'
+                           'En esta simulación educativa, el enjambre de agentes reaccionó al titular '
+                           'con el comportamiento de masas que ves arriba.</div>')
+
+    historias_html = "".join(
+        f"""<tr><td style="padding:18px 32px 2px;border-top:1px solid {LINEA};">
+        <div style="font-family:Georgia,serif;font-size:20px;font-weight:bold;color:{TEXTO};line-height:1.2;">{_esc(h.get("emoji", ""))} {_esc(h["titular"])}</div>
+        {_parrafos(h["cuerpo"])}</td></tr>"""
+        for h in (red.get("historias") or [])
+    )
+
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -156,6 +195,7 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     <div style="font-size:11px;color:{MUTE};margin-top:6px;">by <b style="color:{TEXTO_2};">Rubicón Lab</b></div>
   </td></tr>
   {_bloque_mercado(brief)}
+  {buenos_html}
 
   <tr><td style="padding:22px 32px 4px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">La reacción del día</div>
@@ -168,18 +208,17 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
 
   <tr><td style="padding:8px 32px;">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:bold;color:{TEXTO};line-height:1.25;">
-      {_limpiar(principal['titular'])}</div>
+      {reaccion_titular}</div>
     <div style="padding:8px 0;color:{MUTE};font-size:14px;">
       <span style="color:{COLOR_DIR(direccion)};font-weight:bold;">{_flecha(direccion)} {signo}{direccion}%</span> &nbsp;·&nbsp; agitación {agitacion}</div>
-    <div style="color:{TEXTO_2};font-size:15px;line-height:1.5;">
-      En esta simulación educativa, el enjambre de agentes reaccionó al titular con el
-      comportamiento de masas que ves arriba.</div>
+    {reaccion_cuerpo}
   </td></tr>
 
   <tr><td style="padding:12px 32px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">Las voces</div>
     {voces_html}
   </td></tr>
+  {historias_html}
 
   {f'''<tr><td style="padding:8px 32px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">También reaccionó a</div>

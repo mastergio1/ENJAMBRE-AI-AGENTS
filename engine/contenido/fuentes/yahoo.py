@@ -15,6 +15,65 @@ import httpx
 
 URL = "https://query1.finance.yahoo.com/v8/finance/chart/{simbolo}"
 
+# el "telón de fondo" del diario en símbolos Yahoo (símbolo → nombre editorial).
+# Los índices y materias primas siempre relevantes; las acciones del día se
+# consultan por su ticker directo (NVDA, AAPL…), que Yahoo acepta tal cual.
+NOMBRES = {
+    "^GSPC": "S&P 500", "^IXIC": "Nasdaq 100", "^DJI": "Dow Jones",
+    "CL=F": "Petróleo WTI", "GC=F": "Oro", "BTC-USD": "Bitcoin",
+}
+
+
+def _serie_anual(simbolo: str) -> list[float] | None:
+    """Los cierres diarios del último año (viejo → nuevo). None ante fallo."""
+    try:
+        respuesta = httpx.get(
+            URL.format(simbolo=simbolo),
+            params={"range": "1y", "interval": "1d"},
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=15,
+        )
+        respuesta.raise_for_status()
+        resultado = respuesta.json()["chart"]["result"][0]
+        cierres = resultado["indicators"]["quote"][0]["close"]
+    except Exception:
+        return None
+    limpios = [float(c) for c in cierres if c is not None]
+    return limpios if len(limpios) >= 2 else None
+
+
+def _pct(nuevo: float, viejo: float) -> float | None:
+    return round((nuevo - viejo) / viejo * 100, 2) if viejo else None
+
+
+def _variaciones(cierres: list[float]) -> dict | None:
+    """Día/Mes/Año a partir de la serie anual de cierres."""
+    if len(cierres) < 2:
+        return None
+    ult = cierres[-1]
+    return {
+        "ultimo": round(ult, 2),
+        "variacion_pct": _pct(ult, cierres[-2]),                       # día
+        "var_mes_pct": _pct(ult, cierres[-22]) if len(cierres) >= 22 else None,  # ~1 mes
+        "var_ano_pct": _pct(ult, cierres[0]),                          # ~1 año
+    }
+
+
+def cotizaciones(simbolos: list[str]) -> tuple[list[dict], str]:
+    """Cotizaciones de HOY desde Yahoo (gratis): [{simbolo, nombre, ultimo,
+    variacion_pct, var_mes_pct, var_ano_pct}], origen 'yahoo'. Una llamada por
+    símbolo; los que fallan se omiten. Nunca lanza hacia la redacción."""
+    datos = []
+    for simbolo in simbolos:
+        serie = _serie_anual(simbolo)
+        if not serie:
+            continue
+        var = _variaciones(serie)
+        if not var:
+            continue
+        datos.append({"simbolo": simbolo, "nombre": NOMBRES.get(simbolo, simbolo), **var})
+    return datos, "yahoo"
+
 
 def variacion_real(simbolo: str, desde_iso: str, ruedas: int = 2) -> dict | None:
     if not simbolo:

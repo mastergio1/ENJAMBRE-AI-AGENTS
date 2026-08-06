@@ -158,6 +158,22 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         radar = [d["titular"] for d in destacadas]
         evaluadas = preparado.get("log", [])
         brief = redaccion.preparar_brief(evaluadas=evaluadas, radar=radar)
+
+        # el redactor de IA le pone VOZ al brief (prompt maestro aprobado).
+        # La historia estrella es la destacada principal. Si no hay clave/IA o
+        # algo falla, redactar() devuelve None y el correo usa su plantilla.
+        try:
+            from contenido import redaccion_ia
+            enjambre = None
+            if destacadas:
+                d0 = destacadas[0]
+                enjambre = {"titular": d0["titular"],
+                            "direccion_pct": d0["resumen"].get("direccion_pct"),
+                            "volatilidad": d0["resumen"].get("agitacion")}
+            brief["redactado"] = redaccion_ia.redactar(brief, enjambre)
+        except Exception:
+            brief["redactado"] = None
+
         persistencia.guardar_brief(conexion, persistencia.ahora_iso()[:10], brief)
 
         envio = None

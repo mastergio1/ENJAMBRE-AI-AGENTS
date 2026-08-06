@@ -11,7 +11,7 @@ el futuro. El bloque "qué observa hoy" es ATENCIÓN, no predicción.
 
 import re
 
-from contenido.fuentes import alpaca, barchart
+from contenido.fuentes import alpaca, barchart, yahoo
 from contenido.portero import PATRONES_DESCARTE
 from contenido.vocabulario import es_publicable
 
@@ -22,7 +22,18 @@ UMBRAL_EVENTO = 6        # impacto mínimo del portero para ser "evento del día
 
 # telón de fondo del mercado: índices y materias primas SIEMPRE relevantes.
 # El resto del universo del día es dinámico (los tickers de las noticias).
-TELON = ["$SPX", "$IUXX", "CLZ25", "GCZ25"]
+# Símbolos Yahoo (fuente gratis): índices ^, futuros =F. Las acciones del día
+# entran por su ticker directo (NVDA, AAPL…), que Yahoo acepta tal cual.
+TELON = ["^GSPC", "^IXIC", "^DJI", "CL=F", "GC=F"]
+
+
+def _datos_mercado(simbolos: list[str]) -> tuple[list[dict], str]:
+    """La fuente de números del diario: Yahoo (gratis) primero; si no responde,
+    Barchart (si hay clave) o el snapshot de demostración. Nunca lanza."""
+    datos, origen = yahoo.cotizaciones(simbolos)
+    if datos:
+        return datos, origen
+    return barchart.cotizaciones(simbolos)  # barchart-con-clave, o demo
 
 # términos para casar cada instrumento con un titular que explique el "por qué"
 TERMINOS = {
@@ -176,7 +187,7 @@ def preparar_brief(evaluadas: list[dict] | None = None, radar: list[str] | None 
         universo = TELON + [s.strip().upper() for n in noticias
                             for s in (n.get("simbolos") or "").split(",") if s.strip()]
 
-    cotizaciones, origen_datos = barchart.cotizaciones(_unicos(universo))
+    cotizaciones, origen_datos = _datos_mercado(_unicos(universo))
 
     # movimientos de precio (el número manda), los más grandes primero
     hechos = reportear(cotizaciones, noticias)

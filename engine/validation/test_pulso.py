@@ -175,6 +175,43 @@ def test_endpoint_pipeline_exige_token(monkeypatch):
     assert corridas  # el ritual se disparó en segundo plano
 
 
+def test_html_usa_la_voz_de_ia_cuando_existe(dia):
+    """Si el brief trae 'redactado' (voz del redactor de IA), el correo lo usa;
+    y sigue pasando el filtro CMF con el disclaimer."""
+    destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
+    brief = {"mercado": [], "observa": [], "redactado": {
+        "buenos_dias": "Wall Street amaneció en verde y el Nasdaq sacó pecho.",
+        "historia_estrella": {"emoji": "🩸", "titular": "Insulet cayó pese a vender más",
+                              "cuerpo": "Recortó su previsión.\n\nEl enjambre se hundió tick a tick."},
+        "historias": [{"emoji": "🟢", "titular": "Nvidia subió", "cuerpo": "Los chips mandan."}],
+    }}
+    html = boletin.construir_html(destacadas, "miércoles 5 de agosto", brief=brief)
+    assert "Buenos días" in html
+    assert "Insulet cayó pese a vender más" in html
+    assert "Nvidia subió" in html
+    assert DISCLAIMER in html
+    assert verificar_pieza(html) == []
+
+
+def test_html_cae_a_plantilla_sin_voz(dia):
+    """Sin 'redactado', el correo usa la plantilla de siempre (no se cae)."""
+    destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
+    html = boletin.construir_html(destacadas, "miércoles 5 de agosto")  # sin brief
+    assert "simulación educativa" in html
+    assert DISCLAIMER in html
+
+
+def test_yahoo_calcula_dia_mes_ano():
+    """El cálculo Día/Mes/Año de Yahoo, sin red (serie inyectada)."""
+    from contenido.fuentes import yahoo
+    serie = [100 + i * 0.1 for i in range(260)]   # sube de 100 a ~125.9 en el año
+    v = yahoo._variaciones(serie)
+    assert v["variacion_pct"] is not None          # día
+    assert v["var_mes_pct"] is not None            # mes (>=22 datos)
+    assert v["var_ano_pct"] > 0                    # subió en el año
+    assert yahoo._variaciones([100.0]) is None     # serie muy corta → None
+
+
 def test_ritual_envia_a_suscriptores_confirmados(monkeypatch):
     # un suscriptor confirmado
     conexion = persistencia.conectar()

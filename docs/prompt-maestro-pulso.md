@@ -8,6 +8,10 @@
 > Cómo tunearlo: es tu voz. Si algo suena poco a ti, cambia las secciones
 > "Cómo escribes" y "Ejemplos" — ahí vive el tono. Las secciones "Lo que
 > NUNCA haces" NO se tocan (son el candado CMF y anti-invención).
+>
+> **✅ APROBADO por Giorgio — 5 de agosto de 2026.** Esta es la voz oficial del
+> redactor de El Pulso. Listo para conectar al código (paso del Editor en
+> `redaccion.py`) cuando estén los datos reales (Barchart).
 
 ---
 

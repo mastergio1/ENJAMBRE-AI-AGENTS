@@ -193,6 +193,22 @@ def test_html_usa_la_voz_de_ia_cuando_existe(dia):
     assert verificar_pieza(html) == []
 
 
+def test_tabla_mercado_dia_mes_ano(dia):
+    """La 'foto del día' se pinta como tabla Día/Mes/Año; los datos faltantes
+    (mes/año None) muestran '—' y todo pasa el filtro CMF."""
+    destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
+    brief = {"foto": [
+        {"nombre": "S&P 500", "variacion_pct": 1.8, "var_mes_pct": 2.67, "var_ano_pct": 22.8},
+        {"nombre": "Oro", "variacion_pct": -0.9, "var_mes_pct": 3.28, "var_ano_pct": None},
+    ]}
+    html = boletin.construir_html(destacadas, "miércoles 5 de agosto", brief=brief)
+    assert "La foto del día" in html
+    assert "S&amp;P 500" in html          # nombre escapado
+    assert "1.8%" in html and "22.8%" in html
+    assert "—" in html                     # el año de Oro venía None
+    assert verificar_pieza(html) == []
+
+
 def test_html_cae_a_plantilla_sin_voz(dia):
     """Sin 'redactado', el correo usa la plantilla de siempre (no se cae)."""
     destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())

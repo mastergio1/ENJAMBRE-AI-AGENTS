@@ -92,15 +92,59 @@ def _fila_mercado(m: dict) -> str:
 
 
 def _bloque_mercado(brief: dict | None) -> str:
-    """'La foto del día' — movimientos verificados + eventos, con su fuente."""
+    """'Lo que pasó' — movimientos verificados + eventos, con su fuente.
+    (En modo con voz, esto lo cuenta el editorial; se usa en el fallback.)"""
     if not brief or not brief.get("mercado"):
         return ""
     filas = "".join(_fila_mercado(m) for m in brief["mercado"][:5])
     return f"""
   <tr><td style="padding:18px 32px 2px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">La foto del día</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">Lo que pasó</div>
   </td></tr>
   <tr><td style="padding:4px 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">{filas}</table></td></tr>"""
+
+
+def _pildora(pct) -> str:
+    """Una píldora verde/roja con la variación, o '—' si no hay dato."""
+    if pct is None:
+        return f'<span style="color:{MUTE};font-size:12px;">—</span>'
+    if pct > 0.05:
+        color, bg, flecha = SUBE, "rgba(47,143,102,0.14)", "▲"
+    elif pct < -0.05:
+        color, bg, flecha = BAJA, "rgba(192,80,77,0.13)", "▼"
+    else:
+        color, bg, flecha = MUTE, "rgba(60,56,47,0.06)", "•"
+    return (f'<span style="display:inline-block;padding:3px 9px;border-radius:12px;'
+            f'background:{bg};color:{color};font-size:12px;font-weight:bold;">'
+            f'{flecha} {abs(pct)}%</span>')
+
+
+def _tabla_mercado(brief: dict | None) -> str:
+    """'La foto del día': el telón de fondo (índices, petróleo, oro) con sus
+    columnas Día / Mes / Año."""
+    foto = (brief or {}).get("foto")
+    if not foto:
+        return ""
+    th = (f'font-size:10px;letter-spacing:1px;color:{MUTE};text-transform:uppercase;'
+          'font-weight:600;padding:0 0 8px;')
+    filas = ""
+    for f in foto:
+        filas += f"""<tr>
+          <td style="padding:7px 0;border-top:1px solid {LINEA};color:{TEXTO};font-size:14px;font-weight:600;">{_esc(f["nombre"])}</td>
+          <td align="right" style="padding:7px 0;border-top:1px solid {LINEA};">{_pildora(f.get("variacion_pct"))}</td>
+          <td align="right" style="padding:7px 0;border-top:1px solid {LINEA};">{_pildora(f.get("var_mes_pct"))}</td>
+          <td align="right" style="padding:7px 0;border-top:1px solid {LINEA};">{_pildora(f.get("var_ano_pct"))}</td>
+        </tr>"""
+    return f"""
+  <tr><td style="padding:18px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">La foto del día</div>
+  </td></tr>
+  <tr><td style="padding:6px 32px 4px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><th align="left" style="{th}">Mercado</th><th align="right" style="{th}">Día</th><th align="right" style="{th}">Mes</th><th align="right" style="{th}">Año</th></tr>
+      {filas}
+    </table>
+  </td></tr>"""
 
 
 def _bloque_observa(brief: dict | None) -> str:
@@ -194,7 +238,8 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     <div style="font-family:Georgia,serif;font-style:italic;font-size:16px;color:{MUTE};margin-top:4px;">{fecha}</div>
     <div style="font-size:11px;color:{MUTE};margin-top:6px;">by <b style="color:{TEXTO_2};">Rubicón Lab</b></div>
   </td></tr>
-  {_bloque_mercado(brief)}
+  {_tabla_mercado(brief)}
+  {_bloque_mercado(brief) if not red else ""}
   {buenos_html}
 
   <tr><td style="padding:22px 32px 4px;">

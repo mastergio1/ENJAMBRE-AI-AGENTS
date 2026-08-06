@@ -209,10 +209,22 @@ def preparar_brief(evaluadas: list[dict] | None = None, radar: list[str] | None 
 
     observa = [t for t in (radar or []) if es_publicable(t)][:3]
 
+    # "la foto del día": el telón de fondo (índices, petróleo, oro) con sus
+    # tres columnas Día/Mes/Año. Solo Yahoo trae mes/año; demo/barchart dejan
+    # esos campos en None y la tabla muestra "—".
+    foto = [
+        {"nombre": c.get("nombre", c.get("simbolo", "")),
+         "variacion_pct": c.get("variacion_pct"),
+         "var_mes_pct": c.get("var_mes_pct"),
+         "var_ano_pct": c.get("var_ano_pct")}
+        for c in cotizaciones if c.get("simbolo") in TELON
+    ]
+
     return {
         "mercado": movers + eventos,   # movimientos + eventos, dinámico cada día
+        "foto": foto,                  # la tabla Día/Mes/Año del telón de fondo
         "observa": observa,            # lo que el enjambre mira hoy (atención)
-        "origen_datos": origen_datos,  # 'barchart' | 'demo'
+        "origen_datos": origen_datos,  # 'yahoo' | 'barchart' | 'demo'
     }
 
 

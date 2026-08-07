@@ -118,6 +118,17 @@ def test_flujo_suscripcion_completo():
     conexion.close()
 
 
+def test_suscribir_silencioso_captura_el_lead():
+    """La puerta de correo: soltar un titular con correo deja el lead suscrito
+    (sin RESEND no envía, pero el alta queda)."""
+    server._suscribir_silencioso("nuevo@lector.cl")
+    conexion = persistencia.conectar()
+    total = conexion.execute(
+        "SELECT COUNT(*) FROM suscriptores WHERE email = 'nuevo@lector.cl'").fetchone()[0]
+    conexion.close()
+    assert total == 1
+
+
 def test_suscribir_dos_veces_no_duplica():
     cliente = TestClient(server.app)
     cliente.post("/api/suscribir", json={"email": "a@b.cl"})

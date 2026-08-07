@@ -47,6 +47,52 @@ MENSAJE_PRIVADO = (
     "archivo; para soltar tus propios titulares, escríbenos desde "
     "«El Enjambre para tu organización»."
 )
+MENSAJE_CORREO = (
+    "Deja tu correo para soltar tu propio titular al enjambre. De paso te "
+    "suscribes gratis a El Pulso, el diario diario del enjambre. Un solo dato, "
+    "sin contraseñas."
+)
+
+
+def _puerta_correo_activa() -> bool:
+    """El gancho de crecimiento: en público, pedir correo para soltar titulares.
+    Se enciende con ENJAMBRE_PUERTA_CORREO=1 (apagado por defecto)."""
+    return os.environ.get("ENJAMBRE_PUERTA_CORREO", "").strip() in ("1", "true", "si")
+
+
+def _puerta_simulacion(mensaje: dict) -> tuple[bool, str | None]:
+    """¿Puede esta persona soltar un titular? Devuelve (permitido, correo).
+
+    - En pruebas privadas: solo la clave del equipo abre.
+    - En público CON puerta de correo (ENJAMBRE_PUERTA_CORREO=1): un CORREO
+      válido abre y queda suscrito gratis (cada simulación deja un lead).
+    - En público sin la puerta: abierto (comportamiento de siempre). En todos
+      los casos, si la persona dejó un correo válido, se captura igual.
+    """
+    email = str(mensaje.get("email", "")).strip().lower()
+    correo = email if seguridad.correo_valido(email) else None
+    if seguridad.acceso_privado_activo():
+        return (True, correo) if seguridad.acceso_ok(mensaje.get("acceso")) else (False, None)
+    if _puerta_correo_activa():
+        return (True, correo) if correo else (False, None)
+    return True, correo
+
+
+def _suscribir_silencioso(email: str) -> None:
+    """Captura el lead SIN bloquear la simulación: alta + correo de confirmación
+    (double opt-in). Corre en su propio hilo; cualquier falla se traga para no
+    apagar el momento mágico de ver al enjambre."""
+    try:
+        conexion = persistencia.conectar()
+        try:
+            alta = persistencia.agregar_suscriptor(conexion, email, origen="web")
+        finally:
+            conexion.close()
+        if not alta.get("ya_activo") and alta.get("reenviar", True):
+            from contenido import boletin
+            boletin.enviar_confirmacion(email, alta["token_confirma"])
+    except Exception:
+        pass
 
 
 def _semilla_lider(semilla_sim: int, unique_id: int) -> int:
@@ -173,10 +219,15 @@ async def canal(ws: WebSocket) -> None:
 
             # modo observatorio: el enjambre sigue vivo y recibe noticias encima
             if tipo == "observatorio":
-                # el observatorio también lee titulares con IA: mismo candado
-                if not seguridad.acceso_ok(mensaje.get("acceso")):
-                    await ws.send_text(_responder(ws, tipo="privado", mensaje=MENSAJE_PRIVADO))
+                # el observatorio también lee titulares con IA: misma puerta
+                permitido_obs, correo_obs = _puerta_simulacion(mensaje)
+                if not permitido_obs:
+                    mensaje_puerta = MENSAJE_PRIVADO if seguridad.acceso_privado_activo() else MENSAJE_CORREO
+                    tipo_puerta = "privado" if seguridad.acceso_privado_activo() else "correo"
+                    await ws.send_text(_responder(ws, tipo=tipo_puerta, mensaje=mensaje_puerta))
                     continue
+                if correo_obs:
+                    _asyncio.create_task(_asyncio.to_thread(_suscribir_silencioso, correo_obs))
                 try:
                     await _asyncio.wait_for(_semaforo_obs.acquire(), timeout=0.01)
                 except _asyncio.TimeoutError:
@@ -193,9 +244,13 @@ async def canal(ws: WebSocket) -> None:
             if tipo != "simular":
                 continue
 
-            # candado de pruebas privadas: sin la clave, nadie gasta IA
-            if not seguridad.acceso_ok(mensaje.get("acceso")):
-                await ws.send_text(_responder(ws, tipo="privado", mensaje=MENSAJE_PRIVADO))
+            # la puerta: en privado abre la clave (equipo); en público, un correo
+            # válido abre Y queda suscrito gratis (cada simulación deja un lead).
+            permitido_puerta, correo = _puerta_simulacion(mensaje)
+            if not permitido_puerta:
+                mensaje_puerta = MENSAJE_PRIVADO if seguridad.acceso_privado_activo() else MENSAJE_CORREO
+                tipo_puerta = "privado" if seguridad.acceso_privado_activo() else "correo"
+                await ws.send_text(_responder(ws, tipo=tipo_puerta, mensaje=mensaje_puerta))
                 continue
 
             # tope de simulaciones pesadas simultáneas (antes de gastar cupo)
@@ -213,6 +268,9 @@ async def canal(ws: WebSocket) -> None:
                 if not permitido:
                     await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
                     continue
+                # captura del lead EN PARALELO: no bloquea el momento mágico
+                if correo:
+                    _asyncio.create_task(_asyncio.to_thread(_suscribir_silencioso, correo))
                 await _correr_simulacion(ws, mensaje)
             finally:
                 _semaforo_sim.release()

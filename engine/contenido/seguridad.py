@@ -43,6 +43,15 @@ def sim_id_valido(sim_id: str | None) -> bool:
     return bool(sim_id and HEX16.match(sim_id))
 
 
+_CORREO = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def correo_valido(email: str | None) -> bool:
+    """¿Es un correo con forma válida y de largo razonable? (puerta pública)."""
+    email = (email or "").strip()
+    return bool(email) and len(email) <= 200 and bool(_CORREO.match(email))
+
+
 def ip_cliente(headers, fallback: str | None) -> str:
     """La IP real del visitante detrás de EXACTAMENTE un proxy (Render).
 

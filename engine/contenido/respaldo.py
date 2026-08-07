@@ -36,43 +36,48 @@ def hay_token() -> bool:
     return bool(os.environ.get("GITHUB_RESPALDO_TOKEN"))
 
 
-def casos_remotos() -> list[dict]:
-    """Lo ya respaldado en GitHub (lectura pública del raw, sin token).
+def _leer_remoto(ruta: str, clave: str) -> list[dict]:
+    """Lee un JSON de la caja fuerte y devuelve su lista bajo `clave`.
 
-    El backtest lo consulta para NO re-rendir exámenes que la caja fuerte
-    ya tiene — el disco de Render se borra con cada deploy, pero GitHub no
-    olvida. Lista vacía ante cualquier problema; nunca lanza."""
+    Con token: usa la API autenticada de GitHub → funciona aunque el repo sea
+    PRIVADO. Sin token: lectura pública del raw (repo público). Lista vacía
+    ante cualquier problema; nunca lanza. (La API inline sirve hasta 1 MB;
+    los JSON de calibración/cosecha están muy por debajo.)"""
     repo = os.environ.get("GITHUB_RESPALDO_REPO", REPO_DEFECTO)
     rama = os.environ.get("GITHUB_RESPALDO_RAMA", RAMA_DEFECTO)
-    ruta = os.environ.get("GITHUB_RESPALDO_RUTA", RUTA_DEFECTO)
     try:
+        if hay_token():
+            respuesta = httpx.get(
+                f"{API}/repos/{repo}/contents/{ruta}", params={"ref": rama},
+                headers={"Authorization": f"Bearer {os.environ['GITHUB_RESPALDO_TOKEN']}",
+                         "Accept": "application/vnd.github+json"},
+                timeout=12,
+            )
+            if respuesta.status_code != 200:
+                return []
+            crudo = base64.b64decode(respuesta.json().get("content") or "").decode("utf-8")
+            return (json.loads(crudo) or {}).get(clave, [])
         respuesta = httpx.get(
             f"https://raw.githubusercontent.com/{repo}/{rama}/{ruta}", timeout=10
         )
         if respuesta.status_code != 200:
             return []
-        return (json.loads(respuesta.text) or {}).get("casos", [])
+        return (json.loads(respuesta.text) or {}).get(clave, [])
     except Exception:
         return []
+
+
+def casos_remotos() -> list[dict]:
+    """Los casos de calibración ya respaldados en GitHub. El backtest los
+    consulta para NO re-rendir exámenes que la caja fuerte ya tiene."""
+    ruta = os.environ.get("GITHUB_RESPALDO_RUTA", RUTA_DEFECTO)
+    return _leer_remoto(ruta, "casos")
 
 
 def cosecha_remota() -> list[dict]:
-    """Los eventos cosechados que ya viven en GitHub (lectura pública raw).
-
-    El backtest los suma al banco local de exámenes: así el catálogo crece
-    solo (cosechador) sin depender del disco efímero de Render ni de un
-    redeploy. Lista vacía ante cualquier problema; nunca lanza."""
-    repo = os.environ.get("GITHUB_RESPALDO_REPO", REPO_DEFECTO)
-    rama = os.environ.get("GITHUB_RESPALDO_RAMA", RAMA_DEFECTO)
-    try:
-        respuesta = httpx.get(
-            f"https://raw.githubusercontent.com/{repo}/{rama}/{RUTA_COSECHA}", timeout=10
-        )
-        if respuesta.status_code != 200:
-            return []
-        return (json.loads(respuesta.text) or {}).get("eventos", [])
-    except Exception:
-        return []
+    """Los eventos cosechados que ya viven en GitHub. El backtest los suma al
+    banco local de exámenes (el catálogo crece solo, sin depender del disco)."""
+    return _leer_remoto(RUTA_COSECHA, "eventos")
 
 
 def subir_cosecha(nuevos: list[dict], reemplazar: bool = False) -> dict:

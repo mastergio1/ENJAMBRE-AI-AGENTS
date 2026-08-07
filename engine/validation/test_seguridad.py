@@ -203,3 +203,46 @@ def test_simular_titular_respeta_el_candado(monkeypatch):
     # con la clave correcta, el candado deja pasar (y sigue el flujo normal)
     r2 = cliente.post("/api/simular-titular", json={"id": "no-hex", "acceso": "abre-sesamo"})
     assert r2.status_code == 404  # ya pasó el candado; falla por id inválido
+
+
+# ---------- la puerta de correo (gancho de crecimiento público) ----------
+
+def test_correo_valido():
+    assert seguridad.correo_valido("giorgio@rubicon.cl")
+    assert not seguridad.correo_valido("no-es-correo")
+    assert not seguridad.correo_valido("")
+    assert not seguridad.correo_valido(None)
+    assert not seguridad.correo_valido("a@b." + "x" * 300)  # muy largo
+
+
+def test_puerta_publica_sin_bandera_queda_abierta(monkeypatch):
+    """Sin ENJAMBRE_PUERTA_CORREO, público abierto (comportamiento de siempre)."""
+    monkeypatch.delenv("ENJAMBRE_ACCESO", raising=False)
+    monkeypatch.delenv("ENJAMBRE_PUERTA_CORREO", raising=False)
+    ok, correo = server._puerta_simulacion({"titular": "x"})
+    assert ok and correo is None
+
+
+def test_puerta_publica_con_bandera_exige_correo(monkeypatch):
+    monkeypatch.delenv("ENJAMBRE_ACCESO", raising=False)
+    monkeypatch.setenv("ENJAMBRE_PUERTA_CORREO", "1")
+    assert server._puerta_simulacion({"titular": "x"}) == (False, None)   # sin correo, cerrado
+    ok, correo = server._puerta_simulacion({"titular": "x", "email": "Lector@Medio.CL"})
+    assert ok and correo == "lector@medio.cl"                             # normaliza a minúsculas
+
+
+def test_puerta_privada_exige_clave_no_correo(monkeypatch):
+    monkeypatch.setenv("ENJAMBRE_ACCESO", "abre-sesamo")
+    assert server._puerta_simulacion({"email": "x@y.cl"}) == (False, None)  # el correo no basta
+    ok, _ = server._puerta_simulacion({"acceso": "abre-sesamo"})
+    assert ok
+
+
+def test_ws_pide_correo_en_publico_con_bandera(monkeypatch):
+    monkeypatch.delenv("ENJAMBRE_ACCESO", raising=False)
+    monkeypatch.setenv("ENJAMBRE_PUERTA_CORREO", "1")
+    cliente = TestClient(server.app)
+    with cliente.websocket_connect("/ws") as ws:
+        ws.send_json({"tipo": "simular", "titular": "La Fed sube las tasas"})  # sin correo
+        respuesta = ws.receive_json()
+        assert respuesta["tipo"] == "correo"

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:09:36+00:00",
+ "generado": "2026-08-08T21:10:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2651,6 +2651,28 @@
     "pct_real": -4.85,
     "cierre_base": 231.07,
     "cierre_final": 219.86,
+    "fecha_base": "2024-12-17",
+    "fecha_final": "2024-12-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e710ab963a36ce41",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:10:18+00:00",
+   "titular": "USA Housing Starts (MoM) For November; -1.8% Vs -3.2% YoY",
+   "simbolos": "SPY",
+   "direccion_pct": 2.79,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -3.01,
+    "cierre_base": 604.29,
+    "cierre_final": 586.1,
     "fecha_base": "2024-12-17",
     "fecha_final": "2024-12-19",
     "ruedas": 2,

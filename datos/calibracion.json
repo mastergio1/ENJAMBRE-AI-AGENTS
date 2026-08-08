@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:35:18+00:00",
+ "generado": "2026-08-08T23:36:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6569,6 +6569,28 @@
     "cierre_final": 40.58,
     "fecha_base": "2026-01-12",
     "fecha_final": "2026-01-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "89133798b63125ce",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:36:01+00:00",
+   "titular": "Trump Says Federal Intel Stake Has Made 'Tens Of Billions': Stock Climbs",
+   "simbolos": "INTC",
+   "direccion_pct": 21.71,
+   "volatilidad_pct": 1.04,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 7.18,
+    "cierre_base": 41.11,
+    "cierre_final": 44.06,
+    "fecha_base": "2026-01-08",
+    "fecha_final": "2026-01-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

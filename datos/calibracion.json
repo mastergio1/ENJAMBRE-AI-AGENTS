@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:57:01+00:00",
+ "generado": "2026-08-08T21:57:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3866,6 +3866,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e95c231bbfe14314",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:57:29+00:00",
+   "titular": "Brace For 'Bear Market Tech Rally:' Munster Predicts When Stock Market Could Actually Hit A Bottom",
+   "simbolos": "QQQ",
+   "direccion_pct": -2.06,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 2.99,
+    "cierre_base": 299.33,
+    "cierre_final": 308.28,
+    "fecha_base": "2022-05-26",
+    "fecha_final": "2022-05-31",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:23:09+00:00",
+ "generado": "2026-08-08T22:23:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4680,6 +4680,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "844a01ab3e02aef9",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:23:43+00:00",
+   "titular": "USDC stablecoin breaks its dollar peg after Silicon Valley Bank collapse",
+   "simbolos": "COIN",
+   "direccion_pct": -25.63,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 17.23,
+    "cierre_base": 53.44,
+    "cierre_final": 62.65,
+    "fecha_base": "2023-03-10",
+    "fecha_final": "2023-03-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

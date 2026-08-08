@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:17:09+00:00",
+ "generado": "2026-08-08T21:17:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2851,6 +2851,28 @@
     "cierre_final": 202.2,
     "fecha_base": "2024-08-01",
     "fecha_final": "2024-08-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "701ba6d266230027",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:17:50+00:00",
+   "titular": "Battle Of Humanoid Robots And Robotaxis Vs. Electric Vehicles, Trump Rumor To Drive Bitcoin To The Moon",
+   "simbolos": "QQQ",
+   "direccion_pct": 11.27,
+   "volatilidad_pct": 1.01,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -4.65,
+    "cierre_base": 480.62,
+    "cierre_final": 458.27,
+    "fecha_base": "2024-07-23",
+    "fecha_final": "2024-07-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

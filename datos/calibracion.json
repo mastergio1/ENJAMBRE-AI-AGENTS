@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:08:03+00:00",
+ "generado": "2026-08-08T22:08:38+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4281,6 +4281,28 @@
     "cierre_final": 50.0,
     "fecha_base": "2024-02-27",
     "fecha_final": "2024-02-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e6c061b46150af55",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:08:33+00:00",
+   "titular": "What the Options Market Tells Us About Coinbase Glb",
+   "simbolos": "COIN",
+   "direccion_pct": 7.07,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 20.03,
+    "cierre_base": 165.98,
+    "cierre_final": 199.22,
+    "fecha_base": "2024-02-23",
+    "fecha_final": "2024-02-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:33:04+00:00",
+ "generado": "2026-08-08T21:33:49+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3218,6 +3218,28 @@
    "simbolos": "QQQ",
    "direccion_pct": -0.58,
    "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 9.36,
+    "cierre_base": 263.32,
+    "cierre_final": 287.96,
+    "fecha_base": "2022-11-09",
+    "fecha_final": "2022-11-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bacabb6b4509c1a0",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:33:49+00:00",
+   "titular": "Inflation cools more than expected; stocks stage historic relief rally",
+   "simbolos": "QQQ",
+   "direccion_pct": 4.03,
+   "volatilidad_pct": 1.27,
    "reaccion_real": {
     "simbolo": "QQQ",
     "pct_real": 9.36,

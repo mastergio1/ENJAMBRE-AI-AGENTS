@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:38:32+00:00",
+ "generado": "2026-08-08T22:39:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5051,6 +5051,28 @@
     "cierre_final": 72.97,
     "fecha_base": "2022-10-03",
     "fecha_final": "2022-10-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "61b90e7afbfac479",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:39:09+00:00",
+   "titular": "Blockchain Payments Company Ripple Labs Is 'Interested' In The Assets Of Bankrupt Crypto Lender Celsius Network; Ripple Is 'Actively Looking For M&A Opportunities'",
+   "simbolos": "MARA",
+   "direccion_pct": 11.85,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 21.83,
+    "cierre_base": 14.11,
+    "cierre_final": 17.19,
+    "fecha_base": "2022-08-09",
+    "fecha_final": "2022-08-11",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

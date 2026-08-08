@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:25:30+00:00",
+ "generado": "2026-08-08T22:26:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4768,6 +4768,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ec6e17967fea6bef",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:26:06+00:00",
+   "titular": "Coinbase Global Option Alert: Fri $62 Calls Sweep (38) near the Ask: 255 @ $1.188 vs 21089 OI; Earnings 2/21 After Close Ref=$58.99",
+   "simbolos": "COIN",
+   "direccion_pct": 7.88,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 13.59,
+    "cierre_base": 65.7,
+    "cierre_final": 74.63,
+    "fecha_base": "2023-02-01",
+    "fecha_final": "2023-02-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

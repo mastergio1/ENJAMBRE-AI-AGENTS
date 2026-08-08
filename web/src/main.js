@@ -11,7 +11,8 @@ import { abrirArchivo } from './archivo/archivo.js'
 import { abrirDuelo } from './duelo/duelo.js'
 import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
 import { Enjambre } from './swarm/enjambre.js'
-import { MotorRemoto, urlApi } from './ui/conexion.js'
+import { MotorRemoto, guardarCorreo, urlApi } from './ui/conexion.js'
+import { pedirCorreo } from './ui/correo.js'
 import { montarGuia } from './ui/guia.js'
 import { montarNavegacion } from './ui/navegacion.js'
 import { iniciarTour, tourVisto } from './ui/tour.js'
@@ -138,6 +139,16 @@ async function soltarTitular(titular, titularId = null) {
           panel.fijarLeyendo(false)
           panel.avisar(mensaje)
         },
+        alCorreo: async (mensaje) => {
+          // la puerta pide correo: se pide UNA vez, se guarda y se reintenta el
+          // MISMO titular (que ahora viaja con el correo → abre y suscribe gratis)
+          panel.fijarLeyendo(false)
+          const email = await pedirCorreo(mensaje)
+          if (email) {
+            guardarCorreo(email)
+            soltarTitular(titular, titularId)
+          }
+        },
         alDespertar: () => panel.avisar(
           'El motor estaba descansando y está despertando (hasta 1 minuto). El enjambre reaccionará en cuanto abra los ojos…'),
       }, titularId ? { titular_id: titularId } : {})
@@ -182,6 +193,14 @@ async function alternarObservatorio(titular) {
       alLimite: (m) => {
         panel.fijarLeyendo(false)
         panel.avisar(m)
+      },
+      alCorreo: async (m) => {
+        panel.fijarLeyendo(false)
+        const email = await pedirCorreo(m)
+        if (email) {
+          guardarCorreo(email)
+          alternarObservatorio(titular)   // reintenta con el correo guardado
+        }
       },
       alDespertar: () => panel.avisar(
         'El motor estaba descansando y está despertando (hasta 1 minuto)…'),

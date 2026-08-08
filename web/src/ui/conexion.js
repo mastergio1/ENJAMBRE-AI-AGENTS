@@ -23,6 +23,25 @@ export function claveAcceso() {
   }
 }
 
+/** El correo del visitante (la "puerta de crecimiento"): en público se pide UNA
+ * vez para soltar tu propio titular, y de paso quedas suscrito gratis al Pulso.
+ * Sin contraseñas, sin cuenta — solo un dato, recordado en el navegador. */
+export function correoUsuario() {
+  try {
+    return localStorage.getItem('enjambre-correo') || ''
+  } catch {
+    return ''
+  }
+}
+
+export function guardarCorreo(email) {
+  try {
+    localStorage.setItem('enjambre-correo', String(email || '').trim().toLowerCase())
+  } catch {
+    /* modo privado del navegador: da igual */
+  }
+}
+
 export class MotorRemoto {
   constructor(url) {
     this.url = url
@@ -74,7 +93,7 @@ export class MotorRemoto {
   /** Envía el titular y entrega los eventos: alInicio, alTick, alFin, alLimite.
    * La semilla es aleatoria por corrida: dos corridas del mismo titular dan
    * reacciones y voces distintas — el enjambre nunca suena a loro. */
-  async simular(titular, { alInicio, alTick, alFin, alLimite, alDespertar }, extras = {}) {
+  async simular(titular, { alInicio, alTick, alFin, alLimite, alDespertar, alCorreo }, extras = {}) {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.ws = await this._conectarConPaciencia(alDespertar)
     }
@@ -85,6 +104,7 @@ export class MotorRemoto {
         else if (mensaje.tipo === 'fin') alFin(mensaje.reporte, mensaje.sim_id)
         else if (mensaje.tipo === 'limite') alLimite?.(mensaje.mensaje)
         else if (mensaje.tipo === 'privado') alLimite?.(mensaje.mensaje)
+        else if (mensaje.tipo === 'correo') alCorreo?.(mensaje.mensaje)   // la puerta pide correo
       } else {
         const vista = new DataView(evento.data)
         alTick(
@@ -95,14 +115,17 @@ export class MotorRemoto {
       }
     }
     const seed = Math.floor(Math.random() * 2_000_000_000)
-    this.ws.send(JSON.stringify({ tipo: 'simular', titular, seed, acceso: claveAcceso(), ...extras }))
+    this.ws.send(JSON.stringify({
+      tipo: 'simular', titular, seed,
+      acceso: claveAcceso(), email: correoUsuario(), ...extras,
+    }))
   }
 
   /**
    * Modo observatorio: abre una sesión continua donde el enjambre sigue
    * vivo. Devuelve un mando con soltarNoticia(titular) y detener().
    */
-  async observatorio(titular, { alInicio, alTick, alLimite, alFin, alDespertar }) {
+  async observatorio(titular, { alInicio, alTick, alLimite, alFin, alDespertar, alCorreo }) {
     const ws = await this._conectarConPaciencia(alDespertar)
     this.wsObs = ws
     ws.onmessage = (evento) => {
@@ -111,13 +134,17 @@ export class MotorRemoto {
         if (m.tipo === 'inicio') alInicio?.(m)
         else if (m.tipo === 'limite') alLimite?.(m.mensaje)
         else if (m.tipo === 'privado') alLimite?.(m.mensaje)
+        else if (m.tipo === 'correo') alCorreo?.(m.mensaje)
         else if (m.tipo === 'observatorio-fin') alFin?.()
       } else {
         const v = new DataView(evento.data)
         alTick(v.getFloat32(0, true), v.getUint32(4, true), new Int8Array(evento.data, 8))
       }
     }
-    ws.send(JSON.stringify({ tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000), acceso: claveAcceso() }))
+    ws.send(JSON.stringify({
+      tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000),
+      acceso: claveAcceso(), email: correoUsuario(),
+    }))
     return {
       soltarNoticia(t) {
         if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'noticia', titular: t }))

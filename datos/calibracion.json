@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:22:30+00:00",
+ "generado": "2026-08-08T22:23:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4658,6 +4658,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9aa4e1248b8b6e7e",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:23:09+00:00",
+   "titular": "Marathon Digital Says Co Holds ~$142M In Cash Deposits As Signature Bridge",
+   "simbolos": "MARA",
+   "direccion_pct": 14.52,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 33.77,
+    "cierre_base": 5.33,
+    "cierre_final": 7.13,
+    "fecha_base": "2023-03-10",
+    "fecha_final": "2023-03-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

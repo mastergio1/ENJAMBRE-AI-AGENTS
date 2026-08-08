@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:59:49+00:00",
+ "generado": "2026-08-08T22:00:20+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3976,6 +3976,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4a79864c9093413e",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:00:20+00:00",
+   "titular": "Friday's Top 5 Trending Stocks: What's The Scoop?",
+   "simbolos": "MSTR",
+   "direccion_pct": 11.37,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 10.0,
+    "cierre_base": 183.34,
+    "cierre_final": 201.67,
+    "fecha_base": "2024-10-10",
+    "fecha_final": "2024-10-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:46:24+00:00",
+ "generado": "2026-08-08T22:46:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5337,6 +5337,28 @@
     "cierre_final": 23.81,
     "fecha_base": "2022-05-27",
     "fecha_final": "2022-06-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "420dfd96655cb20e",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:46:58+00:00",
+   "titular": "Top 10 NFTs By Weekly Sales Volume: Azuki Tops, Moonbirds Rejoins And Many Others See Declines",
+   "simbolos": "COIN",
+   "direccion_pct": 1.73,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 2.16,
+    "cierre_base": 61.7,
+    "cierre_final": 63.03,
+    "fecha_base": "2022-05-16",
+    "fecha_final": "2022-05-18",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

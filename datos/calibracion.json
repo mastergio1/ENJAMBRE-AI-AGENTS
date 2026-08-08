@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:04:04+00:00",
+ "generado": "2026-08-08T22:04:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4130,6 +4130,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3f57898f76708c07",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:04:36+00:00",
+   "titular": "Mullen Automotive, Amazon, SoFi, MicroStrategy, Tesla: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "MSTR",
+   "direccion_pct": 21.42,
+   "volatilidad_pct": 1.03,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -20.47,
+    "cierre_base": 129.3,
+    "cierre_final": 102.83,
+    "fecha_base": "2024-04-29",
+    "fecha_final": "2024-05-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

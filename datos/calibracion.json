@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:35:18+00:00",
+ "generado": "2026-08-08T21:35:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3279,16 +3279,16 @@
   {
    "sim_id": "2ee9ebba05b942d6",
    "origen": "historico",
-   "fecha": "2026-08-08T21:35:17+00:00",
+   "fecha": "2026-08-08T21:35:56+00:00",
    "titular": "Major indices were higher amid the start of the Fed's two-day meeting as well as in continued reaction to US earnings. Stocks fell after better-than-expected job openings data added to concerns of a tight labor market but still traded up for the session.",
-   "simbolos": "QQQ",
+   "simbolos": "IWM",
    "direccion_pct": 0.07,
    "volatilidad_pct": 1.49,
    "reaccion_real": {
-    "simbolo": "QQQ",
-    "pct_real": -5.31,
-    "cierre_base": 275.11,
-    "cierre_final": 260.49,
+    "simbolo": "IWM",
+    "pct_real": -3.97,
+    "cierre_base": 183.58,
+    "cierre_final": 176.3,
     "fecha_base": "2022-11-01",
     "fecha_final": "2022-11-03",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:41:02+00:00",
+ "generado": "2026-08-08T22:41:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5142,6 +5142,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "275f8c941fe2190a",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:41:38+00:00",
+   "titular": "GameStop Spikes Higher In This Trend: How The Stonk Looks Heading Into 4-1 Split",
+   "simbolos": "COIN",
+   "direccion_pct": 13.44,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 12.38,
+    "cierre_base": 65.83,
+    "cierre_final": 73.98,
+    "fecha_base": "2022-07-19",
+    "fecha_final": "2022-07-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

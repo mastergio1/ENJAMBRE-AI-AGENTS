@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:30:15+00:00",
+ "generado": "2026-08-08T22:30:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4922,6 +4922,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "baf6b3a01d5f7a49",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:30:53+00:00",
+   "titular": "'FTX.com Assets Frozen by Bahamas Securities Regulator' -Bloomberg Law",
+   "simbolos": "COIN",
+   "direccion_pct": -1.59,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 4.52,
+    "cierre_base": 50.92,
+    "cierre_final": 53.22,
+    "fecha_base": "2022-11-10",
+    "fecha_final": "2022-11-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

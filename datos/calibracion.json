@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:33:39+00:00",
+ "generado": "2026-08-08T22:38:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5029,6 +5029,28 @@
     "cierre_final": 73.81,
     "fecha_base": "2022-10-24",
     "fecha_final": "2022-10-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5b9e3fe14bf6ed54",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:38:28+00:00",
+   "titular": "CME Group Files For Futures Brokerage After Criticizing Rival FTX For Doing The Same Thing",
+   "simbolos": "COIN",
+   "direccion_pct": 5.85,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 10.64,
+    "cierre_base": 65.95,
+    "cierre_final": 72.97,
+    "fecha_base": "2022-10-03",
+    "fecha_final": "2022-10-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

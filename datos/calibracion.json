@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:58:29+00:00",
+ "generado": "2026-08-08T21:59:17+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3932,6 +3932,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0529451c87998e18",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:59:17+00:00",
+   "titular": "Bitcoin jumps to record high after Trump wins US presidential election",
+   "simbolos": "GBTC",
+   "direccion_pct": 59.73,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 10.35,
+    "cierre_base": 55.17,
+    "cierre_final": 60.88,
+    "fecha_base": "2024-11-05",
+    "fecha_final": "2024-11-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

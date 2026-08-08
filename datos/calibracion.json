@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:53:29+00:00",
+ "generado": "2026-08-08T21:53:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3709,6 +3709,28 @@
     "cierre_final": 394.77,
     "fecha_base": "2022-07-18",
     "fecha_final": "2022-07-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4434d29145a91bb9",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:53:57+00:00",
+   "titular": "N. Korea To Boost Frontline Military Units' Action Plan, Vows To Strengthen War Deterrent; Kim Jong Un Says To Bolster Powerful Self-defence Capabilities To Overwhelm Hostile Forces",
+   "simbolos": "SPY",
+   "direccion_pct": -0.81,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 2.79,
+    "cierre_base": 378.06,
+    "cierre_final": 388.59,
+    "fecha_base": "2022-06-23",
+    "fecha_final": "2022-06-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

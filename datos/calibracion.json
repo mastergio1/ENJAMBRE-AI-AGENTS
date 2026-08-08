@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:03:03+00:00",
+ "generado": "2026-08-08T22:03:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4083,6 +4083,28 @@
     "cierre_final": 166.43,
     "fecha_base": "2024-07-12",
     "fecha_final": "2024-07-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2102861b26e511e1",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:03:30+00:00",
+   "titular": "Jim Cramer Says Nu Skin Is 'Overvalued,' Praises 'Fabulous' Pure Storage",
+   "simbolos": "MSTR",
+   "direccion_pct": 13.26,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 10.97,
+    "cierre_base": 129.76,
+    "cierre_final": 144.0,
+    "fecha_base": "2024-05-14",
+    "fecha_final": "2024-05-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

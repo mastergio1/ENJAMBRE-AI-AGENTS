@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:51:30+00:00",
+ "generado": "2026-08-08T22:52:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5491,6 +5491,28 @@
     "cierre_final": 301.65,
     "fecha_base": "2026-06-01",
     "fecha_final": "2026-06-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cd5a8d09d4e9fc8b",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:52:05+00:00",
+   "titular": "Consumer Tech News (May 25-29): Dell, IBM, CrowdStrike, Meta Lead Big Tech AI Push",
+   "simbolos": "CRM",
+   "direccion_pct": 15.46,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "CRM",
+    "pct_real": 5.1,
+    "cierre_base": 191.1,
+    "cierre_final": 200.84,
+    "fecha_base": "2026-05-29",
+    "fecha_final": "2026-06-02",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:46:57+00:00",
+ "generado": "2026-08-08T23:47:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6902,6 +6902,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3463337a54b8b7a5",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:47:44+00:00",
+   "titular": "Netflix, Intuitive Surgical, Beyond Meat, Texas Instruments, Warner Bros: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "NFLX",
+   "direccion_pct": -18.46,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "NFLX",
+    "pct_real": -10.29,
+    "cierre_base": 124.14,
+    "cierre_final": 111.36,
+    "fecha_base": "2025-10-21",
+    "fecha_final": "2025-10-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

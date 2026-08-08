@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:44:00+00:00",
+ "generado": "2026-08-08T22:44:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5249,6 +5249,28 @@
     "cierre_final": 51.71,
     "fecha_base": "2022-07-01",
     "fecha_final": "2022-07-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "69d96d36637712fe",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:44:36+00:00",
+   "titular": "Coinbase To End Coinbase Pro, Have One Advanced Trading Account",
+   "simbolos": "COIN",
+   "direccion_pct": 19.3,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 20.81,
+    "cierre_base": 51.91,
+    "cierre_final": 62.71,
+    "fecha_base": "2022-06-22",
+    "fecha_final": "2022-06-24",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:52:05+00:00",
+ "generado": "2026-08-08T22:52:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5513,6 +5513,28 @@
     "cierre_final": 200.84,
     "fecha_base": "2026-05-29",
     "fecha_final": "2026-06-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "87f7a734853990f9",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:52:39+00:00",
+   "titular": "'Trump Accounts App Will Be Available Thursday, Bessent Says' - Bloomberg News",
+   "simbolos": "HOOD",
+   "direccion_pct": 12.89,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "HOOD",
+    "pct_real": 23.7,
+    "cierre_base": 76.23,
+    "cierre_final": 94.3,
+    "fecha_base": "2026-05-27",
+    "fecha_final": "2026-05-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

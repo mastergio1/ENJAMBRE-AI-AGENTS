@@ -26,6 +26,10 @@ on:
         description: "Borrar la calibración local antes de rendir (para re-validar diales nuevos)"
         required: false
         default: "false"
+      mercados:
+        description: "Mercados a calibrar (separados por espacio). Foco actual: SP500 + acciones + cripto"
+        required: false
+        default: "indice cripto accion"
 
 jobs:
   calibrar:
@@ -52,6 +56,7 @@ jobs:
           TANDA: ${{ github.event.inputs.tanda || '40' }}
           CUPO: ${{ github.event.inputs.cupo || '100' }}
           REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
+          MERCADOS: ${{ github.event.inputs.mercados || 'indice cripto accion' }}
         run: |
           set -u
           BASE="https://enjambre-motor.onrender.com/api/backtest"
@@ -74,7 +79,7 @@ jobs:
               | python3 -c "import sys,json;print(json.load(sys.stdin).get('pendientes',0))" 2>/dev/null || echo 0
           }
 
-          for MERCADO in oro cripto petroleo indice accion; do
+          for MERCADO in $MERCADOS; do
             CAP="$CUPO"   # exactamente $CUPO exámenes por mercado
             echo "════════ Mercado: $MERCADO (cupo $CAP) ════════"
             while true; do
@@ -113,6 +118,6 @@ jobs:
             done
           done
           echo "════════ Calibración terminada ════════"
-          for M in oro cripto petroleo indice accion; do
+          for M in $MERCADOS; do
             echo "  $M: $(hechos $M) rendidos"
           done

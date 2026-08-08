@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:30:23+00:00",
+ "generado": "2026-08-08T23:31:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6437,6 +6437,28 @@
     "cierre_final": 716.5,
     "fecha_base": "2026-01-28",
     "fecha_final": "2026-01-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2c9e29e2c18de78b",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:31:12+00:00",
+   "titular": "Texas Instruments, ASML Lift Chip Stocks Higher",
+   "simbolos": "INTC",
+   "direccion_pct": 0.85,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 10.77,
+    "cierre_base": 43.93,
+    "cierre_final": 48.66,
+    "fecha_base": "2026-01-27",
+    "fecha_final": "2026-01-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:06:20+00:00",
+ "generado": "2026-08-08T22:06:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4218,6 +4218,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f112acfbc691c0a7",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:06:52+00:00",
+   "titular": "Top 4 Tech Stocks That May Collapse In March",
+   "simbolos": "MSTR",
+   "direccion_pct": -33.37,
+   "volatilidad_pct": 1.02,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -20.47,
+    "cierre_base": 178.24,
+    "cierre_final": 141.75,
+    "fecha_base": "2024-03-15",
+    "fecha_final": "2024-03-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

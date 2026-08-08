@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:04:27+00:00",
+ "generado": "2026-08-08T21:05:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2509,16 +2509,16 @@
   {
    "sim_id": "cd48e0c2b7a63874",
    "origen": "historico",
-   "fecha": "2026-08-08T21:04:26+00:00",
+   "fecha": "2026-08-08T21:05:00+00:00",
    "titular": "Wall Street Wipes Out $2 Trillion, Apple Eyes Worst Day Since COVID-19 Pandemic, Oil Plummets: What's Driving Markets Thursday?",
-   "simbolos": "QQQ",
+   "simbolos": "DIA",
    "direccion_pct": 4.98,
    "volatilidad_pct": 1.12,
    "reaccion_real": {
-    "simbolo": "QQQ",
-    "pct_real": -5.98,
-    "cierre_base": 450.66,
-    "cierre_final": 423.69,
+    "simbolo": "DIA",
+    "pct_real": -6.33,
+    "cierre_base": 405.22,
+    "cierre_final": 379.57,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:12:48+00:00",
+ "generado": "2026-08-08T23:13:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6017,6 +6017,28 @@
     "pct_real": 27.27,
     "cierre_base": 66.78,
     "cierre_final": 84.99,
+    "fecha_base": "2026-04-23",
+    "fecha_final": "2026-04-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1359693e45104071",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:13:28+00:00",
+   "titular": "Intel Earnings Prediction Market Preview: What Will Lip-Bu Tan Say?",
+   "simbolos": "QCOM",
+   "direccion_pct": 11.81,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "QCOM",
+    "pct_real": 12.18,
+    "cierre_base": 133.95,
+    "cierre_final": 150.26,
     "fecha_base": "2026-04-23",
     "fecha_final": "2026-04-27",
     "ruedas": 2,

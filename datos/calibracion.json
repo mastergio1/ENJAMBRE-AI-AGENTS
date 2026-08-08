@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:16:22+00:00",
+ "generado": "2026-08-08T22:17:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4460,6 +4460,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e9520a626cb7119a",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:17:02+00:00",
+   "titular": "Bitcoin ETF Imminent? Grayscale Wins Years Long Fight Against SEC That May Open Floodgates",
+   "simbolos": "MARA",
+   "direccion_pct": 15.13,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 26.84,
+    "cierre_base": 10.62,
+    "cierre_final": 13.47,
+    "fecha_base": "2023-08-28",
+    "fecha_final": "2023-08-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -167,7 +167,8 @@ async function soltarTitular(titular, titularId = null) {
   enjambre.aplicarTitular(titular, reloj.getElapsedTime())
 }
 
-// Modo observatorio: el enjambre sigue vivo y recibe noticias encima
+// Modo observatorio: el enjambre sigue vivo y recibe noticias encima.
+// El botón TOGGLEA: si ya está activo, cierra; si no, abre.
 async function alternarObservatorio(titular) {
   if (observatorio) {
     observatorio.detener()
@@ -177,17 +178,28 @@ async function alternarObservatorio(titular) {
     panel.fijarModoObservatorio(false)
     return
   }
+  abrirObservatorio(titular)
+}
+
+// Abre el observatorio. El estado "activo" (observatorio, modoRemoto, la UI) se
+// compromete SOLO cuando el servidor confirma (alInicio) — así, si la puerta
+// pide correo o el visitante cancela, no queda un falso "activo" sin latidos.
+async function abrirObservatorio(titular) {
   if (reducirMovimiento || !motor) {
     panel.avisar('El modo observatorio necesita el motor en vivo.')
     return
   }
   try {
     muroCtl.detenerReplay()
-    observatorio = await motor.observatorio(titular, {
+    const control = await motor.observatorio(titular, {
       alInicio: (m) => {
+        // el servidor aceptó: RECIÉN aquí se marca activo
+        observatorio = control
+        enjambre.modoRemoto = true
+        modo = evaluarCerebros(m.lideres) ? 'observatorio · IA' : 'observatorio · respaldo'
         panel.fijarLeyendo(false)
         enjambre.fijarLideresRemotos(m.lideres)
-        modo = evaluarCerebros(m.lideres) ? 'observatorio · IA' : 'observatorio · respaldo'
+        panel.fijarModoObservatorio(true)
       },
       alTick: (precio, _t, sent) => enjambre.aplicarEstadoRemoto(precio, sent),
       alLimite: (m) => {
@@ -199,7 +211,7 @@ async function alternarObservatorio(titular) {
         const email = await pedirCorreo(m)
         if (email) {
           guardarCorreo(email)
-          alternarObservatorio(titular)   // reintenta con el correo guardado
+          abrirObservatorio(titular)   // REABRE (no togglea) con el correo guardado
         }
       },
       alDespertar: () => panel.avisar(
@@ -211,9 +223,6 @@ async function alternarObservatorio(titular) {
         panel.avisar('El observatorio descansó. Puedes reabrirlo cuando quieras.')
       },
     })
-    enjambre.modoRemoto = true
-    modo = 'observatorio'
-    panel.fijarModoObservatorio(true)
   } catch {
     observatorio = null
     panel.avisar('No se pudo abrir el observatorio.')

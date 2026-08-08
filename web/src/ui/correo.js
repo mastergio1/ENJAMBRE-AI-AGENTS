@@ -46,15 +46,31 @@ export function pedirCorreo(mensaje) {
     const input = capa.querySelector('input')
     const err = capa.querySelector('[data-err]')
     const form = capa.querySelector('form')
+    const focoPrevio = document.activeElement   // para devolverlo al cerrar
 
     function cerrar(valor) {
       if (resuelto) return
       resuelto = true
       document.removeEventListener('keydown', alTecla)
       capa.remove()
+      focoPrevio?.focus?.()                      // accesibilidad: devuelve el foco
       resolver(valor)
     }
-    function alTecla(e) { if (e.key === 'Escape') cerrar(null) }
+
+    function alTecla(e) {
+      if (e.key === 'Escape') { cerrar(null); return }
+      if (e.key !== 'Tab') return
+      // atrapa el Tab dentro del modal (contrato aria-modal)
+      const focos = [...capa.querySelectorAll('button, input')].filter((n) => !n.disabled)
+      if (!focos.length) return
+      const primero = focos[0]
+      const ultimo = focos[focos.length - 1]
+      if (e.shiftKey && document.activeElement === primero) {
+        e.preventDefault(); ultimo.focus()
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault(); primero.focus()
+      }
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault()

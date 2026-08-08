@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:08:04+00:00",
+ "generado": "2026-08-08T23:08:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5863,6 +5863,28 @@
     "pct_real": 13.47,
     "cierre_base": 156.0,
     "cierre_final": 177.01,
+    "fecha_base": "2026-04-29",
+    "fecha_final": "2026-05-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "774995a151bfdc02",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:08:50+00:00",
+   "titular": "ProPetro's PROPWR Unit Enters Into Strategic Framework Agreement With Caterpillar To Purchase Up To 2.1 Gigawatts Of Power Generation Assets To Support Growing Energy Demands; Terms Undisclosed",
+   "simbolos": "CAT",
+   "direccion_pct": 10.82,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "CAT",
+    "pct_real": 9.83,
+    "cierre_base": 810.05,
+    "cierre_final": 889.67,
     "fecha_base": "2026-04-29",
     "fecha_final": "2026-05-01",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:20:48+00:00",
+ "generado": "2026-08-08T21:24:58+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2964,6 +2964,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c03fd937033175eb",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:24:55+00:00",
+   "titular": "Fed holds rates and signals three cuts next year; Dow closes at record high",
+   "simbolos": "SPY",
+   "direccion_pct": 5.3,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.7,
+    "cierre_base": 464.1,
+    "cierre_final": 472.01,
+    "fecha_base": "2023-12-12",
+    "fecha_final": "2023-12-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

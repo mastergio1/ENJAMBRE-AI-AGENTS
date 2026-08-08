@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:19:53+00:00",
+ "generado": "2026-08-08T23:20:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6242,6 +6242,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6e58eebb49d0cb90",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:20:33+00:00",
+   "titular": "Here's How Much $1000 Invested In Caterpillar 20 Years Ago Would Be Worth Today",
+   "simbolos": "CAT",
+   "direccion_pct": 16.39,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "CAT",
+    "pct_real": 9.41,
+    "cierre_base": 678.31,
+    "cierre_final": 742.12,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

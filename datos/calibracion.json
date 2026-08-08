@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:06:20+00:00",
+ "generado": "2026-08-08T21:07:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2565,6 +2565,28 @@
     "cierre_final": 463.56,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3e77842af30e50ff",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:07:01+00:00",
+   "titular": "Wall Street Rebounds Ahead Of Tariff Announcement, Small Caps Rally, Bitcoin Hits $87,000: What's Driving Markets Wednesday?",
+   "simbolos": "IWM",
+   "direccion_pct": 2.64,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": -10.59,
+    "cierre_base": 202.66,
+    "cierre_final": 181.19,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

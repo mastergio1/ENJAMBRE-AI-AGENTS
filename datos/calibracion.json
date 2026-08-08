@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:43:26+00:00",
+ "generado": "2026-08-08T22:44:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5227,6 +5227,28 @@
     "cierre_final": 8.51,
     "fecha_base": "2022-07-06",
     "fecha_final": "2022-07-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "62488552ad0dd6d0",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:44:00+00:00",
+   "titular": "Top 10 NFTs By Weekly Sales Volume: Bored Ape Yacht Club, Otherdeed, CryptoPunks Top List With Moonrunners Ranking Fifth",
+   "simbolos": "COIN",
+   "direccion_pct": 16.16,
+   "volatilidad_pct": 1.04,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 5.44,
+    "cierre_base": 49.04,
+    "cierre_final": 51.71,
+    "fecha_base": "2022-07-01",
+    "fecha_final": "2022-07-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

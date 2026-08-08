@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:23:19+00:00",
+ "generado": "2026-08-08T23:24:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6349,6 +6349,28 @@
     "cierre_final": 41.03,
     "fecha_base": "2026-02-02",
     "fecha_final": "2026-02-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a987e117395f352b",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:23:58+00:00",
+   "titular": "S&P 500 Declines For Third Consecutive Session But Records Gain In January: Investor Sentiment Declines, Fear Index Remains In 'Greed' Zone",
+   "simbolos": "DIS",
+   "direccion_pct": 7.47,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "DIS",
+    "pct_real": -7.61,
+    "cierre_base": 112.8,
+    "cierre_final": 104.22,
+    "fecha_base": "2026-01-30",
+    "fecha_final": "2026-02-03",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

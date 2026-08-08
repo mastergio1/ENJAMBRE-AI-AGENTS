@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:21:18+00:00",
+ "generado": "2026-08-08T22:21:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4611,6 +4611,28 @@
     "cierre_final": 27.92,
     "fecha_base": "2023-03-28",
     "fecha_final": "2023-03-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d8e5130ea29eef44",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:21:54+00:00",
+   "titular": "Everyone Wishes For Silver And Gold After Fed Meeting: Bitcoin, Stocks Tumble",
+   "simbolos": "BITO",
+   "direccion_pct": 12.37,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "BITO",
+    "pct_real": 4.51,
+    "cierre_base": 16.42,
+    "cierre_final": 17.16,
+    "fecha_base": "2023-03-22",
+    "fecha_final": "2023-03-24",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

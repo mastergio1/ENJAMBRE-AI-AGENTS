@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:36:37+00:00",
+ "generado": "2026-08-08T21:37:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3313,6 +3313,28 @@
     "cierre_final": 327.42,
     "fecha_base": "2022-10-27",
     "fecha_final": "2022-10-31",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4178de57785604d4",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:37:22+00:00",
+   "titular": "US Stocks Poised For A Rip-Roaring Start To Week As Nasdaq, S&P 500 Futures Jump — Tesla, Netflix, BofA, Splunk In Focus",
+   "simbolos": "QQQ",
+   "direccion_pct": 0.59,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 4.12,
+    "cierre_base": 260.74,
+    "cierre_final": 271.48,
+    "fecha_base": "2022-10-14",
+    "fecha_final": "2022-10-18",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

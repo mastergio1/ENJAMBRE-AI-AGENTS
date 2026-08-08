@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:41:23+00:00",
+ "generado": "2026-08-08T23:42:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6743,6 +6743,28 @@
     "pct_real": -9.3,
     "cierre_base": 116.65,
     "cierre_final": 105.8,
+    "fecha_base": "2025-11-12",
+    "fecha_final": "2025-11-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e377072a1498d3c0",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:42:06+00:00",
+   "titular": "Millennials Prefer Coinbase, Gen Z Likes UberEats, Gen X Is Playing Call Of Duty And Baby Boomers Use DoorDash",
+   "simbolos": "SOFI",
+   "direccion_pct": 6.14,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SOFI",
+    "pct_real": -13.63,
+    "cierre_base": 32.21,
+    "cierre_final": 27.82,
     "fecha_base": "2025-11-12",
     "fecha_final": "2025-11-14",
     "ruedas": 2,

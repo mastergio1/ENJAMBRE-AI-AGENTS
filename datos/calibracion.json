@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:56:00+00:00",
+ "generado": "2026-08-08T21:56:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3817,6 +3817,28 @@
     "pct_real": -4.48,
     "cierre_base": 288.84,
     "cierre_final": 275.91,
+    "fecha_base": "2022-06-10",
+    "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a44aeb8878eaa971",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:56:31+00:00",
+   "titular": "Stock Bloodbath Continues, Pushing S&P 500 Into Bear Market Ahead Of Critical Fed Meeting",
+   "simbolos": "DIA",
+   "direccion_pct": -2.29,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -3.2,
+    "cierre_base": 314.37,
+    "cierre_final": 304.3,
     "fecha_base": "2022-06-10",
     "fecha_final": "2022-06-14",
     "ruedas": 2,

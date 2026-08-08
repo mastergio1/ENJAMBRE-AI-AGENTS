@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:53:54+00:00",
+ "generado": "2026-08-08T22:54:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5577,6 +5577,28 @@
     "pct_real": 16.59,
     "cierre_base": 213.41,
     "cierre_final": 248.82,
+    "fecha_base": "2026-05-21",
+    "fecha_final": "2026-05-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e2edf083af4e1d6e",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:54:34+00:00",
+   "titular": "Ford Takes Aim At Tesla And BYD In Europe With New Electric Hatchback, SUV Roadmap",
+   "simbolos": "F",
+   "direccion_pct": 8.96,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "F",
+    "pct_real": 12.07,
+    "cierre_base": 13.67,
+    "cierre_final": 15.32,
     "fecha_base": "2026-05-21",
     "fecha_final": "2026-05-26",
     "ruedas": 2,

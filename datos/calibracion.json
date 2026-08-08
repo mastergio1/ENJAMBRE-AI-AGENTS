@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:08:19+00:00",
+ "generado": "2026-08-08T21:08:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2619,16 +2619,16 @@
   {
    "sim_id": "9e4198ad88a9f7a8",
    "origen": "historico",
-   "fecha": "2026-08-08T21:08:19+00:00",
+   "fecha": "2026-08-08T21:08:54+00:00",
    "titular": "US Economic Slowdown 'Talk Of The Town,' Says Economist Mohamed El-Erian As Fed Chair Powell Reaffirms Growth At 'Solid Pace'",
-   "simbolos": "QQQ",
-   "direccion_pct": -1.54,
-   "volatilidad_pct": 1.16,
+   "simbolos": "SPY",
+   "direccion_pct": -4.07,
+   "volatilidad_pct": 1.38,
    "reaccion_real": {
-    "simbolo": "QQQ",
-    "pct_real": -4.11,
-    "cierre_base": 491.79,
-    "cierre_final": 471.6,
+    "simbolo": "SPY",
+    "pct_real": -3.47,
+    "cierre_base": 575.92,
+    "cierre_final": 555.92,
     "fecha_base": "2025-03-07",
     "fecha_final": "2025-03-11",
     "ruedas": 2,

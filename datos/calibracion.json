@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:13:04+00:00",
+ "generado": "2026-08-08T21:13:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2719,6 +2719,28 @@
     "cierre_final": 595.61,
     "fecha_base": "2024-11-05",
     "fecha_final": "2024-11-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ae8f38028a218f5f",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:13:49+00:00",
+   "titular": "Fed cuts rates by half a point, its first cut since 2020",
+   "simbolos": "SPY",
+   "direccion_pct": 4.98,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.4,
+    "cierre_base": 563.07,
+    "cierre_final": 570.98,
+    "fecha_base": "2024-09-17",
+    "fecha_final": "2024-09-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

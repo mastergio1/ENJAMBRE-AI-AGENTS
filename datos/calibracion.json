@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:18:39+00:00",
+ "generado": "2026-08-08T23:19:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6195,6 +6195,28 @@
     "cierre_final": 53.83,
     "fecha_base": "2026-03-03",
     "fecha_final": "2026-03-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "90c6628d78033fd2",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:19:16+00:00",
+   "titular": "Netflix Will Not Raise Offer for Warner Bros: Stock Climbs",
+   "simbolos": "NFLX",
+   "direccion_pct": -10.99,
+   "volatilidad_pct": 1.47,
+   "reaccion_real": {
+    "simbolo": "NFLX",
+    "pct_real": 14.78,
+    "cierre_base": 84.59,
+    "cierre_final": 97.09,
+    "fecha_base": "2026-02-26",
+    "fecha_final": "2026-03-02",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

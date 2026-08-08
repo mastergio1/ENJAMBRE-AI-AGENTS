@@ -21,11 +21,21 @@ def sin_api(monkeypatch):
 
 def test_clasifica_por_palabras_clave():
     assert mercado.clasificar_lexico("Bitcoin surges past $100,000") == "cripto"
-    assert mercado.clasificar_lexico("Oro alcanza máximo histórico como refugio") == "oro"
-    assert mercado.clasificar_lexico("Oil prices spike as OPEC cuts output") == "petroleo"
     assert mercado.clasificar_lexico("Nvidia earnings smash expectations") == "accion"
     # una noticia macro amplia cae en índice (el perfil por defecto)
     assert mercado.clasificar_lexico("La Fed sube las tasas 50 puntos base") == "indice"
+
+
+def test_oro_y_petroleo_en_pausa_caen_a_indice():
+    """Foco del producto: SP500 + acciones + cripto. Oro y petróleo están en
+    pausa → sus noticias se tratan con el perfil por defecto (índice), no con
+    su dial propio (que se conserva para reactivar)."""
+    assert mercado.clasificar_lexico("Oro alcanza máximo histórico como refugio") == "indice"
+    assert mercado.clasificar_lexico("Oil prices spike as OPEC cuts output") == "indice"
+    assert "oro" not in mercado.MERCADOS_ACTIVOS
+    assert "petroleo" not in mercado.MERCADOS_ACTIVOS
+    # los diales calibrados se conservan (para reactivar sin recalibrar)
+    assert mercado.perfil_de("oro")["refugio"] == 0.25
 
 
 def test_clasificar_sin_api_usa_el_lexico():

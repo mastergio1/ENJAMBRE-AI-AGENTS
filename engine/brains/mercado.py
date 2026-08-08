@@ -38,31 +38,44 @@ PERFILES = {
     "indice": {
         "etiqueta": "Índice / mercado amplio",
         "sensibilidad": 1.0, "volatilidad": 1.0, "refugio": 0.0,
-        "nota": "El mercado accionario amplio (S&P 500). Perfil equilibrado (base de calibración).",
+        "nota": "El mercado accionario amplio (S&P 500). Base de calibración. En la "
+                "validación el SPY se pasaba un poco (ratio 1.68), PERO bajar este dial "
+                "a mano rompió el realismo (test_3: retornos predecibles), así que su "
+                "ajuste fino queda para la calibración profunda con exámenes, no a ojo.",
     },
     "accion": {
         "etiqueta": "Acción individual",
         "sensibilidad": 1.4, "volatilidad": 4.0, "refugio": 0.0,
         "nota": "Una empresa concreta: reacciona MUY fuerte a su propia noticia (earnings, guidance).",
     },
-    "petroleo": {
-        "etiqueta": "Petróleo / energía",
-        "sensibilidad": 1.2, "volatilidad": 2.6, "refugio": 0.0,
-        "nota": "Sensible a geopolítica y oferta; volatilidad alta, poco ligado a tasas.",
-    },
-    "oro": {
-        "etiqueta": "Metales (oro, plata, cobre)",
-        "sensibilidad": 0.9, "volatilidad": 2.2, "refugio": 0.25,
-        "nota": "Metales: el oro es refugio (el miedo lo sostiene en parte); plata y cobre suman volatilidad y sí caen con malas noticias.",
-    },
     "cripto": {
         "etiqueta": "Cripto",
         "sensibilidad": 1.7, "volatilidad": 3.6, "refugio": 0.0,
         "nota": "Puro sentimiento de masas: FOMO y pánico amplificados, la mayor volatilidad.",
     },
+    # ── EN PAUSA (5-ago-2026) ─────────────────────────────────────────────
+    # El producto se enfoca en SP500 + acciones individuales + cripto. Oro y
+    # petróleo quedan fuera del foco: sus diales CALIBRADOS se conservan aquí
+    # para reactivarlos sin recalibrar, pero el clasificador ya NO los elige
+    # (ver MERCADOS_ACTIVOS) — sus noticias caen al perfil por defecto (índice).
+    "petroleo": {
+        "etiqueta": "Petróleo / energía",
+        "sensibilidad": 1.2, "volatilidad": 2.6, "refugio": 0.0,
+        "nota": "[EN PAUSA] Sensible a geopolítica y oferta; volatilidad alta, poco ligado a tasas.",
+    },
+    "oro": {
+        "etiqueta": "Metales (oro, plata, cobre)",
+        "sensibilidad": 0.9, "volatilidad": 2.2, "refugio": 0.25,
+        "nota": "[EN PAUSA] Metales: el oro es refugio (el miedo lo sostiene en parte); plata y cobre suman volatilidad.",
+    },
 }
 
 PERFIL_DEFECTO = "indice"
+
+# Mercados ACTIVOS (el foco del producto). Oro y petróleo están en pausa: sus
+# noticias se tratan con el perfil por defecto (índice). Reactivar = agregarlos
+# de vuelta aquí y a la instrucción del clasificador.
+MERCADOS_ACTIVOS = ("indice", "accion", "cripto")
 
 MODELO_CLASIFICADOR = "claude-haiku-4-5-20251001"  # barato: 1 llamada por titular
 
@@ -92,10 +105,13 @@ _PISTAS = {
 
 def clasificar_lexico(titular: str) -> str:
     """Adivina el tipo de mercado por palabras clave (bilingüe). Índice por
-    defecto. Es el respaldo cuando la IA no está disponible."""
+    defecto. Es el respaldo cuando la IA no está disponible.
+
+    Solo enruta a mercados ACTIVOS (cripto, acción, índice). Oro y petróleo
+    están en pausa: sus noticias caen al perfil por defecto (índice)."""
     texto = titular.lower()
-    # orden de prioridad: cripto/oro/petróleo son inequívocos; acción al final
-    for tipo in ("cripto", "oro", "petroleo", "accion"):
+    # cripto es inequívoco; acción al final (heurística de nombres de empresa)
+    for tipo in ("cripto", "accion"):
         if any(p in texto for p in _PISTAS[tipo]):
             return tipo
     return PERFIL_DEFECTO
@@ -106,8 +122,8 @@ def clasificar_lexico(titular: str) -> str:
 _INSTRUCCION = (
     "Clasifica el titular de mercado en UNA de estas categorías según el activo "
     "principal del que trata: 'indice' (mercado amplio, S&P 500, bolsas en "
-    "general), 'accion' (una empresa concreta), 'petroleo' (crudo/energía), "
-    "'oro' (metales refugio), 'cripto' (bitcoin y criptomonedas). "
+    "general, o materias primas como oro/petróleo), 'accion' (una empresa "
+    "concreta), 'cripto' (bitcoin y criptomonedas). "
     'Responde SOLO con JSON: {"mercado": "<categoria>"}.'
 )
 
@@ -129,7 +145,7 @@ async def clasificar_async(titular: str) -> str:
         encontrado = re.search(r"\{.*\}", respuesta.content[0].text, re.DOTALL)
         if encontrado:
             tipo = json.loads(encontrado.group()).get("mercado", "")
-            if tipo in PERFILES:
+            if tipo in MERCADOS_ACTIVOS:   # oro/petróleo en pausa → cae al léxico → índice
                 return tipo
     except Exception:
         pass

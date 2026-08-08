@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:53:20+00:00",
+ "generado": "2026-08-08T22:53:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5557,6 +5557,28 @@
     "cierre_final": 928.41,
     "fecha_base": "2026-05-22",
     "fecha_final": "2026-05-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b8a80b3a96c07be3",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:53:53+00:00",
+   "titular": "Qualcomm Cofounder's Granddaughter, Now In Congress, Sells Almost $2 Million In QCOM Near Record High",
+   "simbolos": "QCOM",
+   "direccion_pct": 52.44,
+   "volatilidad_pct": 0.9,
+   "reaccion_real": {
+    "simbolo": "QCOM",
+    "pct_real": 16.59,
+    "cierre_base": 213.41,
+    "cierre_final": 248.82,
+    "fecha_base": "2026-05-21",
+    "fecha_final": "2026-05-26",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

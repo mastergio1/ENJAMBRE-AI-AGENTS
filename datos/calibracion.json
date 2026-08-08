@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:58:10+00:00",
+ "generado": "2026-08-08T22:58:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5689,6 +5689,28 @@
     "cierre_final": 795.33,
     "fecha_base": "2026-05-07",
     "fecha_final": "2026-05-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "74ef8cba83c5ecde",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:58:52+00:00",
+   "titular": "S&P 500 Hits New High As Oil Prices Fall: Investor Sentiment Improves, Fear Index Remains In 'Greed' Zone",
+   "simbolos": "DIS",
+   "direccion_pct": -1.83,
+   "volatilidad_pct": 1.42,
+   "reaccion_real": {
+    "simbolo": "DIS",
+    "pct_real": 8.14,
+    "cierre_base": 100.48,
+    "cierre_final": 108.66,
+    "fecha_base": "2026-05-05",
+    "fecha_final": "2026-05-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

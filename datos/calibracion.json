@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:57:30+00:00",
+ "generado": "2026-08-08T21:57:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3888,6 +3888,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d7441fa88ec847fd",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:57:58+00:00",
+   "titular": "EXCLUSIVE: How To Know When It's Time To Pull The Trigger And Buy A Stock",
+   "simbolos": "SPY",
+   "direccion_pct": 22.76,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -4.62,
+    "cierre_base": 408.32,
+    "cierre_final": 389.46,
+    "fecha_base": "2022-05-17",
+    "fecha_final": "2022-05-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:32:22+00:00",
+ "generado": "2026-08-08T22:32:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4985,6 +4985,28 @@
     "cierre_final": 8.72,
     "fecha_base": "2022-11-08",
     "fecha_final": "2022-11-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8c27d0e239d2dd23",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:32:54+00:00",
+   "titular": "Earlier Reported, 'U.S. Attorney Announces Historic $3.36B Cryptocurrency Seizure And Conviction In Connection With Silk Road Dark Web Fraud' -DoJ",
+   "simbolos": "MSTR",
+   "direccion_pct": -22.74,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -36.11,
+    "cierre_base": 26.66,
+    "cierre_final": 17.04,
+    "fecha_base": "2022-11-07",
+    "fecha_final": "2022-11-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

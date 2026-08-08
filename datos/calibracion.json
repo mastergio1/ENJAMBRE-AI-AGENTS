@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:24:58+00:00",
+ "generado": "2026-08-08T21:25:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2983,6 +2983,28 @@
     "cierre_final": 472.01,
     "fecha_base": "2023-12-12",
     "fecha_final": "2023-12-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c03b2cbabbec8400",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:25:38+00:00",
+   "titular": "Major indexes are lower after Moody's cut its US credit outlook from 'stable' to 'negative.'",
+   "simbolos": "IWM",
+   "direccion_pct": -0.85,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 5.67,
+    "cierre_base": 169.17,
+    "cierre_final": 178.77,
+    "fecha_base": "2023-11-13",
+    "fecha_final": "2023-11-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

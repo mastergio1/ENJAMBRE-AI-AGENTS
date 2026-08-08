@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:13:50+00:00",
+ "generado": "2026-08-08T21:14:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2744,6 +2744,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7350077111fa2b39",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:14:28+00:00",
+   "titular": "As Global Markets Roil, Strategist Soothes Nerves: 'Some Normal Action Under The Surface' As 'Tech Got Way Ahead Of Itself' (CORRECTED)",
+   "simbolos": "SPY",
+   "direccion_pct": 1.3,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.02,
+    "cierre_base": 532.9,
+    "cierre_final": 522.15,
+    "fecha_base": "2024-08-02",
+    "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

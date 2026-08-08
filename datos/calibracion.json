@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:42:49+00:00",
+ "generado": "2026-08-08T22:43:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5205,6 +5205,28 @@
     "cierre_final": 28.88,
     "fecha_base": "2022-07-18",
     "fecha_final": "2022-07-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e48edfc63006ec49",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:43:25+00:00",
+   "titular": "Marathon Digital Says Produces 707 BTC In Q2 2022, Up 8% YoY",
+   "simbolos": "MARA",
+   "direccion_pct": 8.83,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 50.62,
+    "cierre_base": 5.65,
+    "cierre_final": 8.51,
+    "fecha_base": "2022-07-06",
+    "fecha_final": "2022-07-08",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:43:03+00:00",
+ "generado": "2026-08-08T21:43:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3509,6 +3509,28 @@
     "pct_real": -3.98,
     "cierre_base": 410.97,
     "cierre_final": 394.6,
+    "fecha_base": "2022-09-12",
+    "fecha_final": "2022-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "88f89a473989bc44",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:43:44+00:00",
+   "titular": "S&P 500, Nasdaq Futures Plunge After Consumer Price Inflation Surprises To The Upside  — Twitter, Peloton, Oracle Stocks In Focus",
+   "simbolos": "QQQ",
+   "direccion_pct": -9.27,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -4.73,
+    "cierre_base": 310.74,
+    "cierre_final": 296.03,
     "fecha_base": "2022-09-12",
     "fecha_final": "2022-09-14",
     "ruedas": 2,

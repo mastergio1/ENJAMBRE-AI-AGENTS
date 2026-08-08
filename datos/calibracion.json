@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:16:29+00:00",
+ "generado": "2026-08-08T21:17:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2829,6 +2829,28 @@
     "cierre_final": 522.15,
     "fecha_base": "2024-08-02",
     "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2013ba98fadc836e",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:17:09+00:00",
+   "titular": "EXCLUSIVE: Top 20 Most-Searched Tickers On Benzinga Pro In July 2024 – Where Do Tesla, Nvidia, Apple, CrowdStrike Rank?",
+   "simbolos": "IWM",
+   "direccion_pct": 13.36,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": -6.64,
+    "cierre_base": 216.58,
+    "cierre_final": 202.2,
+    "fecha_base": "2024-08-01",
+    "fecha_final": "2024-08-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

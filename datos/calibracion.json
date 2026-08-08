@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:18:49+00:00",
+ "generado": "2026-08-08T22:19:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4523,6 +4523,28 @@
     "cierre_final": 105.31,
     "fecha_base": "2023-07-12",
     "fecha_final": "2023-07-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "88048f47ab190e6f",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:19:27+00:00",
+   "titular": "Markets With Mando Daily Stock Market Newsletter - Preparing For The Upcoming Week",
+   "simbolos": "MARA",
+   "direccion_pct": -3.13,
+   "volatilidad_pct": 1.42,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 22.34,
+    "cierre_base": 9.98,
+    "cierre_final": 12.21,
+    "fecha_base": "2023-06-16",
+    "fecha_final": "2023-06-21",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

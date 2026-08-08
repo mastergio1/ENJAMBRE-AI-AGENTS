@@ -199,15 +199,23 @@ export class Enjambre {
     const n = this.malla.count
     const respiracion = 1 + 0.045 * Math.sin(t * 0.35)
 
+    // MATH POLISH: dt es constante dentro del frame, así que estos valores son
+    // iguales para los ~10.000 agentes. Se calculan UNA vez aquí en vez de
+    // dentro del bucle → se ahorran ~n Math.min/Math.exp por frame (móvil feliz).
+    const acerca = Math.min(1, dt * 2.5)      // rapidez con que el sent. alcanza su objetivo
+    const decaeObjetivo = Math.exp(-dt / 9)   // agotamiento del objetivo (solo modo local)
+
+    // _dummy y _color: mutables REUTILIZADOS cada iteración (nunca `new … ` en el
+    // bucle). Cero basura para el recolector = fps estables.
     for (let d = 0; d < n; d++) {
       const i = this.orden[d]
       const agente = this.agentes[i]
 
       // el rumor llega, el sentimiento se acerca a su objetivo y luego se agota
       if (t >= agente.tLlegada) {
-        agente.sent += (agente.sentObjetivo - agente.sent) * Math.min(1, dt * 2.5)
+        agente.sent += (agente.sentObjetivo - agente.sent) * acerca
         // en modo remoto el motor refresca el objetivo; aquí no se decae
-        if (!this.modoRemoto) agente.sentObjetivo *= Math.exp(-dt / 9)
+        if (!this.modoRemoto) agente.sentObjetivo *= decaeObjetivo
       }
       const s = agente.sent
       const intensidad = Math.abs(s)
@@ -236,9 +244,10 @@ export class Enjambre {
     this.malla.instanceColor.needsUpdate = true
 
     // líderes: flotan y pulsan según su convicción
+    const decaeLider = Math.exp(-dt / 14) // constante del frame, fuera del bucle
     for (let i = 0; i < this.lideres.length; i++) {
       const lider = this.lideres[i]
-      if (!this.modoRemoto) lider.senal *= Math.exp(-dt / 14) // su opinión se apaga
+      if (!this.modoRemoto) lider.senal *= decaeLider // su opinión se apaga
       const o = i * 3
       const bob = Math.sin(t * this.pl.velocidad[i] + this.pl.fase[i]) * 0.25
       _dummy.position.set(this.pl.centro[o], this.pl.centro[o + 1] + bob + lider.senal * 1.2, this.pl.centro[o + 2])

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:22:35+00:00",
+ "generado": "2026-08-08T23:23:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6327,6 +6327,28 @@
     "cierre_final": 192.5,
     "fecha_base": "2026-02-03",
     "fecha_final": "2026-02-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "96fd4312930078da",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:23:14+00:00",
+   "titular": "PayPal Holdings's Options: A Look at What the Big Money is Thinking",
+   "simbolos": "PYPL",
+   "direccion_pct": 14.13,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "PYPL",
+    "pct_real": -21.59,
+    "cierre_base": 52.33,
+    "cierre_final": 41.03,
+    "fecha_base": "2026-02-02",
+    "fecha_final": "2026-02-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

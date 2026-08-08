@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:40:51+00:00",
+ "generado": "2026-08-08T21:41:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3443,6 +3443,28 @@
     "pct_real": 2.86,
     "cierre_base": 366.61,
     "cierre_final": 377.09,
+    "fecha_base": "2022-10-03",
+    "fecha_final": "2022-10-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2502c2738b1c52ce",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:41:34+00:00",
+   "titular": "The Short List Of Dow Jones Stocks That Are Actually Up This Year: Hint — It's Very Short",
+   "simbolos": "DIA",
+   "direccion_pct": 4.24,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 2.71,
+    "cierre_base": 294.79,
+    "cierre_final": 302.79,
     "fecha_base": "2022-10-03",
     "fecha_final": "2022-10-05",
     "ruedas": 2,

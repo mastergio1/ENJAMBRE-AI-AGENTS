@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:07:20+00:00",
+ "generado": "2026-08-08T23:08:04+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5846,6 +5846,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6bd20ae8b0c8ca30",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:08:04+00:00",
+   "titular": "QUALCOMM Exec Says Co Has A Stable Relationship With Samsung",
+   "simbolos": "QCOM",
+   "direccion_pct": 13.48,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "QCOM",
+    "pct_real": 13.47,
+    "cierre_base": 156.0,
+    "cierre_final": 177.01,
+    "fecha_base": "2026-04-29",
+    "fecha_final": "2026-05-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

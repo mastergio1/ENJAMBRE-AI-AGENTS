@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:44:37+00:00",
+ "generado": "2026-08-08T22:45:12+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5274,6 +5274,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "40d77256c49366e5",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:45:12+00:00",
+   "titular": "Bitcoin Futures Fall More than 5,000 to Sub 24,000 Level",
+   "simbolos": "MSTR",
+   "direccion_pct": 1.57,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -22.86,
+    "cierre_base": 20.34,
+    "cierre_final": 15.69,
+    "fecha_base": "2022-06-10",
+    "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

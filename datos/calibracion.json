@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:08:50+00:00",
+ "generado": "2026-08-08T23:09:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5887,6 +5887,28 @@
     "cierre_final": 889.67,
     "fecha_base": "2026-04-29",
     "fecha_final": "2026-05-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "41f9798a255be9cc",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:09:26+00:00",
+   "titular": "Intel, Qualcomm Alert: Analyst Says Some Chip Stocks Are 'Living In A Bad Neighborhood'",
+   "simbolos": "INTC",
+   "direccion_pct": -4.57,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 11.78,
+    "cierre_base": 84.52,
+    "cierre_final": 94.48,
+    "fecha_base": "2026-04-28",
+    "fecha_final": "2026-04-30",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

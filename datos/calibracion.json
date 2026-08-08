@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:41:35+00:00",
+ "generado": "2026-08-08T21:42:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3465,6 +3465,28 @@
     "pct_real": 2.71,
     "cierre_base": 294.79,
     "cierre_final": 302.79,
+    "fecha_base": "2022-10-03",
+    "fecha_final": "2022-10-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "246b667c37737ae3",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:42:17+00:00",
+   "titular": "'Big Short' Investor Michael Burry On How Current Market Differs From Dot-Com Bubble Burst: 'Only Way Out Is By Trampling Each Other'",
+   "simbolos": "VTI",
+   "direccion_pct": 7.12,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "VTI",
+    "pct_real": 3.02,
+    "cierre_base": 184.03,
+    "cierre_final": 189.58,
     "fecha_base": "2022-10-03",
     "fecha_final": "2022-10-05",
     "ruedas": 2,

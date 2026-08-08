@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:14:34+00:00",
+ "generado": "2026-08-08T22:15:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4389,6 +4389,28 @@
     "pct_real": 36.2,
     "cierre_base": 17.54,
     "cierre_final": 23.89,
+    "fecha_base": "2024-02-07",
+    "fecha_final": "2024-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e4c6534c137b9f37",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:15:08+00:00",
+   "titular": "MicroStrategy CEO Michael Saylor Doubles Down On Bitcoin, Calls For 'Digital Transformation Of Capital'",
+   "simbolos": "MSTR",
+   "direccion_pct": 11.52,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 27.23,
+    "cierre_base": 50.8,
+    "cierre_final": 64.63,
     "fecha_base": "2024-02-07",
     "fecha_final": "2024-02-09",
     "ruedas": 2,

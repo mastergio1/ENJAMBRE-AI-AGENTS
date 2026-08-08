@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:05:01+00:00",
+ "generado": "2026-08-08T21:05:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2519,6 +2519,28 @@
     "pct_real": -6.33,
     "cierre_base": 405.22,
     "cierre_final": 379.57,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "77c06009037d95fd",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:05:41+00:00",
+   "titular": "The American Association of Individual Investors (AAII) Weekly Survey Hit A Bearish Score Of 61.9%, A 16-Year High From March 2009.",
+   "simbolos": "VTI",
+   "direccion_pct": 6.21,
+   "volatilidad_pct": 1.47,
+   "reaccion_real": {
+    "simbolo": "VTI",
+    "pct_real": -6.18,
+    "cierre_base": 263.96,
+    "cierre_final": 247.66,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

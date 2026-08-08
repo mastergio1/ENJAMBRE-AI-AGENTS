@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:17:50+00:00",
+ "generado": "2026-08-08T21:18:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2876,6 +2876,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "38a24f456c936ed2",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:18:30+00:00",
+   "titular": "Rate-Sensitive Cyclical Stocks Poised For Rally As Fed Prepares To Cut Rates: 'We're On The Path To Goldilocks,' Says Bank Of America",
+   "simbolos": "IWM",
+   "direccion_pct": -2.06,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 2.33,
+    "cierre_base": 217.19,
+    "cierre_final": 222.25,
+    "fecha_base": "2024-07-15",
+    "fecha_final": "2024-07-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

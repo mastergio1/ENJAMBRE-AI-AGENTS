@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:28:00+00:00",
+ "generado": "2026-08-08T21:28:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3074,6 +3074,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "162e04f55aa2d39c",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:28:46+00:00",
+   "titular": "Debt Limit Bill Passes In House",
+   "simbolos": "IWM",
+   "direccion_pct": 0.51,
+   "volatilidad_pct": 1.41,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 2.24,
+    "cierre_base": 175.65,
+    "cierre_final": 179.58,
+    "fecha_base": "2023-06-01",
+    "fecha_final": "2023-06-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

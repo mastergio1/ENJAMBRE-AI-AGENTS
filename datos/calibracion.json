@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:45:12+00:00",
+ "generado": "2026-08-08T22:45:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5291,6 +5291,28 @@
     "pct_real": -22.86,
     "cierre_base": 20.34,
     "cierre_final": 15.69,
+    "fecha_base": "2022-06-10",
+    "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7b3201df7cf9508d",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:45:46+00:00",
+   "titular": "Bitcoin tumbles below $23,000 after Celsius freezes customer withdrawals",
+   "simbolos": "GBTC",
+   "direccion_pct": 6.9,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -23.13,
+    "cierre_base": 16.87,
+    "cierre_final": 12.97,
     "fecha_base": "2022-06-10",
     "fecha_final": "2022-06-14",
     "ruedas": 2,

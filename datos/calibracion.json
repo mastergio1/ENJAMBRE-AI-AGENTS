@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:15:45+00:00",
+ "generado": "2026-08-08T22:16:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4438,6 +4438,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "005a69891bb0d27f",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:16:22+00:00",
+   "titular": "Bitcoin Miner Beat Blue Chips In Trading Volumes On Heels Of Expected ETF Approval And Halving, Experts Optimistic",
+   "simbolos": "MARA",
+   "direccion_pct": 42.4,
+   "volatilidad_pct": 1.0,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": -18.43,
+    "cierre_base": 28.11,
+    "cierre_final": 22.93,
+    "fecha_base": "2023-12-28",
+    "fecha_final": "2024-01-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

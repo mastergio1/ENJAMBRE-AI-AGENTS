@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:10:18+00:00",
+ "generado": "2026-08-08T21:10:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2639,28 +2639,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "7ca6416fb8ce552e",
-   "origen": "historico",
-   "fecha": "2026-08-08T21:09:35+00:00",
-   "titular": "Stocks Slip Ahead Of Fed Meeting, Chipmakers Suffer From China's Threat, Bitcoin Spikes Above $107,000: What's Driving Markets Tuesday?",
-   "simbolos": "IWM",
-   "direccion_pct": 7.29,
-   "volatilidad_pct": 1.15,
-   "reaccion_real": {
-    "simbolo": "IWM",
-    "pct_real": -4.85,
-    "cierre_base": 231.07,
-    "cierre_final": 219.86,
-    "fecha_base": "2024-12-17",
-    "fecha_final": "2024-12-19",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "negativa",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "e710ab963a36ce41",
    "origen": "historico",
    "fecha": "2026-08-08T21:10:18+00:00",
@@ -2673,6 +2651,28 @@
     "pct_real": -3.01,
     "cierre_base": 604.29,
     "cierre_final": 586.1,
+    "fecha_base": "2024-12-17",
+    "fecha_final": "2024-12-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7ca6416fb8ce552e",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:10:46+00:00",
+   "titular": "Stocks Slip Ahead Of Fed Meeting, Chipmakers Suffer From China's Threat, Bitcoin Spikes Above $107,000: What's Driving Markets Tuesday?",
+   "simbolos": "DIA",
+   "direccion_pct": 7.29,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -2.53,
+    "cierre_base": 435.57,
+    "cierre_final": 424.53,
     "fecha_base": "2024-12-17",
     "fecha_final": "2024-12-19",
     "ruedas": 2,

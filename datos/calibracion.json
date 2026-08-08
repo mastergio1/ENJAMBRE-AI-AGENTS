@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:30:57+00:00",
+ "generado": "2026-08-08T22:31:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4944,6 +4944,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "36dcb83b6e32e8d8",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:31:34+00:00",
+   "titular": "'Binance Is Strongly Leaning Toward Scrapping FTX Rescue Takeover After First Glance at Books' -CoinDesk Report; Bitcoin Futures Move Sharply Lower",
+   "simbolos": "GBTC",
+   "direccion_pct": -37.65,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -8.65,
+    "cierre_base": 9.54,
+    "cierre_final": 8.72,
+    "fecha_base": "2022-11-08",
+    "fecha_final": "2022-11-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

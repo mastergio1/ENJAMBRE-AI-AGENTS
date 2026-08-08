@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:21:11+00:00",
+ "generado": "2026-08-08T23:21:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6281,6 +6281,28 @@
     "pct_real": 16.37,
     "cierre_base": 9.53,
     "cierre_final": 11.09,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "72531e257a5848af",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:21:47+00:00",
+   "titular": "Polymarket Hit With Nationwide Class Action Over 'Illegal Gambling' Claims",
+   "simbolos": "HOOD",
+   "direccion_pct": 7.18,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "HOOD",
+    "pct_real": 19.1,
+    "cierre_base": 72.68,
+    "cierre_final": 86.56,
     "fecha_base": "2026-02-05",
     "fecha_final": "2026-02-09",
     "ruedas": 2,

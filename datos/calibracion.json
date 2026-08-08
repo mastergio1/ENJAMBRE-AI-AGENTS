@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:01:21+00:00",
+ "generado": "2026-08-08T22:01:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4037,6 +4037,28 @@
     "pct_real": -9.09,
     "cierre_base": 20.35,
     "cierre_final": 18.5,
+    "fecha_base": "2024-08-02",
+    "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "265ba1b60e10afc8",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:01:51+00:00",
+   "titular": "Mike Novogratz Predicts Harris May Soon Embrace Crypto, Grayscale Bitcoin Trust Experiences Drop, FBI Warns Of Crypto Exchange Impersonation Scams And More: This Week In Cryptocurrency",
+   "simbolos": "GBTC",
+   "direccion_pct": -29.2,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -9.12,
+    "cierre_base": 49.87,
+    "cierre_final": 45.32,
     "fecha_base": "2024-08-02",
     "fecha_final": "2024-08-06",
     "ruedas": 2,

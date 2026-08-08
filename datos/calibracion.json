@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:30:53+00:00",
+ "generado": "2026-08-08T21:31:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3157,6 +3157,28 @@
     "pct_real": 4.69,
     "cierre_base": 280.57,
     "cierre_final": 293.72,
+    "fecha_base": "2022-11-29",
+    "fecha_final": "2022-12-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "13b8a4cf20b53f21",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:31:35+00:00",
+   "titular": "USA Chicago PMI for Nov 37.200 vs 47.000 Est; Prior 45.200",
+   "simbolos": "SPY",
+   "direccion_pct": 1.6,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 3.07,
+    "cierre_base": 395.23,
+    "cierre_final": 407.38,
     "fecha_base": "2022-11-29",
     "fecha_final": "2022-12-01",
     "ruedas": 2,

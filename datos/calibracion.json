@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:38:21+00:00",
+ "generado": "2026-08-08T23:39:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6657,6 +6657,28 @@
     "cierre_final": 202.54,
     "fecha_base": "2025-12-01",
     "fecha_final": "2025-12-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "85019a685de853d2",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:39:06+00:00",
+   "titular": "Target's Pain Is TJX's Gain, These ETFs Are Making Holiday Bets On The Winner",
+   "simbolos": "WMT",
+   "direccion_pct": 19.58,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "WMT",
+    "pct_real": 4.68,
+    "cierre_base": 100.61,
+    "cierre_final": 105.32,
+    "fecha_base": "2025-11-19",
+    "fecha_final": "2025-11-21",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

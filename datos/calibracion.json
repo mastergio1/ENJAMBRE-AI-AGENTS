@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:19:18+00:00",
+ "generado": "2026-08-08T21:20:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2920,6 +2920,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3258aad758a3ec7d",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:20:00+00:00",
+   "titular": "Consumer prices come in line with expectations; Fed keeps rates unchanged",
+   "simbolos": "SPY",
+   "direccion_pct": -0.66,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.02,
+    "cierre_base": 536.95,
+    "cierre_final": 542.45,
+    "fecha_base": "2024-06-11",
+    "fecha_final": "2024-06-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

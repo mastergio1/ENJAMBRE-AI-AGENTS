@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:12:45+00:00",
+ "generado": "2026-08-08T22:13:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4323,6 +4323,28 @@
     "pct_real": 26.34,
     "cierre_base": 23.99,
     "cierre_final": 30.31,
+    "fecha_base": "2024-02-23",
+    "fecha_final": "2024-02-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "25870265b4c45870",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:13:20+00:00",
+   "titular": "MicroStrategy X Account Hacked: Fake 'MSTR' Ethereum Token Airdrop Swindles $440K, Says Cyber Sleuth",
+   "simbolos": "MSTR",
+   "direccion_pct": -2.48,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 26.82,
+    "cierre_base": 68.74,
+    "cierre_final": 87.18,
     "fecha_base": "2024-02-23",
     "fecha_final": "2024-02-27",
     "ruedas": 2,

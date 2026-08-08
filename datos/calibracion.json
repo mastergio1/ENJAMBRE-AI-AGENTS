@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-05T12:02:47+00:00",
+ "generado": "2026-08-08T21:03:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2458,6 +2458,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e895c8b98bb556f5",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:03:08+00:00",
+   "titular": "Stocks Rebound, Chipmakers Soar On Trade Deal Hopes, Bitcoin Lags: What's Driving Markets Tuesday?",
+   "simbolos": "IWM",
+   "direccion_pct": 1.87,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": 3.94,
+    "cierre_base": 174.82,
+    "cierre_final": 181.71,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

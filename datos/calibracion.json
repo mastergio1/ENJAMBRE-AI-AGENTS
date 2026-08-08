@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:00:51+00:00",
+ "generado": "2026-08-08T22:01:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4015,6 +4015,28 @@
     "pct_real": -17.16,
     "cierre_base": 25.47,
     "cierre_final": 21.1,
+    "fecha_base": "2024-08-02",
+    "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7acc6621b29e7509",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:01:21+00:00",
+   "titular": "Crypto Stocks Plunge as Bitcoin Dips Below $50K, Triggers $270B Market Value Decline",
+   "simbolos": "BITO",
+   "direccion_pct": -20.47,
+   "volatilidad_pct": 1.03,
+   "reaccion_real": {
+    "simbolo": "BITO",
+    "pct_real": -9.09,
+    "cierre_base": 20.35,
+    "cierre_final": 18.5,
     "fecha_base": "2024-08-02",
     "fecha_final": "2024-08-06",
     "ruedas": 2,

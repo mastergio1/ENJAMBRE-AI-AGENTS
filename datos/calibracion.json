@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:10:46+00:00",
+ "generado": "2026-08-08T21:11:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2663,16 +2663,16 @@
   {
    "sim_id": "7ca6416fb8ce552e",
    "origen": "historico",
-   "fecha": "2026-08-08T21:10:46+00:00",
+   "fecha": "2026-08-08T21:11:15+00:00",
    "titular": "Stocks Slip Ahead Of Fed Meeting, Chipmakers Suffer From China's Threat, Bitcoin Spikes Above $107,000: What's Driving Markets Tuesday?",
-   "simbolos": "DIA",
+   "simbolos": "QQQ",
    "direccion_pct": 7.29,
    "volatilidad_pct": 1.15,
    "reaccion_real": {
-    "simbolo": "DIA",
-    "pct_real": -2.53,
-    "cierre_base": 435.57,
-    "cierre_final": 424.53,
+    "simbolo": "QQQ",
+    "pct_real": -4.04,
+    "cierre_base": 535.8,
+    "cierre_final": 514.17,
     "fecha_base": "2024-12-17",
     "fecha_final": "2024-12-19",
     "ruedas": 2,

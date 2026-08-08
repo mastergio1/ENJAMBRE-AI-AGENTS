@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:37:22+00:00",
+ "generado": "2026-08-08T21:38:04+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3335,6 +3335,28 @@
     "cierre_final": 271.48,
     "fecha_base": "2022-10-14",
     "fecha_final": "2022-10-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5b47f2fa5ebc39bf",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:38:03+00:00",
+   "titular": "If You Invested $1,000 In The Dow Jones When Donald Trump Left White House, Here's How Much You'd Have Now",
+   "simbolos": "DIA",
+   "direccion_pct": 2.1,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 1.6,
+    "cierre_base": 292.16,
+    "cierre_final": 296.82,
+    "fecha_base": "2022-10-12",
+    "fecha_final": "2022-10-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

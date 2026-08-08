@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:20:33+00:00",
+ "generado": "2026-08-08T23:21:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6259,6 +6259,28 @@
     "pct_real": 9.41,
     "cierre_base": 678.31,
     "cierre_final": 742.12,
+    "fecha_base": "2026-02-05",
+    "fecha_final": "2026-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3b5872afcd81b7c0",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:21:10+00:00",
+   "titular": "Top Wall Street Forecasters Revamp Rockwell Automation Expectations Ahead Of Q1 Earnings",
+   "simbolos": "LCID",
+   "direccion_pct": 17.85,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "LCID",
+    "pct_real": 16.37,
+    "cierre_base": 9.53,
+    "cierre_final": 11.09,
     "fecha_base": "2026-02-05",
     "fecha_final": "2026-02-09",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:32:59+00:00",
+ "generado": "2026-08-08T22:33:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5010,6 +5010,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "269d19cf9078454a",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:33:34+00:00",
+   "titular": "Cathie Wood Loads Up Another $2.3M In Tesla Stock As Elon Musk Company's Shares Fall Further",
+   "simbolos": "COIN",
+   "direccion_pct": 14.82,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 11.18,
+    "cierre_base": 66.39,
+    "cierre_final": 73.81,
+    "fecha_base": "2022-10-24",
+    "fecha_final": "2022-10-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

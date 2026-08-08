@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:21:50+00:00",
+ "generado": "2026-08-08T23:22:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6308,6 +6308,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3661e70cdb865e8b",
+   "origen": "historico",
+   "fecha": "2026-08-08T23:22:29+00:00",
+   "titular": "Advanced Micro Devices CEO Says Not Forecasting Any Additional Revenue From Selling AI Chips To China Beyond $100M In Q1;  Have Submitted Licenses To Ship MI325 AI Chip To China; Expect Total Addressable PC Market To Be Slightly Down In 2026 Due To Inflationary Pressures Of Memory Pricing",
+   "simbolos": "AMD",
+   "direccion_pct": 2.45,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "AMD",
+    "pct_real": -20.49,
+    "cierre_base": 242.11,
+    "cierre_final": 192.5,
+    "fecha_base": "2026-02-03",
+    "fecha_final": "2026-02-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

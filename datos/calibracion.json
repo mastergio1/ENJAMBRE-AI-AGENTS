@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T21:57:59+00:00",
+ "generado": "2026-08-08T21:58:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -3905,6 +3905,28 @@
     "pct_real": -4.62,
     "cierre_base": 408.32,
     "cierre_final": 389.46,
+    "fecha_base": "2022-05-17",
+    "fecha_final": "2022-05-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "95d5751b0e1b5c66",
+   "origen": "historico",
+   "fecha": "2026-08-08T21:58:29+00:00",
+   "titular": "Markets Rise Again On Tuesday, Finish Near Session Highs",
+   "simbolos": "QQQ",
+   "direccion_pct": 16.02,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -5.42,
+    "cierre_base": 306.17,
+    "cierre_final": 289.58,
     "fecha_base": "2022-05-17",
     "fecha_final": "2022-05-19",
     "ruedas": 2,

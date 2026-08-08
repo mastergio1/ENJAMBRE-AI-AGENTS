@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:49:25+00:00",
+ "generado": "2026-08-08T22:50:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -5423,6 +5423,28 @@
     "pct_real": -15.15,
     "cierre_base": 22.6,
     "cierre_final": 19.18,
+    "fecha_base": "2022-05-06",
+    "fecha_final": "2022-05-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "09329967bafb142a",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:50:02+00:00",
+   "titular": "Why Bitcoin- And Ethereum-Related Stocks Are Diving",
+   "simbolos": "RIOT",
+   "direccion_pct": 0.03,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": -20.65,
+    "cierre_base": 9.49,
+    "cierre_final": 7.53,
     "fecha_base": "2022-05-06",
     "fecha_final": "2022-05-10",
     "ruedas": 2,

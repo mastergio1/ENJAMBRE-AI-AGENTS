@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T22:24:19+00:00",
+ "generado": "2026-08-08T22:24:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -4719,6 +4719,28 @@
     "pct_real": 11.11,
     "cierre_base": 59.03,
     "cierre_final": 65.59,
+    "fecha_base": "2023-02-14",
+    "fecha_final": "2023-02-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "102310e21810c789",
+   "origen": "historico",
+   "fecha": "2026-08-08T22:24:55+00:00",
+   "titular": "Bitcoin-Linked MicroStrategy and Marathon Digital Shares Are Soaring Today: What's Going On?",
+   "simbolos": "MARA",
+   "direccion_pct": 10.29,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 7.29,
+    "cierre_base": 6.72,
+    "cierre_final": 7.21,
     "fecha_base": "2023-02-14",
     "fecha_final": "2023-02-16",
     "ruedas": 2,

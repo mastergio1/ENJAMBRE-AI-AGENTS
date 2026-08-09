@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:17:54+00:00",
+ "generado": "2026-08-09T03:18:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9495,6 +9495,28 @@
     "cierre_final": 62.03,
     "fecha_base": "2021-02-16",
     "fecha_final": "2021-02-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "74259153f4912c70",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:18:21+00:00",
+   "titular": "Why Cardano Cryptocurrency Has Skyrocketed 93% This Week",
+   "simbolos": "GBTC",
+   "direccion_pct": 25.17,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 26.45,
+    "cierre_base": 34.22,
+    "cierre_final": 43.27,
+    "fecha_base": "2021-02-05",
+    "fecha_final": "2021-02-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:40:55+00:00",
+ "generado": "2026-08-09T02:41:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8307,6 +8307,28 @@
     "cierre_final": 296.26,
     "fecha_base": "2020-02-26",
     "fecha_final": "2020-02-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bff47d5f69091c0a",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:41:28+00:00",
+   "titular": "S&P Futures -40, Dow Futures -334, Nasdaq Futures -146, Crude -1.28",
+   "simbolos": "DIA",
+   "direccion_pct": -5.02,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -6.57,
+    "cierre_base": 289.74,
+    "cierre_final": 270.7,
+    "fecha_base": "2020-02-21",
+    "fecha_final": "2020-02-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

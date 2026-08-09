@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:33:27+00:00",
+ "generado": "2026-08-09T09:34:04+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11319,6 +11319,28 @@
     "pct_real": 7.17,
     "cierre_base": 169.37,
     "cierre_final": 181.51,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9132127b5a4d746f",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:34:03+00:00",
+   "titular": "Citigroup Maintains Buy on Caterpillar, Lowers Price Target to $320",
+   "simbolos": "CAT",
+   "direccion_pct": 36.31,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "CAT",
+    "pct_real": 5.56,
+    "cierre_base": 273.94,
+    "cierre_final": 289.16,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

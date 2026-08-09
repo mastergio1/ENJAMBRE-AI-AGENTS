@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:49:51+00:00",
+ "generado": "2026-08-09T09:50:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11984,6 +11984,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9361789c14480003",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:50:22+00:00",
+   "titular": "Tesla Rival XPeng Aims To Mass-Produce Flying Cars By 2026, But Regulators May Ground Takeoff",
+   "simbolos": "TSLA",
+   "direccion_pct": 31.67,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "TSLA",
+    "pct_real": -12.22,
+    "cierre_base": 262.67,
+    "cierre_final": 230.58,
+    "fecha_base": "2025-03-07",
+    "fecha_final": "2025-03-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

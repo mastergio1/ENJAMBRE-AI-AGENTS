@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:22:02+00:00",
+ "generado": "2026-08-09T03:22:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9696,6 +9696,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "def68529cbfb6c70",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:22:26+00:00",
+   "titular": "Coinbase Down For Many Users",
+   "simbolos": "MARA",
+   "direccion_pct": -22.92,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 55.6,
+    "cierre_base": 16.96,
+    "cierre_final": 26.39,
+    "fecha_base": "2021-01-06",
+    "fecha_final": "2021-01-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

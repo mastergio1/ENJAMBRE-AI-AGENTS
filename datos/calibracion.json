@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:38:39+00:00",
+ "generado": "2026-08-09T09:39:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11517,6 +11517,28 @@
     "pct_real": 7.78,
     "cierre_base": 105.69,
     "cierre_final": 113.91,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a57ae1889f834a58",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:39:07+00:00",
+   "titular": "JP Morgan Maintains Underweight on Snap, Lowers Price Target to $8",
+   "simbolos": "SNAP",
+   "direccion_pct": -15.33,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "SNAP",
+    "pct_real": 8.3,
+    "cierre_base": 7.23,
+    "cierre_final": 7.83,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

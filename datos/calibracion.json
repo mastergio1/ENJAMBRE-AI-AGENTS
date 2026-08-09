@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:47:11+00:00",
+ "generado": "2026-08-09T02:47:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8596,6 +8596,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0207b9f8d80afd7b",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:47:36+00:00",
+   "titular": "Benzinga Pro Afternoon Price Check For Major Averages: Russell 2000 Down 12 (0.9%), S&P 500 Down 54 (2.2%), Dow 30 Down 600 (2.6%), Nasdaq Down 178 (2.7%)",
+   "simbolos": "DIA",
+   "direccion_pct": -3.09,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 3.81,
+    "cierre_base": 226.72,
+    "cierre_final": 235.36,
+    "fecha_base": "2019-01-03",
+    "fecha_final": "2019-01-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

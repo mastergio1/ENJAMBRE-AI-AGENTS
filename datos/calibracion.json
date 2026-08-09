@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:46:16+00:00",
+ "generado": "2026-08-09T09:46:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11847,6 +11847,28 @@
     "pct_real": -18.97,
     "cierre_base": 168.56,
     "cierre_final": 136.59,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0429a95d62a79630",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:46:42+00:00",
+   "titular": "Looking Into Caterpillar's Recent Short Interest",
+   "simbolos": "CAT",
+   "direccion_pct": 23.21,
+   "volatilidad_pct": 0.96,
+   "reaccion_real": {
+    "simbolo": "CAT",
+    "pct_real": -13.92,
+    "cierre_base": 334.66,
+    "cierre_final": 288.08,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

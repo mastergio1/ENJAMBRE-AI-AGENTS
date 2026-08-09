@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:58:56+00:00",
+ "generado": "2026-08-09T02:59:24+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8901,6 +8901,28 @@
     "cierre_final": 23.39,
     "fecha_base": "2022-01-20",
     "fecha_final": "2022-01-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "caab60e4c1bc1f2b",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:59:23+00:00",
+   "titular": "Bitcoin Reigns Supreme, Still Accounts For 46% of the Total Value of Crypto Markets: Survey",
+   "simbolos": "BITO",
+   "direccion_pct": 60.78,
+   "volatilidad_pct": 1.04,
+   "reaccion_real": {
+    "simbolo": "BITO",
+    "pct_real": -5.19,
+    "cierre_base": 33.89,
+    "cierre_final": 32.13,
+    "fecha_base": "2021-12-03",
+    "fecha_final": "2021-12-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:46:15+00:00",
+ "generado": "2026-08-09T02:46:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8547,6 +8547,28 @@
     "pct_real": -1.63,
     "cierre_base": 288.1,
     "cierre_final": 283.4,
+    "fecha_base": "2019-05-10",
+    "fecha_final": "2019-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a84039ddf361af48",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:46:40+00:00",
+   "titular": "Benzinga Pro Morning Price Check For Major Averages:  Dow Jones Down 2.3%, S&P 500 Down 2.4%, Russell Down 2.8%, Nasdaq Down 3.2%",
+   "simbolos": "QQQ",
+   "direccion_pct": -5.36,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -2.41,
+    "cierre_base": 185.0,
+    "cierre_final": 180.54,
     "fecha_base": "2019-05-10",
     "fecha_final": "2019-05-14",
     "ruedas": 2,

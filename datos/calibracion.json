@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:49:24+00:00",
+ "generado": "2026-08-09T02:49:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8659,6 +8659,28 @@
     "cierre_final": 254.38,
     "fecha_base": "2019-01-03",
     "fecha_final": "2019-01-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "62b7eefc27580310",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:49:49+00:00",
+   "titular": "Trump's Frustration With Mnuchin Rising After Failed Attempt To Calm Markets",
+   "simbolos": "SPY",
+   "direccion_pct": -7.41,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 5.86,
+    "cierre_base": 234.34,
+    "cierre_final": 248.07,
+    "fecha_base": "2018-12-24",
+    "fecha_final": "2018-12-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

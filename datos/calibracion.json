@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:43:18+00:00",
+ "generado": "2026-08-09T09:43:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11715,6 +11715,28 @@
     "pct_real": -15.86,
     "cierre_base": 223.89,
     "cierre_final": 188.38,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0898cef05b07a005",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:43:44+00:00",
+   "titular": "Markets Reel As Trump's Tariffs Hit — Magnificent 7 Set To Shed Almost $700 Billion",
+   "simbolos": "AMZN",
+   "direccion_pct": 9.43,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": -12.76,
+    "cierre_base": 196.01,
+    "cierre_final": 171.0,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

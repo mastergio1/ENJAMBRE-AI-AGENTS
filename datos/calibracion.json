@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:18:44+00:00",
+ "generado": "2026-08-09T09:19:12+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10906,6 +10906,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "77f106e6da60e69a",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:19:12+00:00",
+   "titular": "Mullen Automotive, Applied Digital, MongoDB, Netflix, Tesla: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "TSLA",
+   "direccion_pct": 28.6,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "TSLA",
+    "pct_real": -11.12,
+    "cierre_base": 332.05,
+    "cierre_final": 295.14,
+    "fecha_base": "2025-06-04",
+    "fecha_final": "2025-06-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

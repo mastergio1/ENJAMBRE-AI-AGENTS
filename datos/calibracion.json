@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:31:36+00:00",
+ "generado": "2026-08-09T02:32:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8041,6 +8041,28 @@
     "pct_real": 10.69,
     "cierre_base": 222.95,
     "cierre_final": 246.79,
+    "fecha_base": "2020-03-23",
+    "fecha_final": "2020-03-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8b7ddb07644d00e6",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:32:02+00:00",
+   "titular": "US Stocks Open: S&P 500 Down 1.6%, Dow Down 1.7%, Nasdaq Down 0.3%, Russell Down 4.2%",
+   "simbolos": "QQQ",
+   "direccion_pct": -8.37,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 6.95,
+    "cierre_base": 170.46,
+    "cierre_final": 182.3,
     "fecha_base": "2020-03-23",
     "fecha_final": "2020-03-25",
     "ruedas": 2,

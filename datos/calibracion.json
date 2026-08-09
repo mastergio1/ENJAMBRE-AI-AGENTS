@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:32:52+00:00",
+ "generado": "2026-08-09T09:33:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11297,6 +11297,28 @@
     "pct_real": 11.57,
     "cierre_base": 139.39,
     "cierre_final": 155.52,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fb4cb4bae881b890",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:33:27+00:00",
+   "titular": "Wells Fargo Maintains Overweight on GE Aerospace, Lowers Price Target to $203",
+   "simbolos": "GE",
+   "direccion_pct": 41.73,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "GE",
+    "pct_real": 7.17,
+    "cierre_base": 169.37,
+    "cierre_final": 181.51,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

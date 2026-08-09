@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:43:36+00:00",
+ "generado": "2026-08-09T02:44:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8415,6 +8415,28 @@
     "pct_real": -2.59,
     "cierre_base": 263.17,
     "cierre_final": 256.36,
+    "fecha_base": "2019-08-13",
+    "fecha_final": "2019-08-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "51f5506c93d15cad",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:44:02+00:00",
+   "titular": "'How the U.S. determined which China tariffs will be delayed' -Axios",
+   "simbolos": "SPY",
+   "direccion_pct": 3.6,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.7,
+    "cierre_base": 292.55,
+    "cierre_final": 284.65,
     "fecha_base": "2019-08-13",
     "fecha_final": "2019-08-15",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:22:13+00:00",
+ "generado": "2026-08-09T09:22:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11057,6 +11057,28 @@
     "cierre_final": 105.12,
     "fecha_base": "2025-05-06",
     "fecha_final": "2025-05-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "13718eff0b78837c",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:22:38+00:00",
+   "titular": "Peter Lynch Once Revealed Existence Of A One Liner So Loved By Warren Buffett That The Oracle Of Omaha Called Him To Borrow It: 'The One Line He Picked…Has Been The Greatest Mistake'",
+   "simbolos": "MSFT",
+   "direccion_pct": 10.72,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "MSFT",
+    "pct_real": 10.12,
+    "cierre_base": 395.26,
+    "cierre_final": 435.28,
+    "fecha_base": "2025-04-30",
+    "fecha_final": "2025-05-02",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

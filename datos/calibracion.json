@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:41:20+00:00",
+ "generado": "2026-08-09T09:41:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11632,6 +11632,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aa8b4f0216293a14",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:41:46+00:00",
+   "titular": "Exxon Mobil Expects Change In Liquids Prices And Gas Prices To Each Add $0.0B - $0.4B To Q1 Upstream Earnings Vs. Q4 Earnings",
+   "simbolos": "XOM",
+   "direccion_pct": 48.01,
+   "volatilidad_pct": 1.03,
+   "reaccion_real": {
+    "simbolo": "XOM",
+    "pct_real": -8.44,
+    "cierre_base": 112.43,
+    "cierre_final": 102.94,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

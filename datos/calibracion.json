@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:04:30+00:00",
+ "generado": "2026-08-09T03:05:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9143,6 +9143,28 @@
     "cierre_final": 63.05,
     "fecha_base": "2021-06-11",
     "fecha_final": "2021-06-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9db10915fdd62a6f",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:04:59+00:00",
+   "titular": "Where Bitcoin Headed Next Depends On Stock Market? So Says Crypto Big Shot Barry Silbert",
+   "simbolos": "ETHE",
+   "direccion_pct": 50.32,
+   "volatilidad_pct": 0.98,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": 8.04,
+    "cierre_base": 20.79,
+    "cierre_final": 22.46,
+    "fecha_base": "2021-05-21",
+    "fecha_final": "2021-05-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

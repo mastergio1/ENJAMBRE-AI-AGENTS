@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:00:51+00:00",
+ "generado": "2026-08-09T03:01:20+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8987,6 +8987,28 @@
     "pct_real": 10.34,
     "cierre_base": 39.26,
     "cierre_final": 43.32,
+    "fecha_base": "2021-11-05",
+    "fecha_final": "2021-11-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e4fe15aae2cf86e0",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:01:19+00:00",
+   "titular": "Why Bitcoin-Related And Ethereum-Related Stocks Are Rising",
+   "simbolos": "MARA",
+   "direccion_pct": 47.48,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 19.23,
+    "cierre_base": 63.82,
+    "cierre_final": 76.09,
     "fecha_base": "2021-11-05",
     "fecha_final": "2021-11-09",
     "ruedas": 2,

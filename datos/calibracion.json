@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:23:07+00:00",
+ "generado": "2026-08-09T09:23:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11099,6 +11099,28 @@
     "pct_real": 10.44,
     "cierre_base": 172.42,
     "cierre_final": 190.42,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3d9a62caf1c2cdbb",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:23:33+00:00",
+   "titular": "Trump Tariff Strategy Creates 'Self-Inflicted Market Debacle': Analyst",
+   "simbolos": "MSFT",
+   "direccion_pct": -1.04,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "MSFT",
+    "pct_real": 7.56,
+    "cierre_base": 354.56,
+    "cierre_final": 381.35,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

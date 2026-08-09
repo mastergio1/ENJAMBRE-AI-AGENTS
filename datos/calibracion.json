@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:16:16+00:00",
+ "generado": "2026-08-09T03:16:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9427,6 +9427,28 @@
     "pct_real": -6.66,
     "cierre_base": 87.6,
     "cierre_final": 81.77,
+    "fecha_base": "2021-02-22",
+    "fecha_final": "2021-02-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "72f43d0be824bdfb",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:16:45+00:00",
+   "titular": "'The connectivity issues have been resolved and we're fully operational again' -Tweet From Crypto Exchange Kraken",
+   "simbolos": "GBTC",
+   "direccion_pct": 59.75,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -9.53,
+    "cierre_base": 48.33,
+    "cierre_final": 43.72,
     "fecha_base": "2021-02-22",
     "fecha_final": "2021-02-24",
     "ruedas": 2,

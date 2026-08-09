@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:37:40+00:00",
+ "generado": "2026-08-09T09:38:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11473,6 +11473,28 @@
     "pct_real": 9.78,
     "cierre_base": 77.09,
     "cierre_final": 84.63,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ef26715aa7756ea2",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:38:14+00:00",
+   "titular": "JP Morgan Maintains Overweight on Uber Technologies, Lowers Price Target to $80",
+   "simbolos": "UBER",
+   "direccion_pct": 32.04,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "UBER",
+    "pct_real": 9.02,
+    "cierre_base": 65.07,
+    "cierre_final": 70.94,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

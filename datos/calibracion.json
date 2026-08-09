@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:18:32+00:00",
+ "generado": "2026-08-09T02:19:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7403,6 +7403,28 @@
     "pct_real": 3.99,
     "cierre_base": 283.22,
     "cierre_final": 294.51,
+    "fecha_base": "2020-11-06",
+    "fecha_final": "2020-11-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5365929e9e497316",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:19:02+00:00",
+   "titular": "Pfizer says COVID vaccine is more than 90% effective; global stocks surge",
+   "simbolos": "SPY",
+   "direccion_pct": 61.43,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.11,
+    "cierre_base": 350.16,
+    "cierre_final": 354.04,
     "fecha_base": "2020-11-06",
     "fecha_final": "2020-11-10",
     "ruedas": 2,

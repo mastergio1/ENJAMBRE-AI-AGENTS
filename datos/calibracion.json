@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:23:41+00:00",
+ "generado": "2026-08-09T03:24:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9762,6 +9762,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d780e4b733656cb8",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:24:10+00:00",
+   "titular": "Here's How Much Investing $1,000 In Ethereum 5 Years Ago Would Be Worth Today",
+   "simbolos": "ETHE",
+   "direccion_pct": 69.92,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": -14.02,
+    "cierre_base": 17.49,
+    "cierre_final": 15.04,
+    "fecha_base": "2020-12-23",
+    "fecha_final": "2020-12-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-08T23:49:37+00:00",
+ "generado": "2026-08-09T02:02:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -6965,6 +6965,28 @@
     "cierre_final": 211.51,
     "fecha_base": "2025-10-03",
     "fecha_final": "2025-10-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b86b750967dfe8ef",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:01:57+00:00",
+   "titular": "Markets Pare Intraday Losses, Still Finish Marginally Lower",
+   "simbolos": "QQQ",
+   "direccion_pct": 2.71,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 2.5,
+    "cierre_base": 291.15,
+    "cierre_final": 298.44,
+    "fecha_base": "2022-05-12",
+    "fecha_final": "2022-05-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

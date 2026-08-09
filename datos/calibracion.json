@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:55:10+00:00",
+ "generado": "2026-08-09T09:55:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12028,6 +12028,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9b3e253cc3c6c368",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:55:43+00:00",
+   "titular": "Moderna CEO Stephane Bancel Discloses Open Market Purchase Of 160,314 Shares At Avg. Price $31.22",
+   "simbolos": "MRNA",
+   "direccion_pct": 38.32,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "MRNA",
+    "pct_real": 12.94,
+    "cierre_base": 30.37,
+    "cierre_final": 34.3,
+    "fecha_base": "2025-03-04",
+    "fecha_final": "2025-03-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

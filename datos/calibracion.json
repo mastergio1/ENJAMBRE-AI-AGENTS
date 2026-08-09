@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:18:21+00:00",
+ "generado": "2026-08-09T03:18:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9515,6 +9515,28 @@
     "pct_real": 26.45,
     "cierre_base": 34.22,
     "cierre_final": 43.27,
+    "fecha_base": "2021-02-05",
+    "fecha_final": "2021-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8b2f55661efd4e7d",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:18:51+00:00",
+   "titular": "HC Wainwright & Co. Maintains Buy on Marathon Patent Group, Raises Price Target to $30",
+   "simbolos": "MARA",
+   "direccion_pct": 75.93,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 66.92,
+    "cierre_base": 22.52,
+    "cierre_final": 37.59,
     "fecha_base": "2021-02-05",
     "fecha_final": "2021-02-09",
     "ruedas": 2,

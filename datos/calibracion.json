@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:08:09+00:00",
+ "generado": "2026-08-09T03:08:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9317,6 +9317,28 @@
     "pct_real": 5.67,
     "cierre_base": 18.67,
     "cierre_final": 19.73,
+    "fecha_base": "2021-04-12",
+    "fecha_final": "2021-04-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5b3ed8870e7b735f",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:08:37+00:00",
+   "titular": "No Bitcoin, Please: MicroStrategy Gets HSBC Ax",
+   "simbolos": "MSTR",
+   "direccion_pct": -30.35,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 2.4,
+    "cierre_base": 71.82,
+    "cierre_final": 73.55,
     "fecha_base": "2021-04-12",
     "fecha_final": "2021-04-14",
     "ruedas": 2,

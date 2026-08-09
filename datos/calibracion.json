@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:15:51+00:00",
+ "generado": "2026-08-09T09:16:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10774,6 +10774,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "17284e0d1f6ad56a",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:16:17+00:00",
+   "titular": "Want To Help Pay Off $37 Trillion National Debt? Government Accepts Venmo, PayPal",
+   "simbolos": "PYPL",
+   "direccion_pct": 2.15,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "PYPL",
+    "pct_real": -10.88,
+    "cierre_base": 78.22,
+    "cierre_final": 69.71,
+    "fecha_base": "2025-07-28",
+    "fecha_final": "2025-07-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

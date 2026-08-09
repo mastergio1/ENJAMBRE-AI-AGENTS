@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:37:06+00:00",
+ "generado": "2026-08-09T09:37:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11451,6 +11451,28 @@
     "pct_real": 5.49,
     "cierre_base": 57.41,
     "cierre_final": 60.56,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e5b9d5df89c39f90",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:37:39+00:00",
+   "titular": "Affirm And Shopify Announced The Acceleration Of Their Global Expansion Plans",
+   "simbolos": "SHOP",
+   "direccion_pct": 36.91,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "SHOP",
+    "pct_real": 9.78,
+    "cierre_base": 77.09,
+    "cierre_final": 84.63,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

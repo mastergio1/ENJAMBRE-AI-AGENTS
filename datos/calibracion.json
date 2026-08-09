@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:44:11+00:00",
+ "generado": "2026-08-09T03:44:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10488,6 +10488,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c0c5765595392221",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:44:36+00:00",
+   "titular": "Why Marathon Patent Group Is Considered A Crypto/Blockchain And AI Play",
+   "simbolos": "RIOT",
+   "direccion_pct": 50.71,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": -2.44,
+    "cierre_base": 15.99,
+    "cierre_final": 15.6,
+    "fecha_base": "2017-11-22",
+    "fecha_final": "2017-11-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

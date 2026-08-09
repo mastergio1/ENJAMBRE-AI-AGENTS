@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:44:10+00:00",
+ "generado": "2026-08-09T09:44:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11759,6 +11759,28 @@
     "pct_real": -13.56,
     "cierre_base": 583.93,
     "cierre_final": 504.73,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f9d71c67a0c7a6cb",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:44:38+00:00",
+   "titular": "NFL Gets 3 Christmas Day Games In 2025: How Netflix & Amazon Will Both Benefit",
+   "simbolos": "DIS",
+   "direccion_pct": 15.62,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "DIS",
+    "pct_real": -14.66,
+    "cierre_base": 97.88,
+    "cierre_final": 83.53,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

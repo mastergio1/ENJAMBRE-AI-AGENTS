@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:02:15+00:00",
+ "generado": "2026-08-09T03:02:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9053,6 +9053,28 @@
     "pct_real": 21.37,
     "cierre_base": 24.56,
     "cierre_final": 29.81,
+    "fecha_base": "2021-07-23",
+    "fecha_final": "2021-07-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b09b9ddf1c3a2b0d",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:02:39+00:00",
+   "titular": "Why MicroStrategy Stock Is Surging Higher Today",
+   "simbolos": "MSTR",
+   "direccion_pct": 22.77,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 16.84,
+    "cierre_base": 53.97,
+    "cierre_final": 63.06,
     "fecha_base": "2021-07-23",
     "fecha_final": "2021-07-27",
     "ruedas": 2,

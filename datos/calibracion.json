@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:13:46+00:00",
+ "generado": "2026-08-09T09:14:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10686,6 +10686,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1337de9a71e8104e",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:14:15+00:00",
+   "titular": "Shopify Gears Up For Q2 Print; Here Are The Recent Forecast Changes From Wall Street's Most Accurate Analysts",
+   "simbolos": "SHOP",
+   "direccion_pct": 31.66,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "SHOP",
+    "pct_real": 18.95,
+    "cierre_base": 127.0,
+    "cierre_final": 151.07,
+    "fecha_base": "2025-08-05",
+    "fecha_final": "2025-08-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

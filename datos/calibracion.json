@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:19:27+00:00",
+ "generado": "2026-08-09T02:19:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7452,6 +7452,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f0b0de3234a0e58f",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:19:52+00:00",
+   "titular": "What Happens To The MAGA ETF If Trump Loses The Presidential Election?",
+   "simbolos": "SPY",
+   "direccion_pct": -2.98,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.44,
+    "cierre_base": 338.22,
+    "cierre_final": 329.98,
+    "fecha_base": "2020-10-27",
+    "fecha_final": "2020-10-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

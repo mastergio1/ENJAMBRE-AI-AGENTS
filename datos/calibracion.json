@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:25:10+00:00",
+ "generado": "2026-08-09T03:25:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9828,6 +9828,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aeab1e8ebab9fc30",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:25:35+00:00",
+   "titular": "MicroStrategy Plans To Raise $400M In Debt And Use It To Pile Up More Bitcoin",
+   "simbolos": "MSTR",
+   "direccion_pct": 23.05,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -14.87,
+    "cierre_base": 33.62,
+    "cierre_final": 28.62,
+    "fecha_base": "2020-12-07",
+    "fecha_final": "2020-12-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:44:30+00:00",
+ "generado": "2026-08-09T02:44:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8461,6 +8461,28 @@
     "cierre_final": 284.65,
     "fecha_base": "2019-08-13",
     "fecha_final": "2019-08-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "27a8d0b67ed54d0a",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:44:56+00:00",
+   "titular": "China Continues to Proceed With Signed U.S. Soybean Deals, According to State Planner",
+   "simbolos": "SPY",
+   "direccion_pct": 8.36,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -1.65,
+    "cierre_base": 292.62,
+    "cierre_final": 287.8,
+    "fecha_base": "2019-08-02",
+    "fecha_final": "2019-08-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

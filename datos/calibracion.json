@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:21:37+00:00",
+ "generado": "2026-08-09T03:22:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9674,6 +9674,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ed9af907c4689612",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:22:01+00:00",
+   "titular": "Key Metric Indicates Bitcoin Rally Might Be Over For The Time-Being: What You Need To Know",
+   "simbolos": "GBTC",
+   "direccion_pct": -18.87,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -12.38,
+    "cierre_base": 40.13,
+    "cierre_final": 35.16,
+    "fecha_base": "2021-01-08",
+    "fecha_final": "2021-01-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

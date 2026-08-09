@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:45:41+00:00",
+ "generado": "2026-08-09T09:46:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11825,6 +11825,28 @@
     "pct_real": -17.28,
     "cierre_base": 154.08,
     "cierre_final": 127.46,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f1013f3b3afc24ec",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:46:08+00:00",
+   "titular": "Boeing CEO Says Planemaker Still Working With Justice Department On Revised Plea Agreement",
+   "simbolos": "BA",
+   "direccion_pct": 0.66,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "BA",
+    "pct_real": -18.97,
+    "cierre_base": 168.56,
+    "cierre_final": 136.59,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

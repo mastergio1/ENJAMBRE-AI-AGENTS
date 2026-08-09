@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:32:18+00:00",
+ "generado": "2026-08-09T09:32:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11275,6 +11275,28 @@
     "pct_real": 6.88,
     "cierre_base": 65.54,
     "cierre_final": 70.05,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dd62def700f2b87a",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:32:51+00:00",
+   "titular": "Boeing Announces Q1 Deliveries With A Total Of 130 Commercial Airplanes Programs And 26 Defense, Space & Security Programs",
+   "simbolos": "BA",
+   "direccion_pct": 31.67,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "BA",
+    "pct_real": 11.57,
+    "cierre_base": 139.39,
+    "cierre_final": 155.52,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

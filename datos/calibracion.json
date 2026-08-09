@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:03:46+00:00",
+ "generado": "2026-08-09T02:04:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7051,6 +7051,28 @@
     "pct_real": -3.12,
     "cierre_base": 427.81,
     "cierre_final": 414.48,
+    "fecha_base": "2022-04-28",
+    "fecha_final": "2022-05-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8fdde3737f51cd27",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:04:11+00:00",
+   "titular": "Does This ETF Lead The Market?",
+   "simbolos": "QQQ",
+   "direccion_pct": 4.31,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -2.91,
+    "cierre_base": 328.01,
+    "cierre_final": 318.48,
     "fecha_base": "2022-04-28",
     "fecha_final": "2022-05-02",
     "ruedas": 2,

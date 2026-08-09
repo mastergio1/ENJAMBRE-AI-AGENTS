@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:19:23+00:00",
+ "generado": "2026-08-09T03:19:48+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9559,6 +9559,28 @@
     "pct_real": 70.49,
     "cierre_base": 23.38,
     "cierre_final": 39.86,
+    "fecha_base": "2021-02-05",
+    "fecha_final": "2021-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4812bffa1be0e052",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:19:48+00:00",
+   "titular": "Cathie Wood Talks Innovators And Disruptors With Yahoo's Jen Rogers",
+   "simbolos": "MSTR",
+   "direccion_pct": 2.32,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 57.93,
+    "cierre_base": 80.6,
+    "cierre_final": 127.29,
     "fecha_base": "2021-02-05",
     "fecha_final": "2021-02-09",
     "ruedas": 2,

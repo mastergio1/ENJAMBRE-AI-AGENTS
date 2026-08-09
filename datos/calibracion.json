@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:01:20+00:00",
+ "generado": "2026-08-09T03:01:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9014,6 +9014,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a7be27971052fd64",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:01:45+00:00",
+   "titular": "Bitcoin drops sharply on the day El Salvador adopts it as legal tender",
+   "simbolos": "GBTC",
+   "direccion_pct": -27.02,
+   "volatilidad_pct": 1.47,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -7.88,
+    "cierre_base": 36.79,
+    "cierre_final": 33.89,
+    "fecha_base": "2021-09-03",
+    "fecha_final": "2021-09-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

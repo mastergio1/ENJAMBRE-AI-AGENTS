@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:57:19+00:00",
+ "generado": "2026-08-09T09:57:43+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12116,6 +12116,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "05b602a0a56bc5ed",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:57:43+00:00",
+   "titular": "Google DeepMind Has Change Of Heart: AI Principles No Longer Include Promise Not To 'Cause Harm'",
+   "simbolos": "GOOGL",
+   "direccion_pct": -9.45,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "GOOGL",
+    "pct_real": -7.16,
+    "cierre_base": 206.38,
+    "cierre_final": 191.6,
+    "fecha_base": "2025-02-04",
+    "fecha_final": "2025-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:56:48+00:00",
+ "generado": "2026-08-09T09:57:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12091,6 +12091,28 @@
     "cierre_final": 25.72,
     "fecha_base": "2025-02-14",
     "fecha_final": "2025-02-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7f1c7d3b78a20a3e",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:57:18+00:00",
+   "titular": "Airbnb Shares Climb After Q4 Revenue Beats Estimates",
+   "simbolos": "ABNB",
+   "direccion_pct": 37.58,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "ABNB",
+    "pct_real": 13.87,
+    "cierre_base": 141.04,
+    "cierre_final": 160.6,
+    "fecha_base": "2025-02-13",
+    "fecha_final": "2025-02-18",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

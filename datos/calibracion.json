@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:38:14+00:00",
+ "generado": "2026-08-09T09:38:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11495,6 +11495,28 @@
     "pct_real": 9.02,
     "cierre_base": 65.07,
     "cierre_final": 70.94,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b34e4ebe69c23712",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:38:39+00:00",
+   "titular": "JP Morgan Maintains Neutral on Airbnb, Lowers Price Target to $115",
+   "simbolos": "ABNB",
+   "direccion_pct": -1.44,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "ABNB",
+    "pct_real": 7.78,
+    "cierre_base": 105.69,
+    "cierre_final": 113.91,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:08:44+00:00",
+ "generado": "2026-08-09T03:09:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9341,6 +9341,28 @@
     "cierre_final": 73.55,
     "fecha_base": "2021-04-12",
     "fecha_final": "2021-04-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ac1e3d41e06e498a",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:09:13+00:00",
+   "titular": "Marathon Digital Holdings Provides Bitcoin Production And Mining Operation Updates For The First Quarter Of 2021",
+   "simbolos": "MARA",
+   "direccion_pct": 43.49,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 7.37,
+    "cierre_base": 48.85,
+    "cierre_final": 52.45,
+    "fecha_base": "2021-04-01",
+    "fecha_final": "2021-04-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

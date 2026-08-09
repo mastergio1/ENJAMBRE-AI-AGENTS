@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:37:46+00:00",
+ "generado": "2026-08-09T02:38:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8175,6 +8175,28 @@
     "cierre_final": 252.8,
     "fecha_base": "2020-03-13",
     "fecha_final": "2020-03-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ce40653f8ec00f06",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:38:14+00:00",
+   "titular": "S&P 500 Futures Resume Trade Down 20 Points From Halt",
+   "simbolos": "SPY",
+   "direccion_pct": -4.16,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -3.04,
+    "cierre_base": 297.46,
+    "cierre_final": 288.42,
+    "fecha_base": "2020-03-06",
+    "fecha_final": "2020-03-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -178,7 +178,11 @@ def _token_admin_ok(recibido: str) -> bool:
 
 @app.get("/salud")
 def salud() -> dict:
-    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 10, "redaccion": True}
+    # `version` = el commit que Render tiene vivo (lo inyecta solo). Sirve para
+    # confirmar de un vistazo QUÉ código está corriendo tras un despliegue.
+    return {"estado": "ok", "proyecto": "El Enjambre", "etapa": 10,
+            "redaccion": True,
+            "version": (os.environ.get("RENDER_GIT_COMMIT") or "local")[:12]}
 
 
 @app.get("/api/estado")

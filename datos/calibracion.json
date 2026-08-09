@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:29:08+00:00",
+ "generado": "2026-08-09T03:29:48+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10004,6 +10004,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "bfe1a0e6e63e4cde",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:29:40+00:00",
+   "titular": "Riot Blockchain Announces Additional Purchase Of Bitmain S19 Antminers",
+   "simbolos": "RIOT",
+   "direccion_pct": 52.78,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 45.67,
+    "cierre_base": 1.27,
+    "cierre_final": 1.85,
+    "fecha_base": "2020-05-06",
+    "fecha_final": "2020-05-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

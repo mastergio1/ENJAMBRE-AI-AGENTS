@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:35:00+00:00",
+ "generado": "2026-08-09T09:35:34+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11385,6 +11385,28 @@
     "pct_real": 4.45,
     "cierre_base": 88.76,
     "cierre_final": 92.71,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0f43cd1e1ece526f",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:35:33+00:00",
+   "titular": "Jefferies Upgrades Starbucks to Hold, Maintains Price Target to $76",
+   "simbolos": "SBUX",
+   "direccion_pct": 39.09,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SBUX",
+    "pct_real": 6.16,
+    "cierre_base": 79.69,
+    "cierre_final": 84.6,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

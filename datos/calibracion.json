@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:07:10+00:00",
+ "generado": "2026-08-09T03:07:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9278,6 +9278,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c487ed18ff11c4de",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:07:35+00:00",
+   "titular": "3 Cryptocurrency Plays For Stock Investors",
+   "simbolos": "ETHE",
+   "direccion_pct": 54.34,
+   "volatilidad_pct": 1.01,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": 15.36,
+    "cierre_base": 24.65,
+    "cierre_final": 28.43,
+    "fecha_base": "2021-04-30",
+    "fecha_final": "2021-05-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

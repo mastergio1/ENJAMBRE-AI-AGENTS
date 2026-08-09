@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:11:14+00:00",
+ "generado": "2026-08-09T09:11:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10573,6 +10573,28 @@
     "cierre_final": 27.21,
     "fecha_base": "2025-09-29",
     "fecha_final": "2025-10-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dee6cccd9e260846",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:11:44+00:00",
+   "titular": "5 Stock Picks Last Week From Wall Street's Most Accurate Analysts",
+   "simbolos": "HOOD",
+   "direccion_pct": 32.49,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "HOOD",
+    "pct_real": 17.57,
+    "cierre_base": 121.78,
+    "cierre_final": 143.18,
+    "fecha_base": "2025-09-26",
+    "fecha_final": "2025-09-30",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

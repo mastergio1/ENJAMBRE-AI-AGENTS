@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:42:40+00:00",
+ "generado": "2026-08-09T02:43:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8376,6 +8376,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6e3af3160e716b87",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:43:09+00:00",
+   "titular": "Kudlow Says Short-Term Payroll Tax Cut Unlikely, But Personal Rates Could Be Lowered; Says Capital Gains Tax Rate Could Be Reduced",
+   "simbolos": "SPY",
+   "direccion_pct": 6.42,
+   "volatilidad_pct": 1.41,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -1.49,
+    "cierre_base": 292.36,
+    "cierre_final": 288.0,
+    "fecha_base": "2019-08-22",
+    "fecha_final": "2019-08-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

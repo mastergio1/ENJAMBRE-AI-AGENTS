@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:10:41+00:00",
+ "generado": "2026-08-09T02:11:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7276,6 +7276,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c0e04577aa9d1aa6",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:11:17+00:00",
+   "titular": "U.S. Equity Futures Sharply Lower; Covid-Related Stocks Surge on Reports of New, Heavily-Mutated Strain, Feared to be More Infectious than Delta Variant",
+   "simbolos": "DIA",
+   "direccion_pct": 1.14,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -1.91,
+    "cierre_base": 358.03,
+    "cierre_final": 351.19,
+    "fecha_base": "2021-11-24",
+    "fecha_final": "2021-11-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:04:30+00:00",
+ "generado": "2026-08-09T02:04:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7075,6 +7075,28 @@
     "cierre_final": 330.74,
     "fecha_base": "2022-04-28",
     "fecha_final": "2022-05-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "840d7535ef46ded5",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:04:55+00:00",
+   "titular": "Markets Fall As Investors Weigh Earnings",
+   "simbolos": "DIA",
+   "direccion_pct": -4.87,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -2.06,
+    "cierre_base": 347.71,
+    "cierre_final": 340.56,
+    "fecha_base": "2022-04-21",
+    "fecha_final": "2022-04-25",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

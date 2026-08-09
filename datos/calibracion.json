@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:41:22+00:00",
+ "generado": "2026-08-09T03:41:48+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10351,6 +10351,28 @@
     "pct_real": 8.04,
     "cierre_base": 19.75,
     "cierre_final": 21.34,
+    "fecha_base": "2017-12-22",
+    "fecha_final": "2017-12-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5714cd1b2d942068",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:41:48+00:00",
+   "titular": "Many Crypto/Blockchain Related Stocks Rebounding Today From Friday's Weakness As Bitcoin Regains $16K Level; GROW +9.975%, RIOT +17.5%, DPW +2.1%, OTIV +7.57%, MARA +3.3%, SRAX +4.13%, OSTK +4.33%; LTEA An Outlier Down 9.32%",
+   "simbolos": "RIOT",
+   "direccion_pct": 22.4,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 21.53,
+    "cierre_base": 24.52,
+    "cierre_final": 29.8,
     "fecha_base": "2017-12-22",
     "fecha_final": "2017-12-27",
     "ruedas": 2,

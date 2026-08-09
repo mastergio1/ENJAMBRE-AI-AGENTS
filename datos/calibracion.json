@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:48:26+00:00",
+ "generado": "2026-08-09T02:48:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8601,28 +8601,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "0207b9f8d80afd7b",
-   "origen": "historico",
-   "fecha": "2026-08-09T02:47:55+00:00",
-   "titular": "Benzinga Pro Afternoon Price Check For Major Averages: Russell 2000 Down 12 (0.9%), S&P 500 Down 54 (2.2%), Dow 30 Down 600 (2.6%), Nasdaq Down 178 (2.7%)",
-   "simbolos": "IWM",
-   "direccion_pct": -0.19,
-   "volatilidad_pct": 1.28,
-   "reaccion_real": {
-    "simbolo": "IWM",
-    "pct_real": 5.55,
-    "cierre_base": 132.25,
-    "cierre_final": 139.59,
-    "fecha_base": "2019-01-03",
-    "fecha_final": "2019-01-07",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "positiva",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "40c61d6fa17be9c6",
    "origen": "historico",
    "fecha": "2026-08-09T02:48:23+00:00",
@@ -8635,6 +8613,28 @@
     "pct_real": 4.16,
     "cierre_base": 244.21,
     "cierre_final": 254.38,
+    "fecha_base": "2019-01-03",
+    "fecha_final": "2019-01-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0207b9f8d80afd7b",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:48:42+00:00",
+   "titular": "Benzinga Pro Afternoon Price Check For Major Averages: Russell 2000 Down 12 (0.9%), S&P 500 Down 54 (2.2%), Dow 30 Down 600 (2.6%), Nasdaq Down 178 (2.7%)",
+   "simbolos": "QQQ",
+   "direccion_pct": -0.19,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 5.52,
+    "cierre_base": 149.82,
+    "cierre_final": 158.09,
     "fecha_base": "2019-01-03",
     "fecha_final": "2019-01-07",
     "ruedas": 2,

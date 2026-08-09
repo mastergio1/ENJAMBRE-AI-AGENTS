@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:26:44+00:00",
+ "generado": "2026-08-09T09:27:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11209,6 +11209,28 @@
     "pct_real": 10.78,
     "cierre_base": 81.79,
     "cierre_final": 90.61,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "235bb78bfda1a0e2",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:27:18+00:00",
+   "titular": "Barclays Maintains Overweight on Walt Disney, Lowers Price Target to $115",
+   "simbolos": "DIS",
+   "direccion_pct": 37.56,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "DIS",
+    "pct_real": 4.3,
+    "cierre_base": 81.72,
+    "cierre_final": 85.23,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

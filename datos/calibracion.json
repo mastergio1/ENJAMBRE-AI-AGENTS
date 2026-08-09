@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:28:42+00:00",
+ "generado": "2026-08-09T02:29:04+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7933,6 +7933,28 @@
     "cierre_final": 209.43,
     "fecha_base": "2020-04-13",
     "fecha_final": "2020-04-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1c5add756b9e4469",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:29:04+00:00",
+   "titular": "'U.S. Open Postponed; 2020 U.S. Senior Opens Canceled' -US Golf Association",
+   "simbolos": "SPY",
+   "direccion_pct": 0.39,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 6.83,
+    "cierre_base": 248.19,
+    "cierre_final": 265.13,
+    "fecha_base": "2020-04-03",
+    "fecha_final": "2020-04-07",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

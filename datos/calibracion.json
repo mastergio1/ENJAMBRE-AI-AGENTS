@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:14:47+00:00",
+ "generado": "2026-08-09T09:15:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10727,6 +10727,28 @@
     "cierre_final": 7.54,
     "fecha_base": "2025-08-05",
     "fecha_final": "2025-08-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "540b514400eb5f32",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:15:22+00:00",
+   "titular": "Amazon Q2 Earnings Highlights: Double Beat, 'AI Progress Across The Board Continues'",
+   "simbolos": "AMZN",
+   "direccion_pct": 40.51,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": -9.59,
+    "cierre_base": 234.11,
+    "cierre_final": 211.65,
+    "fecha_base": "2025-07-31",
+    "fecha_final": "2025-08-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

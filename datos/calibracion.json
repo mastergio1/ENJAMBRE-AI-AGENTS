@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:05:53+00:00",
+ "generado": "2026-08-09T03:06:17+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9212,6 +9212,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9cfbf6ac3ed3baff",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:06:16+00:00",
+   "titular": "Why Bitcoin-Related Stocks Are Trading Lower Today",
+   "simbolos": "MARA",
+   "direccion_pct": -10.8,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 13.73,
+    "cierre_base": 19.66,
+    "cierre_final": 22.36,
+    "fecha_base": "2021-05-13",
+    "fecha_final": "2021-05-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -47,6 +47,19 @@ CLASES_POR_TIPO = {
 
 CAPITAL_BASE = 10_000.0  # capital de un agente retail 1x
 
+# Escala del consenso de la IA cuando se usa como "tono de la prensa" (ver
+# _tono_de_titular). Es una perilla de MAGNITUD, no de dirección: subirla
+# agranda el golpe del ambiente sin cambiar si el mercado sube o baja. Se
+# calibra con los exámenes (el corrector), igual que los diales de mercado.
+# 1.5 se eligió para que el ambiente conserve la escala que tenía con el
+# diccionario léxico (medido sobre el banco de titulares real).
+GANANCIA_CONSENSO = 1.5
+
+# Fracción mínima de líderes que deben haber hablado con la IA real para
+# confiar en su consenso como tono. Si la mayoría cayó al respaldo léxico
+# (sin saldo de API), se usa el diccionario directo, que es justo para eso.
+MINIMO_IA_CONSENSO = 0.5
+
 
 class MercadoEnjambre(mesa.Model):
     MAX_HISTORIAL = 600  # cola de precios/retornos en sesiones largas
@@ -133,15 +146,38 @@ class MercadoEnjambre(mesa.Model):
             lider.senal = respuesta["senal"]
             lider.confianza = respuesta["confianza"]
             lider.frase = respuesta["frase"]
-        # el "tono de la prensa": el titular crudo marca el ambiente del
-        # mercado (todos leen la misma noticia); las opiniones expertas
-        # de los líderes viajan aparte, por la red de influencia
-        from brains.fallback import sentimiento_lexico
-
-        tono = self._aplicar_perfil(sentimiento_lexico(titular))
+        # el "tono de la prensa": el ambiente de fondo que sienten todos los
+        # agentes (todos leen la misma noticia). Antes lo ponía un diccionario
+        # de palabras; ahora lo pone la LECTURA REAL de la IA (el consenso de
+        # los líderes que hablaron con Claude), que entiende el SIGNIFICADO del
+        # titular donde el diccionario se equivocaba ("recortan aranceles" es
+        # bueno, "wipes out $2 trillion" es malo). Las opiniones expertas de
+        # cada líder siguen viajando aparte, por la red de influencia.
+        tono = self._aplicar_perfil(self._tono_de_titular(titular, respuestas))
         self.sentimiento = max(-1.0, min(1.0, self.sentimiento + tono))
         self._propagar_desde_lideres()
         return respuestas
+
+    def _tono_de_titular(self, titular: str, respuestas: list[dict]) -> float:
+        """El tono de fondo del mercado a partir de la noticia ∈ [-1, +1].
+
+        Prioridad a la LECTURA de la IA: el promedio de las señales de los
+        líderes, ponderado por su confianza. La IA entiende el sentido del
+        titular; el diccionario léxico solo cuenta palabras y fallaba en
+        noticias compuestas (leía "slash tariffs" como pánico cuando es alza).
+
+        Solo pesan los líderes que hablaron con la IA de verdad (fuente
+        api/cache). Si la mayoría usó el respaldo léxico (sin saldo de API),
+        se vuelve al diccionario — que es exactamente para lo que existe.
+        """
+        from brains.fallback import sentimiento_lexico
+
+        ia = [r for r in respuestas if r.get("fuente") in ("api", "cache")]
+        peso = sum(r["confianza"] for r in ia)
+        if len(ia) < len(respuestas) * MINIMO_IA_CONSENSO or peso <= 0:
+            return sentimiento_lexico(titular)  # la IA no opinó lo suficiente
+        consenso = sum(r["senal"] * r["confianza"] for r in ia) / peso
+        return max(-1.0, min(1.0, consenso * GANANCIA_CONSENSO))
 
     def _aplicar_perfil(self, tono: float) -> float:
         """La personalidad del mercado transforma el tono de la noticia.

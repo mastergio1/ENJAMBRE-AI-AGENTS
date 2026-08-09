@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T10:03:57+00:00",
+ "generado": "2026-08-09T10:04:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12424,6 +12424,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "21d7ace966ef27b5",
+   "origen": "historico",
+   "fecha": "2026-08-09T10:04:27+00:00",
+   "titular": "Nvidia, AMD, Taiwan Semi Gain As Broadcom's Q4 Performance Sparks Sector-Wide Surge",
+   "simbolos": "MRVL",
+   "direccion_pct": 37.2,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "MRVL",
+    "pct_real": 14.47,
+    "cierre_base": 109.01,
+    "cierre_final": 124.78,
+    "fecha_base": "2024-12-12",
+    "fecha_final": "2024-12-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

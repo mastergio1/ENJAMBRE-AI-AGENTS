@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:04:11+00:00",
+ "generado": "2026-08-09T02:04:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7039,28 +7039,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "fc6f406af94b6171",
-   "origen": "historico",
-   "fecha": "2026-08-09T02:03:45+00:00",
-   "titular": "Markets Surge Despite Drop In US GDP",
-   "simbolos": "SPY",
-   "direccion_pct": 1.27,
-   "volatilidad_pct": 1.21,
-   "reaccion_real": {
-    "simbolo": "SPY",
-    "pct_real": -3.12,
-    "cierre_base": 427.81,
-    "cierre_final": 414.48,
-    "fecha_base": "2022-04-28",
-    "fecha_final": "2022-05-02",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "negativa",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "8fdde3737f51cd27",
    "origen": "historico",
    "fecha": "2026-08-09T02:04:11+00:00",
@@ -7073,6 +7051,28 @@
     "pct_real": -2.91,
     "cierre_base": 328.01,
     "cierre_final": 318.48,
+    "fecha_base": "2022-04-28",
+    "fecha_final": "2022-05-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fc6f406af94b6171",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:04:30+00:00",
+   "titular": "Markets Surge Despite Drop In US GDP",
+   "simbolos": "DIA",
+   "direccion_pct": -5.09,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -2.52,
+    "cierre_base": 339.29,
+    "cierre_final": 330.74,
     "fecha_base": "2022-04-28",
     "fecha_final": "2022-05-02",
     "ruedas": 2,

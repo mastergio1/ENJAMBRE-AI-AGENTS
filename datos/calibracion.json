@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T10:00:29+00:00",
+ "generado": "2026-08-09T10:00:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12265,6 +12265,28 @@
     "pct_real": -9.56,
     "cierre_base": 142.62,
     "cierre_final": 128.99,
+    "fecha_base": "2025-01-24",
+    "fecha_final": "2025-01-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a55520bfd0c84e9a",
+   "origen": "historico",
+   "fecha": "2026-08-09T10:00:56+00:00",
+   "titular": "Nvidia, AMD, Broadcom, SMCI, TSMC And Other Tech Giants Lead Monday Pre-Market Selloff As Nasdaq 100 Futures Plummet Over 650 Points Amid Reports Of Chinese AI Startup DeepSeek Overtaking ChatGPT",
+   "simbolos": "MU",
+   "direccion_pct": -7.53,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": -14.48,
+    "cierre_base": 103.19,
+    "cierre_final": 88.25,
     "fecha_base": "2025-01-24",
     "fecha_final": "2025-01-28",
     "ruedas": 2,

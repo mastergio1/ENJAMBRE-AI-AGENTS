@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:20:39+00:00",
+ "generado": "2026-08-09T09:21:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10989,6 +10989,28 @@
     "pct_real": 7.02,
     "cierre_base": 58.3,
     "cierre_final": 62.39,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9548727fef655a42",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:21:10+00:00",
+   "titular": "Reported May 9, 2025: Shopify To Join The Nasdaq-100 Index Beginning May 19, 2025",
+   "simbolos": "SHOP",
+   "direccion_pct": 27.29,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "SHOP",
+    "pct_real": 17.34,
+    "cierre_base": 91.77,
+    "cierre_final": 107.68,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

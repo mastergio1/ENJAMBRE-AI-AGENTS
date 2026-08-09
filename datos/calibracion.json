@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:57:11+00:00",
+ "generado": "2026-08-09T02:57:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8811,6 +8811,28 @@
     "pct_real": 28.47,
     "cierre_base": 17.5,
     "cierre_final": 22.48,
+    "fecha_base": "2022-02-03",
+    "fecha_final": "2022-02-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f6aba50f64f3cfda",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:57:40+00:00",
+   "titular": "Bitcoin On-Chain Analytics Show Long Term Holders At Multiyear Highs",
+   "simbolos": "MSTR",
+   "direccion_pct": 64.58,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 21.58,
+    "cierre_base": 34.01,
+    "cierre_final": 41.35,
     "fecha_base": "2022-02-03",
     "fecha_final": "2022-02-07",
     "ruedas": 2,

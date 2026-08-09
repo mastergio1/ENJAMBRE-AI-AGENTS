@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:45:04+00:00",
+ "generado": "2026-08-09T03:45:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10532,6 +10532,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "dfded8d963d76af8",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:45:32+00:00",
+   "titular": "Watching Shares of Greyscale Bitcoin Trust After Hours As Citron's Andrew Left Is Currently Discussing The Trust On CNBC's 'Fast Money'",
+   "simbolos": "GBTC",
+   "direccion_pct": 32.63,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -22.89,
+    "cierre_base": 9.98,
+    "cierre_final": 7.69,
+    "fecha_base": "2017-08-31",
+    "fecha_final": "2017-09-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

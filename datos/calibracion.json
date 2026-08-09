@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:14:15+00:00",
+ "generado": "2026-08-09T09:14:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10708,6 +10708,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "650da5e41d19f0cc",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:14:47+00:00",
+   "titular": "During Conference Call, Snap CEO Says We Think There's Room To Experiment On Pricing, But Co's Primary Focus So Far Has Just Been On Continuing To Build The Value Proposition For Customers",
+   "simbolos": "SNAP",
+   "direccion_pct": 25.99,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "SNAP",
+    "pct_real": -19.7,
+    "cierre_base": 9.39,
+    "cierre_final": 7.54,
+    "fecha_base": "2025-08-05",
+    "fecha_final": "2025-08-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

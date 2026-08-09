@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:47:25+00:00",
+ "generado": "2026-08-09T09:48:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11891,6 +11891,28 @@
     "pct_real": -9.5,
     "cierre_base": 105.77,
     "cierre_final": 95.72,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "14010c04a5732ba2",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:47:52+00:00",
+   "titular": "If You Invested $100 In This Stock 20 Years Ago, You Would Have This Much Today",
+   "simbolos": "NKE",
+   "direccion_pct": 47.07,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "NKE",
+    "pct_real": -11.87,
+    "cierre_base": 64.96,
+    "cierre_final": 57.25,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:23:55+00:00",
+ "generado": "2026-08-09T09:24:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11121,6 +11121,28 @@
     "pct_real": 6.19,
     "cierre_base": 170.66,
     "cierre_final": 181.22,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4a013e4a9dad3c38",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:24:28+00:00",
+   "titular": "Palo Alto Networks Crosses $1.5 Billion In Google Cloud Marketplace Sales, Driven By AI",
+   "simbolos": "GOOGL",
+   "direccion_pct": 42.16,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "GOOGL",
+    "pct_real": 5.61,
+    "cierre_base": 144.7,
+    "cierre_final": 152.82,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

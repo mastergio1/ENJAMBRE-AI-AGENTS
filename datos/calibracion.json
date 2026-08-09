@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:20:14+00:00",
+ "generado": "2026-08-09T03:20:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9605,6 +9605,28 @@
     "cierre_final": 43.27,
     "fecha_base": "2021-02-05",
     "fecha_final": "2021-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a40591e1e577f0ed",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:20:40+00:00",
+   "titular": "Cryptocurrency Chainlink Has Soared 50% In A Week, Yet Whales Keep Piling On: What You Should Know",
+   "simbolos": "ETHE",
+   "direccion_pct": 34.76,
+   "volatilidad_pct": 1.05,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": 8.33,
+    "cierre_base": 12.5,
+    "cierre_final": 13.54,
+    "fecha_base": "2021-01-15",
+    "fecha_final": "2021-01-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

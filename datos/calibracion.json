@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:58:09+00:00",
+ "generado": "2026-08-09T09:58:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12160,6 +12160,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9be05a7cd551ad26",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:58:35+00:00",
+   "titular": "AI Stocks Are Rallying After The Bell: What's Going On?",
+   "simbolos": "PLTR",
+   "direccion_pct": 28.04,
+   "volatilidad_pct": 1.48,
+   "reaccion_real": {
+    "simbolo": "PLTR",
+    "pct_real": 21.04,
+    "cierre_base": 83.74,
+    "cierre_final": 101.36,
+    "fecha_base": "2025-02-03",
+    "fecha_final": "2025-02-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

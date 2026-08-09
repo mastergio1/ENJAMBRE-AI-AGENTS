@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:45:33+00:00",
+ "generado": "2026-08-09T09:11:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10554,6 +10554,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1424cf8b81eccec3",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:11:06+00:00",
+   "titular": "Pharma ETFs In A Tariff Storm: How Investors Can Hedge Risk",
+   "simbolos": "PFE",
+   "direccion_pct": -4.65,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "PFE",
+    "pct_real": 14.09,
+    "cierre_base": 23.85,
+    "cierre_final": 27.21,
+    "fecha_base": "2025-09-29",
+    "fecha_final": "2025-10-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

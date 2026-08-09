@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:20:45+00:00",
+ "generado": "2026-08-09T02:21:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7518,6 +7518,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3f79b917bc792b57",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:21:11+00:00",
+   "titular": "2 Problems Tesla Creates For The S&P 500",
+   "simbolos": "SPY",
+   "direccion_pct": -7.48,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -4.23,
+    "cierre_base": 357.7,
+    "cierre_final": 342.57,
+    "fecha_base": "2020-09-02",
+    "fecha_final": "2020-09-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:30:57+00:00",
+ "generado": "2026-08-09T03:31:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10067,6 +10067,28 @@
     "cierre_final": 5.71,
     "fecha_base": "2020-03-11",
     "fecha_final": "2020-03-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e9ce5a61372546b3",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:31:26+00:00",
+   "titular": "There's A New Cannabis Index To Help Investors Measure The Industry",
+   "simbolos": "GBTC",
+   "direccion_pct": 8.16,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -11.42,
+    "cierre_base": 15.43,
+    "cierre_final": 13.67,
+    "fecha_base": "2019-06-26",
+    "fecha_final": "2019-06-28",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

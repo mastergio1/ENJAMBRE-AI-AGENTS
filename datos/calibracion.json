@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:28:32+00:00",
+ "generado": "2026-08-09T03:29:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9982,6 +9982,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0a8bada71c8c1f9f",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:29:00+00:00",
+   "titular": "Riot Blockchain Announces Relocatio Of 4,000 Bitmain S17 Pro Miners",
+   "simbolos": "RIOT",
+   "direccion_pct": 71.29,
+   "volatilidad_pct": 1.03,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": -26.13,
+    "cierre_base": 3.1,
+    "cierre_final": 2.29,
+    "fecha_base": "2020-06-10",
+    "fecha_final": "2020-06-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

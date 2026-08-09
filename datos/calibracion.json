@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:23:36+00:00",
+ "generado": "2026-08-09T09:23:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11087,28 +11087,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "25812bfeb6811543",
-   "origen": "historico",
-   "fecha": "2026-08-09T09:23:06+00:00",
-   "titular": "Trump's 104% Tariff On Chinese Imports Sends Stock Futures Plunging — Dow Falls Over 500 Points",
-   "simbolos": "AAPL",
-   "direccion_pct": -2.41,
-   "volatilidad_pct": 1.15,
-   "reaccion_real": {
-    "simbolo": "AAPL",
-    "pct_real": 10.44,
-    "cierre_base": 172.42,
-    "cierre_final": 190.42,
-    "fecha_base": "2025-04-08",
-    "fecha_final": "2025-04-10",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "positiva",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "3d9a62caf1c2cdbb",
    "origen": "historico",
    "fecha": "2026-08-09T09:23:33+00:00",
@@ -11121,6 +11099,28 @@
     "pct_real": 7.56,
     "cierre_base": 354.56,
     "cierre_final": 381.35,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "25812bfeb6811543",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:23:51+00:00",
+   "titular": "Trump's 104% Tariff On Chinese Imports Sends Stock Futures Plunging — Dow Falls Over 500 Points",
+   "simbolos": "AMZN",
+   "direccion_pct": -2.41,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": 6.19,
+    "cierre_base": 170.66,
+    "cierre_final": 181.22,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:03:11+00:00",
+ "generado": "2026-08-09T03:03:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9087,16 +9087,16 @@
   {
    "sim_id": "dc6dff9760db3904",
    "origen": "historico",
-   "fecha": "2026-08-09T03:03:11+00:00",
+   "fecha": "2026-08-09T03:03:33+00:00",
    "titular": "City A.M. Reported Amazon is Looking to Accept Bitcoin Payments by the End of the Year",
-   "simbolos": "MARA",
+   "simbolos": "RIOT",
    "direccion_pct": 70.02,
    "volatilidad_pct": 1.34,
    "reaccion_real": {
-    "simbolo": "MARA",
-    "pct_real": 9.66,
-    "cierre_base": 24.64,
-    "cierre_final": 27.02,
+    "simbolo": "RIOT",
+    "pct_real": 12.6,
+    "cierre_base": 28.1,
+    "cierre_final": 31.64,
     "fecha_base": "2021-07-23",
     "fecha_final": "2021-07-27",
     "ruedas": 2,

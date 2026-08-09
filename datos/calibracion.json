@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:39:01+00:00",
+ "generado": "2026-08-09T03:39:28+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10246,6 +10246,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "95dbb8b0d584f409",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:39:28+00:00",
+   "titular": "Amplify ETFs CEO Magoon On BLOK ETF: Says Wouldn't Own Something Like Long Blockchain Because Operations Do Not Center Around Blockchain; Notes Owns Positions In Kodak, Riot Blockchain",
+   "simbolos": "RIOT",
+   "direccion_pct": 4.9,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": -36.51,
+    "cierre_base": 17.2,
+    "cierre_final": 10.92,
+    "fecha_base": "2018-02-15",
+    "fecha_final": "2018-02-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

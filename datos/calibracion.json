@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:21:43+00:00",
+ "generado": "2026-08-09T09:22:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11038,6 +11038,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e99d394bc49ab35e",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:22:13+00:00",
+   "titular": "Disney Q2 Earnings Preview: Streaming, Theme Parks, Box Office Key Items To Watch",
+   "simbolos": "DIS",
+   "direccion_pct": 26.99,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "DIS",
+    "pct_real": 14.05,
+    "cierre_base": 92.17,
+    "cierre_final": 105.12,
+    "fecha_base": "2025-05-06",
+    "fecha_final": "2025-05-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

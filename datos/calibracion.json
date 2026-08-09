@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:18:52+00:00",
+ "generado": "2026-08-09T03:19:23+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9537,6 +9537,28 @@
     "pct_real": 66.92,
     "cierre_base": 22.52,
     "cierre_final": 37.59,
+    "fecha_base": "2021-02-05",
+    "fecha_final": "2021-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fc409be17bee30d7",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:19:22+00:00",
+   "titular": "HC Wainwright & Co. Maintains Buy on Riot Blockchain, Raises Price Target to $28",
+   "simbolos": "RIOT",
+   "direccion_pct": 58.2,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 70.49,
+    "cierre_base": 23.38,
+    "cierre_final": 39.86,
     "fecha_base": "2021-02-05",
     "fecha_final": "2021-02-09",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:05:22+00:00",
+ "generado": "2026-08-09T02:05:49+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7122,6 +7122,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "30315f6e1a716d92",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:05:48+00:00",
+   "titular": "Markets Rise Following Drop In Oil Prices",
+   "simbolos": "QQQ",
+   "direccion_pct": 6.24,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 4.96,
+    "cierre_base": 328.15,
+    "cierre_final": 344.44,
+    "fecha_base": "2022-03-15",
+    "fecha_final": "2022-03-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:20:12+00:00",
+ "generado": "2026-08-09T09:20:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10967,6 +10967,28 @@
     "pct_real": 10.72,
     "cierre_base": 592.49,
     "cierre_final": 656.03,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "96d912a39de6b850",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:20:39+00:00",
+   "titular": "Dow Jones Adds 1,000 Points, Breaks 200-Day Moving Average For First Time Since April 2 Tariff Shock",
+   "simbolos": "NKE",
+   "direccion_pct": 2.34,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "NKE",
+    "pct_real": 7.02,
+    "cierre_base": 58.3,
+    "cierre_final": 62.39,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:00:18+00:00",
+ "generado": "2026-08-09T03:00:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8967,6 +8967,28 @@
     "cierre_final": 47.15,
     "fecha_base": "2021-11-09",
     "fecha_final": "2021-11-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0f50330c9813210e",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:00:51+00:00",
+   "titular": "Why Bitcoin And Ethereum Are Rising Today",
+   "simbolos": "BITO",
+   "direccion_pct": 59.07,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "BITO",
+    "pct_real": 10.34,
+    "cierre_base": 39.26,
+    "cierre_final": 43.32,
+    "fecha_base": "2021-11-05",
+    "fecha_final": "2021-11-09",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

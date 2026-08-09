@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:40:10+00:00",
+ "generado": "2026-08-09T09:40:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11583,6 +11583,28 @@
     "pct_real": 10.74,
     "cierre_base": 9.5,
     "cierre_final": 10.52,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b1ed0105647288e5",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:40:45+00:00",
+   "titular": "Wells Fargo Maintains Overweight on Roblox, Lowers Price Target to $70",
+   "simbolos": "RBLX",
+   "direccion_pct": 38.86,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "RBLX",
+    "pct_real": 9.57,
+    "cierre_base": 51.22,
+    "cierre_final": 56.12,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

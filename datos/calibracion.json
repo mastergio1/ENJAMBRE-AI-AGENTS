@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:06:43+00:00",
+ "generado": "2026-08-09T03:07:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9253,6 +9253,28 @@
     "cierre_final": 32.74,
     "fecha_base": "2021-05-12",
     "fecha_final": "2021-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "24c891360e6c2cac",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:07:09+00:00",
+   "titular": "Bitcoin tumbles as Elon Musk says Tesla will stop accepting it over energy concerns",
+   "simbolos": "GBTC",
+   "direccion_pct": -20.46,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -17.15,
+    "cierre_base": 40.54,
+    "cierre_final": 33.59,
+    "fecha_base": "2021-05-11",
+    "fecha_final": "2021-05-13",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

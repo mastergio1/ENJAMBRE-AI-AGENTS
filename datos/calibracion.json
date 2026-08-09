@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:21:11+00:00",
+ "generado": "2026-08-09T09:21:43+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11016,6 +11016,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5cc8bf904ccc95d9",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:21:43+00:00",
+   "titular": "Meta's WhatsApp Wins $168 Million Verdict Against Pegasus Spyware Maker NSO Group For 2019 Hack",
+   "simbolos": "GOOGL",
+   "direccion_pct": 35.55,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "GOOGL",
+    "pct_real": -5.48,
+    "cierre_base": 163.23,
+    "cierre_final": 154.28,
+    "fecha_base": "2025-05-06",
+    "fecha_final": "2025-05-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

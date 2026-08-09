@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:35:34+00:00",
+ "generado": "2026-08-09T09:36:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11407,6 +11407,28 @@
     "pct_real": 6.16,
     "cierre_base": 79.69,
     "cierre_final": 84.6,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "44abfa0a45333545",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:36:09+00:00",
+   "titular": "Decoding Home Depot's Options Activity: What's the Big Picture?",
+   "simbolos": "HD",
+   "direccion_pct": 35.38,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "HD",
+    "pct_real": 5.48,
+    "cierre_base": 335.24,
+    "cierre_final": 353.62,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

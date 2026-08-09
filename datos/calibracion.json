@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:09:21+00:00",
+ "generado": "2026-08-09T03:09:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9363,6 +9363,28 @@
     "cierre_final": 52.45,
     "fecha_base": "2021-04-01",
     "fecha_final": "2021-04-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "66b67faaa18cbc5a",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:09:49+00:00",
+   "titular": "Crypto/Bitcoin Stocks Quiet After Hours As Hearing Report Coinbase Has Been Valued At $90B In Private Auction",
+   "simbolos": "MARA",
+   "direccion_pct": 47.6,
+   "volatilidad_pct": 0.99,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 33.95,
+    "cierre_base": 28.51,
+    "cierre_final": 38.19,
+    "fecha_base": "2021-03-08",
+    "fecha_final": "2021-03-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

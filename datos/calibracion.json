@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:41:46+00:00",
+ "generado": "2026-08-09T09:42:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11649,6 +11649,28 @@
     "pct_real": -8.44,
     "cierre_base": 112.43,
     "cierre_final": 102.94,
+    "fecha_base": "2025-04-03",
+    "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1df64bafa3938686",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:42:15+00:00",
+   "titular": "TSMC Steps Up To Take 20% Stake In Joint Venture With Intel As Struggling Chipmaker Grapples With Nearly $19 Billion Losses In 2024: Report",
+   "simbolos": "INTC",
+   "direccion_pct": 35.64,
+   "volatilidad_pct": 1.01,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": -12.75,
+    "cierre_base": 22.43,
+    "cierre_final": 19.57,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
     "ruedas": 2,

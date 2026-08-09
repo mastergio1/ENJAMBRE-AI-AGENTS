@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:37:20+00:00",
+ "generado": "2026-08-09T02:37:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8151,6 +8151,28 @@
     "pct_real": -8.03,
     "cierre_base": 232.11,
     "cierre_final": 213.47,
+    "fecha_base": "2020-03-13",
+    "fecha_final": "2020-03-17",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5b2a0127bbe9378f",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:37:45+00:00",
+   "titular": "S&P 500 plunges 12% despite Fed emergency rate cut to zero",
+   "simbolos": "SPY",
+   "direccion_pct": -4.21,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -6.13,
+    "cierre_base": 269.32,
+    "cierre_final": 252.8,
     "fecha_base": "2020-03-13",
     "fecha_final": "2020-03-17",
     "ruedas": 2,

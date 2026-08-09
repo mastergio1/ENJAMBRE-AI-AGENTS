@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:38:02+00:00",
+ "generado": "2026-08-09T03:38:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10202,6 +10202,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1f22eb3f53d9d711",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:38:33+00:00",
+   "titular": "Riot Blockchain Shares Spike 3% Over Last Few Mins As Bitcoin Moves Sharply Higher; Riot Blockchain Now Up 6.1% For Session",
+   "simbolos": "RIOT",
+   "direccion_pct": 39.11,
+   "volatilidad_pct": 1.05,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 25.38,
+    "cierre_base": 4.57,
+    "cierre_final": 5.73,
+    "fecha_base": "2018-07-16",
+    "fecha_final": "2018-07-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

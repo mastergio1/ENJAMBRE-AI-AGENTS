@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:04:56+00:00",
+ "generado": "2026-08-09T02:05:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7095,6 +7095,28 @@
     "pct_real": -2.06,
     "cierre_base": 347.71,
     "cierre_final": 340.56,
+    "fecha_base": "2022-04-21",
+    "fecha_final": "2022-04-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4fde496144694fb6",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:05:21+00:00",
+   "titular": "Ukraine's Zelenskiy Says Russia Has Rejected Proposal For An Easter Truce",
+   "simbolos": "SPY",
+   "direccion_pct": -7.23,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.18,
+    "cierre_base": 438.06,
+    "cierre_final": 428.51,
     "fecha_base": "2022-04-21",
     "fecha_final": "2022-04-25",
     "ruedas": 2,

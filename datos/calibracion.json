@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:15:22+00:00",
+ "generado": "2026-08-09T09:15:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10752,6 +10752,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "47351197ef9a5822",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:15:51+00:00",
+   "titular": "Meta's $210 Billion Tech Stack May Be Masking A Harsh Truth: Jim Chanos Says 12-Year Depreciation On 2-Year GPUs Overstates Profits",
+   "simbolos": "META",
+   "direccion_pct": -17.54,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "META",
+    "pct_real": 7.88,
+    "cierre_base": 695.21,
+    "cierre_final": 750.01,
+    "fecha_base": "2025-07-30",
+    "fecha_final": "2025-08-01",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

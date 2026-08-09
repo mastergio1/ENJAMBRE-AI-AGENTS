@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:45:24+00:00",
+ "generado": "2026-08-09T02:45:50+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8503,6 +8503,28 @@
     "pct_real": -1.71,
     "cierre_base": 264.81,
     "cierre_final": 260.29,
+    "fecha_base": "2019-08-02",
+    "fecha_final": "2019-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "057e755530121f8c",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:45:49+00:00",
+   "titular": "Stocks tumble as China lets yuan slide in trade war escalation",
+   "simbolos": "SPY",
+   "direccion_pct": -7.1,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -1.65,
+    "cierre_base": 292.62,
+    "cierre_final": 287.8,
     "fecha_base": "2019-08-02",
     "fecha_final": "2019-08-06",
     "ruedas": 2,

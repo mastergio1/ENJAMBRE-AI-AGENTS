@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:40:04+00:00",
+ "generado": "2026-08-09T02:40:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8266,6 +8266,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c246b28a56dd8c4d",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:40:28+00:00",
+   "titular": "The Coronavirus Outbreak's Impact On Global Stocks, Commodities, ETFs",
+   "simbolos": "QQQ",
+   "direccion_pct": -8.77,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 1.79,
+    "cierre_base": 205.8,
+    "cierre_final": 209.48,
+    "fecha_base": "2020-02-28",
+    "fecha_final": "2020-03-03",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

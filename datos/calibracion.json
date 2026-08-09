@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:34:29+00:00",
+ "generado": "2026-08-09T09:35:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11363,6 +11363,28 @@
     "pct_real": 5.18,
     "cierre_base": 8.69,
     "cierre_final": 9.14,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "34e83ed04ab98987",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:34:59+00:00",
+   "titular": "Beyond The Numbers: 24 Analysts Discuss Target Stock",
+   "simbolos": "TGT",
+   "direccion_pct": 32.84,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "TGT",
+    "pct_real": 4.45,
+    "cierre_base": 88.76,
+    "cierre_final": 92.71,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

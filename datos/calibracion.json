@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:59:51+00:00",
+ "generado": "2026-08-09T03:00:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8948,6 +8948,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5a8923b6ab6ce958",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:00:18+00:00",
+   "titular": "Bitcoin hits all-time high near $69,000 amid inflation fears",
+   "simbolos": "GBTC",
+   "direccion_pct": 37.46,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -2.43,
+    "cierre_base": 48.32,
+    "cierre_final": 47.15,
+    "fecha_base": "2021-11-09",
+    "fecha_final": "2021-11-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

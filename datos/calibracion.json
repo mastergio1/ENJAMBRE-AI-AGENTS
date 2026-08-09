@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:42:47+00:00",
+ "generado": "2026-08-09T03:43:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10419,6 +10419,28 @@
     "cierre_final": 38.6,
     "fecha_base": "2017-12-15",
     "fecha_final": "2017-12-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9868ad296e35b469",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:43:17+00:00",
+   "titular": "The Most Important Week In The History Of Bitcoin",
+   "simbolos": "GBTC",
+   "direccion_pct": 33.06,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 26.2,
+    "cierre_base": 18.37,
+    "cierre_final": 23.18,
+    "fecha_base": "2017-12-11",
+    "fecha_final": "2017-12-13",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

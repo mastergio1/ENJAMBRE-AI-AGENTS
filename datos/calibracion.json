@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:24:40+00:00",
+ "generado": "2026-08-09T03:25:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9803,6 +9803,28 @@
     "cierre_final": 13.91,
     "fecha_base": "2020-12-21",
     "fecha_final": "2020-12-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9bd099755f528784",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:25:09+00:00",
+   "titular": "Why Is It Moving? Looking At Marathon Patent Group's Price Action Today",
+   "simbolos": "MARA",
+   "direccion_pct": 62.38,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 48.56,
+    "cierre_base": 5.54,
+    "cierre_final": 8.23,
+    "fecha_base": "2020-12-14",
+    "fecha_final": "2020-12-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

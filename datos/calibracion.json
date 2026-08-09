@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:01:46+00:00",
+ "generado": "2026-08-09T03:02:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9036,6 +9036,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ac87dca150317a42",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:02:14+00:00",
+   "titular": "AMC Entertainment Tops Q2 Trends For Millenials And Gen Z, WISH Enters The Top 100",
+   "simbolos": "GBTC",
+   "direccion_pct": 51.98,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 21.37,
+    "cierre_base": 24.56,
+    "cierre_final": 29.81,
+    "fecha_base": "2021-07-23",
+    "fecha_final": "2021-07-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

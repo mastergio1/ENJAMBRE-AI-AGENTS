@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:37:34+00:00",
+ "generado": "2026-08-09T03:38:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10177,6 +10177,28 @@
     "cierre_final": 2.16,
     "fecha_base": "2018-10-09",
     "fecha_final": "2018-10-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7817b970a4d5b75c",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:38:02+00:00",
+   "titular": "Shares of Riot Blockchain are down 3.9% as company CEO John O'Rourke appears to be involved in SEC complain alleging involvement 'pump-and-dump' scheme.",
+   "simbolos": "RIOT",
+   "direccion_pct": -42.12,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": -20.77,
+    "cierre_base": 5.68,
+    "cierre_final": 4.5,
+    "fecha_base": "2018-09-06",
+    "fecha_final": "2018-09-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

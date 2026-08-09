@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:07:29+00:00",
+ "generado": "2026-08-09T02:08:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7173,11 +7173,11 @@
   {
    "sim_id": "4e1cd4cb3fd18048",
    "origen": "historico",
-   "fecha": "2026-08-09T02:07:27+00:00",
+   "fecha": "2026-08-09T02:07:29+00:00",
    "titular": "Nasdaq, S&P 500 And Dow Jones Composite All Close Sharply Lower",
    "simbolos": "QQQ",
-   "direccion_pct": -3.6,
-   "volatilidad_pct": 1.12,
+   "direccion_pct": -3.03,
+   "volatilidad_pct": 1.27,
    "reaccion_real": {
     "simbolo": "QQQ",
     "pct_real": -4.14,
@@ -7188,6 +7188,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f23a2cc345a31ae4",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:08:18+00:00",
+   "titular": "Cisco, Home Depot Lead The Dow Lower Amid Escalating Russia-Ukraine Tensions",
+   "simbolos": "QQQ",
+   "direccion_pct": -1.64,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 4.96,
+    "cierre_base": 329.42,
+    "cierre_final": 345.77,
+    "fecha_base": "2022-02-23",
+    "fecha_final": "2022-02-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

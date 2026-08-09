@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:17:41+00:00",
+ "generado": "2026-08-09T09:18:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10859,6 +10859,28 @@
     "cierre_final": 30.4,
     "fecha_base": "2025-07-16",
     "fecha_final": "2025-07-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "39f3114f9ea7f9a6",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:18:10+00:00",
+   "titular": "'Robinhood Launches Stock Tokens, Reveals Layer 2 Blockchain, And Expands Crypto Suite In EU And U.S. With Perpetual Futures And Staking' - Robinhood Newsroom",
+   "simbolos": "HOOD",
+   "direccion_pct": 38.04,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "HOOD",
+    "pct_real": 11.2,
+    "cierre_base": 83.03,
+    "cierre_final": 92.33,
+    "fecha_base": "2025-06-27",
+    "fecha_final": "2025-07-01",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

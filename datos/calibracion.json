@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:36:09+00:00",
+ "generado": "2026-08-09T09:36:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11263,28 +11263,6 @@
    "epilogo": null
   },
   {
-   "sim_id": "3d8e66c271612a15",
-   "origen": "historico",
-   "fecha": "2026-08-09T09:32:10+00:00",
-   "titular": "10 Information Technology Stocks With Whale Alerts In Today's Session",
-   "simbolos": "MU",
-   "direccion_pct": 33.22,
-   "volatilidad_pct": 1.24,
-   "reaccion_real": {
-    "simbolo": "MU",
-    "pct_real": 6.88,
-    "cierre_base": 65.54,
-    "cierre_final": 70.05,
-    "fecha_base": "2025-04-08",
-    "fecha_final": "2025-04-10",
-    "ruedas": 2,
-    "fuente_datos": "yahoo",
-    "categoria": "positiva",
-    "cerebros": "ia"
-   },
-   "epilogo": null
-  },
-  {
    "sim_id": "dd62def700f2b87a",
    "origen": "historico",
    "fecha": "2026-08-09T09:32:51+00:00",
@@ -11429,6 +11407,28 @@
     "pct_real": 5.48,
     "cierre_base": 335.24,
     "cierre_final": 353.62,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3d8e66c271612a15",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:36:31+00:00",
+   "titular": "10 Information Technology Stocks With Whale Alerts In Today's Session",
+   "simbolos": "CRM",
+   "direccion_pct": 33.22,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "CRM",
+    "pct_real": 4.56,
+    "cierre_base": 243.99,
+    "cierre_final": 255.12,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T10:02:28+00:00",
+ "generado": "2026-08-09T10:03:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12358,6 +12358,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5c134aad27969186",
+   "origen": "historico",
+   "fecha": "2026-08-09T10:02:59+00:00",
+   "titular": "Rivian Produced 12,727 Vehicles And Delivered 14,183 During Q4; In 2024, Co. Produced 49,476 And Delivered 51,579",
+   "simbolos": "RIVN",
+   "direccion_pct": 43.5,
+   "volatilidad_pct": 1.02,
+   "reaccion_real": {
+    "simbolo": "RIVN",
+    "pct_real": 18.6,
+    "cierre_base": 13.25,
+    "cierre_final": 15.72,
+    "fecha_base": "2025-01-02",
+    "fecha_final": "2025-01-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

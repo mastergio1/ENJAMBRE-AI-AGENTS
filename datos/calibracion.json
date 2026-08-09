@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:59:01+00:00",
+ "generado": "2026-08-09T09:59:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12204,6 +12204,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8027509add42eee3",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:59:31+00:00",
+   "titular": "Alibaba, Starbucks, Jetblue, Lockheed Martin, Tesla: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "SBUX",
+   "direccion_pct": 29.57,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "SBUX",
+    "pct_real": 8.55,
+    "cierre_base": 100.41,
+    "cierre_final": 109.0,
+    "fecha_base": "2025-01-28",
+    "fecha_final": "2025-01-30",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

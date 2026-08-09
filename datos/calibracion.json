@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:49:09+00:00",
+ "generado": "2026-08-09T09:49:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11962,6 +11962,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b09d49dc1da222bb",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:49:43+00:00",
+   "titular": "Intel Stock Rallies After Company Names New CEO: What To Know",
+   "simbolos": "INTC",
+   "direccion_pct": 34.92,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": 16.3,
+    "cierre_base": 20.68,
+    "cierre_final": 24.05,
+    "fecha_base": "2025-03-12",
+    "fecha_final": "2025-03-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

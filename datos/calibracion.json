@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:58:33+00:00",
+ "generado": "2026-08-09T02:58:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8877,6 +8877,28 @@
     "pct_real": -19.03,
     "cierre_base": 45.75,
     "cierre_final": 37.04,
+    "fecha_base": "2022-01-20",
+    "fecha_final": "2022-01-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2d11cfc5b69fde94",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:58:56+00:00",
+   "titular": "Bitcoin sinks below $36,000 as risk assets sell off on rate-hike jitters",
+   "simbolos": "GBTC",
+   "direccion_pct": -23.85,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -10.76,
+    "cierre_base": 26.21,
+    "cierre_final": 23.39,
     "fecha_base": "2022-01-20",
     "fecha_final": "2022-01-24",
     "ruedas": 2,

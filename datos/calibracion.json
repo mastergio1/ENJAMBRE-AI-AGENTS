@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:11:22+00:00",
+ "generado": "2026-08-09T03:16:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9410,6 +9410,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c1afe204553fd3fa",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:15:52+00:00",
+   "titular": "Tesla, Square Make $5B On Bitcoin Investment While Small Cap Crypto Stocks Surge",
+   "simbolos": "MARA",
+   "direccion_pct": 22.86,
+   "volatilidad_pct": 0.99,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": -9.97,
+    "cierre_base": 37.11,
+    "cierre_final": 33.41,
+    "fecha_base": "2021-02-22",
+    "fecha_final": "2021-02-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

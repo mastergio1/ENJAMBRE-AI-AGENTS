@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:55:23+00:00",
+ "generado": "2026-08-09T02:55:49+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8725,6 +8725,28 @@
     "cierre_final": 246.18,
     "fecha_base": "2018-12-21",
     "fecha_final": "2018-12-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c5d85dba25a039c1",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:55:48+00:00",
+   "titular": "U.S. House Passes Bill To Fund Federal Agencies Through Feb. 8, Provide $5B For Border Wall",
+   "simbolos": "SPY",
+   "direccion_pct": 4.81,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -5.19,
+    "cierre_base": 247.17,
+    "cierre_final": 234.34,
+    "fecha_base": "2018-12-20",
+    "fecha_final": "2018-12-24",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

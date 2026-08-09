@@ -51,9 +51,12 @@ CAPITAL_BASE = 10_000.0  # capital de un agente retail 1x
 # _tono_de_titular). Es una perilla de MAGNITUD, no de dirección: subirla
 # agranda el golpe del ambiente sin cambiar si el mercado sube o baja. Se
 # calibra con los exámenes (el corrector), igual que los diales de mercado.
-# 1.5 se eligió para que el ambiente conserve la escala que tenía con el
-# diccionario léxico (medido sobre el banco de titulares real).
-GANANCIA_CONSENSO = 1.5
+# 1ª ronda de exámenes (163 casos, índice+cripto): con 1.5 la DIRECCIÓN mejoró
+# fuerte (índice 47%→62%) pero el enjambre se pasó ~2x en MAGNITUD (ratio
+# real/sim ~0.5). Como el cambio de magnitud vino entero de este ambiente,
+# bajamos la perilla ~×0.54 para volver a la escala calibrada (real/sim ~0.9).
+# La dirección NO se toca (es el signo del consenso, no su tamaño).
+GANANCIA_CONSENSO = 0.8
 
 # Fracción mínima de líderes que deben haber hablado con la IA real para
 # confiar en su consenso como tono. Si la mayoría cayó al respaldo léxico

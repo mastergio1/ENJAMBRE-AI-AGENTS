@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T10:00:01+00:00",
+ "generado": "2026-08-09T10:00:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12245,6 +12245,28 @@
     "cierre_final": 49.78,
     "fecha_base": "2025-01-27",
     "fecha_final": "2025-01-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4f609dd6a0c97f0d",
+   "origen": "historico",
+   "fecha": "2026-08-09T10:00:28+00:00",
+   "titular": "Nvidia Stock Slides Overnight On Robinhood As China's DeepSeek Sparks Doubts Over GPU Spending Frenzy — Chamath Palihapitiya Highlights Report Indicating AI Holy Grail Cracked",
+   "simbolos": "NVDA",
+   "direccion_pct": -1.18,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "NVDA",
+    "pct_real": -9.56,
+    "cierre_base": 142.62,
+    "cierre_final": 128.99,
+    "fecha_base": "2025-01-24",
+    "fecha_final": "2025-01-28",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

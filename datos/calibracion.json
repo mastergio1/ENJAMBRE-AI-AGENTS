@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:31:02+00:00",
+ "generado": "2026-08-09T02:31:36+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8024,6 +8024,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "382298770cba0b3b",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:31:30+00:00",
+   "titular": "Pelosi Says Is Pleased With Progress Made For US Workers In Coronavirus Relief Bill",
+   "simbolos": "SPY",
+   "direccion_pct": 2.54,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 10.69,
+    "cierre_base": 222.95,
+    "cierre_final": 246.79,
+    "fecha_base": "2020-03-23",
+    "fecha_final": "2020-03-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:24:11+00:00",
+ "generado": "2026-08-09T03:24:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9784,6 +9784,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aec411e2af54b497",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:24:40+00:00",
+   "titular": "Riot Blockchain Purchases Additional 15K Antminers From Bitmain, Expanding 2021 Total Hash Rate Capacity Over 3.8 EH/s",
+   "simbolos": "RIOT",
+   "direccion_pct": 62.17,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 26.0,
+    "cierre_base": 11.04,
+    "cierre_final": 13.91,
+    "fecha_base": "2020-12-21",
+    "fecha_final": "2020-12-23",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

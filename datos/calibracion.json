@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:08:18+00:00",
+ "generado": "2026-08-09T02:09:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7210,6 +7210,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aba748ab8ff4c265",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:09:00+00:00",
+   "titular": "Netflix And Sirius XM Lead The Nasdaq Sharply Lower",
+   "simbolos": "QQQ",
+   "direccion_pct": -4.25,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -3.05,
+    "cierre_base": 358.43,
+    "cierre_final": 347.49,
+    "fecha_base": "2022-02-10",
+    "fecha_final": "2022-02-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

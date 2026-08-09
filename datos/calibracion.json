@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:26:10+00:00",
+ "generado": "2026-08-09T02:26:40+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7779,6 +7779,28 @@
     "cierre_final": 123.12,
     "fecha_base": "2020-05-12",
     "fecha_final": "2020-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e5d297d4755d8a19",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:26:39+00:00",
+   "titular": "Trump Says We're Going To Look At Aid For States Mentioned By House Speaker Pelosi, But We Want To Get Something For It",
+   "simbolos": "SPY",
+   "direccion_pct": 10.53,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.38,
+    "cierre_base": 290.48,
+    "cierre_final": 283.57,
+    "fecha_base": "2020-04-30",
+    "fecha_final": "2020-05-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

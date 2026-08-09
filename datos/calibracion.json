@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:34:04+00:00",
+ "generado": "2026-08-09T09:34:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11341,6 +11341,28 @@
     "pct_real": 5.56,
     "cierre_base": 273.94,
     "cierre_final": 289.16,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4f012a2d7443652b",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:34:28+00:00",
+   "titular": "Bernstein Downgrades Ford Motor to Underperform, Lowers Price Target to $7",
+   "simbolos": "F",
+   "direccion_pct": -3.25,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "F",
+    "pct_real": 5.18,
+    "cierre_base": 8.69,
+    "cierre_final": 9.14,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

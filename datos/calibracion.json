@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:25:29+00:00",
+ "generado": "2026-08-09T09:26:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11165,6 +11165,28 @@
     "pct_real": 13.77,
     "cierre_base": 221.86,
     "cierre_final": 252.4,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "09c64d40c8bc1aeb",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:26:00+00:00",
+   "titular": "Marjorie Taylor Greene Buys The Dip: Congresswoman Purchases Shares Of Apple, Amazon, Nike And More Following Tariff-Related Sell-Off",
+   "simbolos": "JPM",
+   "direccion_pct": 39.85,
+   "volatilidad_pct": 1.26,
+   "reaccion_real": {
+    "simbolo": "JPM",
+    "pct_real": 4.72,
+    "cierre_base": 216.87,
+    "cierre_final": 227.11,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

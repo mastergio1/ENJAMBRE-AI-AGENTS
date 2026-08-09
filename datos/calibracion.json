@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:48:50+00:00",
+ "generado": "2026-08-09T02:49:24+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8635,6 +8635,28 @@
     "pct_real": 5.52,
     "cierre_base": 149.82,
     "cierre_final": 158.09,
+    "fecha_base": "2019-01-03",
+    "fecha_final": "2019-01-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d153a79d25a0a2c4",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:49:17+00:00",
+   "titular": "Powell signals patience on rates as jobs report crushes estimates; stocks soar",
+   "simbolos": "SPY",
+   "direccion_pct": 4.13,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 4.16,
+    "cierre_base": 244.21,
+    "cierre_final": 254.38,
     "fecha_base": "2019-01-03",
     "fecha_final": "2019-01-07",
     "ruedas": 2,

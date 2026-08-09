@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:26:08+00:00",
+ "generado": "2026-08-09T09:26:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11187,6 +11187,28 @@
     "pct_real": 4.72,
     "cierre_base": 216.87,
     "cierre_final": 227.11,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aefcd4fe3471acb6",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:26:36+00:00",
+   "titular": "As Trump Tariffs Spark Panic, Investors Rush Into These 5 'Recession-Proof' ETFs",
+   "simbolos": "WMT",
+   "direccion_pct": 1.3,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "WMT",
+    "pct_real": 10.78,
+    "cierre_base": 81.79,
+    "cierre_final": 90.61,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

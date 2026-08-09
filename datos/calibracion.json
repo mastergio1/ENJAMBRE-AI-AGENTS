@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:17:30+00:00",
+ "generado": "2026-08-09T03:17:54+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9476,6 +9476,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4445b71e75cb7f2c",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:17:54+00:00",
+   "titular": "Top 10 Trending Stocks On Stocktwits, Tuesday, Feb. 16, 2021 (Via Stocktwits)",
+   "simbolos": "RIOT",
+   "direccion_pct": 23.34,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 4.25,
+    "cierre_base": 59.5,
+    "cierre_final": 62.03,
+    "fecha_base": "2021-02-16",
+    "fecha_final": "2021-02-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

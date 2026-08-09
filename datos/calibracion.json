@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:25:43+00:00",
+ "generado": "2026-08-09T02:26:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7760,6 +7760,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d5de4315693da3cc",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:26:09+00:00",
+   "titular": "ETF Short Sellers Are Targeting Retail, Biotech",
+   "simbolos": "IWM",
+   "direccion_pct": -6.78,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "IWM",
+    "pct_real": -3.03,
+    "cierre_base": 126.97,
+    "cierre_final": 123.12,
+    "fecha_base": "2020-05-12",
+    "fecha_final": "2020-05-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

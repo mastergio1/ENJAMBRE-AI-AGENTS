@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:05:00+00:00",
+ "generado": "2026-08-09T03:05:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9168,6 +9168,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a9ef1ccc8f29ba69",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:05:26+00:00",
+   "titular": "Not Just Bitcoin, Cathie Wood's Ark Is Heavily Bullish On Ethereum Too: What You Need To Know",
+   "simbolos": "ETHE",
+   "direccion_pct": 44.56,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": -16.28,
+    "cierre_base": 29.11,
+    "cierre_final": 24.37,
+    "fecha_base": "2021-05-18",
+    "fecha_final": "2021-05-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

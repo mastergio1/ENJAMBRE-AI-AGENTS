@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:38:33+00:00",
+ "generado": "2026-08-09T03:39:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10221,6 +10221,28 @@
     "cierre_final": 5.73,
     "fecha_base": "2018-07-16",
     "fecha_final": "2018-07-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "8ae65c3d514fd0b6",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:39:00+00:00",
+   "titular": "Benzinga Pro Morning Cryptocurrency Price Check: Over Last 24 Hours, Stellar Up 7.2% To $0.21, Cardano Up 6.3% To $0.15, Bitcoin Cash Up 5.7% To $776.95, Litecoin Up 5.2% To $83.74, EOS Up 4.9% To $8.43, Bitcoin Up 4.2% To $6,627.30,",
+   "simbolos": "GBTC",
+   "direccion_pct": 52.68,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 17.35,
+    "cierre_base": 7.71,
+    "cierre_final": 9.04,
+    "fecha_base": "2018-06-29",
+    "fecha_final": "2018-07-03",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

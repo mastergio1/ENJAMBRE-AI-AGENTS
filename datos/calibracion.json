@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:04:01+00:00",
+ "generado": "2026-08-09T03:04:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9121,6 +9121,28 @@
     "cierre_final": 66.9,
     "fecha_base": "2021-06-25",
     "fecha_final": "2021-06-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f66c9f1e208c275d",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:04:29+00:00",
+   "titular": "Elon Musk Tweet: Tesla only sold ~10% of holdings to confirm BTC could be liquidated easily without moving market.  When there's confirmation of reasonable (~50%) clean energy usage by miners with positive future trend, Tesla will resume allowing Bitcoin transactions.",
+   "simbolos": "MSTR",
+   "direccion_pct": 47.89,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 22.09,
+    "cierre_base": 51.64,
+    "cierre_final": 63.05,
+    "fecha_base": "2021-06-11",
+    "fecha_final": "2021-06-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

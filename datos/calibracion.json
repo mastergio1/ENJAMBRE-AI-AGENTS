@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:42:43+00:00",
+ "generado": "2026-08-09T09:43:18+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11695,6 +11695,28 @@
     "cierre_final": 26.83,
     "fecha_base": "2025-04-03",
     "fecha_final": "2025-04-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "10270e32fa38b878",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:43:17+00:00",
+   "titular": "Trump's Sweeping Tariffs Could Cost US $20 Trillion, Crash Markets Warn Economists: 'Monstrously Destructive'",
+   "simbolos": "AAPL",
+   "direccion_pct": 7.32,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "AAPL",
+    "pct_real": -15.86,
+    "cierre_base": 223.89,
+    "cierre_final": 188.38,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

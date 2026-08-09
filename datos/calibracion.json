@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:39:59+00:00",
+ "generado": "2026-08-09T03:40:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10290,6 +10290,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ff78cb20561ed5a7",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:40:25+00:00",
+   "titular": "Cryptocurrency Ratings Agency Explains Bitcoin's C+ Grade",
+   "simbolos": "GBTC",
+   "direccion_pct": -22.83,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -23.03,
+    "cierre_base": 14.08,
+    "cierre_final": 10.84,
+    "fecha_base": "2018-01-31",
+    "fecha_final": "2018-02-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

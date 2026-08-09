@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:05:27+00:00",
+ "generado": "2026-08-09T03:05:53+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9185,6 +9185,28 @@
     "pct_real": -16.28,
     "cierre_base": 29.11,
     "cierre_final": 24.37,
+    "fecha_base": "2021-05-18",
+    "fecha_final": "2021-05-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "652ded2f113ab5b3",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:05:52+00:00",
+   "titular": "Bitcoin plunges 30% intraday as China crackdown sparks crypto rout",
+   "simbolos": "GBTC",
+   "direccion_pct": -21.06,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -3.87,
+    "cierre_base": 31.06,
+    "cierre_final": 29.86,
     "fecha_base": "2021-05-18",
     "fecha_final": "2021-05-20",
     "ruedas": 2,

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:43:45+00:00",
+ "generado": "2026-08-09T03:44:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10463,6 +10463,28 @@
     "cierre_final": 28.2,
     "fecha_base": "2017-12-08",
     "fecha_final": "2017-12-12",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "74fa0f451084999e",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:44:10+00:00",
+   "titular": "Citadel's Ken Griffin On CNBC Says Bitcoin 'Is Not The Future Of Currency,' But 'Wouldn't Call It A Fraud Either'",
+   "simbolos": "GBTC",
+   "direccion_pct": -15.9,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 36.87,
+    "cierre_base": 10.66,
+    "cierre_final": 14.59,
+    "fecha_base": "2017-11-24",
+    "fecha_final": "2017-11-28",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

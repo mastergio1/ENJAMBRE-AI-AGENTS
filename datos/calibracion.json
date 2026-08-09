@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:21:09+00:00",
+ "generado": "2026-08-09T03:21:37+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9647,6 +9647,28 @@
     "pct_real": 11.33,
     "cierre_base": 51.93,
     "cierre_final": 57.81,
+    "fecha_base": "2021-01-13",
+    "fecha_final": "2021-01-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0b378ab02acf0711",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:21:37+00:00",
+   "titular": "Standpoint Research Analyst Ronnie Moas Highlights His Bitcoin Target Of $56K-$112K For End Of 2021",
+   "simbolos": "RIOT",
+   "direccion_pct": 47.84,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 7.96,
+    "cierre_base": 23.88,
+    "cierre_final": 25.78,
     "fecha_base": "2021-01-13",
     "fecha_final": "2021-01-15",
     "ruedas": 2,

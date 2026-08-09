@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:45:50+00:00",
+ "generado": "2026-08-09T02:46:15+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8527,6 +8527,28 @@
     "cierre_final": 287.8,
     "fecha_base": "2019-08-02",
     "fecha_final": "2019-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "75cbaef735389d58",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:46:15+00:00",
+   "titular": "Chinese Officials Have Increased Biodiesel Tariff From 10% To 25%",
+   "simbolos": "SPY",
+   "direccion_pct": 2.07,
+   "volatilidad_pct": 1.39,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -1.63,
+    "cierre_base": 288.1,
+    "cierre_final": 283.4,
+    "fecha_base": "2019-05-10",
+    "fecha_final": "2019-05-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

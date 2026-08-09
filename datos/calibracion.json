@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:19:12+00:00",
+ "generado": "2026-08-09T09:19:44+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10928,6 +10928,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "92e92247157aa8ec",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:19:43+00:00",
+   "titular": "Mastercard CFO Says Shoppers Ready To Abandon The Web Browser In Favor Of AI Agents: 'Paradigm Shift' Unfolding",
+   "simbolos": "AMZN",
+   "direccion_pct": 29.93,
+   "volatilidad_pct": 1.08,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": 9.48,
+    "cierre_base": 193.06,
+    "cierre_final": 211.37,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

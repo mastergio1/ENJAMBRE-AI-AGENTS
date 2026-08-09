@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:19:48+00:00",
+ "generado": "2026-08-09T03:20:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9581,6 +9581,28 @@
     "pct_real": 57.93,
     "cierre_base": 80.6,
     "cierre_final": 127.29,
+    "fecha_base": "2021-02-05",
+    "fecha_final": "2021-02-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b3ea07ffeee8d6d5",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:20:14+00:00",
+   "titular": "Bitcoin soars to record after Tesla reveals $1.5 billion investment",
+   "simbolos": "GBTC",
+   "direccion_pct": 49.33,
+   "volatilidad_pct": 0.88,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 26.45,
+    "cierre_base": 34.22,
+    "cierre_final": 43.27,
     "fecha_base": "2021-02-05",
     "fecha_final": "2021-02-09",
     "ruedas": 2,

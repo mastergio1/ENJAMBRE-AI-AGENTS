@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:30:22+00:00",
+ "generado": "2026-08-09T03:30:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10038,6 +10038,28 @@
    "simbolos": "GBTC",
    "direccion_pct": -20.15,
    "volatilidad_pct": 1.06,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": -26.6,
+    "cierre_base": 7.78,
+    "cierre_final": 5.71,
+    "fecha_base": "2020-03-11",
+    "fecha_final": "2020-03-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1a55b660e513e6f1",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:30:49+00:00",
+   "titular": "Bitcoin crashes nearly 50% in worst day in seven years as coronavirus panic grips markets",
+   "simbolos": "GBTC",
+   "direccion_pct": -25.27,
+   "volatilidad_pct": 1.19,
    "reaccion_real": {
     "simbolo": "GBTC",
     "pct_real": -26.6,

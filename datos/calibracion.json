@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:24:32+00:00",
+ "generado": "2026-08-09T09:25:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11143,6 +11143,28 @@
     "pct_real": 5.61,
     "cierre_base": 144.7,
     "cierre_final": 152.82,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "13fb847d46717c92",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:24:57+00:00",
+   "titular": "Meta Restricts Live Streaming For Teens Under 16 As Part Of Expanded Safety Measures",
+   "simbolos": "META",
+   "direccion_pct": 2.69,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "META",
+    "pct_real": 7.02,
+    "cierre_base": 510.45,
+    "cierre_final": 546.29,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

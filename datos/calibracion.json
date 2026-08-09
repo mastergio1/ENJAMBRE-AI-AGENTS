@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:42:16+00:00",
+ "generado": "2026-08-09T03:42:47+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10395,6 +10395,28 @@
     "pct_real": 11.93,
     "cierre_base": 26.79,
     "cierre_final": 29.99,
+    "fecha_base": "2017-12-15",
+    "fecha_final": "2017-12-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5a5b0c62a76ca6ea",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:42:47+00:00",
+   "titular": "Attention Crypto Investors: On Track Innovations Is Now A Bitcoin Play",
+   "simbolos": "RIOT",
+   "direccion_pct": 30.57,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 35.44,
+    "cierre_base": 28.5,
+    "cierre_final": 38.6,
     "fecha_base": "2017-12-15",
     "fecha_final": "2017-12-19",
     "ruedas": 2,

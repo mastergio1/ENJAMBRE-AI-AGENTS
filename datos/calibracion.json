@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:48:00+00:00",
+ "generado": "2026-08-09T09:48:35+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11913,6 +11913,28 @@
     "pct_real": -11.87,
     "cierre_base": 64.96,
     "cierre_final": 57.25,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b36cca82822c4215",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:48:27+00:00",
+   "titular": "9 Consumer Discretionary Stocks Whale Activity In Today's Session",
+   "simbolos": "SBUX",
+   "direccion_pct": 45.39,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "SBUX",
+    "pct_real": -17.41,
+    "cierre_base": 99.41,
+    "cierre_final": 82.1,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

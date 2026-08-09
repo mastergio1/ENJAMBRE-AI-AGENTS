@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:27:59+00:00",
+ "generado": "2026-08-09T02:28:24+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7889,6 +7889,28 @@
     "cierre_final": 236.64,
     "fecha_base": "2020-04-16",
     "fecha_final": "2020-04-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "114e2dbde8918a6c",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:28:24+00:00",
+   "titular": "NY Governor Cuomo Says 'We Are Not There Yet' On Testing, Says Reopening Must Be Phased, Balanced",
+   "simbolos": "SPY",
+   "direccion_pct": -5.91,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 0.76,
+    "cierre_base": 275.66,
+    "cierre_final": 277.76,
+    "fecha_base": "2020-04-13",
+    "fecha_final": "2020-04-15",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "neutra",

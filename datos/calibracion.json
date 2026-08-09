@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:39:32+00:00",
+ "generado": "2026-08-09T02:40:04+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8244,6 +8244,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2b84fe05c417a097",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:40:04+00:00",
+   "titular": "FDA Says In Addition To Tests CDC Is Distributing To Public Health Labs, Added CDC Tests Being Produced By Commercial Test Manufacturer IDT",
+   "simbolos": "SPY",
+   "direccion_pct": 43.23,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 0.74,
+    "cierre_base": 300.24,
+    "cierre_final": 302.46,
+    "fecha_base": "2020-03-03",
+    "fecha_final": "2020-03-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

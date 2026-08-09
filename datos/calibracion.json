@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:39:28+00:00",
+ "generado": "2026-08-09T03:39:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10268,6 +10268,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c979657fd9bf27d4",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:39:58+00:00",
+   "titular": "ICYMI: Super Bowl Commercials, Nvidia, Roku, And A Bitcoin Bull",
+   "simbolos": "GBTC",
+   "direccion_pct": 56.69,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 36.22,
+    "cierre_base": 9.08,
+    "cierre_final": 12.37,
+    "fecha_base": "2018-02-05",
+    "fecha_final": "2018-02-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

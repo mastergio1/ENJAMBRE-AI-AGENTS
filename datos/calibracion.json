@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:59:31+00:00",
+ "generado": "2026-08-09T10:00:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12226,6 +12226,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "80ed293d2c3e7a4b",
+   "origen": "historico",
+   "fecha": "2026-08-09T10:00:01+00:00",
+   "titular": "General Motors Q4 Earnings: EV Tax Credits, Tariffs, Political Impacts",
+   "simbolos": "GM",
+   "direccion_pct": 23.97,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "GM",
+    "pct_real": -9.36,
+    "cierre_base": 54.92,
+    "cierre_final": 49.78,
+    "fecha_base": "2025-01-27",
+    "fecha_final": "2025-01-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

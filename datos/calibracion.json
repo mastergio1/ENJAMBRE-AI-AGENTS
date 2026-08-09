@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:43:18+00:00",
+ "generado": "2026-08-09T03:43:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10441,6 +10441,28 @@
     "cierre_final": 23.18,
     "fecha_base": "2017-12-11",
     "fecha_final": "2017-12-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "6da104d43713c994",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:43:45+00:00",
+   "titular": "Riot Blockchain Reports TessPay Unit Signed Letter Of Intent For Merger With Publicly-Traded Cresval Capital Corp.",
+   "simbolos": "RIOT",
+   "direccion_pct": 52.28,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 77.81,
+    "cierre_base": 15.86,
+    "cierre_final": 28.2,
+    "fecha_base": "2017-12-08",
+    "fecha_final": "2017-12-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

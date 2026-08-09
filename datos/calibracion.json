@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:02:56+00:00",
+ "generado": "2026-08-09T02:03:14+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7019,16 +7019,16 @@
   {
    "sim_id": "1900f03b163b03e8",
    "origen": "historico",
-   "fecha": "2026-08-09T02:02:55+00:00",
+   "fecha": "2026-08-09T02:03:14+00:00",
    "titular": "Markets Stage Big Rally Following Historic 50 Basis Point Rate Hike",
-   "simbolos": "QQQ",
+   "simbolos": "DIA",
    "direccion_pct": 7.56,
    "volatilidad_pct": 1.41,
    "reaccion_real": {
-    "simbolo": "QQQ",
-    "pct_real": -6.17,
-    "cierre_base": 329.6,
-    "cierre_final": 309.25,
+    "simbolo": "DIA",
+    "pct_real": -3.38,
+    "cierre_base": 340.59,
+    "cierre_final": 329.07,
     "fecha_base": "2022-05-04",
     "fecha_final": "2022-05-06",
     "ruedas": 2,

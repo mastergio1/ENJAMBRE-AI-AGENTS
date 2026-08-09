@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:40:46+00:00",
+ "generado": "2026-08-09T09:41:20+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11605,6 +11605,28 @@
     "pct_real": 9.57,
     "cierre_base": 51.22,
     "cierre_final": 56.12,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4a3b196dac815c7c",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:41:19+00:00",
+   "titular": "Citigroup Maintains Buy on Carvana, Lowers Price Target to $280",
+   "simbolos": "CVNA",
+   "direccion_pct": 42.57,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "CVNA",
+    "pct_real": 15.51,
+    "cierre_base": 35.26,
+    "cierre_final": 40.73,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

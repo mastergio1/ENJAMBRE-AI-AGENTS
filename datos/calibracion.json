@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:14:38+00:00",
+ "generado": "2026-08-09T02:18:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7371,11 +7371,11 @@
   {
    "sim_id": "283025866ad330e1",
    "origen": "historico",
-   "fecha": "2026-08-09T02:14:31+00:00",
+   "fecha": "2026-08-09T02:14:33+00:00",
    "titular": "Top 20 Trending Stocks On WallStreetBets As Of Wednesday, Feb. 24, 2021 (Via Swaggy Stocks)",
    "simbolos": "QQQ",
-   "direccion_pct": 27.05,
-   "volatilidad_pct": 1.13,
+   "direccion_pct": 26.33,
+   "volatilidad_pct": 1.16,
    "reaccion_real": {
     "simbolo": "QQQ",
     "pct_real": -3.08,
@@ -7386,6 +7386,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "03d62c2727bf5ae1",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:18:26+00:00",
+   "titular": "Resilient Corporate Profits, Post-Election Calm Could Put Bounce In Markets' Step",
+   "simbolos": "DIA",
+   "direccion_pct": 10.59,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 3.99,
+    "cierre_base": 283.22,
+    "cierre_final": 294.51,
+    "fecha_base": "2020-11-06",
+    "fecha_final": "2020-11-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:39:03+00:00",
+ "generado": "2026-08-09T02:39:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8217,6 +8217,28 @@
     "pct_real": -3.24,
     "cierre_base": 258.85,
     "cierre_final": 250.47,
+    "fecha_base": "2020-03-06",
+    "fecha_final": "2020-03-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d636d088784addd6",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:39:32+00:00",
+   "titular": "Dow sinks 2,000 points as oil crashes 30% and coronavirus fears grip markets",
+   "simbolos": "SPY",
+   "direccion_pct": -11.41,
+   "volatilidad_pct": 1.5,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -3.04,
+    "cierre_base": 297.46,
+    "cierre_final": 288.42,
     "fecha_base": "2020-03-06",
     "fecha_final": "2020-03-10",
     "ruedas": 2,

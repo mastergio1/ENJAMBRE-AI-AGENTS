@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:55:44+00:00",
+ "generado": "2026-08-09T09:56:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12050,6 +12050,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3de715335541198a",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:56:15+00:00",
+   "titular": "Walmart Stock Bullish Ahead Of Q4 Earnings: Is Upside Already Priced In?",
+   "simbolos": "WMT",
+   "direccion_pct": 28.8,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "WMT",
+    "pct_real": -8.87,
+    "cierre_base": 104.0,
+    "cierre_final": 94.78,
+    "fecha_base": "2025-02-19",
+    "fecha_final": "2025-02-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

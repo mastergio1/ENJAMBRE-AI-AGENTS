@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:57:43+00:00",
+ "generado": "2026-08-09T09:58:09+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12135,6 +12135,28 @@
     "cierre_final": 191.6,
     "fecha_base": "2025-02-04",
     "fecha_final": "2025-02-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a04ab76a73dd9f25",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:58:09+00:00",
+   "titular": "Palantir, Nvidia, Paypal, Costco, Tesla: Why These 5 Stocks Are On Investors' Radars Today",
+   "simbolos": "PYPL",
+   "direccion_pct": 42.98,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "PYPL",
+    "pct_real": -11.52,
+    "cierre_base": 89.51,
+    "cierre_final": 79.2,
+    "fecha_base": "2025-02-03",
+    "fecha_final": "2025-02-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

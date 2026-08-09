@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:38:14+00:00",
+ "generado": "2026-08-09T02:38:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8195,6 +8195,28 @@
     "pct_real": -3.04,
     "cierre_base": 297.46,
     "cierre_final": 288.42,
+    "fecha_base": "2020-03-06",
+    "fecha_final": "2020-03-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "25d441a7bb74a5aa",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:38:41+00:00",
+   "titular": "S&P, Dow Futures Fall 4% at the Open; Crude Falls $8 After Saudi Aramco Slashes Crude Price for Arab Light by $7/Barrel",
+   "simbolos": "QQQ",
+   "direccion_pct": -7.59,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -1.88,
+    "cierre_base": 208.02,
+    "cierre_final": 204.11,
     "fecha_base": "2020-03-06",
     "fecha_final": "2020-03-10",
     "ruedas": 2,

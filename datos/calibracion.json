@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:28:05+00:00",
+ "generado": "2026-08-09T03:28:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9957,6 +9957,28 @@
     "cierre_final": 5.25,
     "fecha_base": "2020-11-16",
     "fecha_final": "2020-11-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c553ed869261af61",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:28:24+00:00",
+   "titular": "Stocks That Hit 52-Week Highs On Monday",
+   "simbolos": "RIOT",
+   "direccion_pct": 17.46,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "RIOT",
+    "pct_real": 28.79,
+    "cierre_base": 2.64,
+    "cierre_final": 3.4,
+    "fecha_base": "2020-07-31",
+    "fecha_final": "2020-08-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

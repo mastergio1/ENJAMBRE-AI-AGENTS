@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:17:01+00:00",
+ "generado": "2026-08-09T03:17:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9451,6 +9451,28 @@
     "cierre_final": 52.27,
     "fecha_base": "2021-02-22",
     "fecha_final": "2021-02-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "0a389c38b565814b",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:17:29+00:00",
+   "titular": "Benzinga's Crypto Update: Bitcoin Trades Above $52K, Dogecoin Trades Above $0.053, Ethereum Trades Above $1.7K, Litecoin Trades Above $200",
+   "simbolos": "ETHE",
+   "direccion_pct": 69.35,
+   "volatilidad_pct": 0.86,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": -24.08,
+    "cierre_base": 19.65,
+    "cierre_final": 14.92,
+    "fecha_base": "2021-02-19",
+    "fecha_final": "2021-02-23",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

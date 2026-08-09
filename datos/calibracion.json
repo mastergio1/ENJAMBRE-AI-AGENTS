@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:46:50+00:00",
+ "generado": "2026-08-09T09:47:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11869,6 +11869,28 @@
     "pct_real": -13.92,
     "cierre_base": 334.66,
     "cierre_final": 288.08,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "37998b6686f7dcaa",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:47:18+00:00",
+   "titular": "Walmart Pressures Chinese Suppliers To Cut Prices Amid New Tariff Battle",
+   "simbolos": "TGT",
+   "direccion_pct": 18.45,
+   "volatilidad_pct": 0.9,
+   "reaccion_real": {
+    "simbolo": "TGT",
+    "pct_real": -9.5,
+    "cierre_base": 105.77,
+    "cierre_final": 95.72,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

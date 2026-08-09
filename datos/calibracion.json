@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:58:07+00:00",
+ "generado": "2026-08-09T02:58:33+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8855,6 +8855,28 @@
     "pct_real": -13.6,
     "cierre_base": 221.62,
     "cierre_final": 191.48,
+    "fecha_base": "2022-01-20",
+    "fecha_final": "2022-01-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ce7a367c8225ffa4",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:58:32+00:00",
+   "titular": "MicroStrategy Shares Mark Session Low, Quickly Rebound Following Report SEC Has Rejected Co.'s Bitcoin Accounting Strategy",
+   "simbolos": "MSTR",
+   "direccion_pct": 27.52,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -19.03,
+    "cierre_base": 45.75,
+    "cierre_final": 37.04,
     "fecha_base": "2022-01-20",
     "fecha_final": "2022-01-24",
     "ruedas": 2,

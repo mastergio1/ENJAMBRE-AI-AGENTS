@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:23:34+00:00",
+ "generado": "2026-08-09T02:23:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7650,6 +7650,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "eeaea7659bd6a5b0",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:23:57+00:00",
+   "titular": "U.S. Futures Lower Ahead of Job Numbers",
+   "simbolos": "DIA",
+   "direccion_pct": -1.37,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": 4.92,
+    "cierre_base": 263.33,
+    "cierre_final": 276.28,
+    "fecha_base": "2020-06-04",
+    "fecha_final": "2020-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

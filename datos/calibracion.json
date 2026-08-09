@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:10:47+00:00",
+ "generado": "2026-08-09T03:11:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9385,6 +9385,28 @@
     "cierre_final": 75.65,
     "fecha_base": "2021-03-08",
     "fecha_final": "2021-03-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "aafff76f26779cba",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:11:13+00:00",
+   "titular": "Top 20 Trending Stocks On WallStreetBets As Of Monday, March 1, 2021 (Via Swaggy Stocks)",
+   "simbolos": "MARA",
+   "direccion_pct": 28.61,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "MARA",
+    "pct_real": 15.72,
+    "cierre_base": 30.15,
+    "cierre_final": 34.89,
+    "fecha_base": "2021-02-26",
+    "fecha_final": "2021-03-02",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

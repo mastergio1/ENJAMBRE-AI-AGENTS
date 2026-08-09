@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:03:33+00:00",
+ "generado": "2026-08-09T03:04:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -9099,6 +9099,28 @@
     "cierre_final": 31.64,
     "fecha_base": "2021-07-23",
     "fecha_final": "2021-07-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "971df2f86f69462e",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:04:01+00:00",
+   "titular": "Why MicroStrategy Shares Are Moving Today",
+   "simbolos": "MSTR",
+   "direccion_pct": 34.32,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": 21.62,
+    "cierre_base": 55.01,
+    "cierre_final": 66.9,
+    "fecha_base": "2021-06-25",
+    "fecha_final": "2021-06-29",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

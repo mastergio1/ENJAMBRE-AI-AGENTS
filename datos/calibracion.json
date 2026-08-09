@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:13:42+00:00",
+ "generado": "2026-08-09T02:14:38+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7349,11 +7349,11 @@
   {
    "sim_id": "579bfbcb9d6e38f1",
    "origen": "historico",
-   "fecha": "2026-08-09T02:13:35+00:00",
+   "fecha": "2026-08-09T02:13:39+00:00",
    "titular": "Top 20 Trending Stocks On WallStreetBets As Of Monday, Mar. 8, 2021 (Via Swaggy Stocks)",
    "simbolos": "QQQ",
-   "direccion_pct": 24.28,
-   "volatilidad_pct": 1.13,
+   "direccion_pct": 27.29,
+   "volatilidad_pct": 1.0,
    "reaccion_real": {
     "simbolo": "QQQ",
     "pct_real": 3.65,
@@ -7364,6 +7364,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "283025866ad330e1",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:14:31+00:00",
+   "titular": "Top 20 Trending Stocks On WallStreetBets As Of Wednesday, Feb. 24, 2021 (Via Swaggy Stocks)",
+   "simbolos": "QQQ",
+   "direccion_pct": 27.05,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": -3.08,
+    "cierre_base": 324.13,
+    "cierre_final": 314.14,
+    "fecha_base": "2021-02-24",
+    "fecha_final": "2021-02-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

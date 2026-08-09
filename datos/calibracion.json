@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:40:25+00:00",
+ "generado": "2026-08-09T03:40:53+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10312,6 +10312,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7bb14bde7d4e4d56",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:40:53+00:00",
+   "titular": "Bitcoin Investment Trust Announces 91-For-1 Stock Split",
+   "simbolos": "GBTC",
+   "direccion_pct": 72.38,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 1.64,
+    "cierre_base": 16.96,
+    "cierre_final": 17.23,
+    "fecha_base": "2018-01-11",
+    "fecha_final": "2018-01-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

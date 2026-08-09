@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:41:48+00:00",
+ "generado": "2026-08-09T03:42:16+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10375,6 +10375,28 @@
     "cierre_final": 29.8,
     "fecha_base": "2017-12-22",
     "fecha_final": "2017-12-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "72adb4686a063f02",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:42:16+00:00",
+   "titular": "Mastercard Shares Spike ~$0.25 Over Last Min. As Traders Circulate Chatter Of Partnership With IBM Related To Creation Of An Exchange To Buy, Sell Cryptocurrencies",
+   "simbolos": "GBTC",
+   "direccion_pct": 30.08,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 11.93,
+    "cierre_base": 26.79,
+    "cierre_final": 29.99,
+    "fecha_base": "2017-12-15",
+    "fecha_final": "2017-12-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

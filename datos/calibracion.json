@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:43:45+00:00",
+ "generado": "2026-08-09T09:44:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11737,6 +11737,28 @@
     "pct_real": -12.76,
     "cierre_base": 196.01,
     "cierre_final": 171.0,
+    "fecha_base": "2025-04-02",
+    "fecha_final": "2025-04-04",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4898509fd927d06a",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:44:10+00:00",
+   "titular": "Mark Zuckerberg-Led Meta Set To Face 'Truth' At Senate Hearing Over China Operations And Communist Party Censorship Efforts",
+   "simbolos": "META",
+   "direccion_pct": -4.9,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "META",
+    "pct_real": -13.56,
+    "cierre_base": 583.93,
+    "cierre_final": 504.73,
     "fecha_base": "2025-04-02",
     "fecha_final": "2025-04-04",
     "ruedas": 2,

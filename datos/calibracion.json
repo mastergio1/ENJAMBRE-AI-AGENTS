@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:36:32+00:00",
+ "generado": "2026-08-09T09:37:06+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -11429,6 +11429,28 @@
     "pct_real": 4.56,
     "cierre_base": 243.99,
     "cierre_final": 255.12,
+    "fecha_base": "2025-04-08",
+    "fecha_final": "2025-04-10",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "47ecd741c75e6135",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:37:05+00:00",
+   "titular": "Monness, Crespi, Hardt Maintains Buy on PayPal Holdings, Lowers Price Target to $90",
+   "simbolos": "PYPL",
+   "direccion_pct": 31.56,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "PYPL",
+    "pct_real": 5.49,
+    "cierre_base": 57.41,
+    "cierre_final": 60.56,
     "fecha_base": "2025-04-08",
     "fecha_final": "2025-04-10",
     "ruedas": 2,

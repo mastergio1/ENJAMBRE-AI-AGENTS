@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:56:46+00:00",
+ "generado": "2026-08-09T02:57:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8794,6 +8794,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e18abe986f5ddc53",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:57:10+00:00",
+   "titular": "Top 10 Trending Cryptos for Thursday, Feb. 3, 2022 (Social Media Volume via Swaggy Stocks)",
+   "simbolos": "ETHE",
+   "direccion_pct": 62.6,
+   "volatilidad_pct": 0.95,
+   "reaccion_real": {
+    "simbolo": "ETHE",
+    "pct_real": 28.47,
+    "cierre_base": 17.5,
+    "cierre_final": 22.48,
+    "fecha_base": "2022-02-03",
+    "fecha_final": "2022-02-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

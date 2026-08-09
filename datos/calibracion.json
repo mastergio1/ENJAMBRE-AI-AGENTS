@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T03:40:53+00:00",
+ "generado": "2026-08-09T03:41:22+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10331,6 +10331,28 @@
     "cierre_final": 17.23,
     "fecha_base": "2018-01-11",
     "fecha_final": "2018-01-16",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cdc72f3542b25011",
+   "origen": "historico",
+   "fecha": "2026-08-09T03:41:21+00:00",
+   "titular": "A Textbook Technical Move In Bitcoin After Last Week's Haircut",
+   "simbolos": "GBTC",
+   "direccion_pct": 51.67,
+   "volatilidad_pct": 0.96,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 8.04,
+    "cierre_base": 19.75,
+    "cierre_final": 21.34,
+    "fecha_base": "2017-12-22",
+    "fecha_final": "2017-12-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:58:36+00:00",
+ "generado": "2026-08-09T09:59:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12182,6 +12182,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b11d80c8346dddfa",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:59:01+00:00",
+   "titular": "MrBeast And Group Of Investors, Including Roblox CEO, Lock In Over $20 Billion For TikTok Takeover",
+   "simbolos": "MSFT",
+   "direccion_pct": 40.4,
+   "volatilidad_pct": 0.93,
+   "reaccion_real": {
+    "simbolo": "MSFT",
+    "pct_real": -6.17,
+    "cierre_base": 442.33,
+    "cierre_final": 415.06,
+    "fecha_base": "2025-01-29",
+    "fecha_final": "2025-01-31",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

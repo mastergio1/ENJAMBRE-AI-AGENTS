@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:29:40+00:00",
+ "generado": "2026-08-09T02:30:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7980,6 +7980,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5f7821f0e0999f53",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:30:08+00:00",
+   "titular": "Mnuchin Says Will Keep Asking Congress For Oil Purchase Approval",
+   "simbolos": "SPY",
+   "direccion_pct": 8.61,
+   "volatilidad_pct": 1.48,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -2.3,
+    "cierre_base": 257.75,
+    "cierre_final": 251.83,
+    "fecha_base": "2020-03-31",
+    "fecha_final": "2020-04-02",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:17:13+00:00",
+ "generado": "2026-08-09T09:17:41+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10835,6 +10835,28 @@
     "pct_real": 5.83,
     "cierre_base": 135.35,
     "cierre_final": 143.24,
+    "fecha_base": "2025-07-16",
+    "fecha_final": "2025-07-18",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "154c4387f52f0201",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:17:40+00:00",
+   "titular": "Rivian Unseats Lucid, DraftKings Ousts Plug Power In Russell 1000 Shake-Up",
+   "simbolos": "LCID",
+   "direccion_pct": 41.53,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "LCID",
+    "pct_real": 32.75,
+    "cierre_base": 22.9,
+    "cierre_final": 30.4,
     "fecha_base": "2025-07-16",
     "fecha_final": "2025-07-18",
     "ruedas": 2,

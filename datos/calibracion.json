@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:47:57+00:00",
+ "generado": "2026-08-09T02:48:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8613,6 +8613,28 @@
     "pct_real": 5.55,
     "cierre_base": 132.25,
     "cierre_final": 139.59,
+    "fecha_base": "2019-01-03",
+    "fecha_final": "2019-01-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "40c61d6fa17be9c6",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:48:23+00:00",
+   "titular": "'GREAT JOBS NUMBERS JUST ANNOUNCED!' -Tweet From Pres Trump",
+   "simbolos": "SPY",
+   "direccion_pct": 7.97,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 4.16,
+    "cierre_base": 244.21,
+    "cierre_final": 254.38,
     "fecha_base": "2019-01-03",
     "fecha_final": "2019-01-07",
     "ruedas": 2,

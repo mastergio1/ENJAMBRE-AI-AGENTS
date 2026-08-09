@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:26:56+00:00",
+ "generado": "2026-08-09T02:27:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7826,6 +7826,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "5c6c0a0fe42bb5c7",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:27:24+00:00",
+   "titular": "UPDATE: Air Canada Says Planning To Resume Service To US As Of May 22 Subject To Any Further Gov't. Restrictions Beyond That Date",
+   "simbolos": "SPY",
+   "direccion_pct": 57.69,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -0.88,
+    "cierre_base": 281.59,
+    "cierre_final": 279.1,
+    "fecha_base": "2020-04-20",
+    "fecha_final": "2020-04-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

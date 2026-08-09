@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:23:57+00:00",
+ "generado": "2026-08-09T02:24:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7667,6 +7667,28 @@
     "pct_real": 4.92,
     "cierre_base": 263.33,
     "cierre_final": 276.28,
+    "fecha_base": "2020-06-04",
+    "fecha_final": "2020-06-08",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "348d35917c661f65",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:24:21+00:00",
+   "titular": "OPEC Delegates Told US Shale Set to Bounce Back",
+   "simbolos": "SPY",
+   "direccion_pct": -0.76,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 3.8,
+    "cierre_base": 311.36,
+    "cierre_final": 323.2,
     "fecha_base": "2020-06-04",
     "fecha_final": "2020-06-08",
     "ruedas": 2,

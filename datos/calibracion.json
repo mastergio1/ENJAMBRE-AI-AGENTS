@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:20:19+00:00",
+ "generado": "2026-08-09T02:20:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -7496,6 +7496,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a78d3331513071bc",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:20:45+00:00",
+   "titular": "China to Announce Data-Security Initiative on Tuesday Aimed at Countering U.S. Efforts to Persuade Countries from Using Chinese Technology",
+   "simbolos": "SPY",
+   "direccion_pct": -4.52,
+   "volatilidad_pct": 1.37,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -0.81,
+    "cierre_base": 342.57,
+    "cierre_final": 339.79,
+    "fecha_base": "2020-09-04",
+    "fecha_final": "2020-09-09",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "neutra",
     "cerebros": "ia"
    },
    "epilogo": null

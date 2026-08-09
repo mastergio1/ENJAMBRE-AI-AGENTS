@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:19:44+00:00",
+ "generado": "2026-08-09T09:20:12+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10945,6 +10945,28 @@
     "pct_real": 9.48,
     "cierre_base": 193.06,
     "cierre_final": 211.37,
+    "fecha_base": "2025-05-09",
+    "fecha_final": "2025-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "3952922278438eff",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:20:11+00:00",
+   "titular": "Apple Executive Says iPhone Users Are Ditching Google — Now Chamath Palihaptiya Urges The Search Giant To Stop Waiting For Data And Start Fighting Models Like ChatGPT",
+   "simbolos": "META",
+   "direccion_pct": -5.9,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "META",
+    "pct_real": 10.72,
+    "cierre_base": 592.49,
+    "cierre_final": 656.03,
     "fecha_base": "2025-05-09",
     "fecha_final": "2025-05-13",
     "ruedas": 2,

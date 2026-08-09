@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T02:49:56+00:00",
+ "generado": "2026-08-09T02:50:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -8679,6 +8679,28 @@
     "pct_real": 5.86,
     "cierre_base": 234.34,
     "cierre_final": 248.07,
+    "fecha_base": "2018-12-24",
+    "fecha_final": "2018-12-27",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "48b0152745e9894a",
+   "origen": "historico",
+   "fecha": "2026-08-09T02:50:24+00:00",
+   "titular": "Benzinga Pro Morning  Price Check For Major Averages: Nasdaq Up 89 (1.4%), Russell 2000 Up 12 (1.0%), S&P 500 Up 19 (0.8%), Dow 30 Up 120 (0.6%)",
+   "simbolos": "QQQ",
+   "direccion_pct": 1.18,
+   "volatilidad_pct": 1.38,
+   "reaccion_real": {
+    "simbolo": "QQQ",
+    "pct_real": 6.66,
+    "cierre_base": 143.5,
+    "cierre_final": 153.05,
     "fecha_base": "2018-12-24",
     "fecha_final": "2018-12-27",
     "ruedas": 2,

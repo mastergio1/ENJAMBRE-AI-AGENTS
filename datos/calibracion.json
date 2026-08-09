@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T10:00:57+00:00",
+ "generado": "2026-08-09T10:01:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12292,6 +12292,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c007f97c5ffa86e6",
+   "origen": "historico",
+   "fecha": "2026-08-09T10:01:30+00:00",
+   "titular": "AT&T Gears Up For Q4 Print; Here Are The Recent Forecast Changes From Wall Street's Most Accurate Analysts",
+   "simbolos": "T",
+   "direccion_pct": 32.6,
+   "volatilidad_pct": 1.25,
+   "reaccion_real": {
+    "simbolo": "T",
+    "pct_real": 7.39,
+    "cierre_base": 22.72,
+    "cierre_final": 24.4,
+    "fecha_base": "2025-01-24",
+    "fecha_final": "2025-01-28",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

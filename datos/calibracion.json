@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-09T09:16:45+00:00",
+ "generado": "2026-08-09T09:17:13+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -10815,6 +10815,28 @@
     "cierre_final": 52.34,
     "fecha_base": "2025-07-22",
     "fecha_final": "2025-07-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "86fa8465cc8b4a85",
+   "origen": "historico",
+   "fecha": "2026-08-09T09:17:13+00:00",
+   "titular": "Dow Gains Over 200 Points Amid Upbeat Earnings: Investor Sentiment Improves, Fear Index Remains In 'Greed' Zone",
+   "simbolos": "PEP",
+   "direccion_pct": 3.97,
+   "volatilidad_pct": 1.51,
+   "reaccion_real": {
+    "simbolo": "PEP",
+    "pct_real": 5.83,
+    "cierre_base": 135.35,
+    "cierre_final": 143.24,
+    "fecha_base": "2025-07-16",
+    "fecha_final": "2025-07-18",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

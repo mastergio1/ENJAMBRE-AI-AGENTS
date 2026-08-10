@@ -1,6 +1,6 @@
 {
  "generado": "2026-08-03T05:17:14+00:00",
- "nota": "Eventos cosechados por El Enjambre: días de mayor movimiento reales (Yahoo) con su titular real (Benzinga). Alimentan el banco de exámenes de calibración.",
+ "nota": "Eventos cosechados por El Enjambre: días de mayor movimiento reales (Yahoo) con su titular real (Benzinga). Alimentan el banco de exámenes de calibración. | +51 eventos claros de cripto (confirmación de edge, 2026-08)",
  "eventos": [
   {
    "id": "2016-01-11-oro-cosecha-fcx",
@@ -12505,6 +12505,414 @@
    "categoria": "negativa",
    "mercado": "accion",
    "titular": "Baird Downgrades Caterpillar to Neutral, Lowers Price Target to $900"
+  },
+  {
+   "id": "2020-03-12-cripto-conf-btcusd",
+   "fecha": "2020-03-12",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin crashes nearly 40% in worst day since 2013 as COVID panic grips markets"
+  },
+  {
+   "id": "2020-12-16-cripto-conf-btcusd",
+   "fecha": "2020-12-16",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin smashes past $20,000 to a new all-time high"
+  },
+  {
+   "id": "2021-01-08-cripto-conf-btcusd",
+   "fecha": "2021-01-08",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin soars above $40,000 for the first time"
+  },
+  {
+   "id": "2021-02-08-cripto-conf-btcusd",
+   "fecha": "2021-02-08",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Tesla buys $1.5 billion in Bitcoin, price surges to record"
+  },
+  {
+   "id": "2021-05-12-cripto-conf-btcusd",
+   "fecha": "2021-05-12",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Elon Musk says Tesla suspends Bitcoin payments, price plunges"
+  },
+  {
+   "id": "2021-05-19-cripto-conf-btcusd",
+   "fecha": "2021-05-19",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin crashes below $30,000 as China intensifies crypto crackdown"
+  },
+  {
+   "id": "2021-06-21-cripto-conf-btcusd",
+   "fecha": "2021-06-21",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin plunges as China expands ban on crypto mining"
+  },
+  {
+   "id": "2021-09-24-cripto-conf-btcusd",
+   "fecha": "2021-09-24",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "China declares all crypto transactions illegal, Bitcoin drops sharply"
+  },
+  {
+   "id": "2021-10-15-cripto-conf-btcusd",
+   "fecha": "2021-10-15",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin surges toward record as first futures ETF wins approval"
+  },
+  {
+   "id": "2021-11-10-cripto-conf-btcusd",
+   "fecha": "2021-11-10",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin hits fresh all-time high near $69,000"
+  },
+  {
+   "id": "2022-01-21-cripto-conf-btcusd",
+   "fecha": "2022-01-21",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin plunges below $36,000 in brutal weekend selloff"
+  },
+  {
+   "id": "2022-05-09-cripto-conf-btcusd",
+   "fecha": "2022-05-09",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "TerraUSD collapse triggers panic across the crypto market"
+  },
+  {
+   "id": "2022-05-12-cripto-conf-btcusd",
+   "fecha": "2022-05-12",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin crashes as Terra Luna implosion wipes out $40 billion"
+  },
+  {
+   "id": "2022-06-13-cripto-conf-btcusd",
+   "fecha": "2022-06-13",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Celsius freezes withdrawals, crypto market plunges"
+  },
+  {
+   "id": "2022-06-18-cripto-conf-btcusd",
+   "fecha": "2022-06-18",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin sinks below $18,000 in its worst week in years"
+  },
+  {
+   "id": "2022-11-08-cripto-conf-coin",
+   "fecha": "2022-11-08",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Crypto tumbles as FTX crisis deepens and Binance weighs bailout"
+  },
+  {
+   "id": "2022-11-11-cripto-conf-coin",
+   "fecha": "2022-11-11",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "FTX files for bankruptcy, crypto market collapses"
+  },
+  {
+   "id": "2022-12-13-cripto-conf-coin",
+   "fecha": "2022-12-13",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Sam Bankman-Fried arrested as FTX fallout spreads across crypto"
+  },
+  {
+   "id": "2023-01-14-cripto-conf-btcusd",
+   "fecha": "2023-01-14",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin rallies past $20,000 in a strong recovery"
+  },
+  {
+   "id": "2023-03-10-cripto-conf-coin",
+   "fecha": "2023-03-10",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Crypto stocks plunge as Silicon Valley Bank collapses"
+  },
+  {
+   "id": "2023-03-13-cripto-conf-btcusd",
+   "fecha": "2023-03-13",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin surges as banking crisis fuels safe-haven demand"
+  },
+  {
+   "id": "2023-06-05-cripto-conf-coin",
+   "fecha": "2023-06-05",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "SEC sues Binance, crypto stocks tumble"
+  },
+  {
+   "id": "2023-06-06-cripto-conf-coin",
+   "fecha": "2023-06-06",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "SEC sues Coinbase, shares plunge on regulatory crackdown"
+  },
+  {
+   "id": "2023-06-15-cripto-conf-btcusd",
+   "fecha": "2023-06-15",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "BlackRock files for spot Bitcoin ETF, price jumps"
+  },
+  {
+   "id": "2023-08-29-cripto-conf-gbtc",
+   "fecha": "2023-08-29",
+   "simbolo": "GBTC",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Grayscale wins court battle against SEC, Bitcoin soars"
+  },
+  {
+   "id": "2023-10-23-cripto-conf-btcusd",
+   "fecha": "2023-10-23",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin surges above $34,000 on spot ETF optimism"
+  },
+  {
+   "id": "2024-02-28-cripto-conf-btcusd",
+   "fecha": "2024-02-28",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin soars past $60,000 as ETF demand explodes"
+  },
+  {
+   "id": "2024-03-05-cripto-conf-btcusd",
+   "fecha": "2024-03-05",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin hits new all-time high above $69,000"
+  },
+  {
+   "id": "2024-08-05-cripto-conf-btcusd",
+   "fecha": "2024-08-05",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin plunges below $50,000 in a global market rout"
+  },
+  {
+   "id": "2020-09-15-cripto-conf-mstr",
+   "fecha": "2020-09-15",
+   "simbolo": "MSTR",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "MicroStrategy adds $175 million more Bitcoin to its balance sheet"
+  },
+  {
+   "id": "2021-03-13-cripto-conf-btcusd",
+   "fecha": "2021-03-13",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin rockets past $60,000 to a record high"
+  },
+  {
+   "id": "2021-07-20-cripto-conf-btcusd",
+   "fecha": "2021-07-20",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin drops below $30,000 as selloff deepens"
+  },
+  {
+   "id": "2022-02-24-cripto-conf-btcusd",
+   "fecha": "2022-02-24",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Crypto sinks as Russia invades Ukraine and markets panic"
+  },
+  {
+   "id": "2022-08-19-cripto-conf-btcusd",
+   "fecha": "2022-08-19",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin tumbles nearly 10% in a sharp selloff"
+  },
+  {
+   "id": "2023-04-14-cripto-conf-btcusd",
+   "fecha": "2023-04-14",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin climbs above $30,000 for first time since June"
+  },
+  {
+   "id": "2023-12-04-cripto-conf-btcusd",
+   "fecha": "2023-12-04",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin surges past $42,000 on ETF hopes"
+  },
+  {
+   "id": "2024-11-06-cripto-conf-btcusd",
+   "fecha": "2024-11-06",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin soars to record high after US election result"
+  },
+  {
+   "id": "2024-11-11-cripto-conf-btcusd",
+   "fecha": "2024-11-11",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin blasts past $80,000 in post-election rally"
+  },
+  {
+   "id": "2024-12-04-cripto-conf-btcusd",
+   "fecha": "2024-12-04",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin tops $100,000 for the first time in history"
+  },
+  {
+   "id": "2021-12-04-cripto-conf-btcusd",
+   "fecha": "2021-12-04",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin plunges 20% in a brutal weekend crash"
+  },
+  {
+   "id": "2022-09-13-cripto-conf-coin",
+   "fecha": "2022-09-13",
+   "simbolo": "COIN",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Crypto stocks slump as hot inflation data rattles markets"
+  },
+  {
+   "id": "2023-07-13-cripto-conf-coin",
+   "fecha": "2023-07-13",
+   "simbolo": "COIN",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Crypto rallies as Ripple scores partial court victory over SEC"
+  },
+  {
+   "id": "2024-04-13-cripto-conf-btcusd",
+   "fecha": "2024-04-13",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin sinks as Middle East tensions spark risk-off selloff"
+  },
+  {
+   "id": "2024-07-05-cripto-conf-btcusd",
+   "fecha": "2024-07-05",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin plunges below $54,000 on Mt. Gox repayment fears"
+  },
+  {
+   "id": "2025-01-20-cripto-conf-btcusd",
+   "fecha": "2025-01-20",
+   "simbolo": "BTC-USD",
+   "categoria": "positiva",
+   "mercado": "cripto",
+   "titular": "Bitcoin hits record high above $109,000 around inauguration"
+  },
+  {
+   "id": "2025-02-03-cripto-conf-btcusd",
+   "fecha": "2025-02-03",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Crypto market plunges as new tariff fears spark a selloff"
+  },
+  {
+   "id": "2025-02-25-cripto-conf-btcusd",
+   "fecha": "2025-02-25",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin tumbles below $90,000 in a sharp risk-off move"
+  },
+  {
+   "id": "2021-11-26-cripto-conf-btcusd",
+   "fecha": "2021-11-26",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin drops sharply as new Covid variant spooks markets"
+  },
+  {
+   "id": "2022-04-11-cripto-conf-btcusd",
+   "fecha": "2022-04-11",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin falls below $40,000 as risk assets sell off"
+  },
+  {
+   "id": "2023-08-17-cripto-conf-btcusd",
+   "fecha": "2023-08-17",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin plunges below $26,000 in sudden late-night crash"
+  },
+  {
+   "id": "2024-03-19-cripto-conf-btcusd",
+   "fecha": "2024-03-19",
+   "simbolo": "BTC-USD",
+   "categoria": "negativa",
+   "mercado": "cripto",
+   "titular": "Bitcoin slides as ETF outflows accelerate"
   }
  ]
 }

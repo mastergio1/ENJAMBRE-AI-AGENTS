@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:23:05+00:00",
+ "generado": "2026-08-10T01:23:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12861,6 +12861,28 @@
     "cierre_final": 53.26,
     "fecha_base": "2023-06-05",
     "fecha_final": "2023-06-07",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a36a16e58d299579",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:23:31+00:00",
+   "titular": "SEC sues Binance, crypto stocks tumble",
+   "simbolos": "COIN",
+   "direccion_pct": -7.55,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -20.05,
+    "cierre_base": 64.55,
+    "cierre_final": 51.61,
+    "fecha_base": "2023-06-02",
+    "fecha_final": "2023-06-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

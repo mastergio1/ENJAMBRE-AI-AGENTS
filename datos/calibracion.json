@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:23:59+00:00",
+ "generado": "2026-08-10T01:24:31+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12905,6 +12905,28 @@
     "cierre_final": 30318.5,
     "fecha_base": "2023-04-13",
     "fecha_final": "2023-04-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "124083454208e82e",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:24:30+00:00",
+   "titular": "Bitcoin surges as banking crisis fuels safe-haven demand",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 32.61,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 11.65,
+    "cierre_base": 22163.95,
+    "cierre_final": 24746.07,
+    "fecha_base": "2023-03-12",
+    "fecha_final": "2023-03-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

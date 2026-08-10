@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:27:29+00:00",
+ "generado": "2026-08-10T01:27:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13059,6 +13059,28 @@
     "cierre_final": 78.7,
     "fecha_base": "2022-09-12",
     "fecha_final": "2022-09-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "1b2f00287929b80d",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:27:58+00:00",
+   "titular": "Bitcoin tumbles nearly 10% in a sharp selloff",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -5.77,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -8.82,
+    "cierre_base": 23212.74,
+    "cierre_final": 21166.06,
+    "fecha_base": "2022-08-18",
+    "fecha_final": "2022-08-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

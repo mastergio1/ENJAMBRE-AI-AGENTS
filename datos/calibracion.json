@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:34:54+00:00",
+ "generado": "2026-08-10T01:35:30+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13367,6 +13367,28 @@
     "cierre_final": 32110.69,
     "fecha_base": "2021-07-19",
     "fecha_final": "2021-07-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "47232ccd1f64aadd",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:35:22+00:00",
+   "titular": "Bitcoin plunges as China expands ban on crypto mining",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -8.54,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -8.94,
+    "cierre_base": 35698.3,
+    "cierre_final": 32505.66,
+    "fecha_base": "2021-06-20",
+    "fecha_final": "2021-06-22",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

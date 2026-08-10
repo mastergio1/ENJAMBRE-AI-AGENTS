@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:35:30+00:00",
+ "generado": "2026-08-10T01:36:08+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13389,6 +13389,28 @@
     "cierre_final": 32505.66,
     "fecha_base": "2021-06-20",
     "fecha_final": "2021-06-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "88c902a8e63fcd3b",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:36:00+00:00",
+   "titular": "Bitcoin crashes below $30,000 as China intensifies crypto crackdown",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -9.54,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -4.96,
+    "cierre_base": 42909.4,
+    "cierre_final": 40782.74,
+    "fecha_base": "2021-05-18",
+    "fecha_final": "2021-05-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

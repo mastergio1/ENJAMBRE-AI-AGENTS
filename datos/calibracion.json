@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:32:26+00:00",
+ "generado": "2026-08-10T01:33:06+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13282,6 +13282,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "733c502e10cdaaec",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:32:58+00:00",
+   "titular": "Bitcoin hits fresh all-time high near $69,000",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 24.64,
+   "volatilidad_pct": 1.34,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -3.02,
+    "cierre_base": 66971.83,
+    "cierre_final": 64949.96,
+    "fecha_base": "2021-11-09",
+    "fecha_final": "2021-11-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

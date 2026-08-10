@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:28:55+00:00",
+ "generado": "2026-08-10T01:29:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13125,6 +13125,28 @@
     "cierre_final": 22206.79,
     "fecha_base": "2022-06-12",
     "fecha_final": "2022-06-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "7dac8f1854c29325",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:29:25+00:00",
+   "titular": "Bitcoin crashes as Terra Luna implosion wipes out $40 billion",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -14.94,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 1.2,
+    "cierre_base": 28936.36,
+    "cierre_final": 29283.1,
+    "fecha_base": "2022-05-11",
+    "fecha_final": "2022-05-13",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:33:06+00:00",
+ "generado": "2026-08-10T01:33:43+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13301,6 +13301,28 @@
     "cierre_final": 64949.96,
     "fecha_base": "2021-11-09",
     "fecha_final": "2021-11-11",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "c6ce1c37a3070154",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:33:35+00:00",
+   "titular": "Bitcoin surges toward record as first futures ETF wins approval",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 28.41,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 6.23,
+    "cierre_base": 57321.52,
+    "cierre_final": 60892.18,
+    "fecha_base": "2021-10-14",
+    "fecha_final": "2021-10-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

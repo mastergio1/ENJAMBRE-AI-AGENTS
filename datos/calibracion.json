@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:21:33+00:00",
+ "generado": "2026-08-10T01:22:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12798,6 +12798,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "9fc23183ed6fd90d",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:22:02+00:00",
+   "titular": "Crypto rallies as Ripple scores partial court victory over SEC",
+   "simbolos": "COIN",
+   "direccion_pct": 30.15,
+   "volatilidad_pct": 0.97,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 22.52,
+    "cierre_base": 85.95,
+    "cierre_final": 105.31,
+    "fecha_base": "2023-07-12",
+    "fecha_final": "2023-07-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

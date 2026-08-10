@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:09:25+00:00",
+ "generado": "2026-08-10T01:09:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12490,6 +12490,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ab2499950a9ab711",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:09:55+00:00",
+   "titular": "Bitcoin hits record high above $109,000 around inauguration",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 35.12,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 5.0,
+    "cierre_base": 101089.61,
+    "cierre_final": 106146.27,
+    "fecha_base": "2025-01-19",
+    "fecha_final": "2025-01-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

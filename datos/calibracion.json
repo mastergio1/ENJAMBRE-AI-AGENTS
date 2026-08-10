@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:31:51+00:00",
+ "generado": "2026-08-10T01:32:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13257,6 +13257,28 @@
     "cierre_final": 49368.85,
     "fecha_base": "2021-12-03",
     "fecha_final": "2021-12-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "b65e4f9bd54ad593",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:32:18+00:00",
+   "titular": "Bitcoin drops sharply as new Covid variant spooks markets",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 2.19,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -4.29,
+    "cierre_base": 57274.68,
+    "cierre_final": 54815.08,
+    "fecha_base": "2021-11-25",
+    "fecha_final": "2021-11-27",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

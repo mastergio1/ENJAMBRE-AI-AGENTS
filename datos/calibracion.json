@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:27:59+00:00",
+ "generado": "2026-08-10T01:28:27+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13081,6 +13081,28 @@
     "cierre_final": 21166.06,
     "fecha_base": "2022-08-18",
     "fecha_final": "2022-08-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "fef6295b695dc4f8",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:28:26+00:00",
+   "titular": "Bitcoin sinks below $18,000 in its worst week in years",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -7.56,
+   "volatilidad_pct": 1.32,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 0.4,
+    "cierre_base": 20471.48,
+    "cierre_final": 20553.27,
+    "fecha_base": "2022-06-17",
+    "fecha_final": "2022-06-19",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

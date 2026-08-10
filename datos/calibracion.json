@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:36:08+00:00",
+ "generado": "2026-08-10T01:36:46+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13411,6 +13411,28 @@
     "cierre_final": 40782.74,
     "fecha_base": "2021-05-18",
     "fecha_final": "2021-05-20",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "520c464e8fc5a939",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:36:38+00:00",
+   "titular": "Elon Musk says Tesla suspends Bitcoin payments, price plunges",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -9.62,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -12.32,
+    "cierre_base": 56704.57,
+    "cierre_final": 49716.19,
+    "fecha_base": "2021-05-11",
+    "fecha_final": "2021-05-13",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:29:25+00:00",
+ "generado": "2026-08-10T01:29:52+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13147,6 +13147,28 @@
     "cierre_final": 29283.1,
     "fecha_base": "2022-05-11",
     "fecha_final": "2022-05-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "cdbf5f0e8d1fc41a",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:29:52+00:00",
+   "titular": "TerraUSD collapse triggers panic across the crypto market",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -12.3,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -8.91,
+    "cierre_base": 34059.27,
+    "cierre_final": 31022.91,
+    "fecha_base": "2022-05-08",
+    "fecha_final": "2022-05-10",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

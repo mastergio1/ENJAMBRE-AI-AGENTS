@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:09:56+00:00",
+ "generado": "2026-08-10T01:10:29+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12509,6 +12509,28 @@
     "cierre_final": 106146.27,
     "fecha_base": "2025-01-19",
     "fecha_final": "2025-01-21",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "d04df82d4233623f",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:10:27+00:00",
+   "titular": "Bitcoin tops $100,000 for the first time in history",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 22.13,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 0.62,
+    "cierre_base": 96002.16,
+    "cierre_final": 96593.57,
+    "fecha_base": "2024-12-03",
+    "fecha_final": "2024-12-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

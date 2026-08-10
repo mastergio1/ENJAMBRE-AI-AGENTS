@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:33:43+00:00",
+ "generado": "2026-08-10T01:34:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13326,6 +13326,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e1f9277dd47549dd",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:34:11+00:00",
+   "titular": "China declares all crypto transactions illegal, Bitcoin drops sharply",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -16.42,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -4.85,
+    "cierre_base": 44895.1,
+    "cierre_final": 42716.59,
+    "fecha_base": "2021-09-23",
+    "fecha_final": "2021-09-25",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:12:05+00:00",
+ "generado": "2026-08-10T01:12:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12597,6 +12597,28 @@
     "cierre_final": 56034.32,
     "fecha_base": "2024-08-04",
     "fecha_final": "2024-08-06",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2b353dfb2a2268bd",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:12:32+00:00",
+   "titular": "Bitcoin plunges below $54,000 on Mt. Gox repayment fears",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 0.57,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 2.33,
+    "cierre_base": 56977.7,
+    "cierre_final": 58303.54,
+    "fecha_base": "2024-07-04",
+    "fecha_final": "2024-07-06",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

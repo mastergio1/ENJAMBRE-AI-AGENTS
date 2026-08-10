@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:25:32+00:00",
+ "generado": "2026-08-10T01:26:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12974,6 +12974,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "07a259e7dc5d25b7",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:26:02+00:00",
+   "titular": "Sam Bankman-Fried arrested as FTX fallout spreads across crypto",
+   "simbolos": "COIN",
+   "direccion_pct": -21.14,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": -5.66,
+    "cierre_base": 42.6,
+    "cierre_final": 40.19,
+    "fecha_base": "2022-12-12",
+    "fecha_final": "2022-12-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

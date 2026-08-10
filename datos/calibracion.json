@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:31:16+00:00",
+ "generado": "2026-08-10T01:31:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13235,6 +13235,28 @@
     "cierre_final": 35030.25,
     "fecha_base": "2022-01-20",
     "fecha_final": "2022-01-22",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "54258553b724bd14",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:31:43+00:00",
+   "titular": "Bitcoin plunges 20% in a brutal weekend crash",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 5.87,
+   "volatilidad_pct": 1.03,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -7.89,
+    "cierre_base": 53598.25,
+    "cierre_final": 49368.85,
+    "fecha_base": "2021-12-03",
+    "fecha_final": "2021-12-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

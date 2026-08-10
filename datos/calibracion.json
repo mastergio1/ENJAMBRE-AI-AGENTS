@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:08:57+00:00",
+ "generado": "2026-08-10T01:09:25+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12465,6 +12465,28 @@
     "cierre_final": 84347.02,
     "fecha_base": "2025-02-24",
     "fecha_final": "2025-02-26",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "35f2c8805a213d39",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:09:24+00:00",
+   "titular": "Crypto market plunges as new tariff fears spark a selloff",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -3.24,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 0.19,
+    "cierre_base": 97688.98,
+    "cierre_final": 97871.82,
+    "fecha_base": "2025-02-02",
+    "fecha_final": "2025-02-04",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

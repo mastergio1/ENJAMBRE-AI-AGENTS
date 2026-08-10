@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:16:21+00:00",
+ "generado": "2026-08-10T01:21:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12751,6 +12751,28 @@
     "cierre_final": 33901.53,
     "fecha_base": "2023-10-22",
     "fecha_final": "2023-10-24",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "4090ddf071f31342",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:20:57+00:00",
+   "titular": "Grayscale wins court battle against SEC, Bitcoin soars",
+   "simbolos": "GBTC",
+   "direccion_pct": 56.26,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "GBTC",
+    "pct_real": 12.12,
+    "cierre_base": 15.88,
+    "cierre_final": 17.8,
+    "fecha_base": "2023-08-28",
+    "fecha_final": "2023-08-30",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

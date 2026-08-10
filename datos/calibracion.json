@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:24:31+00:00",
+ "generado": "2026-08-10T01:24:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12930,6 +12930,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "ec244628f0f494fc",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:24:58+00:00",
+   "titular": "Crypto stocks plunge as Silicon Valley Bank collapses",
+   "simbolos": "COIN",
+   "direccion_pct": 1.49,
+   "volatilidad_pct": 1.36,
+   "reaccion_real": {
+    "simbolo": "COIN",
+    "pct_real": 1.86,
+    "cierre_base": 58.09,
+    "cierre_final": 59.17,
+    "fecha_base": "2023-03-09",
+    "fecha_final": "2023-03-13",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
     "cerebros": "ia"
    },
    "epilogo": null

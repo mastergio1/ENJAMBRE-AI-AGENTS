@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:24:59+00:00",
+ "generado": "2026-08-10T01:25:32+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12952,6 +12952,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "87ed89fc1989e36b",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:25:31+00:00",
+   "titular": "Bitcoin rallies past $20,000 in a strong recovery",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 37.9,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 4.88,
+    "cierre_base": 19909.57,
+    "cierre_final": 20880.8,
+    "fecha_base": "2023-01-13",
+    "fecha_final": "2023-01-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

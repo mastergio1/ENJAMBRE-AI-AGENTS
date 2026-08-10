@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:13:16+00:00",
+ "generado": "2026-08-10T01:13:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12641,6 +12641,28 @@
     "cierre_final": 65738.73,
     "fecha_base": "2024-04-12",
     "fecha_final": "2024-04-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "2918f3ee00993e51",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:13:44+00:00",
+   "titular": "Bitcoin slides as ETF outflows accelerate",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -6.32,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 0.54,
+    "cierre_base": 67548.59,
+    "cierre_final": 67913.67,
+    "fecha_base": "2024-03-18",
+    "fecha_final": "2024-03-20",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

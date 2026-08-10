@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:22:03+00:00",
+ "generado": "2026-08-10T01:22:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12817,6 +12817,28 @@
     "cierre_final": 105.31,
     "fecha_base": "2023-07-12",
     "fecha_final": "2023-07-14",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "e1ce48f7e0af41a1",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:22:38+00:00",
+   "titular": "BlackRock files for spot Bitcoin ETF, price jumps",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 43.91,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 4.79,
+    "cierre_base": 25124.68,
+    "cierre_final": 26327.46,
+    "fecha_base": "2023-06-14",
+    "fecha_final": "2023-06-16",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

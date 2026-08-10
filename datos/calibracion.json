@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:15:03+00:00",
+ "generado": "2026-08-10T01:15:42+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12707,6 +12707,28 @@
     "cierre_final": 61198.38,
     "fecha_base": "2024-02-27",
     "fecha_final": "2024-02-29",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "f6744e2e5c582ec5",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:15:34+00:00",
+   "titular": "Bitcoin surges past $42,000 on ETF hopes",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 35.16,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 10.26,
+    "cierre_base": 39978.39,
+    "cierre_final": 44080.65,
+    "fecha_base": "2023-12-03",
+    "fecha_final": "2023-12-05",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:28:27+00:00",
+ "generado": "2026-08-10T01:28:55+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13103,6 +13103,28 @@
     "cierre_final": 20553.27,
     "fecha_base": "2022-06-17",
     "fecha_final": "2022-06-19",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "a4bdc35a84fff8f1",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:28:54+00:00",
+   "titular": "Celsius freezes withdrawals, crypto market plunges",
+   "simbolos": "BTC-USD",
+   "direccion_pct": -32.62,
+   "volatilidad_pct": 1.3,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -17.02,
+    "cierre_base": 26762.65,
+    "cierre_final": 22206.79,
+    "fecha_base": "2022-06-12",
+    "fecha_final": "2022-06-14",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",

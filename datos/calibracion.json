@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:10:29+00:00",
+ "generado": "2026-08-10T01:10:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12531,6 +12531,28 @@
     "cierre_final": 96593.57,
     "fecha_base": "2024-12-03",
     "fecha_final": "2024-12-05",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "81118e3ee7b9e90f",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:10:55+00:00",
+   "titular": "Bitcoin blasts past $80,000 in post-election rally",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 33.28,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": 9.3,
+    "cierre_base": 80474.19,
+    "cierre_final": 87955.81,
+    "fecha_base": "2024-11-10",
+    "fecha_final": "2024-11-12",
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "positiva",

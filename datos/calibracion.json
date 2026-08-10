@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:23:31+00:00",
+ "generado": "2026-08-10T01:23:59+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -12886,6 +12886,28 @@
     "ruedas": 2,
     "fuente_datos": "yahoo",
     "categoria": "negativa",
+    "cerebros": "ia"
+   },
+   "epilogo": null
+  },
+  {
+   "sim_id": "009fdccf4cb79bfb",
+   "origen": "historico",
+   "fecha": "2026-08-10T01:23:58+00:00",
+   "titular": "Bitcoin climbs above $30,000 for first time since June",
+   "simbolos": "BTC-USD",
+   "direccion_pct": 29.53,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "BTC-USD",
+    "pct_real": -0.27,
+    "cierre_base": 30399.07,
+    "cierre_final": 30318.5,
+    "fecha_base": "2023-04-13",
+    "fecha_final": "2023-04-15",
+    "ruedas": 2,
+    "fuente_datos": "yahoo",
+    "categoria": "positiva",
     "cerebros": "ia"
    },
    "epilogo": null

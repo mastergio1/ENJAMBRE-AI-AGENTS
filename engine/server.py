@@ -55,9 +55,11 @@ MENSAJE_CORREO = (
 
 
 def _puerta_correo_activa() -> bool:
-    """El gancho de crecimiento: en público, pedir correo para soltar titulares.
-    Se enciende con ENJAMBRE_PUERTA_CORREO=1 (apagado por defecto)."""
-    return os.environ.get("ENJAMBRE_PUERTA_CORREO", "").strip() in ("1", "true", "si")
+    """Decisión de Giorgio: El Enjambre es una herramienta GRATIS y abierta, sin
+    suscripción obligatoria para usarla. La puerta de correo queda DESACTIVADA de
+    forma permanente — suscribirse a El Pulso es siempre opcional. (Si alguien
+    deja su correo al soltar un titular, se captura como lead sin bloquear nada.)"""
+    return False
 
 
 def _puerta_simulacion(mensaje: dict) -> tuple[bool, str | None]:

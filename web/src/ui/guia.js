@@ -70,7 +70,7 @@ const CONTENIDO = `
     cursor por un dorado para leer su frase.</p>
   </section>
 
-  <p class="guia-descargo">Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.</p>
+  <p class="guia-descargo"><strong>Herramienta educativa y recreativa, en proceso de creación y mejora.</strong> Simula el comportamiento de masas con agentes de IA; no constituye asesoría ni recomendación de inversión.</p>
   <button class="guia-listo">Entendido — quiero probar</button>
 `
 

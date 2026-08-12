@@ -911,6 +911,113 @@ def baja(token: str) -> HTMLResponse:
     return _pagina("Te desuscribiste", "Ya no recibirás El Pulso. Puedes volver cuando quieras.")
 
 
+# ---------- El Pulso: revisión y aprobación desde el correo (humano en el lazo) ----------
+# El token de la edición (en el correo de revisión) es la llave: quien lo tiene,
+# decide. Aprobar/Descartar son POST (un clic desde la página de revisión), así
+# ningún prefetch del cliente de correo dispara un envío por accidente.
+
+def _pagina_pulso(titulo: str, cuerpo: str, status: int = 200) -> HTMLResponse:
+    html = f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>{titulo}</title>
+<style>
+ body{{margin:0;background:#141019;color:#f3eee8;font-family:system-ui,-apple-system,sans-serif;}}
+ .barra{{position:sticky;top:0;z-index:2;background:#1b1522;border-bottom:1px solid #2e2636;padding:16px 18px;text-align:center;}}
+ .barra h1{{margin:0 0 4px;font-family:Georgia,serif;font-weight:600;font-size:1.15rem;color:#e3c565;}}
+ .barra p{{margin:0;color:#a8a291;font-size:.85rem;}}
+ .acc{{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px;}}
+ .btn{{border:0;cursor:pointer;font:700 13px/1 system-ui;letter-spacing:.04em;text-transform:uppercase;padding:14px 24px;border-radius:8px;}}
+ .ok{{background:#2f8f66;color:#fff;}} .no{{background:transparent;color:#c0847d;border:1px solid #7a4b47;}}
+ .marco{{width:100%;border:0;background:#faf8f4;display:block;min-height:74vh;}}
+ .aviso{{max-width:520px;margin:64px auto;padding:0 24px;text-align:center;line-height:1.6;}}
+ .aviso h1{{font-family:Georgia,serif;}}
+</style></head><body>{cuerpo}</body></html>"""
+    return HTMLResponse(content=html, status_code=status, headers={
+        "Content-Security-Policy": "default-src 'none'; frame-src 'self'; img-src 'self' data:; style-src 'unsafe-inline'; form-action 'self'",
+        "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff"})
+
+
+@app.get("/pulso/preview/{token}")
+def pulso_preview(token: str) -> Response:
+    """El HTML crudo de la edición (lo carga el iframe de la página de revisión)."""
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+    finally:
+        conexion.close()
+    if not ed or not ed.get("html_preview"):
+        return Response(status_code=404)
+    return HTMLResponse(content=ed["html_preview"], headers={
+        "Content-Security-Policy": "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'",
+        "X-Frame-Options": "SAMEORIGIN"})
+
+
+@app.get("/pulso/revisar/{token}")
+def pulso_revisar(token: str) -> HTMLResponse:
+    """La sala de revisión: el preview real + botones Aprobar / Descartar."""
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        n_susc = len(persistencia.suscriptores_activos(conexion)) if ed else 0
+    finally:
+        conexion.close()
+    if not ed:
+        return _pagina_pulso("Enlace no válido",
+            '<div class="aviso"><h1>Enlace no válido</h1><p>No encontramos esa edición.</p></div>', status=404)
+    estado = ed["estado"]
+    if estado == "enviada":
+        cabecera = f'<h1>Ya enviada ✓</h1><p>Salió a {ed["enviados"]} de {ed["suscriptores"]} suscriptores.</p>'
+        acciones = ""
+    elif estado == "descartada":
+        cabecera = '<h1>Descartada</h1><p>Esta edición no se enviará.</p>'
+        acciones = ""
+    else:
+        cabecera = (f'<h1>El Pulso — pendiente de tu revisión</h1>'
+                    f'<p>Se enviaría a {n_susc} suscriptor(es). Revisa abajo y decide.</p>')
+        acciones = (f'<div class="acc">'
+                    f'<form method="post" action="/pulso/aprobar/{token}" style="margin:0;"><button class="btn ok" type="submit">✅ Aprobar y enviar</button></form>'
+                    f'<form method="post" action="/pulso/descartar/{token}" style="margin:0;"><button class="btn no" type="submit">🗑 Descartar</button></form></div>')
+    cuerpo = (f'<div class="barra">{cabecera}{acciones}</div>'
+              f'<iframe class="marco" src="/pulso/preview/{token}" title="Vista previa de la edición"></iframe>')
+    return _pagina_pulso("Revisar El Pulso", cuerpo)
+
+
+@app.post("/pulso/aprobar/{token}")
+def pulso_aprobar(token: str) -> HTMLResponse:
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        if not ed:
+            return _pagina_pulso("Enlace no válido", '<div class="aviso"><h1>Enlace no válido</h1></div>', status=404)
+        from contenido import pipeline
+        res = pipeline.aprobar_y_enviar(conexion, ed["fecha"])
+    finally:
+        conexion.close()
+    if res.get("ok") and res.get("ya_enviada"):
+        msg = f'Esta edición ya se había enviado ({res.get("enviados", 0)} correos).'
+    elif res.get("ok"):
+        msg = f'Enviada a {res.get("enviados", 0)} de {res.get("suscriptores", 0)} suscriptores. 🎉'
+    else:
+        msg = res.get("motivo", "No se pudo enviar.")
+    return _pagina_pulso("Aprobada",
+        f'<div class="aviso"><h1 style="color:#2f8f66;">✅ Listo</h1><p>{msg}</p></div>')
+
+
+@app.post("/pulso/descartar/{token}")
+def pulso_descartar(token: str) -> HTMLResponse:
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        if not ed:
+            return _pagina_pulso("Enlace no válido", '<div class="aviso"><h1>Enlace no válido</h1></div>', status=404)
+        from contenido import pipeline
+        pipeline.descartar_edicion(conexion, ed["fecha"])
+    finally:
+        conexion.close()
+    return _pagina_pulso("Descartada",
+        '<div class="aviso"><h1 style="color:#c0847d;">🗑 Descartada</h1>'
+        '<p>Esta edición no se enviará. Mañana habrá una nueva.</p></div>')
+
+
 # ---------- disparador del ritual de la madrugada (protegido por token) ----------
 
 def _correr_ritual() -> None:

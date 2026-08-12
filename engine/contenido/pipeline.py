@@ -174,21 +174,74 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         except Exception:
             brief["redactado"] = None
 
-        persistencia.guardar_brief(conexion, persistencia.ahora_iso()[:10], brief)
+        # ── CENTRO DE MANDO: se GENERA y se GUARDA como 'pendiente'; NO se envía
+        # a los suscriptores hasta el visto bueno de Giorgio. Se le manda un
+        # correo de REVISIÓN (a su propio correo → funciona aun sin dominio).
+        import secrets
 
-        envio = None
-        html = None
+        fecha_iso = persistencia.ahora_iso()[:10]
+        fecha_es = _fecha_es(datetime.now(timezone.utc))
+        html_preview = None
+        token = None
         if destacadas:
-            fecha = _fecha_es(datetime.now(timezone.utc))
-            html = boletin.construir_html(destacadas, fecha, brief=brief)  # preview
-            if enviar:
-                envio = _enviar_con_brief(conexion, destacadas, fecha, brief)
+            html_preview = boletin.construir_html(
+                destacadas, fecha_es, token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
+            asunto = boletin.asunto_del_dia(destacadas[0])
+            token = secrets.token_urlsafe(24)
+            persistencia.guardar_edicion(conexion, fecha_iso, brief, html_preview,
+                                         asunto, token, persistencia.ahora_iso())
+            n_susc = len(persistencia.suscriptores_activos(conexion))
+            if enviar:  # 'enviar' ahora = mandar el correo de REVISIÓN (no a suscriptores)
+                boletin.enviar_revision(fecha_es, html_preview, token, n_susc)
+        else:
+            persistencia.guardar_brief(conexion, fecha_iso, brief)  # sin destacadas: solo el brief
 
-        # paso 8: avisar a Giorgio
-        notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], envio))
+        # paso 8: avisar a Giorgio que la edición espera su revisión
+        notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], None))
 
-        return {**preparado, "destacadas": len(destacadas), "envio": envio,
-                "brief": brief, "html_preview": html, "correccion": correccion}
+        return {**preparado, "destacadas": len(destacadas),
+                "estado": "pendiente" if destacadas else "sin_edicion",
+                "brief": brief, "html_preview": html_preview, "token": token,
+                "correccion": correccion}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def aprobar_y_enviar(conexion=None, fecha: str | None = None) -> dict:
+    """El visto bueno: envía la edición del día a los suscriptores (idéntica a lo
+    revisado) y la marca 'enviada'. Idempotente: si ya se envió, no repite."""
+    from contenido import boletin
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        fecha = fecha or persistencia.ahora_iso()[:10]
+        ed = persistencia.obtener_edicion(conexion, fecha)
+        if ed is None or not ed.get("html_preview"):
+            return {"ok": False, "motivo": "no hay edición para ese día"}
+        if ed["estado"] == "enviada":
+            return {"ok": True, "ya_enviada": True,
+                    "enviados": ed["enviados"], "suscriptores": ed["suscriptores"]}
+        if ed["estado"] == "descartada":
+            return {"ok": False, "motivo": "la edición fue descartada"}
+        conteo = boletin.enviar_a_suscriptores(conexion, ed["html_preview"], ed["asunto"] or "El Pulso")
+        persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
+                                    conteo["suscriptores"], persistencia.ahora_iso())
+        return {"ok": True, **conteo}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def descartar_edicion(conexion=None, fecha: str | None = None) -> dict:
+    """Descarta la edición del día (no se enviará)."""
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        fecha = fecha or persistencia.ahora_iso()[:10]
+        ok = persistencia.set_estado_edicion(conexion, fecha, "descartada")
+        return {"ok": ok}
     finally:
         if propia:
             conexion.close()

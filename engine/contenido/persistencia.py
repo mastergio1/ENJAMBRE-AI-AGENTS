@@ -95,6 +95,15 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("suscriptores", "fecha_confirma", "TEXT"),  # anti-reenvío (auditoría C)
             ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
             ("simulaciones", "reaccion_real", "TEXT"),  # corrector automático (calibración)
+            # centro de mando de El Pulso: la edición como máquina de estados
+            ("briefs", "estado", "TEXT DEFAULT 'pendiente'"),  # pendiente/aprobada/enviada/descartada
+            ("briefs", "token", "TEXT"),           # secreto para los enlaces del correo de revisión
+            ("briefs", "html_preview", "TEXT"),    # el correo ya armado (WYSIWYG al aprobar)
+            ("briefs", "asunto", "TEXT"),          # asunto del correo del día
+            ("briefs", "enviados", "INTEGER DEFAULT 0"),
+            ("briefs", "suscriptores", "INTEGER DEFAULT 0"),
+            ("briefs", "generada_iso", "TEXT"),
+            ("briefs", "enviada_iso", "TEXT"),
         ]:
             try:
                 conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
@@ -197,6 +206,107 @@ def aprobar_brief(conexion, fecha: str) -> bool:
     cursor = conexion.execute("UPDATE briefs SET aprobado = 1 WHERE fecha = ?", (fecha,))
     conexion.commit()
     return cursor.rowcount > 0
+
+
+# ---------- El centro de mando: la edición como máquina de estados ----------
+# estado ∈ {pendiente, aprobada, enviada, descartada}. Nada sale a los
+# suscriptores hasta que Giorgio la aprueba (desde el correo o el dashboard).
+
+TOKEN_BAJA_SENTINEL = "__TOKEN_BAJA__"  # marcador en el preview; se reemplaza al enviar
+
+
+def _fila_edicion(fila) -> dict | None:
+    if fila is None:
+        return None
+    return {
+        "fecha": fila["fecha"],
+        "brief": json.loads(fila["brief_json"]),
+        "estado": fila["estado"] or "pendiente",
+        "token": fila["token"],
+        "html_preview": fila["html_preview"],
+        "asunto": fila["asunto"],
+        "enviados": fila["enviados"] or 0,
+        "suscriptores": fila["suscriptores"] or 0,
+        "generada_iso": fila["generada_iso"],
+        "enviada_iso": fila["enviada_iso"],
+        "aprobado": bool(fila["aprobado"]),
+    }
+
+
+_COLS_EDICION = ("fecha, brief_json, aprobado, estado, token, html_preview, asunto, "
+                 "enviados, suscriptores, generada_iso, enviada_iso")
+
+
+def guardar_edicion(conexion, fecha: str, brief: dict, html_preview: str,
+                    asunto: str, token: str, generada_iso: str) -> None:
+    """Guarda la edición del día lista para revisión (estado 'pendiente').
+    Regenerar el mismo día reinicia el estado y las estadísticas."""
+    conexion.execute(
+        """INSERT INTO briefs (fecha, brief_json, aprobado, estado, token,
+                               html_preview, asunto, generada_iso, enviados, suscriptores, enviada_iso)
+           VALUES (?, ?, 0, 'pendiente', ?, ?, ?, ?, 0, 0, NULL)
+           ON CONFLICT(fecha) DO UPDATE SET
+             brief_json=excluded.brief_json, aprobado=0, estado='pendiente',
+             token=excluded.token, html_preview=excluded.html_preview,
+             asunto=excluded.asunto, generada_iso=excluded.generada_iso,
+             enviados=0, suscriptores=0, enviada_iso=NULL""",
+        (fecha, json.dumps(brief, ensure_ascii=False), token, html_preview, asunto, generada_iso),
+    )
+    conexion.commit()
+
+
+def obtener_edicion(conexion, fecha: str) -> dict | None:
+    fila = conexion.execute(
+        f"SELECT {_COLS_EDICION} FROM briefs WHERE fecha = ?", (fecha,)).fetchone()
+    return _fila_edicion(fila)
+
+
+def edicion_por_token(conexion, token: str | None) -> dict | None:
+    """La edición apuntada por un token de correo (para los enlaces de revisión)."""
+    if not token or len(token) < 16:
+        return None
+    fila = conexion.execute(
+        f"SELECT {_COLS_EDICION} FROM briefs WHERE token = ?", (token,)).fetchone()
+    return _fila_edicion(fila)
+
+
+def set_estado_edicion(conexion, fecha: str, estado: str) -> bool:
+    aprobado = 1 if estado in ("aprobada", "enviada") else 0
+    cur = conexion.execute(
+        "UPDATE briefs SET estado = ?, aprobado = ? WHERE fecha = ?", (estado, aprobado, fecha))
+    conexion.commit()
+    return cur.rowcount > 0
+
+
+def marcar_enviada(conexion, fecha: str, enviados: int, suscriptores: int, enviada_iso: str) -> None:
+    conexion.execute(
+        """UPDATE briefs SET estado='enviada', aprobado=1,
+             enviados=?, suscriptores=?, enviada_iso=? WHERE fecha=?""",
+        (enviados, suscriptores, enviada_iso, fecha))
+    conexion.commit()
+
+
+def listar_ediciones(conexion, limite: int = 30) -> list[dict]:
+    """El historial de ediciones para el dashboard (sin el HTML, liviano)."""
+    filas = conexion.execute(
+        """SELECT fecha, estado, asunto, enviados, suscriptores, generada_iso, enviada_iso
+           FROM briefs ORDER BY fecha DESC LIMIT ?""", (max(1, int(limite)),)).fetchall()
+    return [{"fecha": f["fecha"], "estado": f["estado"] or "pendiente", "asunto": f["asunto"],
+             "enviados": f["enviados"] or 0, "suscriptores": f["suscriptores"] or 0,
+             "generada_iso": f["generada_iso"], "enviada_iso": f["enviada_iso"]} for f in filas]
+
+
+def actualizar_redactado(conexion, fecha: str, redactado: dict) -> bool:
+    """Guarda cambios de texto del editor (dashboard) dentro del brief del día."""
+    fila = conexion.execute("SELECT brief_json FROM briefs WHERE fecha = ?", (fecha,)).fetchone()
+    if fila is None:
+        return False
+    brief = json.loads(fila["brief_json"])
+    brief["redactado"] = redactado
+    conexion.execute("UPDATE briefs SET brief_json = ? WHERE fecha = ?",
+                     (json.dumps(brief, ensure_ascii=False), fecha))
+    conexion.commit()
+    return True
 
 
 # ---------- el archivo / hemeroteca (Etapa 9) ----------

@@ -336,3 +336,59 @@ def enviar_pulso(conexion, destacadas: list[dict], fecha: str) -> dict:
         else:
             fallidos += 1
     return {"suscriptores": len(activos), "enviados": enviados, "fallidos": fallidos}
+
+
+# ---------- El correo de REVISIÓN (humano en el lazo, desde el celular) ----------
+
+PULSO_ADMIN_EMAIL = os.environ.get("PULSO_ADMIN_EMAIL", "")
+
+
+def _banner_revision(fecha_es: str, token: str, suscriptores: int) -> str:
+    """El banner que se inyecta arriba del preview en el correo de revisión."""
+    url = f"{BASE_API}/pulso/revisar/{token}"
+    return f"""<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#161009;">
+  <tr><td align="center" style="padding:18px 16px;">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+      <tr><td style="text-align:center;">
+        <div style="font:700 11px/1 system-ui,sans-serif;letter-spacing:2px;text-transform:uppercase;color:#e3c565;">⏸ Pendiente de tu revisión</div>
+        <div style="font-family:Georgia,serif;font-size:19px;color:#faf8f4;margin:6px 0 2px;">El Pulso — {_esc(fecha_es)}</div>
+        <div style="color:#a8a291;font-size:13px;margin-bottom:12px;">Abajo va la edición tal como la recibirían tus {suscriptores} suscriptores. Revísala y decide.</div>
+        <a href="{url}" style="display:inline-block;background:#e3c565;color:#161009;text-decoration:none;
+          font-weight:bold;font-size:13px;letter-spacing:1px;text-transform:uppercase;padding:13px 30px;border-radius:6px;">Revisar y decidir →</a>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>"""
+
+
+def construir_revision(preview_html: str, fecha_es: str, token: str, suscriptores: int) -> str:
+    """Inyecta el banner de revisión arriba del preview real (WYSIWYG)."""
+    banner = _banner_revision(fecha_es, token, suscriptores)
+    corte = preview_html.find(">", preview_html.find("<body"))
+    if corte == -1:  # por si el preview no es un doc completo
+        return banner + preview_html
+    corte += 1
+    return preview_html[:corte] + banner + preview_html[corte:]
+
+
+def enviar_revision(fecha_es: str, preview_html: str, token: str, suscriptores: int,
+                    admin_email: str | None = None) -> bool:
+    """Envía a Giorgio el correo de revisión (preview + botón para decidir).
+    Va a su propio correo → funciona aun sin dominio (modo prueba de Resend)."""
+    destino = (admin_email or PULSO_ADMIN_EMAIL).strip()
+    if not destino:
+        return False
+    html = construir_revision(preview_html, fecha_es, token, suscriptores)
+    return enviar(destino, f"📋 Revisar El Pulso — {fecha_es}", html)
+
+
+def enviar_a_suscriptores(conexion, preview_html: str, asunto: str) -> dict:
+    """Envía la edición YA APROBADA a los suscriptores activos, reemplazando el
+    marcador del token de baja por el de cada uno (WYSIWYG con lo revisado)."""
+    activos = persistencia.suscriptores_activos(conexion)
+    enviados = 0
+    for s in activos:
+        html = preview_html.replace(persistencia.TOKEN_BAJA_SENTINEL, s["token_baja"])
+        if enviar(s["email"], asunto, html):
+            enviados += 1
+    return {"suscriptores": len(activos), "enviados": enviados, "fallidos": len(activos) - enviados}

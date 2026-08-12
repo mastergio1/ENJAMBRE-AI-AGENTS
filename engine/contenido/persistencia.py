@@ -309,6 +309,12 @@ def actualizar_redactado(conexion, fecha: str, redactado: dict) -> bool:
     return True
 
 
+def actualizar_preview(conexion, fecha: str, html_preview: str) -> None:
+    """Reemplaza el HTML del correo tras una edición manual (dashboard)."""
+    conexion.execute("UPDATE briefs SET html_preview = ? WHERE fecha = ?", (html_preview, fecha))
+    conexion.commit()
+
+
 # ---------- el archivo / hemeroteca (Etapa 9) ----------
 
 def archivo(conexion, *, mes: str | None = None, texto: str | None = None,

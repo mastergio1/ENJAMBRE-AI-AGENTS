@@ -1018,6 +1018,149 @@ def pulso_descartar(token: str) -> HTMLResponse:
         '<p>Esta edición no se enviará. Mañana habrá una nueva.</p></div>')
 
 
+# ---------- Centro de Mando de El Pulso (dashboard, protegido por token) ----------
+
+class PeticionEditar(BaseModel):
+    redactado: dict = {}
+
+
+def _fecha_valida(fecha: str) -> bool:
+    return bool(_re.match(r"^\d{4}-\d{2}-\d{2}$", fecha))
+
+
+@app.get("/panel")
+def panel_html() -> Response:
+    """Sirve el Centro de Mando desde la propia API (mismo origen → sin CORS).
+    El acceso lo controla la clave que se pide dentro de la página."""
+    from pathlib import Path
+    ruta = Path(__file__).parent / "panel.html"
+    if not ruta.exists():
+        return Response(status_code=404)
+    return HTMLResponse(content=ruta.read_text(encoding="utf-8"), headers={
+        "Content-Security-Policy": ("default-src 'none'; script-src 'unsafe-inline'; "
+                                    "style-src 'unsafe-inline'; connect-src 'self'; "
+                                    "frame-src 'self'; img-src 'self' data:; font-src 'self'"),
+        "X-Content-Type-Options": "nosniff"})
+
+
+@app.get("/api/panel/estado")
+def panel_estado(x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        hoy = persistencia.ahora_iso()[:10]
+        ed = persistencia.obtener_edicion(conexion, hoy)
+        n_susc = len(persistencia.suscriptores_activos(conexion))
+    finally:
+        conexion.close()
+    return {
+        "hoy": hoy,
+        "suscriptores": n_susc,
+        "ia_configurada": bool(os.environ.get("ANTHROPIC_API_KEY")),
+        "resend_configurado": bool(os.environ.get("RESEND_API_KEY")),
+        "admin_email_configurado": bool(os.environ.get("PULSO_ADMIN_EMAIL")),
+        "edicion_hoy": None if ed is None else {
+            "estado": ed["estado"], "asunto": ed["asunto"],
+            "enviados": ed["enviados"], "suscriptores": ed["suscriptores"]},
+        "version": (os.environ.get("RENDER_GIT_COMMIT") or "local")[:12],
+    }
+
+
+@app.get("/api/panel/ediciones")
+def panel_ediciones(x_pipeline_token: str = Header(default=""), limite: int = 30) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        eds = persistencia.listar_ediciones(conexion, min(max(1, limite), 90))
+    finally:
+        conexion.close()
+    return {"ediciones": eds}
+
+
+@app.get("/api/panel/edicion/{fecha}")
+def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.obtener_edicion(conexion, fecha)
+    finally:
+        conexion.close()
+    if ed is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    brief = ed["brief"] or {}
+    return {
+        "fecha": ed["fecha"], "estado": ed["estado"], "asunto": ed["asunto"],
+        "token": ed["token"], "enviados": ed["enviados"], "suscriptores": ed["suscriptores"],
+        "generada_iso": ed["generada_iso"], "enviada_iso": ed["enviada_iso"],
+        "redactado": brief.get("redactado") or {}, "foto": brief.get("foto") or [],
+    }
+
+
+@app.post("/api/panel/edicion/{fecha}/aprobar")
+def panel_aprobar(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    from contenido import pipeline
+    return pipeline.aprobar_y_enviar(fecha=fecha)
+
+
+@app.post("/api/panel/edicion/{fecha}/descartar")
+def panel_descartar(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    from contenido import pipeline
+    return pipeline.descartar_edicion(fecha=fecha)
+
+
+@app.post("/api/panel/edicion/{fecha}/editar")
+def panel_editar(fecha: str, peticion: PeticionEditar, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.obtener_edicion(conexion, fecha)
+        if ed is None:
+            return {"ok": False, "motivo": "no existe la edición"}
+        if ed["estado"] == "enviada":
+            return {"ok": False, "motivo": "la edición ya se envió; no se puede editar"}
+        persistencia.actualizar_redactado(conexion, fecha, peticion.redactado)
+        # re-renderiza el preview con el texto editado (usa las destacadas de hoy)
+        try:
+            from datetime import datetime as _dt, timezone as _tz
+            from contenido import pipeline, boletin
+            brief = persistencia.obtener_edicion(conexion, fecha)["brief"]
+            destacadas = pipeline._destacadas_de_hoy(conexion)
+            if destacadas:
+                html = boletin.construir_html(
+                    destacadas, pipeline._fecha_es(_dt.now(_tz.utc)),
+                    token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
+                persistencia.actualizar_preview(conexion, fecha, html)
+        except Exception:
+            pass
+        return {"ok": True}
+    finally:
+        conexion.close()
+
+
+@app.post("/api/panel/generar")
+def panel_generar(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    tareas.add_task(_correr_ritual)
+    return {"ok": True, "mensaje": "Generando la edición de hoy… (~1-2 min). Recarga en un momento."}
+
+
 # ---------- disparador del ritual de la madrugada (protegido por token) ----------
 
 def _correr_ritual() -> None:

@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Centro de Mando · El Pulso</title>
+<style>
+  :root{
+    --tinta:#141019; --tinta-2:#1b1522; --tinta-3:#241c2e; --linea:#33293f;
+    --texto:#f3eee8; --mute:#a79fb0; --oro:#e3c565; --teal:#5fb3a1;
+    --verde:#4fae7e; --rojo:#d08b84; --amber:#e0a13a;
+    --serif:Georgia,'Iowan Old Style',serif; --sans:system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--tinta);color:var(--texto);font-family:var(--sans);font-size:15px;line-height:1.5;}
+  a{color:var(--teal)}
+  .oculto{display:none!important}
+  button{font-family:inherit;cursor:pointer;border:0;border-radius:8px;font-weight:600;letter-spacing:.02em;transition:.15s;}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .btn{padding:11px 18px;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+  .btn-oro{background:var(--oro);color:#20180a}
+  .btn-verde{background:var(--verde);color:#06210f}
+  .btn-fant{background:transparent;color:var(--mute);border:1px solid var(--linea)}
+  .btn-rojo{background:transparent;color:var(--rojo);border:1px solid #6d3f3a}
+  input,textarea{width:100%;background:var(--tinta-3);border:1px solid var(--linea);color:var(--texto);
+    border-radius:8px;padding:10px 12px;font-family:inherit;font-size:14px}
+  textarea{resize:vertical;min-height:80px;line-height:1.55}
+  input:focus,textarea:focus{outline:none;border-color:var(--oro)}
+  label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin:14px 0 5px}
+
+  /* login */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:var(--tinta-2);border:1px solid var(--linea);border-radius:16px;padding:36px;max-width:400px;width:100%;text-align:center}
+  .card h1{font-family:var(--serif);color:var(--oro);font-size:1.7rem;margin:0 0 4px}
+  .card .sub{color:var(--mute);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:22px}
+  .card input{text-align:center;margin-bottom:14px}
+  .card .btn{width:100%}
+  .err{color:var(--rojo);font-size:.85rem;margin-top:12px;min-height:1.1em}
+
+  /* topbar */
+  header{position:sticky;top:0;z-index:10;background:var(--tinta-2);border-bottom:1px solid var(--linea);
+    display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;flex-wrap:wrap}
+  header .marca{font-family:var(--serif);color:var(--oro);font-size:1.15rem;font-weight:600}
+  header .marca small{display:block;font-family:var(--sans);color:var(--mute);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;font-weight:400}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .pill{font-size:11px;padding:5px 10px;border-radius:999px;background:var(--tinta-3);border:1px solid var(--linea);color:var(--mute);white-space:nowrap}
+  .pill b{color:var(--texto)}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+  .dot.on{background:var(--verde)} .dot.off{background:var(--rojo)}
+
+  main{max-width:1200px;margin:0 auto;padding:22px;display:grid;grid-template-columns:1fr 340px;gap:22px}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .panel{background:var(--tinta-2);border:1px solid var(--linea);border-radius:14px;overflow:hidden}
+  .panel-cab{padding:16px 18px;border-bottom:1px solid var(--linea);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .panel-cab h2{font-family:var(--serif);font-size:1.15rem;margin:0}
+  .panel-cab .fecha{color:var(--mute);font-size:.85rem}
+  .panel-cuerpo{padding:18px}
+
+  .badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 11px;border-radius:999px}
+  .b-pendiente{background:rgba(224,161,58,.16);color:var(--amber)}
+  .b-aprobada{background:rgba(95,179,161,.16);color:var(--teal)}
+  .b-enviada{background:rgba(79,174,126,.18);color:var(--verde)}
+  .b-descartada{background:rgba(208,139,132,.14);color:var(--rojo)}
+  .b-none{background:var(--tinta-3);color:var(--mute)}
+
+  .acc{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+  iframe.preview{width:100%;height:640px;border:1px solid var(--linea);border-radius:10px;background:#faf8f4;display:block}
+  .vacio{text-align:center;padding:44px 20px;color:var(--mute)}
+  .vacio h3{font-family:var(--serif);color:var(--texto);margin:0 0 6px}
+
+  .hist{list-style:none;margin:0;padding:0}
+  .hist li{padding:12px 16px;border-bottom:1px solid var(--linea);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .hist li:hover{background:var(--tinta-3)}
+  .hist .f{font-weight:600;font-size:.9rem}
+  .hist .a{color:var(--mute);font-size:.78rem;margin-top:2px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hist .n{color:var(--mute);font-size:.75rem;text-align:right;white-space:nowrap}
+
+  .stat{display:flex;align-items:baseline;gap:8px;padding:6px 0}
+  .stat b{font-family:var(--serif);color:var(--oro);font-size:1.6rem}
+  .stat span{color:var(--mute);font-size:.85rem}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--tinta-3);
+    border:1px solid var(--oro);color:var(--texto);padding:13px 20px;border-radius:10px;z-index:50;
+    box-shadow:0 8px 30px rgba(0,0,0,.4);opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+  #toast.ver{opacity:1}
+  .editor label:first-child{margin-top:0}
+  .editor .hgroup{border:1px solid var(--linea);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .fila2{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:end}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login">
+  <div class="card">
+    <h1>El Pulso</h1>
+    <div class="sub">Centro de Mando</div>
+    <input id="clave" type="password" placeholder="Tu clave de administrador" autocomplete="current-password">
+    <button class="btn btn-oro" onclick="entrar()">Entrar</button>
+    <div class="err" id="loginErr"></div>
+    <p style="color:var(--mute);font-size:.72rem;margin-top:20px;line-height:1.5">
+      La clave es tu <code>ENJAMBRE_PIPELINE_TOKEN</code> del motor. Se guarda solo en este navegador.</p>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="app" class="oculto">
+  <header>
+    <div class="marca">El Pulso<small>Centro de Mando · Rubicón Lab</small></div>
+    <div class="pills" id="pills"></div>
+    <button class="btn btn-fant" style="padding:7px 12px;font-size:11px" onclick="salir()">Salir</button>
+  </header>
+
+  <main>
+    <!-- Edición de hoy -->
+    <section class="panel">
+      <div class="panel-cab">
+        <h2>Edición de hoy</h2>
+        <span class="fecha" id="edFecha"></span>
+      </div>
+      <div class="panel-cuerpo" id="edCuerpo">
+        <div class="vacio">Cargando…</div>
+      </div>
+    </section>
+
+    <!-- Columna lateral -->
+    <aside style="display:flex;flex-direction:column;gap:22px">
+      <section class="panel">
+        <div class="panel-cab"><h2 style="font-size:1rem">Suscriptores</h2></div>
+        <div class="panel-cuerpo">
+          <div class="stat"><b id="nSusc">—</b><span>lectores activos</span></div>
+          <div id="estadoSistema" style="margin-top:10px;font-size:.82rem;color:var(--mute);line-height:1.7"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-cab"><h2 style="font-size:1rem">Historial</h2></div>
+        <ul class="hist" id="hist"><li style="color:var(--mute)">Cargando…</li></ul>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+const LS = "pulso_admin_clave";
+let CLAVE = localStorage.getItem(LS) || "";
+let EDICION = null;            // la edición cargada actualmente
+let editando = false;
+
+const $ = s => document.querySelector(s);
+const esc = s => (s==null?"":String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("ver"); setTimeout(()=>t.classList.remove("ver"),3200); }
+
+async function api(path, method="GET", body){
+  const opt={method,headers:{"X-Pipeline-Token":CLAVE}};
+  if(body){opt.headers["Content-Type"]="application/json";opt.body=JSON.stringify(body);}
+  const r=await fetch(path,opt);
+  if(r.status===403){ salir(); throw new Error("no autorizado"); }
+  if(r.status===404) return null;
+  return r.json().catch(()=>({}));
+}
+
+// ---------- login ----------
+async function entrar(){
+  CLAVE=$("#clave").value.trim();
+  if(!CLAVE){ $("#loginErr").textContent="Escribe tu clave."; return; }
+  $("#loginErr").textContent="Verificando…";
+  try{
+    const est=await api("/api/panel/estado");
+    if(!est){ $("#loginErr").textContent="Clave incorrecta."; return; }
+    localStorage.setItem(LS,CLAVE);
+    arrancar(est);
+  }catch(e){ $("#loginErr").textContent="Clave incorrecta o motor no disponible."; }
+}
+function salir(){ localStorage.removeItem(LS); CLAVE=""; $("#app").classList.add("oculto"); $("#login").classList.remove("oculto"); $("#clave").value=""; }
+
+function arrancar(est){
+  $("#login").classList.add("oculto"); $("#app").classList.remove("oculto");
+  pintarEstado(est);
+  cargarEdicionHoy(est.hoy);
+  cargarHistorial();
+}
+
+// ---------- estado del sistema ----------
+function pintarEstado(e){
+  $("#nSusc").textContent=e.suscriptores;
+  const dot=on=>`<span class="dot ${on?'on':'off'}"></span>`;
+  $("#pills").innerHTML=
+    `<span class="pill">${dot(e.ia_configurada)}IA</span>`+
+    `<span class="pill">${dot(e.resend_configurado)}Correo</span>`+
+    `<span class="pill">${dot(e.admin_email_configurado)}Revisión</span>`+
+    `<span class="pill"><b>${e.suscriptores}</b> suscriptores</span>`;
+  $("#estadoSistema").innerHTML=
+    `Inteligencia artificial: <b style="color:${e.ia_configurada?'var(--verde)':'var(--rojo)'}">${e.ia_configurada?'conectada':'sin clave'}</b><br>`+
+    `Envío de correos (Resend): <b style="color:${e.resend_configurado?'var(--verde)':'var(--rojo)'}">${e.resend_configurado?'activo':'sin clave'}</b><br>`+
+    `Correo de revisión: <b style="color:${e.admin_email_configurado?'var(--verde)':'var(--amber)'}">${e.admin_email_configurado?'configurado':'falta PULSO_ADMIN_EMAIL'}</b><br>`+
+    `<span style="opacity:.6">versión ${esc(e.version)}</span>`;
+}
+
+// ---------- edición de hoy ----------
+async function cargarEdicionHoy(hoy){ cargarEdicion(hoy); }
+
+async function cargarEdicion(fecha){
+  editando=false;
+  $("#edFecha").textContent=fecha;
+  const ed=await api("/api/panel/edicion/"+fecha);
+  EDICION=ed;
+  if(!ed){ pintarSinEdicion(fecha); return; }
+  pintarEdicion(ed);
+}
+
+function pintarSinEdicion(fecha){
+  $("#edCuerpo").innerHTML=
+    `<div class="vacio"><h3>No hay edición para ${esc(fecha)}</h3>`+
+    `<p>Genera la edición del día para revisarla. Toma ~1-2 minutos.</p>`+
+    `<div class="acc" style="justify-content:center"><button class="btn btn-oro" onclick="generar()">✨ Generar edición de hoy</button></div></div>`;
+}
+
+function badge(estado){
+  const m={pendiente:['b-pendiente','Pendiente de revisión'],aprobada:['b-aprobada','Aprobada'],
+    enviada:['b-enviada','Enviada'],descartada:['b-descartada','Descartada']};
+  const [c,t]=m[estado]||['b-none',estado||'—'];
+  return `<span class="badge ${c}">${t}</span>`;
+}
+
+function pintarEdicion(ed){
+  const enviada=ed.estado==="enviada", descartada=ed.estado==="descartada";
+  let acc="";
+  if(!enviada && !descartada){
+    acc=`<div class="acc">`+
+      `<button class="btn btn-verde" onclick="aprobar()">✅ Aprobar y enviar</button>`+
+      `<button class="btn btn-fant" onclick="toggleEditor()">✏️ Editar</button>`+
+      `<button class="btn btn-rojo" onclick="descartar()">🗑 Descartar</button>`+
+      `<button class="btn btn-fant" onclick="generar()">↻ Regenerar</button></div>`;
+  } else if(enviada){
+    acc=`<p style="color:var(--verde);margin:14px 0">Enviada a ${ed.enviados} de ${ed.suscriptores} suscriptores.</p>`;
+  } else {
+    acc=`<p style="color:var(--rojo);margin:14px 0">Esta edición fue descartada.</p>`+
+        `<div class="acc"><button class="btn btn-fant" onclick="generar()">↻ Regenerar</button></div>`;
+  }
+  const previewSrc = ed.token ? "/pulso/preview/"+encodeURIComponent(ed.token) : "";
+  $("#edCuerpo").innerHTML =
+    `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">`+
+    `${badge(ed.estado)}<span style="color:var(--mute);font-size:.8rem">${esc(ed.asunto||"")}</span></div>`+
+    acc +
+    `<div id="editorZona"></div>`+
+    (previewSrc?`<iframe class="preview" src="${previewSrc}" title="Vista previa del correo"></iframe>`:
+      `<div class="vacio">Sin vista previa (no hay destacadas hoy).</div>`);
+}
+
+// ---------- editor ----------
+function toggleEditor(){
+  editando=!editando;
+  const z=$("#editorZona");
+  if(!editando){ z.innerHTML=""; return; }
+  const r=(EDICION&&EDICION.redactado)||{};
+  const est=r.historia_estrella||{};
+  const hs=r.historias||[];
+  let html=`<div class="editor" style="background:var(--tinta-3);border:1px solid var(--linea);border-radius:12px;padding:16px;margin:4px 0 16px">`+
+    `<label>Buenos días</label><textarea id="e_bd">${esc(r.buenos_dias||"")}</textarea>`+
+    `<div class="hgroup"><div style="color:var(--oro);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Historia estrella</div>`+
+    `<div class="fila2"><div><label>Emoji</label><input id="e_est_emoji" value="${esc(est.emoji||"")}"></div>`+
+    `<div><label>Titular</label><input id="e_est_tit" value="${esc(est.titular||"")}"></div></div>`+
+    `<label>Cuerpo</label><textarea id="e_est_cuerpo">${esc(est.cuerpo||"")}</textarea></div>`;
+  hs.forEach((h,i)=>{
+    html+=`<div class="hgroup" data-h="${i}"><div style="color:var(--oro);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Historia ${i+1}</div>`+
+      `<div class="fila2"><div><label>Emoji</label><input class="h_emoji" value="${esc(h.emoji||"")}"></div>`+
+      `<div><label>Titular</label><input class="h_tit" value="${esc(h.titular||"")}"></div></div>`+
+      `<label>Cuerpo</label><textarea class="h_cuerpo">${esc(h.cuerpo||"")}</textarea></div>`;
+  });
+  html+=`<div class="acc"><button class="btn btn-oro" onclick="guardarEdicion()">💾 Guardar cambios</button>`+
+        `<button class="btn btn-fant" onclick="toggleEditor()">Cancelar</button></div></div>`;
+  z.innerHTML=html;
+}
+
+async function guardarEdicion(){
+  const r=(EDICION&&EDICION.redactado)||{};
+  const historias=[...document.querySelectorAll('#editorZona .hgroup[data-h]')].map(g=>({
+    emoji:g.querySelector('.h_emoji').value, titular:g.querySelector('.h_tit').value, cuerpo:g.querySelector('.h_cuerpo').value}));
+  const redactado={
+    ...r,
+    buenos_dias:$("#e_bd").value,
+    historia_estrella:{...(r.historia_estrella||{}),emoji:$("#e_est_emoji").value,titular:$("#e_est_tit").value,cuerpo:$("#e_est_cuerpo").value},
+    historias};
+  toast("Guardando y re-armando el correo…");
+  const res=await api("/api/panel/edicion/"+EDICION.fecha+"/editar","POST",{redactado});
+  if(res&&res.ok){ toast("Cambios guardados ✓"); await cargarEdicion(EDICION.fecha); }
+  else toast((res&&res.motivo)||"No se pudo guardar");
+}
+
+// ---------- acciones ----------
+async function aprobar(){
+  if(!confirm("¿Aprobar y ENVIAR esta edición a los suscriptores? Esta acción no se deshace."))return;
+  toast("Enviando…");
+  const res=await api("/api/panel/edicion/"+EDICION.fecha+"/aprobar","POST");
+  if(res&&res.ok) toast(res.ya_enviada?"Ya se había enviado.":("Enviada a "+res.enviados+" suscriptores 🎉"));
+  else toast((res&&res.motivo)||"No se pudo enviar");
+  cargarEdicion(EDICION.fecha); cargarHistorial();
+}
+async function descartar(){
+  if(!confirm("¿Descartar esta edición? No se enviará."))return;
+  await api("/api/panel/edicion/"+EDICION.fecha+"/descartar","POST");
+  toast("Edición descartada"); cargarEdicion(EDICION.fecha); cargarHistorial();
+}
+async function generar(){
+  if(!confirm("¿Generar la edición de hoy? Usa la IA (~1-2 min)."))return;
+  const res=await api("/api/panel/generar","POST");
+  toast((res&&res.mensaje)||"Generando…");
+  setTimeout(()=>{ refrescar(); },90000);
+}
+
+// ---------- historial ----------
+async function cargarHistorial(){
+  const d=await api("/api/panel/ediciones?limite=30");
+  const eds=(d&&d.ediciones)||[];
+  if(!eds.length){ $("#hist").innerHTML='<li style="color:var(--mute)">Aún no hay ediciones.</li>'; return; }
+  $("#hist").innerHTML=eds.map(e=>{
+    const n = e.estado==="enviada" ? `${e.enviados}/${e.suscriptores} enviados` : "";
+    return `<li onclick="cargarEdicion('${e.fecha}')"><div><div class="f">${esc(e.fecha)}</div>`+
+      `<div class="a">${esc(e.asunto||"—")}</div></div>`+
+      `<div style="text-align:right">${badge(e.estado)}<div class="n">${n}</div></div></li>`;
+  }).join("");
+}
+
+async function refrescar(){ const est=await api("/api/panel/estado"); if(est){ pintarEstado(est); cargarEdicion($("#edFecha").textContent||est.hoy); cargarHistorial(); } }
+
+// ---------- init ----------
+$("#clave").addEventListener("keydown",e=>{ if(e.key==="Enter")entrar(); });
+(async function(){
+  if(CLAVE){ try{ const est=await api("/api/panel/estado"); if(est){ arrancar(est); return; } }catch(e){} }
+  $("#login").classList.remove("oculto");
+})();
+</script>
+</body>
+</html>

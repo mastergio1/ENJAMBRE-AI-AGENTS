@@ -287,16 +287,30 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
 </table></td></tr></table></body></html>"""
 
 
-def enviar(destinatario: str, asunto: str, html: str) -> bool:
-    """Envía un correo por Resend. False si no hay clave o falla (no lanza)."""
+def _tag_edicion(fecha: str | None) -> list[dict] | None:
+    """El tag que Resend devuelve en el webhook, para atribuir aperturas/clics a
+    su edición. Resend solo admite letras/números/_/-; la fecha AAAA-MM-DD cumple."""
+    if not fecha:
+        return None
+    limpio = "".join(c for c in fecha if c.isalnum() or c in "-_")[:60]
+    return [{"name": "edicion", "value": limpio}] if limpio else None
+
+
+def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None = None) -> bool:
+    """Envía un correo por Resend. False si no hay clave o falla (no lanza).
+    `fecha_edicion` etiqueta el correo para poder medir su apertura por edición."""
     clave = os.environ.get("RESEND_API_KEY")
     if not clave:
         return False
+    cuerpo = {"from": REMITENTE, "to": [destinatario], "subject": asunto, "html": html}
+    tags = _tag_edicion(fecha_edicion)
+    if tags:
+        cuerpo["tags"] = tags
     try:
         respuesta = httpx.post(
             URL_RESEND,
             headers={"Authorization": f"Bearer {clave}", "Content-Type": "application/json"},
-            json={"from": REMITENTE, "to": [destinatario], "subject": asunto, "html": html},
+            json=cuerpo,
             timeout=20,
         )
         return respuesta.status_code < 300
@@ -382,13 +396,15 @@ def enviar_revision(fecha_es: str, preview_html: str, token: str, suscriptores: 
     return enviar(destino, f"📋 Revisar El Pulso — {fecha_es}", html)
 
 
-def enviar_a_suscriptores(conexion, preview_html: str, asunto: str) -> dict:
+def enviar_a_suscriptores(conexion, preview_html: str, asunto: str,
+                          fecha_edicion: str | None = None) -> dict:
     """Envía la edición YA APROBADA a los suscriptores activos, reemplazando el
-    marcador del token de baja por el de cada uno (WYSIWYG con lo revisado)."""
+    marcador del token de baja por el de cada uno (WYSIWYG con lo revisado).
+    Cada correo va etiquetado con `fecha_edicion` para medir su apertura."""
     activos = persistencia.suscriptores_activos(conexion)
     enviados = 0
     for s in activos:
         html = preview_html.replace(persistencia.TOKEN_BAJA_SENTINEL, s["token_baja"])
-        if enviar(s["email"], asunto, html):
+        if enviar(s["email"], asunto, html, fecha_edicion=fecha_edicion):
             enviados += 1
     return {"suscriptores": len(activos), "enviados": enviados, "fallidos": len(activos) - enviados}

@@ -14,7 +14,9 @@ solo necesita saber cuánto pánico o codicia siente cada partícula.
 """
 
 import asyncio
+import base64
 import contextlib as _contextlib
+import hashlib
 import hmac
 import json
 import struct
@@ -777,6 +779,7 @@ def simular_titular(peticion: PeticionSimular) -> dict:
 # ---------- El Pulso: suscripción con double opt-in (CONTENIDO.md sección 6) ----------
 
 import re as _re  # noqa: E402
+import time as _time  # noqa: E402
 
 from fastapi.responses import HTMLResponse  # noqa: E402
 
@@ -1018,6 +1021,84 @@ def pulso_descartar(token: str) -> HTMLResponse:
         '<p>Esta edición no se enviará. Mañana habrá una nueva.</p></div>')
 
 
+# ---------- Webhook de Resend: aperturas y clics (firmado por Svix) ----------
+# Resend firma cada evento con Svix (HMAC-SHA256). Sin el secreto configurado,
+# el endpoint RECHAZA todo (falla cerrado): jamás ingerimos eventos sin firmar.
+
+def _verificar_svix(cuerpo: bytes, cabeceras) -> bool:
+    """Valida la firma Svix de un webhook de Resend. Constante en el tiempo."""
+    secreto = os.environ.get("RESEND_WEBHOOK_SECRET", "").strip()
+    if not secreto:
+        return False
+    svix_id = cabeceras.get("svix-id", "")
+    svix_ts = cabeceras.get("svix-timestamp", "")
+    firmas = cabeceras.get("svix-signature", "")
+    if not (svix_id and svix_ts and firmas):
+        return False
+    # antirreplay: rechaza timestamps muy viejos o del futuro (tolerancia amplia
+    # para el reloj de Render). El timestamp es parte de lo firmado igualmente.
+    try:
+        desfase = abs(int(_time.time()) - int(svix_ts))
+        if desfase > 3600:
+            return False
+    except (ValueError, TypeError):
+        return False
+    clave = secreto.split("_", 1)[1] if secreto.startswith("whsec_") else secreto
+    try:
+        clave_bytes = base64.b64decode(clave)
+    except Exception:
+        return False
+    firmado = f"{svix_id}.{svix_ts}.".encode() + cuerpo
+    esperada = base64.b64encode(hmac.new(clave_bytes, firmado, hashlib.sha256).digest()).decode()
+    # el header trae "v1,<firma> v1,<firma2>…"; comparación constante contra cada una
+    for parte in firmas.split():
+        _, _, valor = parte.partition(",")
+        if valor and hmac.compare_digest(valor, esperada):
+            return True
+    return False
+
+
+def _tag_edicion_evento(data: dict) -> str | None:
+    """Saca la fecha de edición del tag del evento (Resend la devuelve como
+    objeto {edicion: fecha} o como lista [{name,value}])."""
+    tags = data.get("tags")
+    if isinstance(tags, dict):
+        return tags.get("edicion")
+    if isinstance(tags, list):
+        for t in tags:
+            if isinstance(t, dict) and t.get("name") == "edicion":
+                return t.get("value")
+    return None
+
+
+@app.post("/pulso/webhook/resend")
+async def webhook_resend(request: Request) -> Response:
+    """Recibe eventos de Resend (apertura, clic…) y los registra por edición.
+    Firma Svix obligatoria: sin ella, 401."""
+    cuerpo = await request.body()
+    if len(cuerpo) > 64_000:  # un evento legítimo es pequeño; corta abusos
+        return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+    if not _verificar_svix(cuerpo, request.headers):
+        return JSONResponse({"error": "firma no válida"}, status_code=401)
+    try:
+        evento = json.loads(cuerpo)
+    except (ValueError, TypeError):
+        return JSONResponse({"error": "json no válido"}, status_code=400)
+    tipo = (evento.get("type") or "").removeprefix("email.")
+    data = evento.get("data") or {}
+    destinatarios = data.get("to") or []
+    email = destinatarios[0] if isinstance(destinatarios, list) and destinatarios else ""
+    fecha_ed = _tag_edicion_evento(data)
+    ts = evento.get("created_at")
+    if email and tipo:
+        conexion = persistencia.conectar()
+        try:
+            persistencia.registrar_evento_correo(conexion, fecha_ed, email, tipo, ts)
+        finally:
+            conexion.close()
+    return JSONResponse({"ok": True})  # 200 siempre que la firma sea válida
+
+
 # ---------- Centro de Mando de El Pulso (dashboard, protegido por token) ----------
 
 class PeticionEditar(BaseModel):
@@ -1077,6 +1158,21 @@ def panel_ediciones(x_pipeline_token: str = Header(default=""), limite: int = 30
     finally:
         conexion.close()
     return {"ediciones": eds}
+
+
+@app.get("/api/panel/estadisticas")
+def panel_estadisticas(x_pipeline_token: str = Header(default=""), dias: int = 30) -> dict:
+    """Estadísticas del centro de mando: crecimiento de suscriptores, ediciones
+    y aperturas/clics (estas últimas si el webhook de Resend está configurado)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        datos = persistencia.estadisticas(conexion, dias=dias)
+    finally:
+        conexion.close()
+    datos["webhook_configurado"] = bool(os.environ.get("RESEND_WEBHOOK_SECRET"))
+    return datos
 
 
 @app.get("/api/panel/edicion/{fecha}")

@@ -225,7 +225,8 @@ def aprobar_y_enviar(conexion=None, fecha: str | None = None) -> dict:
                     "enviados": ed["enviados"], "suscriptores": ed["suscriptores"]}
         if ed["estado"] == "descartada":
             return {"ok": False, "motivo": "la edición fue descartada"}
-        conteo = boletin.enviar_a_suscriptores(conexion, ed["html_preview"], ed["asunto"] or "El Pulso")
+        conteo = boletin.enviar_a_suscriptores(
+            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha)
         persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
                                     conteo["suscriptores"], persistencia.ahora_iso())
         return {"ok": True, **conteo}

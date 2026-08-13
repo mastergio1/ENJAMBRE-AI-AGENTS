@@ -87,6 +87,33 @@
   .editor label:first-child{margin-top:0}
   .editor .hgroup{border:1px solid var(--linea);border-radius:10px;padding:12px 14px;margin-top:14px}
   .fila2{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:end}
+
+  /* pestañas */
+  .tabs{display:flex;gap:4px}
+  .tab{padding:8px 15px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);
+    background:transparent;border:1px solid transparent;border-radius:8px}
+  .tab.activa{color:var(--oro);background:var(--tinta-3);border-color:var(--linea)}
+
+  /* estadísticas */
+  .wrap{max-width:1200px;margin:0 auto;padding:22px;display:flex;flex-direction:column;gap:22px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--tinta-2);border:1px solid var(--linea);border-radius:14px;padding:17px 18px}
+  .kpi .n{font-family:var(--serif);color:var(--oro);font-size:2rem;line-height:1}
+  .kpi .l{color:var(--mute);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-top:8px}
+  .kpi .s{color:var(--mute);font-size:.74rem;margin-top:5px;opacity:.85}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  .tabla{width:100%;border-collapse:collapse;font-size:.86rem}
+  .tabla th{text-align:left;color:var(--mute);font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;padding:8px 6px;border-bottom:1px solid var(--linea)}
+  .tabla td{padding:9px 6px;border-bottom:1px solid var(--linea)}
+  .tabla td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .barh{height:7px;background:var(--tinta-3);border-radius:6px;overflow:hidden;margin-top:6px}
+  .barh>i{display:block;height:100%;background:var(--teal);border-radius:6px}
+  .orig{display:flex;justify-content:space-between;font-size:.85rem;margin-top:12px}
+  .aviso-cfg{background:rgba(224,161,58,.08);border:1px solid rgba(224,161,58,.3);border-radius:12px;
+    padding:14px 16px;font-size:.82rem;color:var(--mute);line-height:1.6}
+  .aviso-cfg code{background:var(--tinta-3);padding:1px 6px;border-radius:5px;color:var(--oro);font-size:.9em}
 </style>
 </head>
 <body>
@@ -108,11 +135,15 @@
 <div id="app" class="oculto">
   <header>
     <div class="marca">El Pulso<small>Centro de Mando · Rubicón Lab</small></div>
+    <div class="tabs">
+      <button class="tab activa" id="tabRed" onclick="mostrarVista('red')">📝 Redacción</button>
+      <button class="tab" id="tabEst" onclick="mostrarVista('est')">📊 Estadísticas</button>
+    </div>
     <div class="pills" id="pills"></div>
     <button class="btn btn-fant" style="padding:7px 12px;font-size:11px" onclick="salir()">Salir</button>
   </header>
 
-  <main>
+  <main id="vistaRedaccion">
     <!-- Edición de hoy -->
     <section class="panel">
       <div class="panel-cab">
@@ -139,6 +170,13 @@
       </section>
     </aside>
   </main>
+
+  <!-- Estadísticas -->
+  <div id="vistaEstadisticas" class="oculto">
+    <div class="wrap" id="estWrap">
+      <div class="vacio">Cargando estadísticas…</div>
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -328,6 +366,96 @@ async function cargarHistorial(){
 }
 
 async function refrescar(){ const est=await api("/api/panel/estado"); if(est){ pintarEstado(est); cargarEdicion($("#edFecha").textContent||est.hoy); cargarHistorial(); } }
+
+// ---------- estadísticas ----------
+function mostrarVista(v){
+  const red = v==="red";
+  $("#vistaRedaccion").classList.toggle("oculto", !red);
+  $("#vistaEstadisticas").classList.toggle("oculto", red);
+  $("#tabRed").classList.toggle("activa", red);
+  $("#tabEst").classList.toggle("activa", !red);
+  if(!red) cargarEstadisticas();
+}
+
+const pct = x => (x==null ? "—" : Math.round(x*100)+"%");
+
+async function cargarEstadisticas(){
+  const d = await api("/api/panel/estadisticas?dias=30");
+  if(d) pintarEstadisticas(d);
+}
+
+function graficoCrecimiento(serie){
+  const W=680, H=170, P=22;
+  const vals = serie.map(s=>s.acumulado);
+  const n = vals.length;
+  const max = Math.max(...vals, 1), min = Math.min(...vals, 0);
+  const X = i => P + i*(W-2*P)/Math.max(1,n-1);
+  const Y = v => H-P - (v-min)*(H-2*P)/Math.max(1,(max-min));
+  const linea = vals.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+  const area = `${linea} L${X(n-1).toFixed(1)},${H-P} L${X(0).toFixed(1)},${H-P} Z`;
+  const f0=(serie[0]&&serie[0].fecha||"").slice(5), f1=(serie[n-1]&&serie[n-1].fecha||"").slice(5);
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
+    <defs><linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fb3a1" stop-opacity=".33"/>
+      <stop offset="1" stop-color="#5fb3a1" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#grad)"/>
+    <path d="${linea}" fill="none" stroke="#5fb3a1" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(n-1).toFixed(1)}" cy="${Y(vals[n-1]).toFixed(1)}" r="4" fill="#e3c565"/>
+  </svg>
+  <div style="display:flex;justify-content:space-between;color:var(--mute);font-size:.7rem;margin-top:2px"><span>${esc(f0)}</span><span>hoy</span></div>`;
+}
+
+function pintarEstadisticas(d){
+  const su=d.suscriptores, ed=d.ediciones, co=d.correo;
+  const kpi=(n,l,s)=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div>${s?`<div class="s">${s}</div>`:""}</div>`;
+  const kpis =
+    kpi(su.activos, "Suscriptores activos", `${su.pendientes} sin confirmar`)+
+    kpi(co.hay_datos?pct(co.tasa_apertura):"—", "Tasa de apertura", co.hay_datos?"promedio reciente":"aún sin datos")+
+    kpi(co.hay_datos?pct(co.tasa_clic):"—", "Tasa de clic", co.hay_datos?"promedio reciente":"aún sin datos")+
+    kpi(ed.enviadas, "Ediciones enviadas", `${ed.descartadas} descartadas`);
+
+  // tabla de aperturas por edición
+  let tablaCorreo;
+  if(co.hay_datos && co.por_edicion.length){
+    tablaCorreo = `<table class="tabla"><thead><tr><th>Edición</th><th class="num">Enviados</th><th class="num">Apertura</th><th class="num">Clic</th></tr></thead><tbody>`+
+      co.por_edicion.map(e=>`<tr><td>${esc(e.fecha)}</td><td class="num">${e.enviados}</td>`+
+        `<td class="num" style="color:var(--teal)">${pct(e.tasa_apertura)}</td>`+
+        `<td class="num">${pct(e.tasa_clic)}</td></tr>`).join("")+
+      `</tbody></table>`;
+  } else {
+    tablaCorreo = `<div class="vacio" style="padding:24px 8px">Aún no hay datos de apertura.${
+      d.webhook_configurado ? " Aparecerán cuando salga la próxima edición." : ""}</div>`;
+  }
+
+  // orígenes de suscripción
+  const maxO = Math.max(1, ...su.por_origen.map(o=>o.n));
+  const origenes = su.por_origen.length
+    ? su.por_origen.map(o=>`<div class="orig"><span>${esc(o.origen)}</span><span>${o.n}</span></div>`+
+        `<div class="barh"><i style="width:${Math.round(o.n/maxO*100)}%"></i></div>`).join("")
+    : `<div class="s" style="color:var(--mute)">Sin suscriptores aún.</div>`;
+  const confir = su.tasa_confirmacion==null ? "—" : pct(su.tasa_confirmacion);
+
+  const avisoWebhook = d.webhook_configurado ? "" :
+    `<div class="aviso-cfg">💡 <b>Para medir aperturas y clics:</b> en Resend crea un webhook que apunte a
+     <code>${location.origin}/pulso/webhook/resend</code> y guarda su secreto en la variable
+     <code>RESEND_WEBHOOK_SECRET</code> del motor. Mientras tanto, el resto de las estadísticas ya funciona.</div>`;
+
+  $("#estWrap").innerHTML =
+    `<div class="kpis">${kpis}</div>`+
+    avisoWebhook+
+    `<section class="panel"><div class="panel-cab"><h2 style="font-size:1rem">Crecimiento de suscriptores</h2>`+
+      `<span class="fecha">últimos 30 días</span></div>`+
+      `<div class="panel-cuerpo">${graficoCrecimiento(su.serie)}</div></section>`+
+    `<div class="grid2">`+
+      `<section class="panel"><div class="panel-cab"><h2 style="font-size:1rem">Aperturas por edición</h2></div>`+
+        `<div class="panel-cuerpo">${tablaCorreo}</div></section>`+
+      `<section class="panel"><div class="panel-cab"><h2 style="font-size:1rem">De dónde vienen</h2></div>`+
+        `<div class="panel-cuerpo">${origenes}`+
+          `<div class="orig" style="margin-top:20px;border-top:1px solid var(--linea);padding-top:14px"><span>Tasa de confirmación</span><span style="color:var(--teal)">${confir}</span></div>`+
+          `<div class="s">Cuántos de los que se registran confirman su correo.</div>`+
+        `</div></section>`+
+    `</div>`;
+}
 
 // ---------- init ----------
 $("#clave").addEventListener("keydown",e=>{ if(e.key==="Enter")entrar(); });

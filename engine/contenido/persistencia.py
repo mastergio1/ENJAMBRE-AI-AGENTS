@@ -11,7 +11,7 @@ import json
 import os
 import secrets
 import sqlite3
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 RUTA_DEFECTO = Path(__file__).parent.parent / "datos" / "enjambre.db"
@@ -60,6 +60,15 @@ CREATE TABLE IF NOT EXISTS contactos (
   organizacion TEXT,
   email        TEXT NOT NULL,
   mensaje      TEXT
+);
+CREATE TABLE IF NOT EXISTS eventos_correo (
+  -- eventos de Resend (webhook firmado): aperturas y clics por edición.
+  -- UNIQUE(fecha_ed,email,tipo) → un opened por persona = apertura ÚNICA.
+  fecha_ed   TEXT,                 -- la edición (AAAA-MM-DD), del tag del envío
+  email      TEXT,
+  tipo       TEXT NOT NULL,        -- delivered/opened/clicked/bounced/complained
+  ts         TEXT NOT NULL,
+  UNIQUE(fecha_ed, email, tipo)
 );
 """
 
@@ -581,3 +590,107 @@ def suscriptores_activos(conexion) -> list[dict]:
         "SELECT email, token_baja FROM suscriptores WHERE activo = 1"
     ).fetchall()
     return [dict(f) for f in filas]
+
+
+# ---------- eventos de correo (aperturas/clics de Resend) ----------
+
+# tipos que aceptamos del webhook (los demás se ignoran en silencio)
+_TIPOS_EVENTO = {"delivered", "opened", "clicked", "bounced", "complained"}
+
+
+def registrar_evento_correo(conexion, fecha_ed: str | None, email: str, tipo: str,
+                            ts: str | None = None) -> bool:
+    """Registra un evento de Resend. INSERT OR IGNORE sobre (edición,email,tipo):
+    contar filas = contar personas únicas (aperturas/clics únicos). Devuelve
+    True si era un evento nuevo (no un duplicado)."""
+    tipo = (tipo or "").strip().lower()
+    if tipo not in _TIPOS_EVENTO or not email:
+        return False
+    cur = conexion.execute(
+        "INSERT OR IGNORE INTO eventos_correo (fecha_ed, email, tipo, ts) VALUES (?, ?, ?, ?)",
+        ((fecha_ed or "").strip()[:10] or None, email.strip().lower()[:200], tipo, ts or ahora_iso()),
+    )
+    conexion.commit()
+    return cur.rowcount > 0
+
+
+def _unicos(conexion, fecha_ed: str, tipo: str) -> int:
+    return conexion.execute(
+        "SELECT COUNT(DISTINCT email) FROM eventos_correo WHERE fecha_ed = ? AND tipo = ?",
+        (fecha_ed, tipo),
+    ).fetchone()[0]
+
+
+def estadisticas(conexion, dias: int = 30, ediciones_correo: int = 14) -> dict:
+    """El panorama para la pestaña de estadísticas del centro de mando:
+    suscriptores (total/activos/pendientes, curva de crecimiento, orígenes),
+    ediciones (enviadas/descartadas) y correo (aperturas/clics por edición).
+
+    Todo sale de datos reales; si aún no hay eventos de Resend, las tasas van
+    en None y la UI lo muestra como 'aún sin datos' (degradación elegante)."""
+    dias = max(7, min(int(dias), 120))
+
+    total = conexion.execute("SELECT COUNT(*) FROM suscriptores").fetchone()[0]
+    activos = conexion.execute("SELECT COUNT(*) FROM suscriptores WHERE activo = 1").fetchone()[0]
+    pendientes = total - activos
+    tasa_confirma = round(activos / total, 3) if total else None
+
+    # curva de crecimiento: acumulado de activos por día en la ventana
+    altas = {f["d"]: f["n"] for f in conexion.execute(
+        "SELECT substr(fecha_alta,1,10) d, COUNT(*) n FROM suscriptores "
+        "WHERE activo = 1 GROUP BY d").fetchall()}
+    inicio = date.today() - timedelta(days=dias - 1)
+    base = conexion.execute(
+        "SELECT COUNT(*) FROM suscriptores WHERE activo = 1 AND substr(fecha_alta,1,10) < ?",
+        (inicio.isoformat(),)).fetchone()[0]
+    serie, acum = [], base
+    for i in range(dias):
+        d = (inicio + timedelta(days=i)).isoformat()
+        n = altas.get(d, 0)
+        acum += n
+        serie.append({"fecha": d, "altas": n, "acumulado": acum})
+
+    por_origen = [{"origen": f["o"], "n": f["n"]} for f in conexion.execute(
+        "SELECT COALESCE(NULLIF(origen,''),'—') o, COUNT(*) n FROM suscriptores "
+        "WHERE activo = 1 GROUP BY o ORDER BY n DESC").fetchall()]
+
+    # ediciones
+    def _cuenta(estado):
+        return conexion.execute("SELECT COUNT(*) FROM briefs WHERE estado = ?", (estado,)).fetchone()[0]
+    enviadas, descartadas = _cuenta("enviada"), _cuenta("descartada")
+    prom = conexion.execute(
+        "SELECT AVG(enviados) FROM briefs WHERE estado = 'enviada' AND enviados > 0").fetchone()[0]
+
+    # correo por edición (últimas enviadas)
+    filas = conexion.execute(
+        "SELECT fecha, asunto, enviados FROM briefs WHERE estado = 'enviada' "
+        "ORDER BY fecha DESC LIMIT ?", (max(1, int(ediciones_correo)),)).fetchall()
+    correo, sum_env, sum_ab, sum_cl = [], 0, 0, 0
+    for f in filas:
+        env = f["enviados"] or 0
+        ab, cl = _unicos(conexion, f["fecha"], "opened"), _unicos(conexion, f["fecha"], "clicked")
+        sum_env += env; sum_ab += ab; sum_cl += cl
+        correo.append({
+            "fecha": f["fecha"], "asunto": f["asunto"], "enviados": env,
+            "abiertos": ab, "clics": cl,
+            "tasa_apertura": round(ab / env, 3) if env else None,
+            "tasa_clic": round(cl / env, 3) if env else None,
+        })
+    hay_eventos = conexion.execute("SELECT COUNT(*) FROM eventos_correo").fetchone()[0] > 0
+
+    return {
+        "suscriptores": {
+            "total": total, "activos": activos, "pendientes": pendientes,
+            "tasa_confirmacion": tasa_confirma, "serie": serie, "por_origen": por_origen,
+        },
+        "ediciones": {
+            "enviadas": enviadas, "descartadas": descartadas,
+            "promedio_enviados": round(prom, 1) if prom else None,
+        },
+        "correo": {
+            "hay_datos": hay_eventos,
+            "tasa_apertura": round(sum_ab / sum_env, 3) if sum_env else None,
+            "tasa_clic": round(sum_cl / sum_env, 3) if sum_env else None,
+            "por_edicion": correo,
+        },
+    }

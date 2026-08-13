@@ -223,12 +223,16 @@ def test_puerta_publica_sin_bandera_queda_abierta(monkeypatch):
     assert ok and correo is None
 
 
-def test_puerta_publica_con_bandera_exige_correo(monkeypatch):
+def test_puerta_correo_desactivada_es_permanente(monkeypatch):
+    """Decisión de Giorgio: El Enjambre es GRATIS y abierto. La puerta de correo
+    queda desactivada aunque alguien ponga la bandera; nunca bloquea. Si la
+    persona deja un correo válido, igual se captura como lead (sin bloquear)."""
     monkeypatch.delenv("ENJAMBRE_ACCESO", raising=False)
-    monkeypatch.setenv("ENJAMBRE_PUERTA_CORREO", "1")
-    assert server._puerta_simulacion({"titular": "x"}) == (False, None)   # sin correo, cerrado
+    monkeypatch.setenv("ENJAMBRE_PUERTA_CORREO", "1")  # la bandera ya no tiene efecto
+    ok, correo = server._puerta_simulacion({"titular": "x"})              # sin correo: abierto
+    assert ok and correo is None
     ok, correo = server._puerta_simulacion({"titular": "x", "email": "Lector@Medio.CL"})
-    assert ok and correo == "lector@medio.cl"                             # normaliza a minúsculas
+    assert ok and correo == "lector@medio.cl"                            # lead capturado (minúsculas)
 
 
 def test_puerta_privada_exige_clave_no_correo(monkeypatch):
@@ -238,11 +242,13 @@ def test_puerta_privada_exige_clave_no_correo(monkeypatch):
     assert ok
 
 
-def test_ws_pide_correo_en_publico_con_bandera(monkeypatch):
+def test_ws_no_pide_correo_en_publico(monkeypatch):
+    """Aunque esté la bandera vieja, el WS NO exige correo: la simulación arranca.
+    (El Enjambre es abierto; suscribirse a El Pulso es siempre opcional.)"""
     monkeypatch.delenv("ENJAMBRE_ACCESO", raising=False)
     monkeypatch.setenv("ENJAMBRE_PUERTA_CORREO", "1")
     cliente = TestClient(server.app)
     with cliente.websocket_connect("/ws") as ws:
         ws.send_json({"tipo": "simular", "titular": "La Fed sube las tasas"})  # sin correo
         respuesta = ws.receive_json()
-        assert respuesta["tipo"] == "correo"
+        assert respuesta["tipo"] != "correo"  # no bloquea; arranca la simulación

@@ -139,14 +139,25 @@ MAX_TICKS_OBS = 6000        # tope de latidos por sesión (~8 min); luego se cie
 _semaforo_obs = _asyncio.Semaphore(MAX_OBSERVATORIOS)
 
 
+_contador_peticiones = 0
+_CADA_LIMPIEZA = 500  # cada tantas requests se purga el estado vencido
+
+
 @app.middleware("http")
 async def blindaje(request: Request, call_next):
     """Rate-limit por IP en /api/* y cabeceras de seguridad en todo."""
+    global _contador_peticiones
     ruta = request.url.path
     if ruta.startswith("/api/"):
         ip = seguridad.ip_cliente(request.headers, request.client.host if request.client else None)
         if not seguridad.permitir_http(ip, ruta):
             return JSONResponse({"error": "Demasiadas solicitudes. Espera un momento."}, status_code=429)
+    # limpieza periódica: evita que el estado en memoria (ventanas de rate-limit
+    # e IPs de límites) crezca sin fin al acumular visitantes distintos.
+    _contador_peticiones += 1
+    if _contador_peticiones % _CADA_LIMPIEZA == 0:
+        seguridad.limpiar()
+        limites.limpiar()
     respuesta = await call_next(request)
     for clave, valor in seguridad.CABECERAS_SEGURIDAD.items():
         respuesta.headers.setdefault(clave, valor)

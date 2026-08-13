@@ -250,7 +250,7 @@ def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
     conexion.close()
 
     enviados = []
-    monkeypatch.setattr(boletin, "enviar", lambda *a: enviados.append(a) or True)
+    monkeypatch.setattr(boletin, "enviar", lambda *a, **k: enviados.append(a) or True)
     monkeypatch.setattr(boletin, "PULSO_ADMIN_EMAIL", "")  # sin correo de revisión en el test
     from contenido import notificar
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)

@@ -62,7 +62,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
         ${ESCENARIOS.map((e, i) => `<button class="chip" data-i="${i}">${e.etiqueta}</button>`).join('')}
         <button class="chip" id="btn-observatorio">🔭 Dejar corriendo</button>
       </div>
-      <p class="descargo">Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.</p>
+      <p class="descargo">Herramienta educativa y recreativa en proceso de creación y mejora. Simula el comportamiento de masas con agentes de IA; no constituye asesoría ni recomendación de inversión.</p>
     </div>
 
     <div id="tooltip" class="tooltip" hidden></div>

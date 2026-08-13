@@ -65,6 +65,19 @@ def permitir(ip: str, consumir: bool = True) -> tuple[bool, str]:
     return True, ""
 
 
+def limpiar(ahora: float | None = None) -> None:
+    """Descarta IPs sin actividad en la última hora — evita que _por_ip crezca
+    sin fin al acumular visitantes distintos (fuga de memoria lenta)."""
+    ahora = time.time() if ahora is None else ahora
+    hace_una_hora = ahora - 3600
+    for ip in list(_por_ip):
+        recientes = [t for t in _por_ip[ip] if t > hace_una_hora]
+        if recientes:
+            _por_ip[ip] = recientes
+        else:
+            del _por_ip[ip]
+
+
 def reiniciar() -> None:
     """Borra el estado (para los tests)."""
     global _consumidas_hoy

@@ -56,7 +56,8 @@
   .panel-cab .fecha{color:var(--mute);font-size:.85rem}
   .panel-cuerpo{padding:18px}
 
-  .badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 11px;border-radius:999px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .badge.mini{font-size:10px;padding:3px 9px;letter-spacing:.04em}
   .b-pendiente{background:rgba(224,161,58,.16);color:var(--amber)}
   .b-aprobada{background:rgba(95,179,161,.16);color:var(--teal)}
   .b-enviada{background:rgba(79,174,126,.18);color:var(--verde)}
@@ -218,11 +219,13 @@ function pintarSinEdicion(fecha){
     `<div class="acc" style="justify-content:center"><button class="btn btn-oro" onclick="generar()">✨ Generar edición de hoy</button></div></div>`;
 }
 
-function badge(estado){
-  const m={pendiente:['b-pendiente','Pendiente de revisión'],aprobada:['b-aprobada','Aprobada'],
-    enviada:['b-enviada','Enviada'],descartada:['b-descartada','Descartada']};
-  const [c,t]=m[estado]||['b-none',estado||'—'];
-  return `<span class="badge ${c}">${t}</span>`;
+function badge(estado,mini){
+  const largo={pendiente:'Pendiente de revisión',aprobada:'Aprobada',enviada:'Enviada',descartada:'Descartada'};
+  const corto={pendiente:'Pendiente',aprobada:'Aprobada',enviada:'Enviada',descartada:'Descartada'};
+  const clase={pendiente:'b-pendiente',aprobada:'b-aprobada',enviada:'b-enviada',descartada:'b-descartada'};
+  const c=clase[estado]||'b-none';
+  const t=(mini?corto:largo)[estado]||estado||'—';
+  return `<span class="badge ${c}${mini?' mini':''}">${t}</span>`;
 }
 
 function pintarEdicion(ed){
@@ -320,7 +323,7 @@ async function cargarHistorial(){
     const n = e.estado==="enviada" ? `${e.enviados}/${e.suscriptores} enviados` : "";
     return `<li onclick="cargarEdicion('${e.fecha}')"><div><div class="f">${esc(e.fecha)}</div>`+
       `<div class="a">${esc(e.asunto||"—")}</div></div>`+
-      `<div style="text-align:right">${badge(e.estado)}<div class="n">${n}</div></div></li>`;
+      `<div style="text-align:right">${badge(e.estado,true)}<div class="n">${n}</div></div></li>`;
   }).join("");
 }
 

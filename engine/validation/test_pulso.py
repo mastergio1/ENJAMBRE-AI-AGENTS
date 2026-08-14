@@ -161,7 +161,8 @@ def test_ritual_matutino_arma_todo_sin_enviar(monkeypatch):
     resultado = pipeline.ritual_matutino(semilla_base=99, enviar=False)
     assert len(resultado["publicadas"]) == 3
     assert resultado["destacadas"] == 3
-    assert resultado["envio"] is None          # enviar=False
+    assert resultado["estado"] == "pendiente"   # generada, esperando el visto bueno
+    assert resultado["token"]                   # token para los enlaces del correo de revisión
     assert DISCLAIMER in resultado["html_preview"]
     assert avisos and "El Pulso" in avisos[0]   # paso 8: avisó a Giorgio
 
@@ -239,7 +240,9 @@ def test_yahoo_calcula_dia_mes_ano():
     assert yahoo._variaciones([100.0]) is None     # serie muy corta → None
 
 
-def test_ritual_envia_a_suscriptores_confirmados(monkeypatch):
+def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
+    """El ritual GENERA la edición (pendiente); nada sale a los suscriptores
+    hasta que Giorgio la aprueba. Aprobar la envía a los confirmados."""
     # un suscriptor confirmado
     conexion = persistencia.conectar()
     alta = persistencia.agregar_suscriptor(conexion, "lector@medio.cl")
@@ -247,12 +250,17 @@ def test_ritual_envia_a_suscriptores_confirmados(monkeypatch):
     conexion.close()
 
     enviados = []
-    monkeypatch.setattr(boletin, "enviar", lambda *a: enviados.append(a) or True)
+    monkeypatch.setattr(boletin, "enviar", lambda *a, **k: enviados.append(a) or True)
+    monkeypatch.setattr(boletin, "PULSO_ADMIN_EMAIL", "")  # sin correo de revisión en el test
     from contenido import notificar
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
 
+    # 1) el ritual arma la edición pero NO la envía a los suscriptores (queda pendiente)
     resultado = pipeline.ritual_matutino(semilla_base=7, enviar=True)
-    assert resultado["envio"]["suscriptores"] == 1
-    assert resultado["envio"]["enviados"] == 1
-    # el correo salió al suscriptor confirmado
-    assert enviados[0][0] == "lector@medio.cl"
+    assert resultado["estado"] == "pendiente"
+    assert enviados == []                       # nada salió a los suscriptores todavía
+
+    # 2) el visto bueno la envía a los suscriptores confirmados
+    envio = pipeline.aprobar_y_enviar()
+    assert envio["ok"] and envio["suscriptores"] == 1 and envio["enviados"] == 1
+    assert enviados[0][0] == "lector@medio.cl"  # el correo salió al confirmado

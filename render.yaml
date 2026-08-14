@@ -40,6 +40,17 @@ services:
       # El Pulso (Etapa 8) — se pegan a mano cuando el dominio esté verificado:
       - key: RESEND_API_KEY
         sync: false
+      # correo de Giorgio: recibe el aviso de REVISIÓN de cada edición (con los
+      # botones Aprobar/Descartar) y habilita el pill "Revisión" del panel.
+      # Funciona aun sin dominio verificado (modo prueba de Resend).
+      - key: PULSO_ADMIN_EMAIL
+        sync: false
+      # secreto del webhook de Resend (aperturas/clics del panel de estadísticas).
+      # En Resend: Webhooks → crear uno a {API_URL}/pulso/webhook/resend, copiar
+      # su "Signing Secret" (empieza con whsec_) y pegarlo aquí. Sin esto, el
+      # panel muestra el resto de estadísticas y omite aperturas (falla cerrado).
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
       # La Redacción — capa de datos de mercado (Barchart) para el análisis:
       - key: BARCHART_API_KEY
         sync: false

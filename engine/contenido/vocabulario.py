@@ -9,8 +9,9 @@ Nada se publica sin pasar por aquí.
 import unicodedata
 
 DISCLAIMER = (
-    "Simulación educativa de comportamiento de masas con agentes de IA. "
-    "No constituye asesoría ni recomendación de inversión."
+    "Herramienta educativa y recreativa en proceso de creación y mejora. "
+    "Simula el comportamiento de masas con agentes de IA; "
+    "no constituye asesoría ni recomendación de inversión."
 )
 
 # términos prohibidos por el principio regulatorio (más variantes obvias);

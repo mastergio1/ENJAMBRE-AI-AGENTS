@@ -9,7 +9,7 @@ Reglas de oro que estos tests protegen:
 import pytest
 
 from contenido import boletin, persistencia, redaccion
-from contenido.fuentes import barchart
+from contenido.fuentes import barchart, yahoo
 from contenido.vocabulario import DISCLAIMER, es_publicable, verificar_pieza
 
 
@@ -18,6 +18,11 @@ def sin_claves(monkeypatch, tmp_path):
     monkeypatch.delenv("BARCHART_API_KEY", raising=False)
     monkeypatch.delenv("ALPACA_API_KEY_ID", raising=False)
     monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
+    # Hermético: Yahoo es una fuente GRATIS (sin clave), así que borrar las claves
+    # no basta para forzar el modo demo — un entorno con salida a Yahoo devolvería
+    # 'origen_datos' = 'yahoo' y rompería los asserts que esperan 'demo'. Lo
+    # neutralizamos aquí para que los tests corran igual con o sin red (como en CI).
+    monkeypatch.setattr(yahoo, "cotizaciones", lambda *a, **k: ([], "sin_datos"))
 
 
 NOTICIAS = [
@@ -157,7 +162,7 @@ def test_correo_con_brief_es_cmf_limpio_y_lleva_disclaimer():
                            {"arquetipo": "institucional_frio", "senal": 0.1, "frase": "Sin impacto."}],
     }]
     html = boletin.construir_html(destacadas, "domingo 12 de julio", brief=brief)
-    assert "Lo que pasó en el mercado" in html
+    assert "Lo que pasó" in html                       # el bloque de 'movers' con su cita
     assert "Qué observa el enjambre hoy" in html
     assert DISCLAIMER in html
     assert verificar_pieza(html) == []  # sin vocabulario prohibido, con disclaimer

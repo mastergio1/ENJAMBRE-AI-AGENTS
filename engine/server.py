@@ -756,6 +756,51 @@ def imagen(sim_id: str) -> Response:
     )
 
 
+# periodo → (rango Yahoo, intervalo Yahoo, etiqueta editorial)
+_PERIODOS = {
+    "semana": ("5d", "1d", "última semana"),
+    "mes": ("1mo", "1d", "en el mes"),
+    "ano": ("1y", "1d", "en el año"),
+    "dia": ("1d", "15m", "en el día"),
+}
+
+
+def _ticker_valido(t: str) -> bool:
+    """Tickers de Yahoo: letras/números y . = ^ - (SPY, ^GSPC, CL=F, BTC-USD).
+    Nada de barras ni espacios → sin inyección en la URL de Yahoo."""
+    return bool(t) and len(t) <= 15 and all(c.isalnum() or c in ".=^-" for c in t)
+
+
+@app.get("/api/grafico/{ticker}")
+def grafico(ticker: str, respuesta: Response, n: str = "", p: str = "semana", m: str = "$") -> Response:
+    """Gráfico de precio REAL de un activo (PNG estilo Moby) para el correo.
+
+    n = nombre a mostrar · p = periodo (semana/mes/ano/dia) · m = símbolo moneda.
+    Degrada elegante: si Yahoo no responde o el ticker no da datos, 404 (el
+    correo simplemente omite el gráfico, nunca se cae)."""
+    if not _ticker_valido(ticker):
+        return Response(status_code=404)
+    rango, intervalo, etiqueta = _PERIODOS.get(p, _PERIODOS["semana"])
+    from contenido import graficos
+    from contenido.fuentes import yahoo
+
+    datos = yahoo.serie_reciente(ticker, rango=rango, intervalo=intervalo)
+    if not datos:
+        return Response(status_code=404)
+    fechas, cierres = datos
+    nombre = (n.strip()[:40] or yahoo.NOMBRES.get(ticker, ticker))
+    png = graficos.generar_grafico(
+        nombre, ticker, cierres, etiqueta_periodo=etiqueta,
+        fecha_inicio=yahoo.etiqueta_fecha(fechas[0]), fecha_fin="hoy",
+        moneda=(m.strip()[:2] or "$"),
+    )
+    if png is None:
+        return Response(status_code=404)
+    # los precios cambian: caché de 1 h (no 'immutable' como el replay)
+    return Response(content=png, media_type="image/png",
+                    headers={"Cache-Control": "public, max-age=3600"})
+
+
 @app.get("/api/simulacion/{sim_id}/replay")
 def replay(sim_id: str) -> Response:
     """Los frames binarios del replay 3D (solo destacadas los conservan).

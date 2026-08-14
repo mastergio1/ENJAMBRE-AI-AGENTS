@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-10T01:36:46+00:00",
+ "generado": "2026-08-14T21:51:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -2461,6 +2461,66 @@
     "cerebros": "ia"
    },
    "epilogo": null
+  },
+  {
+   "sim_id": "6ae3c699aa3979a0",
+   "origen": "en_vivo",
+   "fecha": "2026-08-05T12:01:13+00:00",
+   "titular": "CORRECTION: EVgo Lowers FY2026 Sales Guidance from $410.000M-$470.000M to $400.000M-$430.000M vs $432.947M Est",
+   "simbolos": "EVGO",
+   "direccion_pct": -1.13,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "EVGO",
+    "pct_real": -12.43,
+    "cierre_base": 1.73,
+    "cierre_final": 1.515,
+    "fecha_base": "2026-08-04",
+    "fecha_final": "2026-08-06",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -1.1%. En el mercado real, EVGO cerró en 1.515 el 2026-08-06 (venía de 1.73 el 2026-08-04): -12.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "5741ff4305d85c90",
+   "origen": "en_vivo",
+   "fecha": "2026-08-05T12:02:02+00:00",
+   "titular": "Medline Q2 Adj. EPS $0.50 Beats $0.32 Estimate, Sales $7.685B Beat $7.512B Estimate",
+   "simbolos": "MDLN",
+   "direccion_pct": 39.7,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "MDLN",
+    "pct_real": -17.9,
+    "cierre_base": 42.06,
+    "cierre_final": 34.53,
+    "fecha_base": "2026-08-04",
+    "fecha_final": "2026-08-06",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +39.7%. En el mercado real, MDLN cerró en 34.53 el 2026-08-06 (venía de 42.06 el 2026-08-04): -17.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "90b35e583c78ed47",
+   "origen": "en_vivo",
+   "fecha": "2026-08-05T12:02:44+00:00",
+   "titular": "Omnipod Sales Soar, But Insulet's Outlook Cut Sparks Stock Selloff",
+   "simbolos": "PODD",
+   "direccion_pct": -5.19,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "PODD",
+    "pct_real": -16.48,
+    "cierre_base": 166.67,
+    "cierre_final": 139.2,
+    "fecha_base": "2026-08-04",
+    "fecha_final": "2026-08-06",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -5.2%. En el mercado real, PODD cerró en 139.2 el 2026-08-06 (venía de 166.67 el 2026-08-04): -16.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   },
   {
    "sim_id": "e895c8b98bb556f5",

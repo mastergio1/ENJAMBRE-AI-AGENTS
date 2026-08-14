@@ -163,7 +163,7 @@ Son los únicos agentes que leen la noticia real. Cada uno hace **una llamada** 
 ### Reglas de implementación de los cerebros
 
 - Llamadas en **paralelo** (asyncio) — las 100 deben resolverse en < 15 segundos.
-- `temperature` ≈ 0.8 para variabilidad intra-arquetipo (dos Doomers no responden idéntico).
+- **NO enviar `temperature` / `top_p` / `top_k`:** `claude-sonnet-5` los rechaza con HTTP 400 y *todos* los líderes caen al respaldo léxico en silencio (lección cara — ver `docs/contexto.md` §3.2). La variabilidad intra-arquetipo viene del muestreo propio del modelo y de la semilla aleatoria por corrida, no de un parámetro.
 - **Fallback obligatorio:** si la API falla o el JSON no parsea, el líder usa una señal precomputada por arquetipo según el sentimiento léxico del titular (diccionario simple). La simulación NUNCA se cae por la API.
 - Cachear respuestas por (titular, arquetipo, seed) para repetir demos sin costo.
 - Validar el JSON con schema; recortar señal a [-1, +1].

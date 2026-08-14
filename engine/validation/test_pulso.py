@@ -264,3 +264,36 @@ def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
     envio = pipeline.aprobar_y_enviar()
     assert envio["ok"] and envio["suscriptores"] == 1 and envio["enviados"] == 1
     assert enviados[0][0] == "lector@medio.cl"  # el correo salió al confirmado
+
+
+# ---------- el correo no deja pasar marcado ajeno ----------
+
+def test_el_correo_escapa_titulares_y_frases_hostiles():
+    """Los titulares llegan de fuentes externas (Alpaca) y las frases las
+    escribe la IA leyendo un titular que puede venir del público: ni unos ni
+    otras pueden inyectar HTML en el correo que reciben los suscriptores."""
+    titular_hostil = '<img src=x onerror=alert(1)> La Fed sube las tasas'
+    destacadas = [
+        {"titular": titular_hostil, "sim_id": "a" * 16,
+         "resumen": {"direccion_pct": -3.2, "agitacion": "alto"},
+         "lideres_frases": [
+             {"arquetipo": "doomer", "senal": -0.9,
+              "frase": '</p><a href="http://sitio-falso.cl">entra aquí</a>'},
+             {"arquetipo": "fomo_evangelista", "senal": 0.8, "frase": "Momento histórico"},
+         ]},
+        {"titular": titular_hostil, "sim_id": "b" * 16, "resumen": {"direccion_pct": 1.1}},
+    ]
+    html = boletin.construir_html(destacadas, "lunes 4 de agosto", token_baja="ABC")
+    assert "<img src=x" not in html
+    assert "&lt;img src=x" in html                       # se ve como texto, no se ejecuta
+    assert '<a href="http://sitio-falso.cl"' not in html  # sin enlaces colados
+    assert "&lt;/p&gt;" in html
+
+
+def test_el_correo_solo_acepta_enlaces_http():
+    """La fuente de un dato de mercado es un enlace externo: solo http(s)."""
+    assert boletin._url_segura("https://ejemplo.cl/nota") == "https://ejemplo.cl/nota"
+    assert boletin._url_segura("javascript:alert(1)") == ""
+    assert boletin._url_segura("") == ""
+    fila = boletin._fila_mercado({"tipo": "evento", "titular": "Dato", "url": "javascript:alert(1)"})
+    assert "javascript:" not in fila

@@ -135,13 +135,32 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
     return respuesta.json()
   }
 
+  // El bloque de suscripción a El Pulso: se muestra SIEMPRE (con o sin muro
+  // cargado). Es el gancho de crecimiento; no puede desaparecer si el motor
+  // tiene un hipo. Antes vivía solo dentro de render() y se esfumaba en el
+  // estado de aviso — nadie podía suscribirse.
+  function bloquePulso() {
+    return `
+      <section class="pulso">
+        <h2>El Pulso del Enjambre</h2>
+        <p>Cada mañana, la reacción del enjambre a los titulares del día. Un correo, sin ruido.</p>
+        <form class="pulso-form">
+          <input type="email" name="email" placeholder="tu@correo.cl" autocomplete="email" required />
+          <button type="submit" class="accion">Suscribirme</button>
+        </form>
+        <p class="pulso-estado" hidden></p>
+      </section>`
+  }
+
   function renderAviso(mensaje) {
     contenedor.innerHTML = `
       <header class="muro-cabecera"><h1>El Enjambre</h1>
         <p>el focus group sintético del mercado</p></header>
       <p class="muro-aviso">${mensaje}</p>
+      ${bloquePulso()}
       ${FIRMA_RUBICON}`
     document.body.classList.add('con-muro')
+    conectarPulso()   // el formulario funciona aunque el muro no haya cargado
   }
 
   function render(datos) {
@@ -160,15 +179,7 @@ export async function inicializarMuro({ enjambre, panel, correrTitular, reducirM
       <div class="muro-lista">${tarjetas.map(plantillaTarjeta).join('')}</div>
       ${datos.tarjetas.length > visibles
         ? '<button class="accion ver-mas">Ver más titulares</button>' : ''}
-      <section class="pulso">
-        <h2>El Pulso del Enjambre</h2>
-        <p>Cada mañana, la reacción del enjambre a los titulares del día. Un correo, sin ruido.</p>
-        <form class="pulso-form">
-          <input type="email" name="email" placeholder="tu@correo.cl" autocomplete="email" required />
-          <button type="submit" class="accion">Suscribirme</button>
-        </form>
-        <p class="pulso-estado" hidden></p>
-      </section>
+      ${bloquePulso()}
       <section class="organizaciones">
         <h2>El Enjambre para tu organización</h2>
         <p>Educación financiera, medios y fintechs: demos guiadas, el widget

@@ -1,6 +1,6 @@
 # El Enjambre 🐝
 
-Simulador de escenarios del mercado bursátil: ingresas una noticia y observas en una escena 3D cómo 5.000 inversionistas simulados reaccionan — el pánico se contagia, las manadas se forman, el precio emerge.
+Simulador de escenarios del mercado bursátil: ingresas una noticia y observas en una escena 3D cómo 10.000 inversionistas simulados reaccionan — el pánico se contagia, las manadas se forman, el precio emerge.
 
 > **Herramienta de simulación y educación. No es asesoría financiera.**
 
@@ -39,7 +39,13 @@ npm run dev
 
 ## Estado del proyecto
 
-**Etapa 4 (integración) completada** — el motor Python corre la simulación real y la transmite por WebSocket al enjambre 3D: escribes un titular, los 100 líderes lo leen, la ola se propaga por 5.000 inversionistas y al final aparece el reporte (dirección esperada, volatilidad, desglose por tipo). Sin motor, la web funciona sola en modo demo. Deploy: ver [docs/despliegue.md](docs/despliegue.md). Roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida).
+**Etapas 0-10 completadas y en producción.** El motor Python corre la simulación real y la transmite por WebSocket al enjambre 3D: escribes un titular, los 1.000 líderes lo leen (compartiendo ~110 cerebros de IA), la ola se propaga por 10.000 inversionistas y al final aparece el reporte (dirección esperada, volatilidad, desglose por tipo). Sin motor, la web funciona sola en modo demo.
+
+Sobre esa base está construida la capa de contenido (ver [CONTENIDO.md](CONTENIDO.md)): **el muro** (portada con las 3 noticias del día ya simuladas), **el archivo** (hemeroteca buscable), **El Pulso** (newsletter diaria), **La Redacción** (análisis verificado), **el duelo** (dos escenarios enfrentados) y **el widget** embebible.
+
+Fase actual: **calibración** — se contrastan las reacciones del enjambre contra movimientos reales del mercado, con foco en acciones USA, SPY y cripto.
+
+Deploy: ver [docs/despliegue.md](docs/despliegue.md) · Roadmap en [CLAUDE.md](CLAUDE.md#9-roadmap-referencia-rápida) · Foto detallada del avance en [docs/estado-del-proyecto.md](docs/estado-del-proyecto.md) y el traspaso técnico en [docs/contexto.md](docs/contexto.md).
 
 Para explorar el mercado simulado:
 
@@ -52,4 +58,4 @@ python demo_titular.py "La Fed sube las tasas 50 puntos base"
 ```
 
 ---
-*Rubicón Lab · Julio 2026*
+*Rubicón Lab · Agosto 2026*

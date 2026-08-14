@@ -142,12 +142,24 @@ _semaforo_obs = _asyncio.Semaphore(MAX_OBSERVATORIOS)
 _contador_peticiones = 0
 _CADA_LIMPIEZA = 500  # cada tantas requests se purga el estado vencido
 
+# Tope de cuerpo por petición. El más grande legítimo es el editor del panel
+# (el texto completo de una edición del Pulso: unos pocos KB), así que 256 KB
+# sobra. Sin este freno, un POST de cientos de MB se carga entero en memoria
+# antes de que pydantic lo valide → el motor (512 MB en Render) se queda sin
+# memoria y reinicia. Nota: cubre el caso con Content-Length (el normal); una
+# subida "chunked" sin ese encabezado sigue acotada por los frenos de más abajo.
+MAX_CUERPO = 256_000
+
 
 @app.middleware("http")
 async def blindaje(request: Request, call_next):
-    """Rate-limit por IP en /api/* y cabeceras de seguridad en todo."""
+    """Rate-limit por IP en /api/*, tope de cuerpo y cabeceras de seguridad."""
     global _contador_peticiones
     ruta = request.url.path
+    if request.method in ("POST", "PUT", "PATCH"):
+        declarado = request.headers.get("content-length", "")
+        if declarado.isdigit() and int(declarado) > MAX_CUERPO:
+            return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
     if ruta.startswith("/api/"):
         ip = seguridad.ip_cliente(request.headers, request.client.host if request.client else None)
         if not seguridad.permitir_http(ip, ruta):
@@ -877,10 +889,14 @@ def api_contacto(peticion: PeticionContacto) -> dict:
         conexion.close()
     try:
         from contenido import notificar
+        # todo lo que escribió el visitante se escapa: el aviso va con
+        # parse_mode=HTML y un "<" suelto haría que Telegram lo rechace
+        # (Giorgio perdería el lead sin enterarse).
         notificar.avisar(
-            f"🤝 <b>Nuevo contacto B2B</b>\n{nombre}"
-            + (f" · {peticion.organizacion.strip()[:80]}" if peticion.organizacion.strip() else "")
-            + f"\n{email}\n{peticion.mensaje.strip()[:200]}"
+            f"🤝 <b>Nuevo contacto B2B</b>\n{notificar.escapar(nombre)}"
+            + (f" · {notificar.escapar(peticion.organizacion.strip()[:80])}"
+               if peticion.organizacion.strip() else "")
+            + f"\n{notificar.escapar(email)}\n{notificar.escapar(peticion.mensaje.strip()[:200])}"
         )
     except Exception:
         pass  # el lead ya quedó guardado; el aviso es cortesía

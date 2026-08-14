@@ -51,8 +51,21 @@ def COLOR_DIR(pct: float) -> str:
 
 
 def _limpiar(texto: str) -> str:
-    """Un texto variable solo sale si pasa el filtro CMF; si no, se neutraliza."""
-    return texto if es_publicable(texto) else "—"
+    """Un texto variable solo sale si pasa el filtro CMF; si no, se neutraliza.
+
+    Además ESCAPA el HTML: los titulares llegan de fuentes externas (Alpaca) y
+    las frases las escribe la IA leyendo un titular que puede venir del público.
+    Sin escapar, un `<` en un titular rompe el correo — y un titular hostil podría
+    colar marcado (un enlace falso) en el Pulso que reciben los suscriptores.
+    Todos los usos de esta función son contexto HTML.
+    """
+    return _esc(texto) if es_publicable(texto) else "—"
+
+
+def _url_segura(url: str) -> str:
+    """Solo http(s) llega al correo: cierra la puerta a `javascript:` y `data:`."""
+    limpia = (url or "").strip()
+    return _esc(limpia) if limpia.lower().startswith(("http://", "https://")) else ""
 
 
 def _voz(frase: dict) -> str:
@@ -79,8 +92,9 @@ def asunto_del_dia(destacada: dict) -> str:
 
 
 def _fila_mercado(m: dict) -> str:
-    fuente = (f'<a href="{_esc(m["url"])}" style="color:{TEAL};font-size:12px;text-decoration:none;">·&nbsp;fuente</a>'
-              if m.get("url") else "")
+    url = _url_segura(m.get("url", ""))
+    fuente = (f'<a href="{url}" style="color:{TEAL};font-size:12px;text-decoration:none;">·&nbsp;fuente</a>'
+              if url else "")
     if m.get("tipo") == "evento":
         marca = f'<span style="color:{ORO};font-weight:bold;">◆</span>'
         cuerpo = _esc(m["titular"])

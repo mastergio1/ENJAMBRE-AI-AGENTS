@@ -252,3 +252,41 @@ def test_ws_no_pide_correo_en_publico(monkeypatch):
         ws.send_json({"tipo": "simular", "titular": "La Fed sube las tasas"})  # sin correo
         respuesta = ws.receive_json()
         assert respuesta["tipo"] != "correo"  # no bloquea; arranca la simulación
+
+
+# ---------- tope de cuerpo por petición (memoria del motor) ----------
+
+def test_cuerpo_gigante_se_rechaza_con_413():
+    """Un POST enorme se corta en la puerta: sin este freno se carga entero en
+    memoria antes de validarse y el motor (512 MB en Render) reinicia."""
+    cliente = TestClient(server.app)
+    grande = "x" * (server.MAX_CUERPO + 1)
+    respuesta = cliente.post("/api/contacto",
+                             json={"nombre": "Ana", "email": "ana@medio.cl", "mensaje": grande})
+    assert respuesta.status_code == 413
+    # y el webhook (fuera de /api/) también queda cubierto
+    assert cliente.post("/pulso/webhook/resend", content=grande).status_code == 413
+
+
+def test_cuerpo_normal_sigue_pasando():
+    """El freno no puede estorbar al uso legítimo (el más grande es el editor
+    del panel: unos pocos KB)."""
+    cliente = TestClient(server.app)
+    respuesta = cliente.post("/api/contacto", json={
+        "nombre": "Ana", "email": "ana@medio.cl",
+        "organizacion": "Medio X", "mensaje": "y" * 4000})
+    assert respuesta.status_code == 200
+
+
+# ---------- avisos a Telegram (van con parse_mode=HTML) ----------
+
+def test_aviso_telegram_escapa_lo_que_viene_de_afuera():
+    """Un "<" en un formulario o en un titular hacía que Telegram rechazara el
+    mensaje entero (400) y el aviso se perdiera en silencio."""
+    from contenido import notificar
+    assert notificar.escapar("<b>Ana</b>") == "&lt;b&gt;Ana&lt;/b&gt;"
+    resumen = notificar.resumen_ejecucion(
+        "demo", [{"impacto": 8, "titular": "<script>alert(1)</script> Fed sube"}], None)
+    assert "<script>" not in resumen
+    assert "&lt;script&gt;" in resumen
+    assert "<b>El Pulso" in resumen  # el marcado propio del aviso se conserva

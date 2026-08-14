@@ -81,6 +81,29 @@ def es_publicable(texto: str) -> bool:
     return not encontrar_prohibidas(texto)
 
 
+# frase con la que se reemplaza la voz de un líder que no pasa el filtro:
+# neutra, CMF-limpia y en la voz genérica del analista (no deja hueco visual).
+FRASE_NEUTRAL = "Prefiere no comentar este titular."
+
+
+def frase_segura(texto: str) -> str:
+    """La voz de un líder solo se muestra si pasa el filtro CMF; si no —p. ej.
+    alguien empujó al modelo a un «compra ahora»— se neutraliza. Las frases de
+    los líderes son lo que más gente ve (web, muro, widget), así que este es el
+    borde de cumplimiento más importante de cerrar."""
+    return texto if es_publicable(texto) else FRASE_NEUTRAL
+
+
+def sanear_frases(respuestas: list[dict]) -> list[dict]:
+    """Neutraliza IN SITU las frases no publicables de las respuestas de los
+    cerebros, apenas vuelven de la IA y ANTES de repartirlas a la web, la base
+    y el muro. Devuelve la misma lista (para encadenar con reparto.expandir)."""
+    for r in respuestas:
+        if isinstance(r, dict) and "frase" in r:
+            r["frase"] = frase_segura(str(r.get("frase", "")))
+    return respuestas
+
+
 def verificar_pieza(texto: str) -> list[str]:
     """Verificación completa de una pieza pública (página, correo, widget).
 

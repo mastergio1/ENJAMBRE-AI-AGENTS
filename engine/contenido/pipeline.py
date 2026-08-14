@@ -37,7 +37,10 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
     # 1000 líderes comparten ~110 cerebros (presupuesto de la biblia)
     consultas, asignacion = reparto.planificar(lideres, lambda uid: uid)
-    respuestas = reparto.expandir(analizar_titular(titular, consultas), asignacion)
+    from contenido import vocabulario
+    # filtro CMF a las voces de los líderes antes de que se guarden y se sirvan
+    respuestas = reparto.expandir(
+        vocabulario.sanear_frases(analizar_titular(titular, consultas)), asignacion)
     # el enjambre razona el TIPO de mercado y aplica su personalidad
     perfil = perfil_de(clasificar(titular))
 

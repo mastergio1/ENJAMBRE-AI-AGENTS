@@ -297,3 +297,25 @@ def test_el_correo_solo_acepta_enlaces_http():
     assert boletin._url_segura("") == ""
     fila = boletin._fila_mercado({"tipo": "evento", "titular": "Dato", "url": "javascript:alert(1)"})
     assert "javascript:" not in fila
+
+
+# ---------- B5: el panel no miente cuando el preview no se regenera ----------
+
+def test_editar_avisa_si_el_preview_no_se_regenera(monkeypatch):
+    """Si al editar no hay destacadas para re-armar el correo, la respuesta debe
+    DECIRLO (preview_actualizado=False), no un ok:true a secas — si no, se
+    aprueba y sale el correo sin las ediciones."""
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto")
+    hoy = persistencia.ahora_iso()[:10]
+    conexion = persistencia.conectar()
+    # una edición guardada, pero SIN simulaciones destacadas para hoy
+    persistencia.guardar_edicion(conexion, hoy, {"redactado": {}}, "<html>viejo</html>",
+                                 "Asunto", "t" * 24, persistencia.ahora_iso())
+    conexion.close()
+    cliente = TestClient(server.app)
+    res = cliente.post(f"/api/panel/edicion/{hoy}/editar",
+                       headers={"X-Pipeline-Token": "secreto"},
+                       json={"redactado": {"buenos_dias": "Hola"}}).json()
+    assert res["ok"] is True
+    assert res["preview_actualizado"] is False        # no mintió
+    assert "vista previa" in res["motivo"].lower()

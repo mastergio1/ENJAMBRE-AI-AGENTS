@@ -327,7 +327,17 @@ async function guardarEdicion(){
     historias};
   toast("Guardando y re-armando el correo…");
   const res=await api("/api/panel/edicion/"+EDICION.fecha+"/editar","POST",{redactado});
-  if(res&&res.ok){ toast("Cambios guardados ✓"); await cargarEdicion(EDICION.fecha); }
+  if(res&&res.ok){
+    if(res.preview_actualizado===false){
+      // se guardó el texto pero la vista previa NO se regeneró: avisar fuerte
+      // para que no se apruebe una versión vieja sin querer (B5).
+      alert("⚠️ "+(res.motivo||"Se guardó tu texto, pero la vista previa quedó desactualizada.")+
+            "\n\nNo apruebes hasta confirmar que el correo se ve como quieres.");
+    } else {
+      toast("Cambios guardados ✓");
+    }
+    await cargarEdicion(EDICION.fecha);
+  }
   else toast((res&&res.motivo)||"No se pudo guardar");
 }
 

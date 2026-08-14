@@ -32,7 +32,7 @@ from pydantic import BaseModel
 from agents.lider import LiderOpinion
 from brains.arquetipos import POR_ID
 from brains.cerebro import analizar_titular_async
-from contenido import limites, persistencia, portero, seguridad
+from contenido import limites, persistencia, portero, seguridad, vocabulario
 from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
 
@@ -43,7 +43,12 @@ RITMO_DEFECTO = 0.08      # segundos entre ticks transmitidos
 RITMO_MINIMO = 0.02       # piso: nadie pide ticks sin pausa (protege la CPU)
 MAX_TITULAR = 1200        # caracteres: cabe un tweet presidencial completo
 MAX_MENSAJE_WS = 4000     # bytes de texto por mensaje del cliente
-MAX_SIM_CONCURRENTES = 2  # simulaciones pesadas en vuelo a la vez
+MAX_SIM_CONCURRENTES = 1  # simulaciones pesadas en vuelo a la vez. En 0,5 CPU /
+                          # 512 MB, 2 estaba al borde (ya hubo reinicios por
+                          # memoria con UNA). Con 1, el que llega de más ve
+                          # "ocupado, intenta en unos segundos" (elegante) en vez
+                          # de que el motor reinicie a mitad de su simulación.
+                          # Si se sube el plan del servidor, se puede volver a 2.
 MENSAJE_PRIVADO = (
     "El Enjambre está en pruebas privadas. Puedes explorar el muro y el "
     "archivo; para soltar tus propios titulares, escríbenos desde "
@@ -330,7 +335,7 @@ async def _leer_titular_en_vivo(modelo, lideres, titular, candado, semilla) -> l
         analizar_titular_async(titular, consultas),
         clasificar_async(titular),
     )
-    respuestas = reparto.expandir(respuestas_cerebros, asignacion)
+    respuestas = reparto.expandir(vocabulario.sanear_frases(respuestas_cerebros), asignacion)
     async with candado:
         await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas, perfil_de(tipo))
     return respuestas
@@ -441,7 +446,9 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
         analizar_titular_async(titular, consultas),
         clasificar_async(titular),
     )
-    respuestas = reparto.expandir(respuestas_cerebros, asignacion)
+    # filtro CMF a las voces de los líderes: se neutraliza aquí, UNA vez, antes
+    # de repartirlas a la web, la base y el muro (borde de cumplimiento CMF).
+    respuestas = reparto.expandir(vocabulario.sanear_frases(respuestas_cerebros), asignacion)
     perfil = perfil_de(tipo_mercado)
 
     await ws.send_text(json.dumps({
@@ -1258,7 +1265,11 @@ def panel_editar(fecha: str, peticion: PeticionEditar, x_pipeline_token: str = H
         if ed["estado"] == "enviada":
             return {"ok": False, "motivo": "la edición ya se envió; no se puede editar"}
         persistencia.actualizar_redactado(conexion, fecha, peticion.redactado)
-        # re-renderiza el preview con el texto editado (usa las destacadas de hoy)
+        # re-renderiza el preview con el texto editado (usa las destacadas de hoy).
+        # Si esto falla (p. ej. hoy no hay destacadas), el texto SÍ quedó guardado
+        # pero la vista previa quedó vieja: hay que DECIRLO, no mentir con ok:true
+        # a secas — si no, se aprueba y sale el correo sin las ediciones (B5).
+        preview_ok, motivo = False, ""
         try:
             from datetime import datetime as _dt, timezone as _tz
             from contenido import pipeline, boletin
@@ -1269,9 +1280,12 @@ def panel_editar(fecha: str, peticion: PeticionEditar, x_pipeline_token: str = H
                     destacadas, pipeline._fecha_es(_dt.now(_tz.utc)),
                     token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
                 persistencia.actualizar_preview(conexion, fecha, html)
-        except Exception:
-            pass
-        return {"ok": True}
+                preview_ok = True
+            else:
+                motivo = "Hoy no hay destacadas: se guardó tu texto, pero la vista previa no se pudo regenerar."
+        except Exception as error:
+            motivo = f"Se guardó tu texto, pero la vista previa no se pudo regenerar ({type(error).__name__})."
+        return {"ok": True, "preview_actualizado": preview_ok, "motivo": motivo}
     finally:
         conexion.close()
 
@@ -1288,12 +1302,21 @@ def panel_generar(tareas: BackgroundTasks, x_pipeline_token: str = Header(defaul
 
 def _correr_ritual() -> None:
     """Corre el ritual completo en el MISMO proceso web → misma base que
-    sirve el muro. Cualquier fallo se traga (no debe tumbar el servidor)."""
+    sirve el muro. Un fallo NO debe tumbar el servidor, pero SÍ debe dejar
+    rastro: si no, un muro vacío y ningún correo son indistinguibles de un día
+    sin noticias, y en el log no hay pista de por qué (B6)."""
     try:
         from contenido import pipeline
         pipeline.ritual_matutino(enviar=True)
     except Exception:
-        pass
+        import traceback
+        traceback.print_exc()  # queda en el log de Render
+        try:
+            from contenido import notificar
+            notificar.avisar("⚠️ <b>El ritual de El Pulso falló.</b> Revisa el log del motor; "
+                             "el muro puede haber quedado sin actualizar y no salió edición.")
+        except Exception:
+            pass  # el aviso es cortesía; el traceback ya quedó en el log
 
 
 @app.get("/api/diagnostico")

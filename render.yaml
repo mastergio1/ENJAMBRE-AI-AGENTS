@@ -26,7 +26,7 @@ services:
       # billetera con la URL abierta: 5 simulaciones NUEVAS al día como máximo
       # (el resto se re-ve desde la caché sin costo) y 3 por IP/hora.
       - key: ENJAMBRE_MAX_SIM_DIA
-        value: "5"
+        value: "2"
       - key: ENJAMBRE_MAX_SIM_IP_HORA
         value: "3"
       # orígenes permitidos por CORS: el dominio de Vercel de producción.

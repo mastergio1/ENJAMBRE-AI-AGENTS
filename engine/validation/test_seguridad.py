@@ -252,3 +252,83 @@ def test_ws_no_pide_correo_en_publico(monkeypatch):
         ws.send_json({"tipo": "simular", "titular": "La Fed sube las tasas"})  # sin correo
         respuesta = ws.receive_json()
         assert respuesta["tipo"] != "correo"  # no bloquea; arranca la simulación
+
+
+# ---------- tope de cuerpo por petición (memoria del motor) ----------
+
+def test_cuerpo_gigante_se_rechaza_con_413():
+    """Un POST enorme se corta en la puerta: sin este freno se carga entero en
+    memoria antes de validarse y el motor (512 MB en Render) reinicia."""
+    cliente = TestClient(server.app)
+    grande = "x" * (server.MAX_CUERPO + 1)
+    respuesta = cliente.post("/api/contacto",
+                             json={"nombre": "Ana", "email": "ana@medio.cl", "mensaje": grande})
+    assert respuesta.status_code == 413
+    # y el webhook (fuera de /api/) también queda cubierto
+    assert cliente.post("/pulso/webhook/resend", content=grande).status_code == 413
+
+
+def test_cuerpo_normal_sigue_pasando():
+    """El freno no puede estorbar al uso legítimo (el más grande es el editor
+    del panel: unos pocos KB)."""
+    cliente = TestClient(server.app)
+    respuesta = cliente.post("/api/contacto", json={
+        "nombre": "Ana", "email": "ana@medio.cl",
+        "organizacion": "Medio X", "mensaje": "y" * 4000})
+    assert respuesta.status_code == 200
+
+
+# ---------- avisos a Telegram (van con parse_mode=HTML) ----------
+
+def test_aviso_telegram_escapa_lo_que_viene_de_afuera():
+    """Un "<" en un formulario o en un titular hacía que Telegram rechazara el
+    mensaje entero (400) y el aviso se perdiera en silencio."""
+    from contenido import notificar
+    assert notificar.escapar("<b>Ana</b>") == "&lt;b&gt;Ana&lt;/b&gt;"
+    resumen = notificar.resumen_ejecucion(
+        "demo", [{"impacto": 8, "titular": "<script>alert(1)</script> Fed sube"}], None)
+    assert "<script>" not in resumen
+    assert "&lt;script&gt;" in resumen
+    assert "<b>El Pulso" in resumen  # el marcado propio del aviso se conserva
+
+
+# ---------- filtro CMF a las voces de los líderes (borde de cumplimiento) ----------
+
+def test_sanear_frases_neutraliza_lo_no_publicable():
+    """Una frase de líder con vocabulario prohibido se neutraliza; una limpia
+    se conserva. La neutra, a su vez, sí pasa el filtro."""
+    from contenido import vocabulario
+    r = [{"arquetipo": "fomo", "frase": "Compra ahora, esto va a subir"},
+         {"arquetipo": "doomer", "frase": "Cautela ante el dato de empleo"}]
+    vocabulario.sanear_frases(r)
+    assert r[0]["frase"] == vocabulario.FRASE_NEUTRAL
+    assert r[1]["frase"] == "Cautela ante el dato de empleo"
+    assert vocabulario.es_publicable(vocabulario.FRASE_NEUTRAL)
+
+
+def test_las_frases_de_lideres_se_sanean_en_los_tres_flujos():
+    """Guard de código: las tres rutas que muestran frases de líderes (web,
+    observatorio en vivo y pipeline de la madrugada) pasan por sanear_frases
+    antes de repartirlas a la web, la base y el muro."""
+    srv = (Path(__file__).parent.parent / "server.py").read_text(encoding="utf-8")
+    assert srv.count("sanear_frases(") >= 2  # simulación transmitida + observatorio
+    pipe = (Path(__file__).parent.parent / "contenido" / "pipeline.py").read_text(encoding="utf-8")
+    assert "sanear_frases(" in pipe
+
+
+# ---------- el tope diario vive en disco (sobrevive a los reinicios) ----------
+
+def test_tope_diario_persiste_en_disco(monkeypatch):
+    """El cupo global no depende de una variable en memoria que Render reinicia:
+    vive en la base, así que un reinicio del proceso no lo levanta a cero."""
+    from datetime import date
+    monkeypatch.setenv("ENJAMBRE_MAX_SIM_DIA", "2")
+    limites.reiniciar()
+    assert limites.permitir("a")[0]
+    assert limites.permitir("b")[0]
+    # el gasto quedó en disco (una conexión nueva lo ve): el cupo está agotado
+    conexion = persistencia.conectar()
+    assert persistencia.gasto_dia(conexion, date.today().isoformat()) == 2
+    conexion.close()
+    ok, motivo = limites.permitir("c")
+    assert not ok and motivo == limites.MENSAJE_GLOBAL

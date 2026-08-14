@@ -327,7 +327,17 @@ async function guardarEdicion(){
     historias};
   toast("Guardando y re-armando el correo…");
   const res=await api("/api/panel/edicion/"+EDICION.fecha+"/editar","POST",{redactado});
-  if(res&&res.ok){ toast("Cambios guardados ✓"); await cargarEdicion(EDICION.fecha); }
+  if(res&&res.ok){
+    if(res.preview_actualizado===false){
+      // se guardó el texto pero la vista previa NO se regeneró: avisar fuerte
+      // para que no se apruebe una versión vieja sin querer (B5).
+      alert("⚠️ "+(res.motivo||"Se guardó tu texto, pero la vista previa quedó desactualizada.")+
+            "\n\nNo apruebes hasta confirmar que el correo se ve como quieres.");
+    } else {
+      toast("Cambios guardados ✓");
+    }
+    await cargarEdicion(EDICION.fecha);
+  }
   else toast((res&&res.motivo)||"No se pudo guardar");
 }
 
@@ -357,12 +367,17 @@ async function cargarHistorial(){
   const d=await api("/api/panel/ediciones?limite=30");
   const eds=(d&&d.ediciones)||[];
   if(!eds.length){ $("#hist").innerHTML='<li style="color:var(--mute)">Aún no hay ediciones.</li>'; return; }
+  // la fecha viaja en un data-atributo escapado (no cosida dentro de un
+  // onclick): así ningún dato de la base termina interpretado como código.
   $("#hist").innerHTML=eds.map(e=>{
     const n = e.estado==="enviada" ? `${e.enviados}/${e.suscriptores} enviados` : "";
-    return `<li onclick="cargarEdicion('${e.fecha}')"><div><div class="f">${esc(e.fecha)}</div>`+
+    return `<li data-fecha="${esc(e.fecha)}"><div><div class="f">${esc(e.fecha)}</div>`+
       `<div class="a">${esc(e.asunto||"—")}</div></div>`+
       `<div style="text-align:right">${badge(e.estado,true)}<div class="n">${n}</div></div></li>`;
   }).join("");
+  $("#hist").querySelectorAll("li[data-fecha]").forEach(li=>{
+    li.addEventListener("click",()=>cargarEdicion(li.dataset.fecha));
+  });
 }
 
 async function refrescar(){ const est=await api("/api/panel/estado"); if(est){ pintarEstado(est); cargarEdicion($("#edFecha").textContent||est.hoy); cargarHistorial(); } }

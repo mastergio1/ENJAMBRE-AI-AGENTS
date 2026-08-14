@@ -61,6 +61,13 @@ CREATE TABLE IF NOT EXISTS contactos (
   email        TEXT NOT NULL,
   mensaje      TEXT
 );
+CREATE TABLE IF NOT EXISTS gasto_diario (
+  -- el tope global de simulaciones públicas del día, en DISCO (no en memoria):
+  -- así NO se reinicia con cada despliegue de Render (la muralla de la billetera
+  -- debe ser un techo firme, no uno que se levanta solo en cada reinicio).
+  fecha       TEXT PRIMARY KEY,     -- AAAA-MM-DD (UTC)
+  consumidas  INTEGER DEFAULT 0
+);
 CREATE TABLE IF NOT EXISTS eventos_correo (
   -- eventos de Resend (webhook firmado): aperturas y clics por edición.
   -- UNIQUE(fecha_ed,email,tipo) → un opened por persona = apertura ÚNICA.
@@ -590,6 +597,31 @@ def suscriptores_activos(conexion) -> list[dict]:
         "SELECT email, token_baja FROM suscriptores WHERE activo = 1"
     ).fetchall()
     return [dict(f) for f in filas]
+
+
+# ---------- tope de gasto diario (en disco, sobrevive a los reinicios) ----------
+
+def gasto_dia(conexion, fecha: str) -> int:
+    """Cuántas simulaciones públicas se han consumido en `fecha` (0 si no hay fila)."""
+    fila = conexion.execute(
+        "SELECT consumidas FROM gasto_diario WHERE fecha = ?", (fecha,)).fetchone()
+    return fila[0] if fila else 0
+
+
+def sumar_gasto_dia(conexion, fecha: str, n: int = 1) -> int:
+    """Suma `n` al gasto de `fecha` (crea la fila si no existe). Devuelve el total."""
+    conexion.execute(
+        "INSERT INTO gasto_diario (fecha, consumidas) VALUES (?, ?) "
+        "ON CONFLICT(fecha) DO UPDATE SET consumidas = consumidas + excluded.consumidas",
+        (fecha, n))
+    conexion.commit()
+    return gasto_dia(conexion, fecha)
+
+
+def reiniciar_gasto(conexion) -> None:
+    """Borra todo el gasto registrado (solo para los tests)."""
+    conexion.execute("DELETE FROM gasto_diario")
+    conexion.commit()
 
 
 # ---------- eventos de correo (aperturas/clics de Resend) ----------

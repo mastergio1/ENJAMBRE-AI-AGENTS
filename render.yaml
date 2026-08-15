@@ -21,15 +21,14 @@ services:
         sync: false
       - key: ALPACA_API_SECRET_KEY
         sync: false
-      # ⚠️ TOPES ALTOS PARA DEMOS/PITCH (14-ago-2026): sin freno para poder
-      # mostrar el enjambre en vivo sin límite. Seguro mientras el sitio siga
-      # PRIVADO (ENJAMBRE_ACCESO puesto). ANTES DE ABRIR AL PÚBLICO, bajar a
-      # DIA="5" e IP_HORA="3" (cada simulación ≈ 100 llamadas LLM: son la
-      # muralla de la billetera con la URL abierta).
+      # 🔒 TOPES DE PRODUCCIÓN (sitio PÚBLICO, 15-ago-2026): 5 simulaciones
+      # NUEVAS al día como máximo (el resto se re-ve desde la caché sin costo)
+      # y 3 por IP/hora. Cada simulación ≈ 100 llamadas LLM: son la muralla de
+      # la billetera con la URL abierta.
       - key: ENJAMBRE_MAX_SIM_DIA
-        value: "999"
+        value: "5"
       - key: ENJAMBRE_MAX_SIM_IP_HORA
-        value: "999"
+        value: "3"
       # orígenes permitidos por CORS: el dominio de Vercel de producción.
       # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
       - key: ENJAMBRE_ORIGENES

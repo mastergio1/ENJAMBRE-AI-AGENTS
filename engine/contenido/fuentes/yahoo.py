@@ -75,6 +75,96 @@ def serie_reciente(simbolo: str, rango: str = "5d", intervalo: str = "1d"):
     return [p[0] for p in pares], [p[1] for p in pares]
 
 
+# ---------- fundamentales (para el análisis de fin de semana) ----------
+# El endpoint quoteSummary pide un "crumb" (cookie + token). Lo pedimos una vez
+# por proceso y lo reusamos. Si el flujo falla, fundamentales() devuelve None y
+# el deep-dive sale SIN el bloque de números (nunca inventa cifras).
+
+_URL_CRUMB = "https://query1.finance.yahoo.com/v1/test/getcrumb"
+_URL_RESUMEN = "https://query1.finance.yahoo.com/v10/finance/quoteSummary/{simbolo}"
+_UA_NAV = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+           "(KHTML, like Gecko) Chrome/120 Safari/537.36")
+_MODULOS = "financialData,defaultKeyStatistics,summaryDetail,price"
+
+_crumb_cache: dict = {"cliente": None, "crumb": None}
+
+
+def _sesion_crumb():
+    """(cliente httpx con cookie, crumb) reutilizable. None si no se pudo obtener."""
+    if _crumb_cache["crumb"]:
+        return _crumb_cache["cliente"], _crumb_cache["crumb"]
+    try:
+        cliente = httpx.Client(headers={"User-Agent": _UA_NAV}, timeout=15, follow_redirects=True)
+        cliente.get("https://fc.yahoo.com")  # siembra la cookie (puede dar 404, da igual)
+        crumb = cliente.get(_URL_CRUMB).text.strip()
+        # un crumb válido es un token corto sin espacios ni HTML
+        if not crumb or len(crumb) > 40 or "<" in crumb or " " in crumb:
+            cliente.close()
+            return None, None
+        _crumb_cache["cliente"], _crumb_cache["crumb"] = cliente, crumb
+        return cliente, crumb
+    except Exception:
+        return None, None
+
+
+def _fmt(nodo) -> str | None:
+    """El texto formateado de un campo de Yahoo ({raw, fmt}); None si no hay dato."""
+    if isinstance(nodo, dict):
+        f = nodo.get("fmt")
+        return f if f else None
+    return None
+
+
+def _num(nodo) -> float | None:
+    return nodo.get("raw") if isinstance(nodo, dict) and isinstance(nodo.get("raw"), (int, float)) else None
+
+
+def fundamentales(simbolo: str) -> dict | None:
+    """Los fundamentales VERIFICADos de una empresa (para el análisis de fin de
+    semana): capitalización, ingresos y su crecimiento, márgenes, EBITDA, deuda y
+    caja. Los valores van formateados (para mostrar) tal como los da Yahoo. None
+    ante cualquier problema o si es un instrumento sin fundamentales (un ETF).
+    Nunca lanza."""
+    cliente, crumb = _sesion_crumb()
+    if not cliente or not crumb:
+        return None
+    try:
+        r = cliente.get(_URL_RESUMEN.format(simbolo=simbolo),
+                        params={"modules": _MODULOS, "crumb": crumb})
+        if r.status_code != 200:
+            return None
+        res = (r.json().get("quoteSummary", {}).get("result") or [None])[0]
+        if not res:
+            return None
+    except Exception:
+        return None
+    fd = res.get("financialData", {}) or {}
+    sd = res.get("summaryDetail", {}) or {}
+    price = res.get("price", {}) or {}
+
+    cap_num = _num(sd.get("marketCap")) or _num(price.get("marketCap"))
+    ingresos = _fmt(fd.get("totalRevenue"))
+    ebitda = _fmt(fd.get("ebitda"))
+    # sin ingresos ni EBITDA no hay ficha que valga (típico de ETFs/índices)
+    if ingresos is None and ebitda is None:
+        return None
+    datos = {
+        "market_cap": _fmt(sd.get("marketCap")) or _fmt(price.get("marketCap")),
+        "market_cap_num": cap_num,
+        "ingresos": ingresos,
+        "crecimiento_ingresos": _fmt(fd.get("revenueGrowth")),
+        "ebitda": ebitda,
+        "margen_bruto": _fmt(fd.get("grossMargins")),
+        "margen_operativo": _fmt(fd.get("operatingMargins")),
+        "margen_neto": _fmt(fd.get("profitMargins")),
+        "deuda": _fmt(fd.get("totalDebt")),
+        "caja": _fmt(fd.get("totalCash")),
+        "flujo_caja_libre": _fmt(fd.get("freeCashflow")),
+    }
+    # descarta claves sin dato para no arrastrar None hasta la plantilla
+    return {k: v for k, v in datos.items() if v is not None}
+
+
 def _pct(nuevo: float, viejo: float) -> float | None:
     return round((nuevo - viejo) / viejo * 100, 2) if viejo else None
 

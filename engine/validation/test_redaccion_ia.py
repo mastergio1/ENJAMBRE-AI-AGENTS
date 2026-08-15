@@ -75,17 +75,14 @@ def test_cmf_todo_prohibido_devuelve_none():
 
 def test_validar_sanea_y_arma_estructura():
     """Una respuesta de IA (simulada) se valida: conserva lo limpio, cae lo
-    que cruza la CMF, y arma la forma final."""
+    que cruza la CMF, y arma la forma final (rediseño: {buenos_dias, historias})."""
     datos = {
         "buenos_dias": ("Wall Street amaneció en verde.\n\n"
                         "Deberias comprar ya mismo."),   # 2º párrafo cae
-        "historia_estrella": {
-            "emoji": "🩸",
-            "titular": "Insulet vendió más y aun así la castigaron",
-            "cuerpo": "Recortó su previsión.\n\nEl enjambre se hundió 6%.",
-        },
         "historias": [
-            {"emoji": "🟢", "titular": "Nvidia subió", "cuerpo": "Los chips mandan."},
+            {"kicker": "Tecnología", "emoji": "🟢", "titular": "Nvidia subió",
+             "dek": "Los chips mandan", "cuerpo": "Los chips mandan.", "bottom_line": "",
+             "grafico": {"ticker": "NVDA", "nombre": "Nvidia", "periodo": "semana"}},
             {"emoji": "⚠️", "titular": "Compra ahora esta acción", "cuerpo": "x"},  # titular prohibido → cae
         ],
     }
@@ -93,10 +90,10 @@ def test_validar_sanea_y_arma_estructura():
     assert salida is not None
     assert "amaneció en verde" in salida["buenos_dias"]
     assert "comprar ya mismo" not in salida["buenos_dias"]
-    assert salida["historia_estrella"]["titular"].startswith("Insulet")
     # solo la historia limpia sobrevive (la de "Compra ahora" se cae)
     assert len(salida["historias"]) == 1
     assert salida["historias"][0]["titular"] == "Nvidia subió"
+    assert salida["historias"][0]["grafico"]["ticker"] == "NVDA"
 
 
 def test_validar_sin_apertura_ni_estrella_es_none():
@@ -112,10 +109,12 @@ def test_extraer_json_desde_texto_envuelto():
 
 
 def test_mensaje_del_dia_no_filtra_numeros():
-    """El mensaje que ve la IA lleva los números tal cual (para copiarlos, no inventarlos)."""
-    brief = {"mercado": [{"nombre": "Nvidia", "variacion_pct": 3.4}]}
-    enjambre = {"titular": "Insulet recorta su previsión", "direccion_pct": -6.1}
-    msg = redaccion_ia._mensaje_del_dia(brief, enjambre)
+    """El mensaje que ve la IA lleva los números y las citas tal cual (para
+    copiarlos, no inventarlos). Rediseño: los movers van como CANDIDATOS con su
+    [TICKER] y su cita de prensa."""
+    brief = {"mercado": [{"nombre": "Nvidia", "variacion_pct": 3.4, "simbolo": "NVDA",
+                          "cita_titular": "Insulet recorta su previsión"}]}
+    msg = redaccion_ia._mensaje_del_dia(brief)
     assert "3.4%" in msg
-    assert "-6.1%" in msg
+    assert "[NVDA]" in msg
     assert "Insulet recorta su previsión" in msg

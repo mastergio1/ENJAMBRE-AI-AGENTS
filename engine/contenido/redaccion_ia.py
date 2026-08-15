@@ -20,6 +20,7 @@ import os
 import re
 from datetime import datetime, timezone
 
+from brains.arquetipos import ARQUETIPOS, POR_ID
 from contenido.vocabulario import es_publicable
 
 # los lectores viven en Chile/LatAm; el saludo se calcula en hora local de
@@ -309,3 +310,210 @@ def redactar(brief: dict, enjambre: dict | None = None, cuando: dict | None = No
         return _validar(datos) if datos else None
     except Exception:
         return None  # cualquier falla → fallback a plantilla
+
+
+# ══════════════════════════════════════════════════════════════════════════
+#  LA EDICIÓN DE FIN DE SEMANA — el deep-dive de una mid-cap o un sector
+# ══════════════════════════════════════════════════════════════════════════
+# Formato distinto al diario: CONTEXTO primero (qué ES), luego el DEBATE de
+# arquetipos (miradas contrastantes = "lo que nuestros inversionistas IA están
+# viendo o analizando"). NUNCA consejo de inversión. Ver analisis_semanal.py.
+
+# roster compacto de arquetipos para el prompt (id → nombre + una línea de perfil)
+def _roster_arquetipos() -> str:
+    lineas = []
+    for a in ARQUETIPOS:
+        # una línea de esencia por arquetipo (la primera frase de su prompt)
+        esencia = a["prompt"].split(".")[0].strip()
+        lineas.append(f'- {a["id"]} ({a["nombre"]}): {esencia}.')
+    return "\n".join(lineas)
+
+
+PROMPT_ANALISIS = """\
+Eres el redactor jefe de EL PULSO (by Rubicón Lab). Es FIN DE SEMANA: el mercado
+está cerrado y toca la lectura pausada. Hoy NO cuentas las noticias del día:
+haces UN análisis a fondo de un solo protagonista —una empresa de mediana
+capitalización o un sector— que te entrego ya elegido, con su contexto y su
+cifra verificada.
+
+EL ENCUADRE QUE MANDA (léelo dos veces)
+Esto NO es consejo de inversión. Es "lo que nuestros inversionistas IA están
+VIENDO y ANALIZANDO". Tú no le dices a nadie qué hacer con su plata: describes
+qué es el protagonista, por qué llamó la atención, y cómo lo miran perfiles de
+inversionista MUY distintos entre sí. El valor está en el CONTRASTE de miradas,
+no en una conclusión única.
+
+CÓMO ESCRIBES (tu voz)
+- Cálido, agudo, cercano; con humor seco sobre los hechos, nunca sobre el lector.
+- Español neutro (Chile/LatAm). Si usas un término técnico, lo explicas ahí mismo
+  con una analogía cotidiana.
+- Extenso donde importa: párrafos de análisis real, no un resumen.
+
+LA ESTRUCTURA (síguela en este orden — es un análisis de analista, no un tuit)
+1. CONTEXTO PRIMERO — QUÉ ES el protagonista. Antes de opinar nada, explícale al
+   lector a qué se dedica la empresa/sector, cómo gana dinero, qué lo hace
+   particular. Apóyate en el contexto factual que te doy; no inventes datos.
+   Desarróllalo: 2-3 párrafos.
+2. LA LECTURA — POR QUÉ está en la mira esta semana: la movida de precio (la
+   cifra que te doy) y la narrativa alrededor. Qué historia se está contando.
+3. LOS NÚMEROS — la lectura financiera, como la haría un analista. Con los DATOS
+   VERIFICADOS que te doy (capitalización, ingresos y su crecimiento, márgenes,
+   EBITDA, deuda, caja), explica en simple qué dicen sobre la SALUD del negocio:
+   ¿crece o se estanca?, ¿gana o quema plata?, ¿está apalancada o tiene colchón?
+   Traduce cada término técnico con una analogía (ej. EBITDA = las ganancias del
+   negocio antes de intereses e impuestos; margen bruto = de cada $100 vendidos,
+   cuántos quedan tras el costo directo). COPIA las cifras TEXTUALES; no inventes
+   ninguna. Si no te doy fundamentales (o vienen vacíos), OMITE este bloque
+   entero (deja "numeros": "").
+4. EL DEBATE — cómo lo miran distintos perfiles de nuestros inversionistas IA.
+   Elige 4 a 6 arquetipos de la lista y dale a cada uno 1-2 frases con SU mirada
+   particular sobre este protagonista. Que se CONTRADIGAN entre sí (el optimista
+   ve una cosa, el doomer la contraria): ese choque es el corazón del análisis.
+5. QUÉ OBSERVAR — qué está en juego de aquí en adelante. ATENCIÓN, no predicción:
+   "habrá que ver si…", "lo que está en juego es…", nunca "va a…".
+
+LOS ARQUETIPOS DISPONIBLES (usa sus id exactos en el JSON):
+{ROSTER}
+
+LO QUE NUNCA HACES — REGLAS DE ORO (INNEGOCIABLES)
+A. Candado CMF (regulación chilena) — TU LÍNEA:
+- NUNCA recomiendas comprar, vender ni mantener. Prohibidas: "conviene",
+  "es buen momento", "oportunidad de compra", "deberías", "apunta a",
+  "podría subir/bajar", "esperamos que", "precio objetivo", "le vemos potencial".
+- NUNCA predices el futuro ni das una tesis de inversión propia del medio. El
+  "potencial" no lo pones TÚ: lo ponen en tensión los arquetipos, como miradas.
+- Analizas y explicas SÍ; aconsejas JAMÁS. Puedes decir por qué algo importa sin
+  decirle a nadie qué hacer con su dinero.
+B. Integridad de datos:
+- Los NÚMEROS, TICKERS y NOMBRES vienen dados. Cópialos TEXTUALES. Las ÚNICAS
+  cifras que existen son la variación de precio y los fundamentales que te doy;
+  NO inventes ninguna otra (ni múltiplos, ni proyecciones, ni cifras redondeadas
+  a ojo). Si un dato no está en lo que te di, NO lo mencionas.
+
+QUÉ DEVUELVES: SOLO un objeto JSON válido, sin texto alrededor, con esta forma:
+{
+  "titular": "titular con gancho sobre el protagonista, en tu voz",
+  "dek": "una bajada de una línea (subtítulo)",
+  "contexto": "2-3 párrafos (separados por \\n\\n): QUÉ ES el protagonista",
+  "lectura": "2-3 párrafos (separados por \\n\\n): por qué está en la mira + la narrativa",
+  "numeros": "2-3 párrafos (separados por \\n\\n) explicando en simple los fundamentales verificados; \\"\\" si no te di ninguno",
+  "debate": [
+    {"arquetipo": "contrarian_sabio", "mirada": "1-2 frases con su mirada sobre este protagonista"}
+  ],
+  "que_observar": "1 párrafo: qué está en juego / qué observar (atención, no predicción)"
+}
+Escribe SIEMPRE en español. Prioriza profundidad; el debate DEBE tener miradas
+que se contradigan.""".replace("{ROSTER}", _roster_arquetipos())
+
+
+def _mensaje_analisis(analisis: dict, cuando: dict | None = None) -> str:
+    """Serializa los hechos del protagonista del fin de semana para el redactor:
+    qué es (contexto factual), su cifra verificada y el encuadre. Solo hechos."""
+    cuando = cuando or contexto_temporal()
+    es_sector = analisis.get("modo") == "sector"
+    lineas = [
+        f'HOY es {cuando["dia_semana"]} {cuando["fecha"]} (fin de semana, mercado cerrado).',
+        f'Sección: {analisis.get("titulo", "")}.',
+        "",
+        f'PROTAGONISTA: {analisis.get("nombre", "")} [{analisis.get("ticker", "")}]',
+    ]
+    if es_sector:
+        lineas.append(f'Es un SECTOR completo. Se está moviendo por: {analisis.get("en_rotacion_por", "")}.')
+        if analisis.get("ejemplos"):
+            lineas.append(f'Ejemplos de empresas del sector: {", ".join(analisis["ejemplos"])}.')
+    else:
+        lineas.append(f'Es una empresa de MEDIANA capitalización. Sector: {analisis.get("sector", "")}.')
+    lineas += [
+        "",
+        "CONTEXTO FACTUAL (qué es — apóyate en esto, NO inventes más datos):",
+        analisis.get("contexto", ""),
+        "",
+        "LA CIFRA VERIFICADA (la ÚNICA que puedes usar; cópiala textual):",
+        f'- Variación de la semana: {analisis.get("var_semana_pct")}%',
+    ]
+    if analisis.get("var_mes_pct") is not None:
+        lineas.append(f'- Variación del mes: {analisis.get("var_mes_pct")}%')
+    lineas.append(f'- Ventana del gráfico: {analisis.get("fecha_inicio")} a {analisis.get("fecha_fin")}.')
+
+    fund = analisis.get("fundamentales")
+    if isinstance(fund, dict) and fund:
+        etiquetas = {
+            "market_cap": "Capitalización de mercado", "ingresos": "Ingresos (últimos 12 meses)",
+            "crecimiento_ingresos": "Crecimiento de ingresos (interanual)",
+            "ebitda": "EBITDA", "margen_bruto": "Margen bruto",
+            "margen_operativo": "Margen operativo", "margen_neto": "Margen neto",
+            "deuda": "Deuda total", "caja": "Caja y equivalentes",
+            "flujo_caja_libre": "Flujo de caja libre",
+        }
+        lineas += ["", "FUNDAMENTALES VERIFICADOS (datos de mercado; cópialos TEXTUALES, "
+                   "explícalos en simple, NO inventes otros):"]
+        for clave, etiqueta in etiquetas.items():
+            if fund.get(clave):
+                lineas.append(f'- {etiqueta}: {fund[clave]}')
+    else:
+        lineas += ["", "No hay fundamentales para este protagonista: OMITE el bloque de "
+                   "números (deja \"numeros\": \"\")."]
+
+    lineas += [
+        "",
+        "Recuerda: encuadre = lo que nuestros inversionistas IA VEN y ANALIZAN, "
+        "NUNCA consejo de inversión. Contexto primero; luego los números y el debate.",
+    ]
+    return "\n".join(lineas)
+
+
+def _sanear_debate(debate) -> list[dict]:
+    """Cada mirada de arquetipo: arquetipo válido + frase publicable (CMF)."""
+    salida = []
+    for d in (debate or []):
+        if not isinstance(d, dict):
+            continue
+        arq = str(d.get("arquetipo", "")).strip()
+        mirada = str(d.get("mirada", "")).strip()
+        if arq in POR_ID and mirada and es_publicable(mirada):
+            salida.append({"arquetipo": arq, "nombre": POR_ID[arq]["nombre"], "mirada": mirada[:400]})
+    return salida
+
+
+def _validar_analisis(datos: dict) -> dict | None:
+    """Valida la forma del deep-dive y pasa TODO por el filtro CMF. None si no
+    queda lo mínimo (contexto + titular publicables)."""
+    if not isinstance(datos, dict):
+        return None
+    titular = str(datos.get("titular", "")).strip()
+    contexto = _cmf(datos.get("contexto", ""))
+    if not titular or not es_publicable(titular) or not contexto:
+        return None
+    return {
+        "titular": titular[:160],
+        "dek": _texto_cmf(datos.get("dek"))[:200],
+        "contexto": contexto,
+        "lectura": _cmf(datos.get("lectura", "")) or "",
+        "numeros": _cmf(datos.get("numeros", "")) or "",
+        "debate": _sanear_debate(datos.get("debate")),
+        "que_observar": _cmf(datos.get("que_observar", "")) or "",
+    }
+
+
+def redactar_analisis(analisis: dict, cuando: dict | None = None) -> dict | None:
+    """Le pone VOZ al deep-dive del fin de semana: {titular, dek, contexto,
+    lectura, debate[], que_observar}. None si no se puede (sin clave, API caída,
+    JSON roto, todo filtrado por CMF) — el correo cae a su respaldo. NUNCA lanza."""
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return None
+    if not analisis or not analisis.get("contexto"):
+        return None
+    try:
+        import anthropic
+
+        cliente = anthropic.Anthropic(timeout=TIMEOUT_SEGUNDOS)
+        respuesta = cliente.messages.create(
+            model=MODELO,
+            max_tokens=MAX_TOKENS,
+            system=PROMPT_ANALISIS,
+            messages=[{"role": "user", "content": _mensaje_analisis(analisis, cuando=cuando)}],
+        )
+        datos = _extraer_json(respuesta.content[0].text)
+        return _validar_analisis(datos) if datos else None
+    except Exception:
+        return None

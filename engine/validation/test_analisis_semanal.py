@@ -41,8 +41,8 @@ def test_universo_carga_y_tiene_contexto():
     u = analisis_semanal.cargar_universo()
     assert u.get("acciones") and u.get("sectores")
     for a in u["acciones"]:
-        assert a["ticker"] and a["nombre"] and a["contexto"]
-        assert a["banda"] in ("1-15B", "15-30B")  # mediana capitalización
+        assert a["ticker"] and a["nombre"] and a["contexto"] and a["sector"]
+        assert isinstance(a.get("banda", ""), str)  # 'banda' es solo un hint; el gate real es la cap. en vivo
     for s in u["sectores"]:
         assert s["nombre"] and s["etf"] and s["contexto"]
 
@@ -69,7 +69,7 @@ def test_selecciona_la_accion_de_mayor_movida():
     sel = analisis_semanal.seleccionar_accion(universo, fetch=fetch, fetch_fund=_sin_fundamentales)
     assert sel["ticker"] == "BBB"
     assert sel["modo"] == "accion"
-    assert sel["encuadre"] == "mediana capitalización"
+    assert "capitalización" in sel["encuadre"]      # etiqueta neutra sin ficha
     assert isinstance(sel["var_semana_pct"], (int, float))
     assert sel["grafico"]["ticker"] == "BBB"
     assert sel["fundamentales"] is None  # Yahoo no dio ficha → sin números, sin romperse
@@ -87,7 +87,7 @@ def test_band_gate_excluye_los_muy_grandes_y_adjunta_fundamentales():
         "MID": [50, 51, 52, 53, 54, 55],          # movida menor, pero en banda
     })
     fichas = {
-        "BIG": {"market_cap_num": 25_000_000_000, "ingresos": "40B"},
+        "BIG": {"market_cap_num": 62_000_000_000, "ingresos": "40B"},   # > 50B → fuera de banda
         "MID": {"market_cap_num": 8_000_000_000, "ingresos": "2B", "ebitda": "300M"},
     }
     sel = analisis_semanal.seleccionar_accion(universo, fetch=fetch, fetch_fund=lambda t: fichas.get(t))

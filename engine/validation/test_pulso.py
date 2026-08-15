@@ -158,13 +158,52 @@ def test_ritual_matutino_arma_todo_sin_enviar(monkeypatch):
     from contenido import notificar
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: avisos.append(mensaje) or True)
 
-    resultado = pipeline.ritual_matutino(semilla_base=99, enviar=False)
+    # se fuerza un día de semana (el ritual del fin de semana es otra edición)
+    entre_semana = {"dia_semana": "lunes", "fecha": "4 de agosto de 2026",
+                    "momento": "mañana", "es_finde": False}
+    resultado = pipeline.ritual_matutino(semilla_base=99, enviar=False, cuando=entre_semana)
     assert len(resultado["publicadas"]) == 3
     assert resultado["destacadas"] == 3
     assert resultado["estado"] == "pendiente"   # generada, esperando el visto bueno
     assert resultado["token"]                   # token para los enlaces del correo de revisión
     assert DISCLAIMER in resultado["html_preview"]
     assert avisos and "El Pulso" in avisos[0]   # paso 8: avisó a Giorgio
+
+
+def test_ritual_de_fin_de_semana_arma_el_deep_dive(monkeypatch):
+    """El sábado el ritual NO simula noticias: arma la edición de fin de semana
+    (deep-dive de una mid-cap/sector) y la deja pendiente de revisión."""
+    from contenido import analisis_semanal, notificar, redaccion_ia
+    monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
+
+    hechos = {
+        "modo": "accion", "titulo": "Acción seleccionada", "encuadre": "mediana capitalización",
+        "ticker": "ROKU", "nombre": "Roku", "sector": "Streaming", "contexto": "…",
+        "var_semana_pct": 8.4, "var_mes_pct": 12.0, "fecha_inicio": "1 ago", "fecha_fin": "31 ago",
+        "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"},
+    }
+    redactado = {
+        "titular": "Roku vuelve a la conversación", "dek": "Semana movida",
+        "contexto": "Roku hace el sistema de sus televisores.\n\nGana con publicidad.",
+        "lectura": "Avanzó tras un anuncio.",
+        "debate": [{"arquetipo": "doomer", "nombre": "El Doomer",
+                    "mirada": "La publicidad es lo primero que se recorta."}],
+        "que_observar": "Habrá que ver si sostiene el ritmo.",
+    }
+    monkeypatch.setattr(analisis_semanal, "preparar_analisis", lambda **k: hechos)
+    monkeypatch.setattr(redaccion_ia, "redactar_analisis", lambda *a, **k: redactado)
+
+    finde = {"dia_semana": "sábado", "fecha": "15 de agosto de 2026",
+             "momento": "mañana", "es_finde": True}
+    resultado = pipeline.ritual_matutino(enviar=False, cuando=finde)
+
+    assert resultado["edicion"] == "finde"
+    assert resultado["estado"] == "pendiente"
+    assert resultado["publicadas"] == []                 # el finde no simula el enjambre
+    html = resultado["html_preview"]
+    assert "Edición de fin de semana" in html
+    assert "Qué es" in html and "Lo que ven nuestros inversionistas IA" in html
+    assert DISCLAIMER in html
 
 
 def test_endpoint_pipeline_exige_token(monkeypatch):
@@ -265,7 +304,9 @@ def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
 
     # 1) el ritual arma la edición pero NO la envía a los suscriptores (queda pendiente)
-    resultado = pipeline.ritual_matutino(semilla_base=7, enviar=True)
+    entre_semana = {"dia_semana": "lunes", "fecha": "4 de agosto de 2026",
+                    "momento": "mañana", "es_finde": False}
+    resultado = pipeline.ritual_matutino(semilla_base=7, enviar=True, cuando=entre_semana)
     assert resultado["estado"] == "pendiente"
     assert enviados == []                       # nada salió a los suscriptores todavía
 
@@ -326,3 +367,35 @@ def test_editar_avisa_si_el_preview_no_se_regenera(monkeypatch):
     assert res["ok"] is True
     assert res["preview_actualizado"] is False        # no mintió
     assert "vista previa" in res["motivo"].lower()
+
+
+def test_panel_edicion_finde_marca_deep_dive_y_regenera_preview(monkeypatch):
+    """La edición de FIN DE SEMANA se marca como 'finde' en el panel y su vista
+    previa SÍ se regenera sin destacadas (el deep-dive no las necesita)."""
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto")
+    hoy = persistencia.ahora_iso()[:10]
+    brief = {
+        "analisis": {"modo": "accion", "titulo": "Acción seleccionada",
+                     "encuadre": "mediana capitalización", "ticker": "ROKU", "nombre": "Roku",
+                     "sector": "Streaming", "var_semana_pct": 8.4,
+                     "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"}},
+        "analisis_redactado": {"titular": "Roku vuelve a la conversación", "dek": "",
+                               "contexto": "Roku hace el sistema de sus televisores.", "lectura": "",
+                               "debate": [{"arquetipo": "doomer", "nombre": "El Doomer",
+                                           "mirada": "La publicidad es lo primero que se recorta."}],
+                               "que_observar": "Habrá que ver si sostiene el ritmo."},
+    }
+    conexion = persistencia.conectar()
+    persistencia.guardar_edicion(conexion, hoy, brief, "<html>viejo</html>",
+                                 "Asunto", "t" * 24, persistencia.ahora_iso())
+    conexion.close()
+    cliente = TestClient(server.app)
+
+    ed = cliente.get(f"/api/panel/edicion/{hoy}", headers={"X-Pipeline-Token": "secreto"}).json()
+    assert ed["finde"] is True
+    assert ed["analisis"]["nombre"] == "Roku"
+
+    res = cliente.post(f"/api/panel/edicion/{hoy}/editar",
+                       headers={"X-Pipeline-Token": "secreto"},
+                       json={"redactado": {}}).json()
+    assert res["ok"] is True and res["preview_actualizado"] is True  # se regeneró el deep-dive

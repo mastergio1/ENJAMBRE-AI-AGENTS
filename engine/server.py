@@ -1268,11 +1268,18 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
     if ed is None:
         return Response(status_code=404)  # type: ignore[return-value]
     brief = ed["brief"] or {}
+    # ¿es la edición de FIN DE SEMANA (deep-dive)? Entonces no hay editor de
+    # historias: se revisa en la vista previa y se aprueba/descarta.
+    analisis = brief.get("analisis") if isinstance(brief.get("analisis"), dict) else None
+    es_finde = isinstance(brief.get("analisis_redactado"), dict)
     return {
         "fecha": ed["fecha"], "estado": ed["estado"], "asunto": ed["asunto"],
         "token": ed["token"], "enviados": ed["enviados"], "suscriptores": ed["suscriptores"],
         "generada_iso": ed["generada_iso"], "enviada_iso": ed["enviada_iso"],
         "redactado": brief.get("redactado") or {}, "foto": brief.get("foto") or [],
+        "finde": es_finde,
+        "analisis": ({"titulo": analisis.get("titulo"), "nombre": analisis.get("nombre"),
+                      "ticker": analisis.get("ticker")} if es_finde and analisis else None),
     }
 
 
@@ -1320,7 +1327,10 @@ def panel_editar(fecha: str, peticion: PeticionEditar, x_pipeline_token: str = H
             from contenido import pipeline, boletin
             brief = persistencia.obtener_edicion(conexion, fecha)["brief"]
             destacadas = pipeline._destacadas_de_hoy(conexion)
-            if destacadas:
+            # el fin de semana el correo es el deep-dive (no necesita destacadas):
+            # construir_html lo arma desde brief["analisis_redactado"].
+            es_finde = isinstance(brief.get("analisis_redactado"), dict)
+            if destacadas or es_finde:
                 html = boletin.construir_html(
                     destacadas, pipeline._fecha_es(_dt.now(_tz.utc)),
                     token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)

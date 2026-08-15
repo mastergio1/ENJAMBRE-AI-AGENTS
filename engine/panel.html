@@ -270,11 +270,17 @@ function pintarEdicion(ed){
   const enviada=ed.estado==="enviada", descartada=ed.estado==="descartada";
   let acc="";
   if(!enviada && !descartada){
+    // la edición de FIN DE SEMANA (deep-dive) se revisa en la vista previa; su
+    // editor por campos es otro formato, así que aquí no se muestra "Editar".
+    const editar = ed.finde ? "" : `<button class="btn btn-fant" onclick="toggleEditor()">✏️ Editar</button>`;
+    const notaFinde = ed.finde
+      ? `<p style="color:var(--mute);font-size:.82rem;margin:10px 0 0">◆ Edición de fin de semana${ed.analisis&&ed.analisis.nombre?` · ${esc(ed.analisis.titulo||"")}: ${esc(ed.analisis.nombre)}`:""}. Revísala abajo y aprueba o descarta.</p>`
+      : "";
     acc=`<div class="acc">`+
       `<button class="btn btn-verde" onclick="aprobar()">✅ Aprobar y enviar</button>`+
-      `<button class="btn btn-fant" onclick="toggleEditor()">✏️ Editar</button>`+
+      editar +
       `<button class="btn btn-rojo" onclick="descartar()">🗑 Descartar</button>`+
-      `<button class="btn btn-fant" onclick="generar()">↻ Regenerar</button></div>`;
+      `<button class="btn btn-fant" onclick="generar()">↻ Regenerar</button></div>`+notaFinde;
   } else if(enviada){
     acc=`<p style="color:var(--verde);margin:14px 0">Enviada a ${ed.enviados} de ${ed.suscriptores} suscriptores.</p>`;
   } else {
@@ -293,6 +299,7 @@ function pintarEdicion(ed){
 
 // ---------- editor (formato nuevo: historias con análisis + gráfico) ----------
 function toggleEditor(){
+  if(EDICION&&EDICION.finde){ return; }  // el finde no usa el editor por campos
   editando=!editando;
   const z=$("#editorZona");
   if(!editando){ z.innerHTML=""; return; }

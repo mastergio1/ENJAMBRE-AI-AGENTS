@@ -91,6 +91,14 @@ def asunto_del_dia(destacada: dict) -> str:
     return f"🐝 El Pulso — {resumen}"
 
 
+def asunto_finde(analisis: dict | None) -> str:
+    """El asunto de la edición de fin de semana: la sección + el protagonista."""
+    analisis = analisis or {}
+    titulo = analisis.get("titulo", "Fin de semana")
+    nombre = analisis.get("nombre", "")
+    return f"🐝 El Pulso — {titulo}: {nombre}".rstrip(": ")
+
+
 def _fila_mercado(m: dict) -> str:
     url = _url_segura(m.get("url", ""))
     fuente = (f'<a href="{url}" style="color:{TEAL};font-size:12px;text-decoration:none;">·&nbsp;fuente</a>'
@@ -242,6 +250,100 @@ def _bloque_historia(h: dict) -> str:
   </td></tr>"""
 
 
+def _bloque_debate(debate: list[dict]) -> str:
+    """El debate de arquetipos: miradas contrastantes de nuestros inversionistas
+    IA sobre el protagonista. Cada una es nombre del perfil + su frase (escapada
+    y filtrada por CMF). Este contraste ES el análisis del fin de semana."""
+    if not debate:
+        return ""
+    tarjetas = ""
+    for d in debate:
+        if not isinstance(d, dict):
+            continue
+        nombre = _limpiar(str(d.get("nombre", "") or ""))
+        mirada = _limpiar(str(d.get("mirada", "") or ""))
+        if not mirada or mirada == "—":
+            continue
+        tarjetas += f"""
+      <tr><td style="padding:10px 0;border-top:1px solid {LINEA};">
+        <div style="font-size:11px;letter-spacing:1px;color:{TEAL};text-transform:uppercase;font-weight:700;margin-bottom:3px;">{nombre}</div>
+        <div style="color:{TEXTO_2};font-size:14px;line-height:1.5;">{mirada}</div>
+      </td></tr>"""
+    if not tarjetas:
+        return ""
+    return f"""
+  <tr><td style="padding:18px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;">🐝 Lo que ven nuestros inversionistas IA</div>
+    <div style="color:{MUTE};font-size:12px;font-style:italic;margin:4px 0 2px;">Miradas distintas del mismo caso — no un veredicto único.</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{tarjetas}</table>
+  </td></tr>"""
+
+
+def _bloque_analisis(brief: dict | None) -> str:
+    """La EDICIÓN DE FIN DE SEMANA: el deep-dive de una mid-cap o un sector.
+    Contexto primero (qué es), la lectura (por qué llamó la atención), el gráfico
+    real, el debate de arquetipos y qué observar. Todo escapado + filtrado CMF.
+    Devuelve '' si no hay análisis redactado (entonces el correo usa lo normal)."""
+    brief = brief or {}
+    red = brief.get("analisis_redactado")
+    hechos = brief.get("analisis") or {}
+    if not isinstance(red, dict) or not red.get("contexto") or not red.get("titular"):
+        return ""
+
+    titulo = _limpiar(str(hechos.get("titulo", "Edición de fin de semana")))
+    encuadre = _limpiar(str(hechos.get("encuadre", "")))
+    nombre = _limpiar(str(hechos.get("nombre", "")))
+    ticker = _esc(str(hechos.get("ticker", "") or ""))
+    sector = _limpiar(str(hechos.get("sector", "") or ""))
+    titular = _limpiar(str(red.get("titular", "")))
+    dek = _limpiar(str(red.get("dek", "") or ""))
+    contexto = _parrafos(str(red.get("contexto", "") or ""))
+    lectura = _parrafos(str(red.get("lectura", "") or ""))
+    que_observar = _parrafos(str(red.get("que_observar", "") or ""), color=TEXTO_2)
+    pildora = _pildora(hechos.get("var_semana_pct"))
+
+    dek_html = (f'<div style="font-family:Georgia,serif;font-style:italic;color:{MUTE};'
+                f'font-size:15px;margin:4px 0 8px;">{dek}</div>' if dek and dek != "—" else "")
+    sector_html = (f'<span style="color:{MUTE};font-size:12px;">· {sector}</span>'
+                   if sector and sector != "—" else "")
+    lectura_html = (f"""
+  <tr><td style="padding:6px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:4px;">Por qué llamó la atención</div>
+    {lectura}
+  </td></tr>""" if lectura else "")
+    observar_html = (f"""
+  <tr><td style="padding:8px 32px 6px;">
+    <div style="margin:6px 0 2px;padding:12px 16px;background:{PAPEL};border-left:3px solid {ORO};border-radius:6px;">
+      <div style="font-size:11px;letter-spacing:1px;color:{ORO};text-transform:uppercase;font-weight:700;margin-bottom:4px;">Qué observar</div>
+      <div style="color:{TEXTO_2};font-size:14px;line-height:1.55;">{que_observar}</div>
+    </div>
+  </td></tr>""" if que_observar else "")
+
+    return f"""
+  <tr><td style="padding:22px 32px 4px;text-align:center;border-top:1px solid {LINEA};">
+    <div style="font-size:11px;letter-spacing:3px;color:{ORO};text-transform:uppercase;font-weight:700;">◆ Edición de fin de semana</div>
+    <div style="font-size:11px;letter-spacing:1px;color:{TEAL};text-transform:uppercase;font-weight:700;margin-top:6px;">{titulo} · {encuadre}</div>
+  </td></tr>
+  <tr><td style="padding:4px 32px 2px;">
+    <div style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:{TEXTO};line-height:1.25;">{titular}</div>
+    {dek_html}
+    <div style="margin:6px 0 2px;">{pildora} <b style="color:{TEXTO};font-size:14px;">{nombre}</b>
+      <span style="color:{MUTE};font-size:12px;">{ticker}</span> {sector_html}
+      <span style="color:{MUTE};font-size:12px;">· en la semana</span></div>
+  </td></tr>
+  {_grafico_img(hechos.get("grafico"))}
+  <tr><td style="padding:10px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:4px;">Qué es</div>
+    {contexto}
+  </td></tr>
+  {lectura_html}
+  {_bloque_debate(red.get("debate"))}
+  {observar_html}
+  <tr><td style="padding:2px 32px 8px;">
+    <div style="color:{MUTE};font-size:12px;font-style:italic;line-height:1.5;">No es asesoría de inversión: es lo que nuestros inversionistas IA están viendo y analizando.</div>
+  </td></tr>"""
+
+
 def _footer_enjambre() -> str:
     """El Enjambre al pie, como herramienta HERMANA (no como autor de El Pulso):
     una invitación a probarlo + su descripción. Nada de 'esto lo escribe el
@@ -269,20 +371,29 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     red = brief.get("redactado") or {}
     url_baja = f"{BASE_API}/api/baja/{token_baja}"
 
-    historias = [h for h in (red.get("historias") or []) if isinstance(h, dict)]
+    # EDICIÓN DE FIN DE SEMANA: si hay un deep-dive redactado, ES el correo
+    # (reemplaza las noticias del día; el fin de semana no hay sesión).
+    analisis_html = _bloque_analisis(brief)
+    es_finde = bool(analisis_html)
+
+    historias = [] if es_finde else [h for h in (red.get("historias") or []) if isinstance(h, dict)]
     historias_html = "".join(_bloque_historia(h) for h in historias)
 
     buenos_html = ""
-    if red.get("buenos_dias"):
+    if not es_finde and red.get("buenos_dias"):
         buenos_html = f"""
   <tr><td style="padding:22px 32px 2px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;">☀️ Buenos días</div>
     {_parrafos(red["buenos_dias"])}
   </td></tr>"""
 
+    # la foto del día (índices, petróleo, oro) va entre semana; el fin de semana
+    # el deep-dive se lee solo, sin la tabla del telón (cierres del viernes).
+    tabla_html = "" if es_finde else _tabla_mercado(brief)
+
     # respaldo: si la IA no escribió historias, al menos 'lo que pasó' crudo
-    # (mejor un digest simple que un correo vacío)
-    cuerpo_respaldo = _bloque_mercado(brief) if not historias else ""
+    # (mejor un digest simple que un correo vacío). No aplica al fin de semana.
+    cuerpo_respaldo = _bloque_mercado(brief) if (not historias and not es_finde) else ""
 
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
@@ -299,8 +410,9 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     <div style="font-family:Georgia,serif;font-style:italic;font-size:16px;color:{MUTE};margin-top:4px;">{fecha}</div>
     <div style="font-size:11px;color:{MUTE};margin-top:6px;">by <b style="color:{TEXTO_2};">Rubicón Lab</b></div>
   </td></tr>
-  {_tabla_mercado(brief)}
+  {tabla_html}
   {buenos_html}
+  {analisis_html}
   {historias_html}
   {cuerpo_respaldo}
   {_footer_enjambre()}

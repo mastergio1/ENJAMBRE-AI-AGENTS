@@ -32,6 +32,12 @@ _RUTA_UNIVERSO = os.path.join(os.path.dirname(__file__), "config", "universo_sem
 # cuántas sesiones (ruedas) atrás miramos para "la movida de la semana"
 RUEDAS_SEMANA = 5
 
+# la franja de capitalización del protagonista (foco de Giorgio: ~1 a 20 mil
+# millones de dólares). Se verifica con la capitalización REAL de Yahoo cuando
+# está disponible; si no, se acepta el candidato (el universo ya es curado).
+CAP_MIN = 1_000_000_000        # 1 000 millones (1B)
+CAP_MAX = 20_000_000_000       # 20 000 millones (20B)
+
 
 def cargar_universo(ruta: str | None = None) -> dict:
     """Lee el universo curado. Devuelve {} si falta o está roto (nunca lanza)."""
@@ -99,11 +105,31 @@ def _grafico_de(ticker: str, nombre: str) -> dict:
     return {"ticker": ticker, "nombre": nombre, "periodo": "mes", "moneda": "$"}
 
 
-def seleccionar_accion(universo: dict, fetch=yahoo.serie_reciente) -> dict | None:
-    """La 'acción seleccionada' del fin de semana: la mid-cap del universo que
-    más llamó la atención esta semana. None si no hay datos."""
+def seleccionar_accion(universo: dict, fetch=yahoo.serie_reciente,
+                       fetch_fund=yahoo.fundamentales) -> dict | None:
+    """La 'acción seleccionada' del fin de semana: la empresa del universo que más
+    llamó la atención esta semana, DENTRO de la franja ~1-20B (foco de Giorgio).
+
+    Ordena los candidatos por atención (movida de la semana) y baja por la lista
+    trayendo sus fundamentales, hasta dar con la primera EN BANDA. Si Yahoo no da
+    la capitalización de un candidato, se acepta (el universo ya es curado). None
+    si ninguno trae datos o todos quedan verificadamente fuera de banda."""
     acciones = universo.get("acciones") or []
-    elegida = _mayor_atencion(acciones, lambda c: c.get("ticker", ""), fetch)
+    rankeados = []
+    for c in acciones:
+        movida = _movida(fetch(c.get("ticker", ""), rango="1mo", intervalo="1d"))
+        if movida:
+            rankeados.append({**c, **movida})
+    rankeados.sort(key=lambda x: -abs(x["var_semana_pct"]))
+
+    elegida, fundamentales = None, None
+    for c in rankeados:
+        fund = fetch_fund(c.get("ticker", ""))
+        cap = (fund or {}).get("market_cap_num")
+        en_banda = cap is None or (CAP_MIN <= cap <= CAP_MAX)
+        if en_banda:
+            elegida, fundamentales = c, fund
+            break
     if not elegida:
         return None
     return {
@@ -118,6 +144,7 @@ def seleccionar_accion(universo: dict, fetch=yahoo.serie_reciente) -> dict | Non
         "var_mes_pct": elegida.get("var_mes_pct"),
         "fecha_inicio": elegida["fecha_inicio"],
         "fecha_fin": elegida["fecha_fin"],
+        "fundamentales": fundamentales,   # dict verificado (o None si Yahoo no dio)
         "grafico": _grafico_de(elegida["ticker"], elegida["nombre"]),
     }
 
@@ -148,7 +175,8 @@ def seleccionar_sector(universo: dict, fetch=yahoo.serie_reciente) -> dict | Non
 
 
 def preparar_analisis(universo: dict | None = None, modo: str | None = None,
-                      cuando: dict | None = None, fetch=yahoo.serie_reciente) -> dict | None:
+                      cuando: dict | None = None, fetch=yahoo.serie_reciente,
+                      fetch_fund=yahoo.fundamentales) -> dict | None:
     """Arma los HECHOS del deep-dive del fin de semana (sin voz todavía).
 
     Elige el modo (turnándolo solo si no se fuerza), selecciona el protagonista
@@ -161,7 +189,10 @@ def preparar_analisis(universo: dict | None = None, modo: str | None = None,
     modo = modo or elegir_modo(cuando)
     orden = [modo, "sector" if modo == "accion" else "accion"]  # el elegido, luego el otro
     for m in orden:
-        sel = (seleccionar_accion if m == "accion" else seleccionar_sector)(universo, fetch)
+        if m == "accion":
+            sel = seleccionar_accion(universo, fetch, fetch_fund)
+        else:
+            sel = seleccionar_sector(universo, fetch)
         if sel:
             return sel
     return None

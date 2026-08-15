@@ -9,9 +9,11 @@
 Dos formatos que se **turnan solos** semana a semana (par/impar de la semana del
 calendario, así es reproducible):
 
-1. **Acción seleccionada** — una empresa de **mediana capitalización** (las bandas
-   1–15B y 15–30B). Se elige la que **más llamó la atención** esa semana: la de
-   mayor movida de precio dentro del universo curado.
+1. **Acción seleccionada** — una empresa de **mediana capitalización, franja ~1 a
+   20 mil millones de dólares** (foco de Giorgio). Se elige la que **más llamó la
+   atención** esa semana (mayor movida de precio) que además esté **en banda**: la
+   capitalización se verifica con el dato REAL de Yahoo; si el mayor movedor es más
+   grande que ~20B, se baja al siguiente candidato en banda.
 2. **Sector en rotación** — un sector que se está moviendo en bloque (energía,
    semiconductores, bancos regionales, biotecnología, utilities, oro). También se
    elige por atención.
@@ -21,11 +23,18 @@ calendario, así es reproducible):
 1. **Qué es** — el CONTEXTO primero: a qué se dedica la empresa/sector, cómo gana
    dinero, qué lo hace particular. Se apoya en una descripción **factual y curada**
    (no la inventa la IA).
-2. **Gráfico real** — la curva de precio del mes del protagonista (desde Yahoo).
-3. **Lo que ven nuestros inversionistas IA** — el **debate de arquetipos**: 4 a 6
+2. **Por qué está en la mira** — la movida de la semana y la narrativa alrededor.
+3. **Gráfico real** — la curva de precio del mes del protagonista (desde Yahoo).
+4. **Los números** — la ficha de **fundamentales VERIFICADOS** (capitalización,
+   ingresos y su crecimiento, márgenes, EBITDA, deuda, caja), traída de Yahoo. La
+   **tabla se dibuja desde los datos** (no desde el texto de la IA), atribuida a su
+   fuente; debajo, la IA la explica en simple ("EBITDA = ganancias antes de
+   intereses e impuestos", etc.). Si Yahoo no da la ficha (p. ej. un ETF), este
+   bloque se omite entero. Aplica a la **acción seleccionada**, no a los sectores.
+5. **Lo que ven nuestros inversionistas IA** — el **debate de arquetipos**: 4 a 6
    perfiles de inversionista con miradas que se **contradicen** entre sí. Ese
    choque es el corazón del análisis.
-4. **Qué observar** — qué está en juego de aquí en adelante. Atención, no predicción.
+6. **Qué observar** — qué está en juego de aquí en adelante. Atención, no predicción.
 
 ## La regla de oro (marco CMF)
 
@@ -42,7 +51,10 @@ correo lleva el disclaimer oficial.
   (acciones + sectores, cada uno con su contexto factual). **Aquí se crece la
   lista** sin tocar código.
 - `engine/contenido/analisis_semanal.py` — selecciona el protagonista por atención
-  (el número manda: la variación viene de Yahoo, gratis) y arma los hechos.
+  (el número manda: la variación viene de Yahoo, gratis), lo filtra a la franja
+  ~1-20B con la capitalización real, y adjunta sus fundamentales.
+- `engine/contenido/fuentes/yahoo.py::fundamentales` — trae la ficha financiera
+  verificada (usa el flujo cookie+crumb de Yahoo; degrada a None si falla).
 - `engine/contenido/redaccion_ia.py::redactar_analisis` — le pone voz al deep-dive
   (contexto + lectura + debate + qué observar), con el `PROMPT_ANALISIS`. Un solo
   llamado LLM (respeta el presupuesto: el fin de semana **no** simula el enjambre).

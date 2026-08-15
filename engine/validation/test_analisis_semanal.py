@@ -30,6 +30,11 @@ def _fetch_fake(mapa):
     return fetch
 
 
+def _sin_fundamentales(_ticker):
+    """fetch_fund que no trae ficha (Yahoo caído): el deep-dive sale sin números."""
+    return None
+
+
 # ---------- el universo curado ----------
 
 def test_universo_carga_y_tiene_contexto():
@@ -61,12 +66,33 @@ def test_selecciona_la_accion_de_mayor_movida():
         "AAA": [100, 100.5, 101, 101.5, 102, 102],
         "BBB": [100, 105, 110, 120, 128, 130],
     })
-    sel = analisis_semanal.seleccionar_accion(universo, fetch=fetch)
+    sel = analisis_semanal.seleccionar_accion(universo, fetch=fetch, fetch_fund=_sin_fundamentales)
     assert sel["ticker"] == "BBB"
     assert sel["modo"] == "accion"
     assert sel["encuadre"] == "mediana capitalización"
     assert isinstance(sel["var_semana_pct"], (int, float))
     assert sel["grafico"]["ticker"] == "BBB"
+    assert sel["fundamentales"] is None  # Yahoo no dio ficha → sin números, sin romperse
+
+
+def test_band_gate_excluye_los_muy_grandes_y_adjunta_fundamentales():
+    """La franja manda: el mayor movedor puede quedar FUERA si su capitalización
+    real supera ~20B; se elige el siguiente EN banda y se le adjunta su ficha."""
+    universo = {"acciones": [
+        {"ticker": "BIG", "nombre": "Gigante", "banda": "15-30B", "sector": "X", "contexto": "c"},
+        {"ticker": "MID", "nombre": "Media", "banda": "1-15B", "sector": "Y", "contexto": "c"},
+    ]}
+    fetch = _fetch_fake({
+        "BIG": [100, 120, 140, 160, 180, 200],   # movida enorme, pero es gigante
+        "MID": [50, 51, 52, 53, 54, 55],          # movida menor, pero en banda
+    })
+    fichas = {
+        "BIG": {"market_cap_num": 25_000_000_000, "ingresos": "40B"},
+        "MID": {"market_cap_num": 8_000_000_000, "ingresos": "2B", "ebitda": "300M"},
+    }
+    sel = analisis_semanal.seleccionar_accion(universo, fetch=fetch, fetch_fund=lambda t: fichas.get(t))
+    assert sel["ticker"] == "MID"                 # BIG excluido por capitalización
+    assert sel["fundamentales"]["ebitda"] == "300M"
 
 
 def test_selecciona_el_sector_de_mayor_movida():
@@ -91,7 +117,8 @@ def test_preparar_cae_al_otro_modo_si_el_elegido_no_tiene_datos():
     }
     # se fuerza 'sector' pero XLE no trae datos → cae a 'accion' (AAA sí trae)
     fetch = _fetch_fake({"AAA": [10, 11, 12, 13, 14, 15]})
-    sel = analisis_semanal.preparar_analisis(universo, modo="sector", fetch=fetch)
+    sel = analisis_semanal.preparar_analisis(universo, modo="sector", fetch=fetch,
+                                             fetch_fund=_sin_fundamentales)
     assert sel is not None and sel["modo"] == "accion"
 
 
@@ -99,7 +126,8 @@ def test_preparar_none_si_no_hay_datos():
     universo = {"acciones": [{"ticker": "AAA", "nombre": "Alfa", "banda": "1-15B",
                               "sector": "X", "contexto": "c"}], "sectores": []}
     fetch = _fetch_fake({})  # Yahoo no responde para nada
-    assert analisis_semanal.preparar_analisis(universo, modo="accion", fetch=fetch) is None
+    assert analisis_semanal.preparar_analisis(universo, modo="accion", fetch=fetch,
+                                              fetch_fund=_sin_fundamentales) is None
 
 
 # ---------- el filtro CMF sobre el deep-dive redactado ----------
@@ -137,6 +165,9 @@ def _brief_finde():
         "ticker": "ROKU", "nombre": "Roku", "sector": "Streaming",
         "contexto": "...", "var_semana_pct": 8.4, "var_mes_pct": 12.0,
         "fecha_inicio": "1 ago", "fecha_fin": "31 ago",
+        "fundamentales": {"market_cap": "9.5B", "ingresos": "4.2B",
+                          "crecimiento_ingresos": "18.00%", "margen_bruto": "45.00%",
+                          "ebitda": "300M", "deuda": "500M", "caja": "2.1B"},
         "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"},
     }
     red = {
@@ -144,6 +175,7 @@ def _brief_finde():
         "dek": "La plataforma de TV conectada tuvo una semana movida",
         "contexto": "Roku hace el sistema operativo de televisores.\n\nGana con publicidad.",
         "lectura": "Esta semana avanzó con fuerza tras un anuncio.",
+        "numeros": "Crece 18% al año.\n\nEBITDA positivo y más caja que deuda: un colchón cómodo.",
         "debate": [
             {"arquetipo": "fomo_evangelista", "nombre": "El FOMO Evangelista",
              "mirada": "¡La TV conectada es el futuro y aquí está pasando!"},
@@ -164,6 +196,11 @@ def test_correo_finde_es_deep_dive_cmf_limpio():
     assert "no es asesoría de inversión" in html.lower()
     assert "El FOMO Evangelista" in html and "El Doomer" in html
     assert "/api/grafico/ROKU" in html            # gráfico real del protagonista
+    # 'Los números': la ficha de fundamentales (datos de mercado) + la lectura
+    assert "Los números" in html
+    assert "EBITDA" in html and "300M" in html and "4.2B" in html
+    assert "Crecimiento ingresos" in html and "18.00%" in html
+    assert "Yahoo Finance" in html                # la ficha va atribuida a su fuente
     # El Enjambre al pie + disclaimer, como siempre
     assert "También de Rubicón Lab" in html
     assert DISCLAIMER in html

@@ -24,7 +24,21 @@
     {"ticker": "DBX", "nombre": "Dropbox", "banda": "1-15B", "sector": "Software / almacenamiento en la nube",
      "contexto": "Dropbox guarda y sincroniza archivos en la nube para personas y empresas. Es un negocio de suscripción maduro: su historia gira en torno a retener suscriptores y encontrar nuevo crecimiento en herramientas de trabajo."},
     {"ticker": "BROS", "nombre": "Dutch Bros", "banda": "15-30B", "sector": "Cafeterías / consumo",
-     "contexto": "Dutch Bros es una cadena de cafeterías de autoservicio del oeste de Estados Unidos que se expande abriendo locales nuevos a buen ritmo. Su historia es de crecimiento por apertura de tiendas, no por subir precios."}
+     "contexto": "Dutch Bros es una cadena de cafeterías de autoservicio del oeste de Estados Unidos que se expande abriendo locales nuevos a buen ritmo. Su historia es de crecimiento por apertura de tiendas, no por subir precios."},
+    {"ticker": "W", "nombre": "Wayfair", "banda": "1-15B", "sector": "Comercio electrónico / hogar",
+     "contexto": "Wayfair vende muebles y artículos para el hogar por internet, sin tiendas físicas. Su desafío es que los muebles son caros de despachar y la gente los compra más cuando hay confianza y tasas bajas, así que sigue de cerca el ánimo del consumidor."},
+    {"ticker": "SG", "nombre": "Sweetgreen", "banda": "1-15B", "sector": "Comida rápida saludable",
+     "contexto": "Sweetgreen es una cadena de comida rápida de ensaladas y bowls saludables, con fuerte presencia en ciudades de Estados Unidos. Su apuesta es crecer abriendo locales y automatizar parte de la cocina para bajar costos."},
+    {"ticker": "YETI", "nombre": "YETI Holdings", "banda": "1-15B", "sector": "Productos outdoor / consumo",
+     "contexto": "YETI vende coolers, vasos térmicos y equipo para actividades al aire libre, como una marca premium por la que la gente paga más. Su reto es seguir creciendo más allá de su producto estrella y no depender solo de una moda."},
+    {"ticker": "PTON", "nombre": "Peloton", "banda": "1-15B", "sector": "Fitness conectado",
+     "contexto": "Peloton vende bicicletas y cintas de correr con pantalla, más una suscripción de clases en vivo. Voló durante la pandemia y luego cayó fuerte; hoy su historia es de reordenar las cuentas y retener a sus suscriptores."},
+    {"ticker": "WRBY", "nombre": "Warby Parker", "banda": "1-15B", "sector": "Óptica / consumo directo",
+     "contexto": "Warby Parker vende anteojos y lentes de contacto directo al consumidor, saltándose a los intermediarios tradicionales, con tienda online y locales propios. Crece abriendo tiendas y sumando servicios de examen visual."},
+    {"ticker": "RKLB", "nombre": "Rocket Lab", "banda": "1-15B", "sector": "Espacio / lanzamientos",
+     "contexto": "Rocket Lab pone satélites pequeños en órbita con sus propios cohetes y además fabrica componentes espaciales para terceros. Es una de las alternativas a SpaceX en el negocio de lanzamientos; su historia depende de cadencia de lanzamientos y contratos."},
+    {"ticker": "SOUN", "nombre": "SoundHound AI", "banda": "1-15B", "sector": "Inteligencia artificial de voz",
+     "contexto": "SoundHound desarrolla inteligencia artificial de voz: los asistentes que entienden y responden habla, para autos, restaurantes y dispositivos. Es una acción pequeña y muy volátil, muy sensible al entusiasmo del mercado con la IA."}
   ],
   "sectores": [
     {"nombre": "Energía", "etf": "XLE", "en_rotacion_por": "petróleo, geopolítica, inflación",

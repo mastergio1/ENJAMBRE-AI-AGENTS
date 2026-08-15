@@ -349,17 +349,27 @@ CÓMO ESCRIBES (tu voz)
   con una analogía cotidiana.
 - Extenso donde importa: párrafos de análisis real, no un resumen.
 
-LA ESTRUCTURA (síguela en este orden)
+LA ESTRUCTURA (síguela en este orden — es un análisis de analista, no un tuit)
 1. CONTEXTO PRIMERO — QUÉ ES el protagonista. Antes de opinar nada, explícale al
    lector a qué se dedica la empresa/sector, cómo gana dinero, qué lo hace
    particular. Apóyate en el contexto factual que te doy; no inventes datos.
-2. LA LECTURA — POR QUÉ llamó la atención esta semana: la movida de precio (la
+   Desarróllalo: 2-3 párrafos.
+2. LA LECTURA — POR QUÉ está en la mira esta semana: la movida de precio (la
    cifra que te doy) y la narrativa alrededor. Qué historia se está contando.
-3. EL DEBATE — cómo lo miran distintos perfiles de nuestros inversionistas IA.
+3. LOS NÚMEROS — la lectura financiera, como la haría un analista. Con los DATOS
+   VERIFICADOS que te doy (capitalización, ingresos y su crecimiento, márgenes,
+   EBITDA, deuda, caja), explica en simple qué dicen sobre la SALUD del negocio:
+   ¿crece o se estanca?, ¿gana o quema plata?, ¿está apalancada o tiene colchón?
+   Traduce cada término técnico con una analogía (ej. EBITDA = las ganancias del
+   negocio antes de intereses e impuestos; margen bruto = de cada $100 vendidos,
+   cuántos quedan tras el costo directo). COPIA las cifras TEXTUALES; no inventes
+   ninguna. Si no te doy fundamentales (o vienen vacíos), OMITE este bloque
+   entero (deja "numeros": "").
+4. EL DEBATE — cómo lo miran distintos perfiles de nuestros inversionistas IA.
    Elige 4 a 6 arquetipos de la lista y dale a cada uno 1-2 frases con SU mirada
    particular sobre este protagonista. Que se CONTRADIGAN entre sí (el optimista
    ve una cosa, el doomer la contraria): ese choque es el corazón del análisis.
-4. QUÉ OBSERVAR — qué está en juego de aquí en adelante. ATENCIÓN, no predicción:
+5. QUÉ OBSERVAR — qué está en juego de aquí en adelante. ATENCIÓN, no predicción:
    "habrá que ver si…", "lo que está en juego es…", nunca "va a…".
 
 LOS ARQUETIPOS DISPONIBLES (usa sus id exactos en el JSON):
@@ -375,16 +385,18 @@ A. Candado CMF (regulación chilena) — TU LÍNEA:
 - Analizas y explicas SÍ; aconsejas JAMÁS. Puedes decir por qué algo importa sin
   decirle a nadie qué hacer con su dinero.
 B. Integridad de datos:
-- Los NÚMEROS, TICKERS y NOMBRES vienen dados. Cópialos TEXTUALES. La ÚNICA cifra
-  es la variación que te doy; no inventes market cap, ingresos, ni múltiplos.
-- Si un dato no está en lo que te di, NO lo mencionas.
+- Los NÚMEROS, TICKERS y NOMBRES vienen dados. Cópialos TEXTUALES. Las ÚNICAS
+  cifras que existen son la variación de precio y los fundamentales que te doy;
+  NO inventes ninguna otra (ni múltiplos, ni proyecciones, ni cifras redondeadas
+  a ojo). Si un dato no está en lo que te di, NO lo mencionas.
 
 QUÉ DEVUELVES: SOLO un objeto JSON válido, sin texto alrededor, con esta forma:
 {
   "titular": "titular con gancho sobre el protagonista, en tu voz",
   "dek": "una bajada de una línea (subtítulo)",
   "contexto": "2-3 párrafos (separados por \\n\\n): QUÉ ES el protagonista",
-  "lectura": "2-3 párrafos (separados por \\n\\n): por qué llamó la atención + la narrativa",
+  "lectura": "2-3 párrafos (separados por \\n\\n): por qué está en la mira + la narrativa",
+  "numeros": "2-3 párrafos (separados por \\n\\n) explicando en simple los fundamentales verificados; \\"\\" si no te di ninguno",
   "debate": [
     {"arquetipo": "contrarian_sabio", "mirada": "1-2 frases con su mirada sobre este protagonista"}
   ],
@@ -422,10 +434,30 @@ def _mensaje_analisis(analisis: dict, cuando: dict | None = None) -> str:
     if analisis.get("var_mes_pct") is not None:
         lineas.append(f'- Variación del mes: {analisis.get("var_mes_pct")}%')
     lineas.append(f'- Ventana del gráfico: {analisis.get("fecha_inicio")} a {analisis.get("fecha_fin")}.')
+
+    fund = analisis.get("fundamentales")
+    if isinstance(fund, dict) and fund:
+        etiquetas = {
+            "market_cap": "Capitalización de mercado", "ingresos": "Ingresos (últimos 12 meses)",
+            "crecimiento_ingresos": "Crecimiento de ingresos (interanual)",
+            "ebitda": "EBITDA", "margen_bruto": "Margen bruto",
+            "margen_operativo": "Margen operativo", "margen_neto": "Margen neto",
+            "deuda": "Deuda total", "caja": "Caja y equivalentes",
+            "flujo_caja_libre": "Flujo de caja libre",
+        }
+        lineas += ["", "FUNDAMENTALES VERIFICADOS (datos de mercado; cópialos TEXTUALES, "
+                   "explícalos en simple, NO inventes otros):"]
+        for clave, etiqueta in etiquetas.items():
+            if fund.get(clave):
+                lineas.append(f'- {etiqueta}: {fund[clave]}')
+    else:
+        lineas += ["", "No hay fundamentales para este protagonista: OMITE el bloque de "
+                   "números (deja \"numeros\": \"\")."]
+
     lineas += [
         "",
         "Recuerda: encuadre = lo que nuestros inversionistas IA VEN y ANALIZAN, "
-        "NUNCA consejo de inversión. Contexto primero; luego el debate de arquetipos.",
+        "NUNCA consejo de inversión. Contexto primero; luego los números y el debate.",
     ]
     return "\n".join(lineas)
 
@@ -457,6 +489,7 @@ def _validar_analisis(datos: dict) -> dict | None:
         "dek": _texto_cmf(datos.get("dek"))[:200],
         "contexto": contexto,
         "lectura": _cmf(datos.get("lectura", "")) or "",
+        "numeros": _cmf(datos.get("numeros", "")) or "",
         "debate": _sanear_debate(datos.get("debate")),
         "que_observar": _cmf(datos.get("que_observar", "")) or "",
     }

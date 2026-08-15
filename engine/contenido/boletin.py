@@ -279,11 +279,74 @@ def _bloque_debate(debate: list[dict]) -> str:
   </td></tr>"""
 
 
+def _pildora_pct_texto(fmt: str) -> str:
+    """Una píldora verde/roja a partir de un porcentaje YA formateado por Yahoo
+    (ej. '35.50%', '-4.20%'). El color sale del signo; no reinterpreta el número."""
+    t = str(fmt or "").strip()
+    negativo = t.startswith("-")
+    color, bg = (BAJA, "rgba(192,80,77,0.13)") if negativo else (SUBE, "rgba(47,143,102,0.14)")
+    flecha = "▼" if negativo else "▲"
+    return (f'<span style="display:inline-block;padding:2px 8px;border-radius:12px;'
+            f'background:{bg};color:{color};font-size:12px;font-weight:bold;">{flecha} {_esc(t)}</span>')
+
+
+# fundamentales que se muestran, en orden, y cuáles llevan píldora de color (%)
+_FUND_FILAS = [
+    ("market_cap", "Capitalización", False),
+    ("ingresos", "Ingresos (12m)", False),
+    ("crecimiento_ingresos", "Crecimiento ingresos", True),
+    ("margen_bruto", "Margen bruto", False),
+    ("margen_operativo", "Margen operativo", False),
+    ("ebitda", "EBITDA", False),
+    ("deuda", "Deuda total", False),
+    ("caja", "Caja", False),
+]
+
+
+def _tabla_fundamentales(fund: dict | None) -> str:
+    """'Los números' del protagonista: la ficha de fundamentales VERIFICADOS
+    (datos de mercado), como la tabla de un analista. Solo cifras que existen;
+    se dibuja desde los datos, no desde el texto de la IA. '' si no hay ficha."""
+    if not isinstance(fund, dict) or not fund:
+        return ""
+    filas = ""
+    for clave, etiqueta, es_pct in _FUND_FILAS:
+        valor = fund.get(clave)
+        if not valor:
+            continue
+        celda = _pildora_pct_texto(valor) if es_pct else f'<b style="color:{TEXTO};font-size:14px;">{_esc(str(valor))}</b>'
+        filas += f"""<tr>
+          <td style="padding:7px 0;border-top:1px solid {LINEA};color:{TEXTO_2};font-size:13px;">{etiqueta}</td>
+          <td align="right" style="padding:7px 0;border-top:1px solid {LINEA};">{celda}</td>
+        </tr>"""
+    if not filas:
+        return ""
+    return f"""<table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+      style="background:{PAPEL};border:1px solid {LINEA};border-radius:8px;padding:2px 14px;margin:2px 0 6px;">{filas}
+      <tr><td colspan="2" style="padding:6px 0 2px;color:{MUTE};font-size:11px;font-style:italic;">Datos de mercado (Yahoo Finance), últimos disponibles.</td></tr>
+    </table>"""
+
+
+def _bloque_numeros(hechos: dict, red: dict) -> str:
+    """'Los números': la ficha de fundamentales (tabla desde datos) + la lectura
+    financiera en simple que escribió la IA. '' si no hay ni ficha ni prosa."""
+    tabla = _tabla_fundamentales(hechos.get("fundamentales"))
+    prosa = _parrafos(str(red.get("numeros", "") or ""))
+    if not tabla and not prosa:
+        return ""
+    return f"""
+  <tr><td style="padding:14px 32px 2px;border-top:1px solid {LINEA};">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:6px;">Los números</div>
+    {tabla}
+    {prosa}
+  </td></tr>"""
+
+
 def _bloque_analisis(brief: dict | None) -> str:
     """La EDICIÓN DE FIN DE SEMANA: el deep-dive de una mid-cap o un sector.
-    Contexto primero (qué es), la lectura (por qué llamó la atención), el gráfico
-    real, el debate de arquetipos y qué observar. Todo escapado + filtrado CMF.
-    Devuelve '' si no hay análisis redactado (entonces el correo usa lo normal)."""
+    Contexto primero (qué es), la lectura (por qué está en la mira), el gráfico
+    real, los números (fundamentales), el debate de arquetipos y qué observar.
+    Todo escapado + filtrado CMF. '' si no hay análisis redactado."""
     brief = brief or {}
     red = brief.get("analisis_redactado")
     hechos = brief.get("analisis") or {}
@@ -308,7 +371,7 @@ def _bloque_analisis(brief: dict | None) -> str:
                    if sector and sector != "—" else "")
     lectura_html = (f"""
   <tr><td style="padding:6px 32px 2px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:4px;">Por qué llamó la atención</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:4px;">Por qué está en la mira</div>
     {lectura}
   </td></tr>""" if lectura else "")
     observar_html = (f"""
@@ -331,12 +394,13 @@ def _bloque_analisis(brief: dict | None) -> str:
       <span style="color:{MUTE};font-size:12px;">{ticker}</span> {sector_html}
       <span style="color:{MUTE};font-size:12px;">· en la semana</span></div>
   </td></tr>
-  {_grafico_img(hechos.get("grafico"))}
   <tr><td style="padding:10px 32px 2px;">
     <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:4px;">Qué es</div>
     {contexto}
   </td></tr>
   {lectura_html}
+  {_grafico_img(hechos.get("grafico"))}
+  {_bloque_numeros(hechos, red)}
   {_bloque_debate(red.get("debate"))}
   {observar_html}
   <tr><td style="padding:2px 32px 8px;">

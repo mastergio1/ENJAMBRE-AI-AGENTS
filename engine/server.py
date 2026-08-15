@@ -1268,18 +1268,27 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
     if ed is None:
         return Response(status_code=404)  # type: ignore[return-value]
     brief = ed["brief"] or {}
-    # ¿es la edición de FIN DE SEMANA (deep-dive)? Entonces no hay editor de
-    # historias: se revisa en la vista previa y se aprueba/descarta.
+    # ¿es una edición de FIN DE SEMANA (sábado = resumen, domingo = deep-dive)?
+    # Entonces no hay editor de historias: se revisa en la vista previa y se
+    # aprueba/descarta.
     analisis = brief.get("analisis") if isinstance(brief.get("analisis"), dict) else None
-    es_finde = isinstance(brief.get("analisis_redactado"), dict)
+    es_resumen = isinstance(brief.get("resumen_redactado"), dict)
+    es_finde = es_resumen or isinstance(brief.get("analisis_redactado"), dict)
+    if es_resumen:
+        resumen_hechos = {"titulo": (brief.get("resumen") or {}).get("titulo", "El Pulso de la semana"),
+                          "nombre": "Resumen de la semana"}
+    elif analisis:
+        resumen_hechos = {"titulo": analisis.get("titulo"), "nombre": analisis.get("nombre"),
+                          "ticker": analisis.get("ticker")}
+    else:
+        resumen_hechos = None
     return {
         "fecha": ed["fecha"], "estado": ed["estado"], "asunto": ed["asunto"],
         "token": ed["token"], "enviados": ed["enviados"], "suscriptores": ed["suscriptores"],
         "generada_iso": ed["generada_iso"], "enviada_iso": ed["enviada_iso"],
         "redactado": brief.get("redactado") or {}, "foto": brief.get("foto") or [],
         "finde": es_finde,
-        "analisis": ({"titulo": analisis.get("titulo"), "nombre": analisis.get("nombre"),
-                      "ticker": analisis.get("ticker")} if es_finde and analisis else None),
+        "analisis": resumen_hechos if es_finde else None,
     }
 
 
@@ -1327,9 +1336,10 @@ def panel_editar(fecha: str, peticion: PeticionEditar, x_pipeline_token: str = H
             from contenido import pipeline, boletin
             brief = persistencia.obtener_edicion(conexion, fecha)["brief"]
             destacadas = pipeline._destacadas_de_hoy(conexion)
-            # el fin de semana el correo es el deep-dive (no necesita destacadas):
-            # construir_html lo arma desde brief["analisis_redactado"].
-            es_finde = isinstance(brief.get("analisis_redactado"), dict)
+            # el fin de semana el correo es el resumen (sábado) o el deep-dive
+            # (domingo): no necesita destacadas, construir_html lo arma del brief.
+            es_finde = (isinstance(brief.get("analisis_redactado"), dict)
+                        or isinstance(brief.get("resumen_redactado"), dict))
             if destacadas or es_finde:
                 html = boletin.construir_html(
                     destacadas, pipeline._fecha_es(_dt.now(_tz.utc)),

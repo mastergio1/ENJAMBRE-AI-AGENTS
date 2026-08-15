@@ -141,15 +141,19 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
     try:
-        # ¿es fin de semana? (hora local del lector). El sábado El Pulso cambia
-        # de marcha: no simula noticias, hace el deep-dive de una mid-cap/sector.
-        # `cuando` se puede inyectar (tests); si no, se calcula del reloj.
+        # ¿qué día es? (hora local del lector). El fin de semana El Pulso cambia
+        # de marcha: SÁBADO = resumen de la semana; DOMINGO = deep-dive de una
+        # mid/small-cap o sector. `cuando` se puede inyectar (tests).
         cuando = cuando or redaccion_ia.contexto_temporal()
-        es_finde = cuando["es_finde"]
+        dia = cuando.get("weekday")
+        es_finde = cuando.get("es_finde", dia in (5, 6) if dia is not None else False)
+        es_sabado = dia == 5
+        # sin weekday (cuando antiguo inyectado) pero es finde → se trata como domingo
+        es_domingo = dia == 6 or (es_finde and dia is None)
 
         if es_finde:
             # sin simulaciones nuevas ni gasto de enjambre: el fin de semana es
-            # lectura pausada. Un solo llamado LLM (el redactor del deep-dive).
+            # lectura pausada. Un solo llamado LLM (el redactor del finde).
             preparado = {"origen": "fin de semana", "publicadas": [], "log": []}
         else:
             preparado = preparar_dia(conexion, maximo=maximo, semilla_base=semilla_base)
@@ -173,10 +177,23 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         evaluadas = preparado.get("log", [])
         brief = redaccion.preparar_brief(evaluadas=evaluadas, radar=radar)
 
-        if es_finde:
-            # ── EDICIÓN DE FIN DE SEMANA: acción seleccionada de mid-cap o sector
-            # en rotación. Contexto primero + debate de arquetipos + gráfico real.
-            # NUNCA consejo de inversión (marco CMF). Degrada a None sin romperse.
+        if es_sabado:
+            # ── SÁBADO: RESUMEN DE LA SEMANA. Los grandes temas con punto de vista
+            # (qué pasó, por qué, geopolítica/macro → mercado, qué observar). NUNCA
+            # predicción (marco CMF). Degrada a None sin romperse.
+            try:
+                from contenido import resumen_semanal
+                resumen = resumen_semanal.preparar_resumen(conexion, cuando=cuando)
+                brief["resumen"] = resumen
+                brief["resumen_redactado"] = (
+                    redaccion_ia.redactar_resumen(resumen, cuando=cuando) if resumen else None)
+            except Exception:
+                brief["resumen"] = None
+                brief["resumen_redactado"] = None
+        elif es_domingo:
+            # ── DOMINGO: DEEP-DIVE de una empresa mediana/pequeña o un sector en
+            # rotación. Contexto + números verificados + debate de arquetipos +
+            # gráfico real. NUNCA consejo de inversión (marco CMF).
             try:
                 from contenido import analisis_semanal
                 analisis = analisis_semanal.preparar_analisis(cuando=cuando)
@@ -208,15 +225,22 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
 
         fecha_iso = persistencia.ahora_iso()[:10]
         fecha_es = _fecha_es(datetime.now(timezone.utc))
-        # hay edición si hay destacadas (entre semana) o un deep-dive (fin de semana)
-        finde_listo = es_finde and isinstance(brief.get("analisis_redactado"), dict)
+        # hay edición si hay destacadas (entre semana), resumen (sábado) o
+        # deep-dive (domingo)
+        sabado_listo = es_sabado and isinstance(brief.get("resumen_redactado"), dict)
+        domingo_listo = es_domingo and isinstance(brief.get("analisis_redactado"), dict)
+        finde_listo = sabado_listo or domingo_listo
         html_preview = None
         token = None
         if destacadas or finde_listo:
             html_preview = boletin.construir_html(
                 destacadas, fecha_es, token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
-            asunto = (boletin.asunto_finde(brief["analisis"]) if finde_listo
-                      else boletin.asunto_del_dia(destacadas[0]))
+            if sabado_listo:
+                asunto = boletin.asunto_resumen(brief.get("resumen"))
+            elif domingo_listo:
+                asunto = boletin.asunto_finde(brief["analisis"])
+            else:
+                asunto = boletin.asunto_del_dia(destacadas[0])
             token = secrets.token_urlsafe(24)
             persistencia.guardar_edicion(conexion, fecha_iso, brief, html_preview,
                                          asunto, token, persistencia.ahora_iso())
@@ -229,9 +253,11 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         # paso 8: avisar a Giorgio que la edición espera su revisión
         notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], None))
 
+        edicion = ("resumen" if sabado_listo else "finde" if domingo_listo
+                   else "diaria" if destacadas else "ninguna")
         return {**preparado, "destacadas": len(destacadas),
                 "estado": "pendiente" if (destacadas or finde_listo) else "sin_edicion",
-                "edicion": "finde" if finde_listo else ("diaria" if destacadas else "ninguna"),
+                "edicion": edicion,
                 "brief": brief, "html_preview": html_preview, "token": token,
                 "correccion": correccion}
     finally:

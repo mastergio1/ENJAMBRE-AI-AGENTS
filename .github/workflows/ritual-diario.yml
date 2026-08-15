@@ -24,10 +24,12 @@ on:
     # 10:00 UTC = 6:00 en Chile (invierno) — antes de la apertura de EE.UU.
     # Lunes a viernes: la edición DIARIA (noticias + gráficos).
     - cron: "0 10 * * 1-5"
-    # Sábado: la EDICIÓN DE FIN DE SEMANA (deep-dive de una mid-cap o un sector
-    # en rotación). El motor detecta que es finde y arma el deep-dive solo (un
-    # único llamado LLM, sin simular el enjambre).
+    # Sábado: el RESUMEN DE LA SEMANA (los grandes temas con punto de vista).
     - cron: "0 10 * * 6"
+    # Domingo: el DEEP-DIVE de una empresa mediana/pequeña o un sector. En ambos
+    # casos el motor detecta el día y arma la edición sola (un único llamado LLM,
+    # sin simular el enjambre).
+    - cron: "0 10 * * 0"
   workflow_dispatch: {}  # disparo manual: Actions → este workflow → Run workflow
 
 jobs:

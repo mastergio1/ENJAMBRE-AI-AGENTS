@@ -42,6 +42,39 @@ def _serie_anual(simbolo: str) -> list[float] | None:
     return limpios if len(limpios) >= 2 else None
 
 
+_MESES_ES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago",
+             "sep", "oct", "nov", "dic"]
+
+
+def etiqueta_fecha(dt: datetime) -> str:
+    """'7 ago' — etiqueta corta en español para los ejes del gráfico."""
+    return f"{dt.day} {_MESES_ES[dt.month - 1]}"
+
+
+def serie_reciente(simbolo: str, rango: str = "5d", intervalo: str = "1d"):
+    """(fechas, cierres) recientes de un símbolo, para dibujar su gráfico.
+    `rango` e `intervalo` en la jerga de Yahoo (5d/1mo/1y, 1d/15m…).
+    Devuelve (list[datetime], list[float]) o None ante cualquier problema."""
+    try:
+        respuesta = httpx.get(
+            URL.format(simbolo=simbolo),
+            params={"range": rango, "interval": intervalo},
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=15,
+        )
+        respuesta.raise_for_status()
+        r = respuesta.json()["chart"]["result"][0]
+        marcas = r["timestamp"]
+        cierres = r["indicators"]["quote"][0]["close"]
+    except Exception:
+        return None
+    pares = [(datetime.utcfromtimestamp(ts), float(c))
+             for ts, c in zip(marcas, cierres) if c is not None]
+    if len(pares) < 2:
+        return None
+    return [p[0] for p in pares], [p[1] for p in pares]
+
+
 def _pct(nuevo: float, viejo: float) -> float | None:
     return round((nuevo - viejo) / viejo * 100, 2) if viejo else None
 

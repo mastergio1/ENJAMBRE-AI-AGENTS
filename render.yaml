@@ -21,12 +21,12 @@ services:
         sync: false
       - key: ALPACA_API_SECRET_KEY
         sync: false
-      # 🔒 LANZAMIENTO PÚBLICO (14-ago-2026): topes de producción. Cada
-      # simulación ≈ 100 llamadas LLM, así que estos son la muralla de la
-      # billetera con la URL abierta: 5 simulaciones NUEVAS al día como máximo
-      # (el resto se re-ve desde la caché sin costo) y 3 por IP/hora.
+      # 🔒 TOPES DE PRODUCCIÓN (sitio PÚBLICO, 15-ago-2026): 5 simulaciones
+      # NUEVAS al día como máximo (el resto se re-ve desde la caché sin costo)
+      # y 3 por IP/hora. Cada simulación ≈ 100 llamadas LLM: son la muralla de
+      # la billetera con la URL abierta.
       - key: ENJAMBRE_MAX_SIM_DIA
-        value: "2"
+        value: "5"
       - key: ENJAMBRE_MAX_SIM_IP_HORA
         value: "3"
       # orígenes permitidos por CORS: el dominio de Vercel de producción.

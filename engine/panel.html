@@ -291,25 +291,30 @@ function pintarEdicion(ed){
       `<div class="vacio">Sin vista previa (no hay destacadas hoy).</div>`);
 }
 
-// ---------- editor ----------
+// ---------- editor (formato nuevo: historias con análisis + gráfico) ----------
 function toggleEditor(){
   editando=!editando;
   const z=$("#editorZona");
   if(!editando){ z.innerHTML=""; return; }
   const r=(EDICION&&EDICION.redactado)||{};
-  const est=r.historia_estrella||{};
-  const hs=r.historias||[];
+  const hs=(r.historias&&r.historias.length)?r.historias:[{}];
+  const opt=(sel)=>['semana','mes','dia','ano'].map(p=>`<option value="${p}"${(sel||'semana')===p?' selected':''}>${p}</option>`).join('');
   let html=`<div class="editor" style="background:var(--tinta-3);border:1px solid var(--linea);border-radius:12px;padding:16px;margin:4px 0 16px">`+
-    `<label>Buenos días</label><textarea id="e_bd">${esc(r.buenos_dias||"")}</textarea>`+
-    `<div class="hgroup"><div style="color:var(--oro);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Historia estrella</div>`+
-    `<div class="fila2"><div><label>Emoji</label><input id="e_est_emoji" value="${esc(est.emoji||"")}"></div>`+
-    `<div><label>Titular</label><input id="e_est_tit" value="${esc(est.titular||"")}"></div></div>`+
-    `<label>Cuerpo</label><textarea id="e_est_cuerpo">${esc(est.cuerpo||"")}</textarea></div>`;
+    `<label>Buenos días</label><textarea id="e_bd">${esc(r.buenos_dias||"")}</textarea>`;
   hs.forEach((h,i)=>{
+    const g=h.grafico||{};
     html+=`<div class="hgroup" data-h="${i}"><div style="color:var(--oro);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Historia ${i+1}</div>`+
+      `<label>Etiqueta (categoría)</label><input class="h_kicker" value="${esc(h.kicker||"")}" placeholder="Tecnología · catalizador">`+
       `<div class="fila2"><div><label>Emoji</label><input class="h_emoji" value="${esc(h.emoji||"")}"></div>`+
       `<div><label>Titular</label><input class="h_tit" value="${esc(h.titular||"")}"></div></div>`+
-      `<label>Cuerpo</label><textarea class="h_cuerpo">${esc(h.cuerpo||"")}</textarea></div>`;
+      `<label>Bajada</label><input class="h_dek" value="${esc(h.dek||"")}" placeholder="una línea de subtítulo">`+
+      `<label>Análisis (cuerpo)</label><textarea class="h_cuerpo" style="min-height:130px">${esc(h.cuerpo||"")}</textarea>`+
+      `<label>En una línea (cierre)</label><input class="h_bl" value="${esc(h.bottom_line||"")}">`+
+      `<div style="display:grid;grid-template-columns:1fr 1fr 96px;gap:10px;align-items:end;margin-top:4px">`+
+        `<div><label>Gráfico · ticker</label><input class="h_gt" value="${esc(g.ticker||"")}" placeholder="AAPL"></div>`+
+        `<div><label>Gráfico · nombre</label><input class="h_gn" value="${esc(g.nombre||"")}" placeholder="Apple Inc."></div>`+
+        `<div><label>Periodo</label><select class="h_gp">${opt(g.periodo)}</select></div>`+
+      `</div></div>`;
   });
   html+=`<div class="acc"><button class="btn btn-oro" onclick="guardarEdicion()">💾 Guardar cambios</button>`+
         `<button class="btn btn-fant" onclick="toggleEditor()">Cancelar</button></div></div>`;
@@ -318,13 +323,14 @@ function toggleEditor(){
 
 async function guardarEdicion(){
   const r=(EDICION&&EDICION.redactado)||{};
-  const historias=[...document.querySelectorAll('#editorZona .hgroup[data-h]')].map(g=>({
-    emoji:g.querySelector('.h_emoji').value, titular:g.querySelector('.h_tit').value, cuerpo:g.querySelector('.h_cuerpo').value}));
-  const redactado={
-    ...r,
-    buenos_dias:$("#e_bd").value,
-    historia_estrella:{...(r.historia_estrella||{}),emoji:$("#e_est_emoji").value,titular:$("#e_est_tit").value,cuerpo:$("#e_est_cuerpo").value},
-    historias};
+  const historias=[...document.querySelectorAll('#editorZona .hgroup[data-h]')].map(g=>{
+    const tk=g.querySelector('.h_gt').value.trim();
+    const grafico=tk?{ticker:tk,nombre:g.querySelector('.h_gn').value.trim(),periodo:g.querySelector('.h_gp').value,moneda:'$'}:null;
+    return {kicker:g.querySelector('.h_kicker').value, emoji:g.querySelector('.h_emoji').value,
+      titular:g.querySelector('.h_tit').value, dek:g.querySelector('.h_dek').value,
+      cuerpo:g.querySelector('.h_cuerpo').value, bottom_line:g.querySelector('.h_bl').value, grafico};
+  });
+  const redactado={ ...r, buenos_dias:$("#e_bd").value, historias };
   toast("Guardando y re-armando el correo…");
   const res=await api("/api/panel/edicion/"+EDICION.fecha+"/editar","POST",{redactado});
   if(res&&res.ok){

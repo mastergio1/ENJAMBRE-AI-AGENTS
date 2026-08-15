@@ -408,6 +408,90 @@ def _bloque_analisis(brief: dict | None) -> str:
   </td></tr>"""
 
 
+def _tabla_semana(foto: list[dict]) -> str:
+    """'La semana en números': el movimiento SEMANAL del telón (índices, petróleo,
+    oro), una sola columna con su píldora verde/roja. '' si no hay datos."""
+    if not foto:
+        return ""
+    filas = ""
+    for f in foto:
+        filas += f"""<tr>
+          <td style="padding:7px 0;border-top:1px solid {LINEA};color:{TEXTO};font-size:14px;font-weight:600;">{_esc(str(f.get("nombre","")))}</td>
+          <td align="right" style="padding:7px 0;border-top:1px solid {LINEA};">{_pildora(f.get("var_semana_pct"))}</td>
+        </tr>"""
+    return f"""
+  <tr><td style="padding:14px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;margin-bottom:4px;">La semana en números</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{filas}</table>
+  </td></tr>"""
+
+
+def _bloque_tema(t: dict) -> str:
+    """Un tema de la semana: etiqueta, titular, análisis, gráfico opcional y 'qué
+    observar'. Todo escapado + filtrado CMF."""
+    if not isinstance(t, dict):
+        return ""
+    kicker = _limpiar(str(t.get("kicker", "") or ""))
+    emoji = _esc(str(t.get("emoji", "") or ""))
+    titular = _limpiar(str(t.get("titular", "") or ""))
+    analisis = _parrafos(str(t.get("analisis", "") or ""))
+    observar = _limpiar(str(t.get("que_observar", "") or ""))
+    if not titular or not analisis:
+        return ""
+    kicker_html = (f'<div style="font-size:11px;letter-spacing:1.5px;color:{TEAL};'
+                   f'text-transform:uppercase;font-weight:700;margin-bottom:4px;">{kicker}</div>'
+                   if kicker and kicker != "—" else "")
+    obs_html = (f'<div style="margin:12px 0 2px;padding:10px 14px;background:{PAPEL};'
+                f'border-left:3px solid {ORO};border-radius:6px;color:{TEXTO_2};font-size:13px;">'
+                f'<b style="color:{TEXTO};">Qué observar:</b> {observar}</div>'
+                if observar and observar != "—" else "")
+    return f"""
+  <tr><td style="padding:20px 32px 2px;border-top:1px solid {LINEA};">
+    {kicker_html}
+    <div style="font-family:Georgia,serif;font-size:21px;font-weight:bold;color:{TEXTO};line-height:1.28;">{emoji} {titular}</div>
+  </td></tr>
+  {_grafico_img(t.get("grafico"))}
+  <tr><td style="padding:8px 32px 2px;">
+    {analisis}
+    {obs_html}
+  </td></tr>"""
+
+
+def _bloque_resumen(brief: dict | None) -> str:
+    """La EDICIÓN DEL SÁBADO: el resumen de la semana con punto de vista. Intro +
+    'la semana en números' + los temas (qué pasó, por qué, qué observar) + cierre.
+    '' si no hay resumen redactado (entonces el correo usa lo normal)."""
+    brief = brief or {}
+    red = brief.get("resumen_redactado")
+    hechos = brief.get("resumen") or {}
+    if not isinstance(red, dict) or not (red.get("temas") or red.get("intro")):
+        return ""
+    titulo = _limpiar(str(hechos.get("titulo", "El Pulso de la semana")))
+    intro = _parrafos(str(red.get("intro", "") or ""))
+    cierre = _parrafos(str(red.get("cierre", "") or ""))
+    temas_html = "".join(_bloque_tema(t) for t in (red.get("temas") or []))
+    intro_html = (f'<tr><td style="padding:8px 32px 2px;">{intro}</td></tr>' if intro else "")
+    cierre_html = (f'<tr><td style="padding:10px 32px 2px;">{cierre}</td></tr>' if cierre else "")
+    return f"""
+  <tr><td style="padding:22px 32px 4px;text-align:center;border-top:1px solid {LINEA};">
+    <div style="font-size:11px;letter-spacing:3px;color:{ORO};text-transform:uppercase;font-weight:700;">◆ Edición de fin de semana</div>
+    <div style="font-family:Georgia,serif;font-size:24px;color:{TEXTO};font-weight:bold;margin-top:6px;">{titulo}</div>
+    <div style="font-size:11px;letter-spacing:1px;color:{TEAL};text-transform:uppercase;font-weight:700;margin-top:4px;">Repaso de la semana</div>
+  </td></tr>
+  {_tabla_semana(hechos.get("foto") or [])}
+  {intro_html}
+  {temas_html}
+  {cierre_html}
+  <tr><td style="padding:2px 32px 8px;">
+    <div style="color:{MUTE};font-size:12px;font-style:italic;line-height:1.5;">No es asesoría de inversión: es nuestra lectura de lo que movió al mercado esta semana.</div>
+  </td></tr>"""
+
+
+def asunto_resumen(hechos: dict | None = None) -> str:
+    """El asunto de la edición del sábado."""
+    return "🐝 El Pulso — La semana en el mercado"
+
+
 def _footer_enjambre() -> str:
     """El Enjambre al pie, como herramienta HERMANA (no como autor de El Pulso):
     una invitación a probarlo + su descripción. Nada de 'esto lo escribe el
@@ -435,10 +519,12 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
     red = brief.get("redactado") or {}
     url_baja = f"{BASE_API}/api/baja/{token_baja}"
 
-    # EDICIÓN DE FIN DE SEMANA: si hay un deep-dive redactado, ES el correo
-    # (reemplaza las noticias del día; el fin de semana no hay sesión).
-    analisis_html = _bloque_analisis(brief)
-    es_finde = bool(analisis_html)
+    # EDICIÓN DE FIN DE SEMANA: si hay resumen de la semana (sábado) o deep-dive
+    # (domingo) redactado, ESE es el correo (reemplaza las noticias del día).
+    resumen_html = _bloque_resumen(brief)
+    analisis_html = "" if resumen_html else _bloque_analisis(brief)
+    finde_html = resumen_html or analisis_html
+    es_finde = bool(finde_html)
 
     historias = [] if es_finde else [h for h in (red.get("historias") or []) if isinstance(h, dict)]
     historias_html = "".join(_bloque_historia(h) for h in historias)
@@ -476,7 +562,7 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
   </td></tr>
   {tabla_html}
   {buenos_html}
-  {analisis_html}
+  {finde_html}
   {historias_html}
   {cuerpo_respaldo}
   {_footer_enjambre()}

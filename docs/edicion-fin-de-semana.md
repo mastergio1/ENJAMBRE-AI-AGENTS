@@ -1,10 +1,15 @@
-# La edición de fin de semana de El Pulso
+# Las ediciones de fin de semana de El Pulso
 
-> La lectura pausada del sábado. Entre semana El Pulso cuenta las noticias del
-> día; el fin de semana cambia de marcha y hace **un análisis a fondo de un solo
-> protagonista**.
+> Entre semana El Pulso cuenta las noticias del día. El fin de semana cambia de
+> marcha, con **dos ediciones distintas**:
+>
+> - **Sábado — el resumen de la semana:** los grandes temas con punto de vista
+>   (qué pasó, por qué, la geopolítica y la macro, y qué observar). Ver
+>   `resumen_semanal.py`.
+> - **Domingo — el deep-dive:** un análisis a fondo de una empresa mediana/pequeña
+>   o un sector. Es lo que documenta el resto de este archivo.
 
-## Qué es
+## El deep-dive del domingo — qué es
 
 Dos formatos que se **turnan solos** semana a semana (par/impar de la semana del
 calendario, así es reproducible):
@@ -62,13 +67,27 @@ correo lleva el disclaimer oficial.
 - `engine/contenido/pipeline.py::ritual_matutino` — detecta que es fin de semana
   (hora local del lector) y arma el deep-dive en vez de la edición diaria.
 
+## El resumen del sábado
+
+`resumen_semanal.py` arma los hechos: los **temas de la semana** (los titulares que
+el motor destacó en los últimos 7 días, deduplicados) y **la semana en números**
+(el movimiento semanal de índices y materias primas, desde Yahoo).
+`redaccion_ia.redactar_resumen` (con `PROMPT_RESUMEN`) le pone voz: intro con el
+ánimo de la semana, 3-5 temas (qué pasó → por qué → conexión macro/geopolítica →
+**qué observar**) y un cierre. Marco CMF idéntico: **punto de vista sobre lo que ya
+pasó SÍ; predicción JAMÁS** — mirar adelante es siempre "qué observar", nunca "qué
+va a pasar". `boletin._bloque_resumen` lo dibuja.
+
 ## Cuándo se envía
 
-El cron (`.github/workflows/ritual-diario.yml`) corre **de lunes a sábado** a las
-6:00 de Chile. De lunes a viernes arma la edición diaria; el **sábado** arma la
-edición de fin de semana. Como todas las ediciones, queda **pendiente de la
-revisión de Giorgio** (correo de revisión + panel) antes de salir a los
-suscriptores.
+El cron (`.github/workflows/ritual-diario.yml`) corre **todos los días** a las 6:00
+de Chile:
+- **Lunes a viernes:** la edición diaria (noticias + gráficos).
+- **Sábado:** el resumen de la semana.
+- **Domingo:** el deep-dive.
+
+Como todas las ediciones, cada una queda **pendiente de la revisión de Giorgio**
+(correo de revisión + panel) antes de salir a los suscriptores.
 
 ## En el panel
 

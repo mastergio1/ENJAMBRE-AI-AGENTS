@@ -170,9 +170,9 @@ def test_ritual_matutino_arma_todo_sin_enviar(monkeypatch):
     assert avisos and "El Pulso" in avisos[0]   # paso 8: avisó a Giorgio
 
 
-def test_ritual_de_fin_de_semana_arma_el_deep_dive(monkeypatch):
-    """El sábado el ritual NO simula noticias: arma la edición de fin de semana
-    (deep-dive de una mid-cap/sector) y la deja pendiente de revisión."""
+def test_ritual_de_domingo_arma_el_deep_dive(monkeypatch):
+    """El domingo el ritual NO simula noticias: arma el deep-dive de una
+    mid/small-cap o sector y lo deja pendiente de revisión."""
     from contenido import analisis_semanal, notificar, redaccion_ia
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
 
@@ -193,9 +193,9 @@ def test_ritual_de_fin_de_semana_arma_el_deep_dive(monkeypatch):
     monkeypatch.setattr(analisis_semanal, "preparar_analisis", lambda **k: hechos)
     monkeypatch.setattr(redaccion_ia, "redactar_analisis", lambda *a, **k: redactado)
 
-    finde = {"dia_semana": "sábado", "fecha": "15 de agosto de 2026",
-             "momento": "mañana", "es_finde": True}
-    resultado = pipeline.ritual_matutino(enviar=False, cuando=finde)
+    domingo = {"dia_semana": "domingo", "weekday": 6, "fecha": "16 de agosto de 2026",
+               "momento": "mañana", "es_finde": True}
+    resultado = pipeline.ritual_matutino(enviar=False, cuando=domingo)
 
     assert resultado["edicion"] == "finde"
     assert resultado["estado"] == "pendiente"
@@ -203,6 +203,36 @@ def test_ritual_de_fin_de_semana_arma_el_deep_dive(monkeypatch):
     html = resultado["html_preview"]
     assert "Edición de fin de semana" in html
     assert "Qué es" in html and "Lo que ven nuestros inversionistas IA" in html
+    assert DISCLAIMER in html
+
+
+def test_ritual_de_sabado_arma_el_resumen(monkeypatch):
+    """El sábado el ritual arma el RESUMEN DE LA SEMANA (no el deep-dive) y lo
+    deja pendiente de revisión."""
+    from contenido import notificar, redaccion_ia, resumen_semanal
+    monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
+
+    hechos = {"titulo": "El Pulso de la semana",
+              "titulares": [{"titular": "La Fed sube el tono", "fecha": "2026-08-14"}],
+              "foto": [{"simbolo": "^GSPC", "nombre": "S&P 500", "var_semana_pct": 1.8}]}
+    redactado = {"intro": "Semana de nervios.",
+                 "temas": [{"kicker": "Macro", "emoji": "🏦", "titular": "La Fed marcó el tono",
+                            "analisis": "Subió el tono.\n\nCautela.",
+                            "que_observar": "Habrá que ver la próxima acta.", "grafico": None}],
+                 "cierre": "Una semana para respirar."}
+    monkeypatch.setattr(resumen_semanal, "preparar_resumen", lambda *a, **k: hechos)
+    monkeypatch.setattr(redaccion_ia, "redactar_resumen", lambda *a, **k: redactado)
+
+    sabado = {"dia_semana": "sábado", "weekday": 5, "fecha": "15 de agosto de 2026",
+              "momento": "mañana", "es_finde": True}
+    resultado = pipeline.ritual_matutino(enviar=False, cuando=sabado)
+
+    assert resultado["edicion"] == "resumen"
+    assert resultado["estado"] == "pendiente"
+    assert resultado["publicadas"] == []
+    html = resultado["html_preview"]
+    assert "El Pulso de la semana" in html and "La semana en números" in html
+    assert "La Fed marcó el tono" in html
     assert DISCLAIMER in html
 
 

@@ -56,6 +56,7 @@ def contexto_temporal(ahora: datetime | None = None) -> dict:
     t = _ahora_local(ahora)
     return {
         "dia_semana": _DIAS[t.weekday()],
+        "weekday": t.weekday(),                 # 0=lunes … 5=sábado, 6=domingo
         "fecha": f"{t.day} de {_MESES[t.month - 1]} de {t.year}",
         "momento": _momento(t.hour),
         "es_finde": t.weekday() >= 5,
@@ -515,5 +516,160 @@ def redactar_analisis(analisis: dict, cuando: dict | None = None) -> dict | None
         )
         datos = _extraer_json(respuesta.content[0].text)
         return _validar_analisis(datos) if datos else None
+    except Exception:
+        return None
+
+
+# ══════════════════════════════════════════════════════════════════════════
+#  EL RESUMEN DE LA SEMANA — la edición del sábado
+# ══════════════════════════════════════════════════════════════════════════
+# Mira la semana entera con punto de vista: los grandes temas, el porqué de cada
+# cosa, cómo la geopolítica y la macro movieron el mercado, y QUÉ OBSERVAR de
+# aquí en adelante (atención, jamás predicción). Ver resumen_semanal.py.
+
+PROMPT_RESUMEN = """\
+Eres el redactor jefe de EL PULSO (by Rubicón Lab). Es SÁBADO: sale la edición de
+FIN DE SEMANA que mira la SEMANA ENTERA. No cuentas el día: haces un RESUMEN con
+PUNTO DE VISTA de lo que movió el mercado esta semana. Piensa en la carta de fin
+de semana de un buen medio: ameno, agudo, que conecta los puntos.
+
+TU TRABAJO
+De los TEMAS de la semana que te doy (titulares que de verdad importaron) y de la
+FOTO SEMANAL del mercado (cuánto se movió cada índice/materia prima), arma un
+repaso que EXPLIQUE: qué pasó, POR QUÉ pasó, y cómo se conecta con lo macro y lo
+geopolítico (tasas, la Fed, el petróleo, conflictos, elecciones). El valor está
+en el porqué y en las conexiones, no en repetir titulares.
+
+CÓMO ESCRIBES (tu voz)
+- Cálido y filoso, cercano, con humor seco sobre los hechos (nunca sobre el lector).
+- Español neutro (Chile/LatAm). Si usas un término técnico, lo explicas ahí mismo
+  con una analogía cotidiana.
+- Extenso donde importa: cada tema son 2-4 párrafos de análisis real.
+
+LA ESTRUCTURA
+1. INTRO — 2-3 párrafos con el ÁNIMO de la semana (¿de miedo?, ¿de euforia?, ¿de
+   espera?) y el hilo que la conecta.
+2. LOS TEMAS — elige los 3-5 que más marcaron la semana. Cada uno: QUÉ pasó, POR
+   QUÉ importó, LA CONEXIÓN (macro/geopolítica), y cierra con QUÉ OBSERVAR.
+3. CIERRE — 1 párrafo que remata la semana.
+
+LO QUE NUNCA HACES — REGLAS DE ORO (INNEGOCIABLES)
+A. Candado CMF (regulación chilena) — TU LÍNEA:
+- NUNCA recomiendas comprar, vender ni mantener. Prohibidas: "conviene", "es buen
+  momento", "oportunidad de compra", "deberías", "apunta a", "precio objetivo".
+- NUNCA PREDICES el futuro. Cuentas lo que YA pasó y POR QUÉ. Cuando mires hacia
+  adelante, es "QUÉ OBSERVAR / qué está en juego / habrá que ver si…", jamás
+  "qué va a pasar", "subirá", "caerá", "esperamos que". Punto de vista sobre lo
+  ocurrido: SÍ. Adivinar el futuro: JAMÁS.
+B. Integridad de datos:
+- Los TÍTULARES, NÚMEROS y FECHAS vienen dados. Cópialos TEXTUALES. La única cifra
+  es la variación semanal que te doy; no inventes otras. Si un dato no está, no lo
+  mencionas. Los titulares se citan como CONTEXTO, no como causa confirmada.
+
+NO menciones "el enjambre" ni simulaciones: El Pulso es un diario serio. (El
+Enjambre se promociona aparte, al pie del correo.)
+
+EL GRÁFICO (opcional por tema)
+Si un tema gira en torno a un índice o materia prima con ticker claro entre los
+datos (S&P 500 = ^GSPC, Nasdaq = ^IXIC, Petróleo = CL=F, Oro = GC=F), puedes pedir
+su gráfico en "grafico" con ese ticker (textual) y "periodo": "semana". Si no, deja
+"grafico": null.
+
+QUÉ DEVUELVES: SOLO un objeto JSON válido, sin texto alrededor, con esta forma:
+{
+  "intro": "2-3 párrafos separados por \\n\\n: el ánimo de la semana",
+  "temas": [
+    {
+      "kicker": "etiqueta corta, ej: 'Geopolítica · petróleo', 'Macro · la Fed'",
+      "emoji": "un emoji que resuma el tema",
+      "titular": "el tema en tu voz, con gancho",
+      "analisis": "2-4 párrafos separados por \\n\\n: qué pasó + por qué + la conexión",
+      "que_observar": "1 frase de atención (no predicción)",
+      "grafico": {"ticker": "CL=F", "nombre": "Petróleo WTI", "periodo": "semana", "moneda": "$"}
+    }
+  ],
+  "cierre": "1 párrafo que remata la semana"
+}
+Devuelve 3-5 temas. Escribe SIEMPRE en español. Prioriza el porqué y las conexiones."""
+
+
+def _mensaje_resumen(resumen: dict, cuando: dict | None = None) -> str:
+    """Serializa los hechos de la semana para el redactor: los temas (titulares
+    destacados) y la foto semanal del mercado. Solo hechos verificados."""
+    cuando = cuando or contexto_temporal()
+    lineas = [
+        f'HOY es {cuando["dia_semana"]} {cuando["fecha"]} (edición de fin de semana: '
+        f'repaso de la SEMANA, sin sesión de mercado hoy).',
+        "Saluda acorde y usa esta fecha; NO inventes otra.\n",
+    ]
+    foto = resumen.get("foto") or []
+    if foto:
+        lineas.append("LA SEMANA EN NÚMEROS (variación de la semana; cópiala textual):")
+        for f in foto:
+            lineas.append(f'- {f.get("nombre","")} [{f.get("simbolo","")}]: {f.get("var_semana_pct")}%')
+        lineas.append("")
+    titulares = resumen.get("titulares") or []
+    if titulares:
+        lineas.append("LOS TEMAS DE LA SEMANA (titulares que importaron; elige y desarrolla los "
+                      "que más la marcaron, explica el POR QUÉ y la conexión macro/geopolítica):")
+        for t in titulares:
+            lineas.append(f'- ({t.get("fecha","")}) «{t.get("titular","")}»')
+        lineas.append("")
+    lineas.append("Recuerda: punto de vista sobre lo que YA pasó y su porqué, SÍ; predecir el "
+                  "futuro, JAMÁS. Mirar adelante = 'qué observar', nunca 'qué va a pasar'.")
+    return "\n".join(lineas)
+
+
+def _sanear_tema(t: dict) -> dict | None:
+    """Un tema de la semana: titular + análisis publicables (CMF). None si no."""
+    if not isinstance(t, dict):
+        return None
+    titular = str(t.get("titular", "")).strip()
+    analisis = _cmf(t.get("analisis", ""))
+    if not titular or not es_publicable(titular) or not analisis:
+        return None
+    return {
+        "kicker": _texto_cmf(t.get("kicker"))[:60],
+        "emoji": str(t.get("emoji", "") or "").strip()[:4],
+        "titular": titular[:160],
+        "analisis": analisis,
+        "que_observar": _texto_cmf(t.get("que_observar"))[:280],
+        "grafico": _grafico_valido(t.get("grafico")),
+    }
+
+
+def _validar_resumen(datos: dict) -> dict | None:
+    """Valida la forma del resumen y pasa TODO por el filtro CMF. None si no queda
+    ni intro ni temas."""
+    if not isinstance(datos, dict):
+        return None
+    intro = _cmf(datos.get("intro", ""))
+    temas = [s for s in (_sanear_tema(t) for t in (datos.get("temas") or [])
+                         if isinstance(t, dict)) if s]
+    if not temas and not intro:
+        return None
+    return {"intro": intro or "", "temas": temas[:5], "cierre": _cmf(datos.get("cierre", "")) or ""}
+
+
+def redactar_resumen(resumen: dict, cuando: dict | None = None) -> dict | None:
+    """Le pone VOZ al resumen de la semana: {intro, temas[], cierre}. None si no
+    se puede (sin clave, API caída, JSON roto, todo filtrado por CMF) — el correo
+    cae a su respaldo. NUNCA lanza."""
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return None
+    if not resumen or not resumen.get("titulares"):
+        return None
+    try:
+        import anthropic
+
+        cliente = anthropic.Anthropic(timeout=TIMEOUT_SEGUNDOS)
+        respuesta = cliente.messages.create(
+            model=MODELO,
+            max_tokens=MAX_TOKENS,
+            system=PROMPT_RESUMEN,
+            messages=[{"role": "user", "content": _mensaje_resumen(resumen, cuando=cuando)}],
+        )
+        datos = _extraer_json(respuesta.content[0].text)
+        return _validar_resumen(datos) if datos else None
     except Exception:
         return None

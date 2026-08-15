@@ -143,7 +143,26 @@
     {"ticker": "NXT", "nombre": "Nextracker", "banda": "15-30B", "sector": "Energía solar / equipos", "tema": "Solar",
      "contexto": "Nextracker fabrica los 'seguidores solares', las estructuras que mueven los paneles para que apunten al sol durante el día y produzcan más. Es líder de ese nicho dentro del negocio solar a gran escala."},
     {"ticker": "SHLS", "nombre": "Shoals Technologies", "banda": "1-15B", "sector": "Energía solar / equipos", "tema": "Solar",
-     "contexto": "Shoals fabrica los componentes eléctricos que conectan y hacen funcionar las grandes plantas solares. Es un proveedor 'de picos y palas' del boom solar, más que un instalador."}
+     "contexto": "Shoals fabrica los componentes eléctricos que conectan y hacen funcionar las grandes plantas solares. Es un proveedor 'de picos y palas' del boom solar, más que un instalador."},
+
+    {"ticker": "BLZE", "nombre": "Backblaze", "banda": "1-15B", "sector": "Almacenamiento en la nube", "tema": "Nube",
+     "contexto": "Backblaze ofrece guardar y respaldar datos en la nube a bajo costo, compitiendo con los gigantes (Amazon, Google) por precio. Es de las más chicas y puras del tema: su negocio es, literalmente, almacenamiento en la nube."},
+    {"ticker": "CVLT", "nombre": "Commvault Systems", "banda": "1-15B", "sector": "Nube / respaldo de datos", "tema": "Nube",
+     "contexto": "Commvault hace software para respaldar y proteger los datos de las empresas, cada vez más en la nube y contra el ransomware. Su tema de fondo: cuando todo vive en la nube, protegerlo se vuelve crítico."},
+    {"ticker": "FSLY", "nombre": "Fastly", "banda": "1-15B", "sector": "Nube / entrega de contenido", "tema": "Nube",
+     "contexto": "Fastly hace que las webs y apps carguen rápido y seguras acercando los datos al usuario (una 'red de entrega de contenido' con cómputo en el borde). Su reto es crecer frente a rivales más grandes como Cloudflare."},
+    {"ticker": "ESTC", "nombre": "Elastic", "banda": "1-15B", "sector": "Nube / búsqueda de datos", "tema": "Nube",
+     "contexto": "Elastic hace el motor (Elasticsearch) con que las empresas buscan dentro de sus propios datos y vigilan sus sistemas, ofrecido como servicio en la nube. Últimamente se subió a la ola de la IA para buscar mejor."},
+    {"ticker": "NTNX", "nombre": "Nutanix", "banda": "15-30B", "sector": "Nube / infraestructura", "tema": "Nube",
+     "contexto": "Nutanix hace software que ayuda a las empresas a manejar sus datos y aplicaciones entre su propio centro de datos y varias nubes a la vez (nube híbrida). Ya es un negocio de suscripción rentable y en crecimiento."},
+    {"ticker": "AKAM", "nombre": "Akamai Technologies", "banda": "15-30B", "sector": "Nube / entrega y seguridad", "tema": "Nube",
+     "contexto": "Akamai fue pionera en repartir el contenido de internet por el mundo (CDN) para que cargue rápido; hoy combina eso con ciberseguridad y nube. Es la cara grande y establecida del rubro, buscando reinventarse."},
+    {"ticker": "RXT", "nombre": "Rackspace Technology", "banda": "1-15B", "sector": "Nube gestionada", "tema": "Nube",
+     "contexto": "Rackspace opera la nube POR otras empresas: las ayuda a funcionar sobre Amazon, Microsoft o Google. Es una compañía en plena transición y bastante endeudada; su historia es la de reordenarse y volver a crecer."},
+    {"ticker": "WIX", "nombre": "Wix.com", "banda": "1-15B", "sector": "Nube / creación de sitios web", "tema": "Nube",
+     "contexto": "Wix es una plataforma en la nube para crear y alojar sitios web sin saber programar, apuntada a pequeños negocios y creadores. Gana por suscripción y crece sumando herramientas (tienda online, reservas, pagos)."},
+    {"ticker": "GDDY", "nombre": "GoDaddy", "banda": "1-15B", "sector": "Nube / dominios y hosting", "tema": "Nube",
+     "contexto": "GoDaddy es el mayor registrador de dominios del mundo: vende el nombre '.com', el alojamiento y las herramientas para que un pequeño negocio esté online. Negocio grande, estable y muy generador de caja."}
   ],
   "sectores": [
     {"nombre": "Energía", "etf": "XLE", "en_rotacion_por": "petróleo, geopolítica, inflación",

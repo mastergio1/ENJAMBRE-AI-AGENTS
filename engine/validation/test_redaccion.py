@@ -162,8 +162,10 @@ def test_correo_con_brief_es_cmf_limpio_y_lleva_disclaimer():
                            {"arquetipo": "institucional_frio", "senal": 0.1, "frase": "Sin impacto."}],
     }]
     html = boletin.construir_html(destacadas, "domingo 12 de julio", brief=brief)
-    assert "Lo que pasó" in html                       # el bloque de 'movers' con su cita
-    assert "Qué observa el enjambre hoy" in html
+    # sin redactado (fallback): al menos el digest 'Lo que pasó' de los movers
+    assert "Lo que pasó" in html
+    # El Enjambre baja al pie como herramienta hermana (rediseño)
+    assert "También de Rubicón Lab" in html and "Probar El Enjambre" in html
     assert DISCLAIMER in html
     assert verificar_pieza(html) == []  # sin vocabulario prohibido, con disclaimer
 

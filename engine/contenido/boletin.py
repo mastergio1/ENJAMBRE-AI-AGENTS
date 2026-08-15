@@ -175,67 +175,114 @@ def _bloque_observa(brief: dict | None) -> str:
     {filas}</td></tr>"""
 
 
+def _grafico_img(g: dict | None) -> str:
+    """El <img> del gráfico de precio REAL de un activo, si la historia trae uno.
+    Apunta al endpoint /api/grafico, que lo dibuja desde Yahoo. Si el ticker es
+    inválido, no se pone gráfico (nunca rompe el correo)."""
+    if not isinstance(g, dict) or not g.get("ticker"):
+        return ""
+    from urllib.parse import quote
+    ticker = str(g.get("ticker", "")).strip()
+    if not ticker or len(ticker) > 15 or not all(c.isalnum() or c in ".=^-" for c in ticker):
+        return ""
+    periodo = str(g.get("periodo", "semana")).strip() or "semana"
+    nombre = str(g.get("nombre", "") or ticker)[:40]
+    moneda = str(g.get("moneda", "$") or "$")[:2]
+    url = (f"{BASE_API}/api/grafico/{quote(ticker, safe='.=^-')}"
+           f"?n={quote(nombre)}&p={quote(periodo)}&m={quote(moneda)}")
+    return f"""
+  <tr><td style="padding:8px 32px 2px;">
+    <img src="{url}" width="536" alt="Gráfico de {_esc(nombre)}"
+      style="width:100%;max-width:536px;display:block;border:1px solid {LINEA};border-radius:8px;">
+  </td></tr>"""
+
+
+def _sin_prefijo_linea(texto: str) -> str:
+    """Quita un 'En una línea:' inicial si el redactor lo incluyó (lo pone la plantilla)."""
+    t = texto.strip()
+    bajo = t.lower()
+    for p in ("en una línea:", "en una linea:", "en resumen:", "bottom line:"):
+        if bajo.startswith(p):
+            return t[len(p):].strip()
+    return t
+
+
+def _bloque_historia(h: dict) -> str:
+    """Una historia del día: etiqueta, titular, bajada, gráfico real, análisis
+    y el 'en una línea' de cierre. Todo escapado (los titulares y el texto de la
+    IA no pueden inyectar HTML) y filtrado por CMF vía _limpiar."""
+    if not isinstance(h, dict):
+        return ""
+    kicker = _limpiar(str(h.get("kicker", "") or ""))
+    emoji = _esc(str(h.get("emoji", "") or ""))
+    titular = _limpiar(str(h.get("titular", "") or ""))
+    dek = _limpiar(str(h.get("dek", "") or ""))
+    cuerpo = _parrafos(str(h.get("cuerpo", "") or ""))
+    bl = _limpiar(_sin_prefijo_linea(str(h.get("bottom_line", "") or "")))
+    if not titular or not cuerpo:
+        return ""
+    kicker_html = (f'<div style="font-size:11px;letter-spacing:1.5px;color:{TEAL};'
+                   f'text-transform:uppercase;font-weight:700;margin-bottom:4px;">{kicker}</div>'
+                   if kicker and kicker != "—" else "")
+    dek_html = (f'<div style="font-family:Georgia,serif;font-style:italic;color:{MUTE};'
+                f'font-size:14px;margin:3px 0 10px;">{dek}</div>' if dek and dek != "—" else "")
+    bl_html = (f'<div style="margin:15px 0 2px;padding:12px 16px;background:{PAPEL};'
+               f'border-left:3px solid {ORO};border-radius:6px;color:{TEXTO_2};font-size:14px;">'
+               f'<b style="color:{TEXTO};">En una línea:</b> {bl}</div>' if bl and bl != "—" else "")
+    return f"""
+  <tr><td style="padding:22px 32px 2px;border-top:1px solid {LINEA};">
+    {kicker_html}
+    <div style="font-family:Georgia,serif;font-size:22px;font-weight:bold;color:{TEXTO};line-height:1.25;">{emoji} {titular}</div>
+    {dek_html}
+  </td></tr>
+  {_grafico_img(h.get("grafico"))}
+  <tr><td style="padding:8px 32px 2px;">
+    {cuerpo}
+    {bl_html}
+  </td></tr>"""
+
+
+def _footer_enjambre() -> str:
+    """El Enjambre al pie, como herramienta HERMANA (no como autor de El Pulso):
+    una invitación a probarlo + su descripción. Nada de 'esto lo escribe el
+    enjambre' — El Pulso es el diario serio; El Enjambre, otra herramienta nuestra."""
+    return f"""
+  <tr><td style="padding:10px 32px 24px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#171019;border-radius:12px;">
+      <tr><td style="padding:20px 22px;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e3c565;font-weight:700;">🐝 También de Rubicón Lab</div>
+        <div style="font-family:Georgia,serif;font-size:18px;color:#ffffff;font-weight:bold;margin:6px 0;">Mira al mercado entrar en pánico, en cámara lenta</div>
+        <div style="color:#c7bfb2;font-size:13px;line-height:1.55;margin-bottom:14px;">El Enjambre es nuestra herramienta educativa: le sueltas un titular y 10.000 inversionistas simulados con IA reaccionan en vivo, en 3D. Ves formarse la manada, el miedo y la euforia — el comportamiento de las masas del mercado, hecho visible.</div>
+        <a href="{BASE_WEB}" style="display:inline-block;background:#e3c565;color:#1b1410;text-decoration:none;font-weight:bold;font-size:12px;letter-spacing:.5px;padding:11px 20px;border-radius:7px;">Probar El Enjambre →</a>
+      </td></tr>
+    </table>
+  </td></tr>"""
+
+
 def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN",
                    brief: dict | None = None) -> str:
-    """El HTML del correo (paleta clara). destacadas: [{titular, sim_id, resumen, lideres}].
-    brief (opcional): el análisis de mercado de La Redacción."""
-    if not destacadas:
-        raise ValueError("no hay simulaciones destacadas para el Pulso")
-
-    principal = destacadas[0]
-    resumen = principal["resumen"]
-    direccion = resumen.get("direccion_pct", 0) or 0
-    agitacion = resumen.get("agitacion") or "medio"
-
-    frases = sorted(principal.get("lideres_frases", []), key=lambda f: f.get("senal", 0))
-    voces = [frases[0], frases[-1]] if len(frases) >= 2 else []
-
-    url_sim = f"{BASE_WEB}/?sim={principal['sim_id']}"
-    url_img = f"{BASE_API}/api/simulacion/{principal['sim_id']}/imagen"
+    """El HTML del correo (rediseño estilo diario): las NOTICIAS con análisis y
+    gráficos reales son el cuerpo; El Enjambre baja al pie como herramienta
+    hermana. `destacadas` ya no arma el cuerpo (el correo es noticioso), pero se
+    mantiene la firma por compatibilidad. brief["redactado"] trae las historias."""
+    brief = brief or {}
+    red = brief.get("redactado") or {}
     url_baja = f"{BASE_API}/api/baja/{token_baja}"
 
-    otras = "".join(
-        f"""<tr><td style="padding:6px 0;color:{TEXTO_2};font-size:14px;border-top:1px solid {LINEA};">
-        · {_limpiar(d['titular'])} &nbsp;<span style="color:{COLOR_DIR(d['resumen'].get('direccion_pct', 0) or 0)};font-weight:bold;">{_flecha(d['resumen'].get('direccion_pct', 0) or 0)}</span>
-        &nbsp;<a href="{BASE_WEB}/?sim={d['sim_id']}" style="color:{TEAL};text-decoration:none;">ver</a>
-        </td></tr>"""
-        for d in destacadas[1:3]
-    )
-
-    voces_html = "".join(
-        f"""<p style="margin:8px 0;color:{TEXTO_2};font-size:15px;font-style:italic;line-height:1.4;">
-        {_voz(v)}</p>"""
-        for v in voces
-    )
-    signo = '+' if direccion > 0 else ''
-
-    # --- la VOZ del redactor de IA (si la hay); si no, la plantilla ---
-    red = (brief or {}).get("redactado") or {}
+    historias = [h for h in (red.get("historias") or []) if isinstance(h, dict)]
+    historias_html = "".join(_bloque_historia(h) for h in historias)
 
     buenos_html = ""
     if red.get("buenos_dias"):
         buenos_html = f"""
   <tr><td style="padding:22px 32px 2px;">
-    <div style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:{TEXTO};">☀️ Buenos días</div>
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;">☀️ Buenos días</div>
     {_parrafos(red["buenos_dias"])}
   </td></tr>"""
 
-    estrella = red.get("historia_estrella")
-    if estrella:
-        reaccion_titular = f'{_esc(estrella.get("emoji", ""))} {_esc(estrella["titular"])}'.strip()
-        reaccion_cuerpo = _parrafos(estrella["cuerpo"])
-    else:
-        reaccion_titular = _limpiar(principal['titular'])
-        reaccion_cuerpo = (f'<div style="color:{TEXTO_2};font-size:15px;line-height:1.5;">'
-                           'En esta simulación educativa, el enjambre de agentes reaccionó al titular '
-                           'con el comportamiento de masas que ves arriba.</div>')
-
-    historias_html = "".join(
-        f"""<tr><td style="padding:18px 32px 2px;border-top:1px solid {LINEA};">
-        <div style="font-family:Georgia,serif;font-size:20px;font-weight:bold;color:{TEXTO};line-height:1.2;">{_esc(h.get("emoji", ""))} {_esc(h["titular"])}</div>
-        {_parrafos(h["cuerpo"])}</td></tr>"""
-        for h in (red.get("historias") or [])
-    )
+    # respaldo: si la IA no escribió historias, al menos 'lo que pasó' crudo
+    # (mejor un digest simple que un correo vacío)
+    cuerpo_respaldo = _bloque_mercado(brief) if not historias else ""
 
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
@@ -247,51 +294,18 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
   style="max-width:600px;width:100%;background:{BLANCO};border:1px solid {LINEA};border-radius:8px;">
 
   <tr><td style="padding:30px 32px 20px;text-align:center;border-bottom:1px solid {LINEA};">
-    <div style="font-family:Georgia,serif;font-size:34px;font-weight:bold;color:{ORO};line-height:1;">El Enjambre 🐝</div>
-    <div style="font-size:10px;letter-spacing:3px;color:{TEAL};text-transform:uppercase;font-weight:bold;margin-top:10px;">El Pulso · Diario de mercado</div>
+    <div style="font-family:Georgia,serif;font-size:34px;font-weight:bold;color:{ORO};line-height:1;">El Pulso 🐝</div>
+    <div style="font-size:10px;letter-spacing:3px;color:{TEAL};text-transform:uppercase;font-weight:bold;margin-top:10px;">Diario de mercado</div>
     <div style="font-family:Georgia,serif;font-style:italic;font-size:16px;color:{MUTE};margin-top:4px;">{fecha}</div>
     <div style="font-size:11px;color:{MUTE};margin-top:6px;">by <b style="color:{TEXTO_2};">Rubicón Lab</b></div>
   </td></tr>
   {_tabla_mercado(brief)}
-  {_bloque_mercado(brief) if not red else ""}
   {buenos_html}
-
-  <tr><td style="padding:22px 32px 4px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">La reacción del día</div>
-  </td></tr>
-
-  <tr><td style="padding:8px 32px;">
-    <a href="{url_sim}"><img src="{url_img}" width="536" alt="El enjambre reaccionando"
-      style="width:100%;max-width:536px;display:block;border:1px solid {LINEA};border-radius:6px;"></a>
-  </td></tr>
-
-  <tr><td style="padding:8px 32px;">
-    <div style="font-family:Georgia,serif;font-size:22px;font-weight:bold;color:{TEXTO};line-height:1.25;">
-      {reaccion_titular}</div>
-    <div style="padding:8px 0;color:{MUTE};font-size:14px;">
-      <span style="color:{COLOR_DIR(direccion)};font-weight:bold;">{_flecha(direccion)} {signo}{direccion}%</span> &nbsp;·&nbsp; agitación {agitacion}</div>
-    {reaccion_cuerpo}
-  </td></tr>
-
-  <tr><td style="padding:12px 32px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">Las voces</div>
-    {voces_html}
-  </td></tr>
   {historias_html}
+  {cuerpo_respaldo}
+  {_footer_enjambre()}
 
-  {f'''<tr><td style="padding:8px 32px;">
-    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:600;">También reaccionó a</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{otras}</table>
-  </td></tr>''' if otras else ''}
-  {_bloque_observa(brief)}
-
-  <tr><td style="padding:22px 32px;text-align:center;">
-    <a href="{url_sim}" style="display:inline-block;background:{ORO};color:#ffffff;
-      text-decoration:none;font-weight:bold;font-size:13px;letter-spacing:1px;
-      text-transform:uppercase;padding:13px 28px;border-radius:4px;">Ver el enjambre en vivo →</a>
-  </td></tr>
-
-  <tr><td style="padding:16px 32px 28px;border-top:1px solid {LINEA};text-align:center;">
+  <tr><td style="padding:8px 32px 28px;border-top:1px solid {LINEA};text-align:center;">
     <div style="color:{MUTE};font-size:11px;line-height:1.5;">{DISCLAIMER}</div>
     <div style="margin-top:10px;">
       <a href="{url_baja}" style="color:{TEAL};font-size:11px;">Desuscribirse en un clic</a>

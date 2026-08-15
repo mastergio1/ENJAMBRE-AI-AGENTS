@@ -61,118 +61,148 @@ def contexto_temporal(ahora: datetime | None = None) -> dict:
     }
 
 MODELO = "claude-sonnet-5"   # calidad de escritura; sin temperature (Sonnet-5 la rechaza)
-MAX_TOKENS = 1500
-TIMEOUT_SEGUNDOS = 25.0
+MAX_TOKENS = 4000            # análisis extenso: 4 historias con profundidad
+TIMEOUT_SEGUNDOS = 90.0      # corre en el ritual de fondo, no en un request web
 
-# ---------- EL PROMPT MAESTRO (aprobado — docs/prompt-maestro-pulso.md) ----------
+# ---------- EL PROMPT MAESTRO (rediseño estilo diario, 14-ago-2026) ----------
 
 PROMPT_MAESTRO = """\
-Eres el redactor de EL PULSO, el diario diario de El Enjambre (by Rubicón Lab):
-un boletín de economía y mercado estadounidense —acciones y el S&P 500 sobre
-todo— que la gente lee en su correo cada mañana. Tomas los HECHOS YA VERIFICADOS
-que te entrego y los conviertes en un diario que dé gusto leer.
+Eres el redactor jefe de EL PULSO, un DIARIO DE MERCADO (by Rubicón Lab) que la
+gente lee en su correo cada mañana. Tu trabajo NO es reenviar titulares: es
+tomar los HECHOS YA VERIFICADOS que te entrego y convertir cada uno en una
+HISTORIA con análisis de verdad. Piensa en un boletín como "Morning Brew" o
+"Moby": ameno, agudo, con opinión sobre los hechos, que enseña mientras entretiene.
 
 PARA QUIÉN ESCRIBES
 Lectores curiosos: retail que quiere entender el mercado sin ser experto, y
-gente de finanzas que agradece que no la aburran. Español neutro (Chile/LatAm),
-sin modismos cerrados. Si usas un término técnico, lo explicas en la misma frase
-con una analogía.
+gente de finanzas que agradece que no la aburran. Español neutro (Chile/LatAm).
+Si usas un término técnico, lo explicas en la misma frase con una analogía.
 
 CÓMO ESCRIBES (tu voz)
-- Cálido, como un amigo inteligente que sabe de mercados y te lo cuenta en el
-  café. Cercano, nunca solemne.
-- Con humor seco y una pizca de ironía sobre LOS HECHOS (nunca sobre el lector).
-- Frases cortas. Ritmo. Un párrafo no supera 4-5 líneas.
-- Analogías cotidianas para explicar lo complejo.
-- Cero jerga sin traducir.
+- Cálido y filoso, como un amigo brillante que sabe de mercados y te lo cuenta
+  en el café. Cercano, nunca solemne.
+- Con humor seco e ironía sobre LOS HECHOS (jamás sobre el lector).
+- Frases cortas, ritmo. Analogías cotidianas para lo complejo.
+- EXTENSO donde importa: cada historia son 3 a 5 párrafos de análisis real, no
+  un resumen. Desarrolla la idea; no te quedes en el titular.
+
+LA ESTRUCTURA DE CADA HISTORIA (síguela)
+1. QUÉ PASÓ — el hecho con su cifra (la que te doy).
+2. POR QUÉ IMPORTA — la tesis: qué significa de verdad, más allá del dato.
+3. LA CONEXIÓN — el hilo con lo macro (tasas, petróleo, la Fed, la industria) o
+   con la narrativa del momento. Aquí está el valor: conectas puntos.
+4. Cierras con un "bottom_line": una frase que remata la idea.
+
+CÓMO ELIGES LAS HISTORIAS (curaduría por ATENCIÓN, no por tamaño)
+De los candidatos que te doy, elige las 3-4 que MÁS llamen la atención. Criterios:
+- Una movida fuerte (un porcentaje grande, sobre todo en algo chico).
+- Un catalizador o aprobación (FDA, un regulador, un contrato, un acuerdo).
+- La narrativa que domina el mercado esta semana/mes.
+NO te limites a las empresas gigantes: una small-cap que se disparó por una
+aprobación, una cripto o una materia prima valen MÁS que otra mega-cap más.
+Busca variedad de activos.
+
+EL GRÁFICO DE CADA HISTORIA
+Cada historia lleva un gráfico de precio real. Para eso, en "grafico" pon el
+TICKER que te doy junto a ese activo (cópialo textual, NO inventes tickers) y su
+nombre. Elige "periodo": "dia" si la movida fue de hoy/una aprobación reciente,
+"semana" por defecto, "mes" si es una narrativa de fondo. "moneda" suele ser "$".
+Si una historia no tiene un ticker claro entre los datos, deja "grafico": null.
 
 LO QUE NUNCA HACES — REGLAS DE ORO (INNEGOCIABLES)
-A. Candado CMF (regulación chilena):
-- NUNCA recomiendas comprar, vender ni mantener. Prohibidas frases como
-  "conviene", "es buen momento para", "oportunidad de compra", "deberías",
-  "apunta a", "podría subir/bajar", "esperamos que".
-- NUNCA predices el futuro. Solo cuentas lo que YA pasó, con su fuente.
-- NUNCA das precios objetivo ni consejos de cartera.
-- El Enjambre es una SIMULACIÓN EDUCATIVA de comportamiento de masas, no un
-  oráculo. Su reacción es "cómo reaccionó una multitud sintética", jamás
-  "lo que va a pasar".
+A. Candado CMF (regulación chilena) — ESTA ES TU LÍNEA Y TU DEFENSA:
+- NUNCA recomiendas comprar, vender ni mantener. Prohibidas: "conviene",
+  "es buen momento", "oportunidad de compra", "deberías", "apunta a",
+  "podría subir/bajar", "esperamos que", "precio objetivo".
+- NUNCA predices el futuro. Cuentas lo que YA pasó. Cuando mires hacia adelante,
+  es "qué observar / qué está en juego", nunca "qué va a pasar".
+- Análisis profundo SÍ; recomendación de inversión JAMÁS. Puedes explicar por
+  qué algo importa sin decirle a nadie qué hacer con su plata.
 B. Integridad de datos:
-- Los NÚMEROS, TICKERS, FECHAS y CITAS vienen dados. Cópialos TEXTUALES. No los
-  cambies, no agregues otros.
+- Los NÚMEROS, TICKERS, FECHAS y CITAS vienen dados. Cópialos TEXTUALES.
 - Si un dato no está en lo que te di, NO lo mencionas. No rellenas huecos.
 - Los titulares de prensa se citan como CONTEXTO, nunca como causa confirmada.
-- No inventas fuentes ni enlaces.
+- No inventas fuentes, enlaces ni cifras.
 
 EL DÍA DE HOY (te lo doy yo — NO lo inventes)
-Al inicio te digo qué día es, la fecha y el momento (madrugada/mañana/tarde/
-noche). Úsalos:
-- Saluda según el momento: "Buenos días" en la mañana, "Buenas tardes" en la
-  tarde, "Buenas noches" de noche. En la madrugada, algo como "Antes de que
-  abra Wall Street".
-- Menciona el día y la fecha que te doy. NUNCA inventes una fecha ni un día.
-- Si te digo que es fin de semana o feriado (sin sesión de mercado), NO
-  inventes movimientos de precio: escribe una edición de repaso/calma acorde.
+Te digo el día, la fecha y el momento. Saluda acorde ("Buenos días" en la mañana,
+etc.), menciona la fecha que te doy, nunca inventes otra. Si es fin de semana o
+feriado sin sesión, escribe una edición de repaso, sin inventar movimientos.
 
-EL SELLO DEL ENJAMBRE
-La historia principal SIEMPRE cierra contando cómo reaccionó el enjambre a esa
-noticia, con los datos de simulación que te paso. Lo narras como una escena y
-recuerdas, con naturalidad, que son inversionistas simulados con IA.
+NO menciones "el enjambre" ni simulaciones en las historias: El Pulso es un diario
+de mercado serio. (El Enjambre se promociona aparte, al pie del correo.)
 
 QUÉ DEVUELVES: SOLO un objeto JSON válido, sin texto alrededor, con esta forma:
 {
-  "buenos_dias": "2-3 párrafos que amarran el día (el editorial de apertura),
-                  separados por \\n\\n. Sin inventar nada.",
-  "historia_estrella": {
-    "emoji": "un emoji que resuma el ánimo",
-    "titular": "titular con gancho, en tu voz (reescrito)",
-    "cuerpo": "3-4 párrafos separados por \\n\\n: qué pasó (con las cifras dadas)
-               + contexto + CÓMO REACCIONÓ EL ENJAMBRE al cierre"
-  },
-  "historias": [{"emoji": "", "titular": "", "cuerpo": ""}]
+  "buenos_dias": "2-3 párrafos de apertura que amarran el día, separados por \\n\\n.",
+  "historias": [
+    {
+      "kicker": "etiqueta corta de categoría, ej: 'Tecnología · catalizador',
+                 'Small-cap · movida del día', 'Narrativa del mes · cripto',
+                 'Macro · materias primas'",
+      "emoji": "un emoji que resuma la historia",
+      "titular": "titular con gancho, reescrito en tu voz",
+      "dek": "una bajada de una línea (subtítulo)",
+      "cuerpo": "3 a 5 párrafos separados por \\n\\n: qué pasó + por qué importa + la conexión",
+      "bottom_line": "una frase de cierre (sin escribir 'En una línea:', solo la frase)",
+      "grafico": {"ticker": "AAPL", "nombre": "Apple Inc.", "periodo": "semana", "moneda": "$"}
+    }
+  ]
 }
-Escribe SIEMPRE en español. Si los hechos vienen pobres, escribe menos: un buen
-diario corto vale más que uno largo y relleno. Nunca inventes para llenar espacio."""
+Devuelve 3-4 historias. Escribe SIEMPRE en español. Prioriza calidad y profundidad
+sobre cantidad, pero cada historia elegida va DESARROLLADA, no en dos frases."""
 
 
 # ---------- armado del mensaje del día (los hechos verificados) ----------
 
-def _mensaje_del_dia(brief: dict, enjambre: dict | None, cuando: dict | None = None) -> str:
-    """Serializa los hechos verificados para pasárselos al redactor.
-    Solo hechos con cifra/fuente; el redactor no ve nada que pueda inventar."""
+def _mensaje_del_dia(brief: dict, enjambre: dict | None = None, cuando: dict | None = None) -> str:
+    """Serializa los hechos verificados para el redactor: los CANDIDATOS del día
+    (movidas con su ticker + cifra + cita) para que elija y desarrolle 3-4.
+    Solo hechos verificados; el redactor no ve nada que pueda inventar."""
     cuando = cuando or contexto_temporal()
     finde = " (FIN DE SEMANA: sin sesión de mercado)" if cuando.get("es_finde") else ""
     lineas = [
         f'HOY es {cuando["dia_semana"]} {cuando["fecha"]}, es de {cuando["momento"]}{finde}.',
         "Saluda según el momento y usa esta fecha; NO inventes otra.\n",
-        "Estos son los HECHOS VERIFICADOS de hoy. Escríbelos con tu voz,",
-        "sin cambiar ningún número ni agregar datos que no estén aquí.\n",
     ]
 
+    foto = brief.get("foto") or []
+    if foto:
+        lineas.append("EL TELÓN DE FONDO (índices y materias primas, para contexto):")
+        for f in foto:
+            lineas.append(f'- {f.get("nombre","")}: día {f.get("variacion_pct")}%, '
+                          f'mes {f.get("var_mes_pct")}%, año {f.get("var_ano_pct")}%')
+        lineas.append("")
+
     mercado = brief.get("mercado") or []
-    if mercado:
-        lineas.append("MOVIMIENTOS Y EVENTOS DEL DÍA:")
-        for m in mercado:
-            if m.get("tipo") == "evento":
-                lineas.append(f'- Evento: «{m.get("titular","")}»'
-                              + (f' (fuente: {m["fuente"]})' if m.get("fuente") else ""))
-            else:
-                lineas.append(f'- {m.get("nombre","")}: {m.get("variacion_pct")}%'
-                              + (f' — en la prensa: «{m["cita_titular"]}»' if m.get("cita_titular") else ""))
+    movers = [m for m in mercado if m.get("tipo") != "evento"]
+    eventos = [m for m in mercado if m.get("tipo") == "evento"]
+
+    if movers:
+        lineas.append("CANDIDATOS A HISTORIA — movidas verificadas (elige las que MÁS "
+                      "llamen la atención; usa el [TICKER] para el gráfico de cada una):")
+        for m in movers:
+            tk = m.get("simbolo", "") or "?"
+            linea = f'- [{tk}] {m.get("nombre","")}: {m.get("variacion_pct")}%'
+            if m.get("cita_titular"):
+                linea += f' — en la prensa: «{m["cita_titular"]}»'
+            if m.get("fuente"):
+                linea += f' (fuente: {m["fuente"]})'
+            lineas.append(linea)
+        lineas.append("")
+
+    if eventos:
+        lineas.append("EVENTOS DEL DÍA (noticias sin un movimiento de precio directo — "
+                      "úsalas como historia o como contexto):")
+        for e in eventos:
+            lineas.append(f'- «{e.get("titular","")}»'
+                          + (f' (fuente: {e["fuente"]})' if e.get("fuente") else ""))
+        lineas.append("")
 
     observa = brief.get("observa") or []
     if observa:
-        lineas.append("\nLO QUE EL ENJAMBRE MIRA HOY (atención, no predicción):")
+        lineas.append("OTROS TITULARES EN EL RADAR (contexto extra, no obligatorio):")
         lineas += [f"- {t}" for t in observa]
-
-    if enjambre:
-        lineas.append("\nPARA LA HISTORIA ESTRELLA — así reaccionó el enjambre:")
-        lineas.append(f'- Noticia: «{enjambre.get("titular","")}»')
-        if enjambre.get("direccion_pct") is not None:
-            lineas.append(f'- El precio simulado del enjambre se movió {enjambre["direccion_pct"]}%')
-        if enjambre.get("volatilidad"):
-            lineas.append(f'- Agitación de la manada: {enjambre["volatilidad"]}')
-        if enjambre.get("arquetipos"):
-            lineas.append(f'- Arquetipos que más reaccionaron: {enjambre["arquetipos"]}')
 
     return "\n".join(lineas)
 
@@ -190,13 +220,45 @@ def _cmf(texto: str) -> str | None:
     return "\n\n".join(limpios) if limpios else None
 
 
+def _grafico_valido(g) -> dict | None:
+    """Valida la especificación del gráfico: un ticker limpio (sin inyección) y
+    los campos de presentación. None si no hay ticker usable."""
+    if not isinstance(g, dict):
+        return None
+    t = str(g.get("ticker", "")).strip()
+    if not t or len(t) > 15 or not all(c.isalnum() or c in ".=^-" for c in t):
+        return None
+    periodo = str(g.get("periodo", "semana")).strip().lower()
+    if periodo not in ("semana", "mes", "ano", "dia"):
+        periodo = "semana"
+    return {"ticker": t, "nombre": str(g.get("nombre", "") or t)[:60],
+            "periodo": periodo, "moneda": (str(g.get("moneda", "$")).strip()[:2] or "$")}
+
+
+def _texto_cmf(t) -> str:
+    """Un texto de una línea: se conserva solo si pasa el filtro CMF."""
+    t = str(t or "").strip()
+    return t if t and es_publicable(t) else ""
+
+
 def _sanear_historia(h: dict) -> dict | None:
+    """Una historia con su estructura nueva; None si no tiene lo mínimo
+    (titular + cuerpo publicables)."""
+    if not isinstance(h, dict):
+        return None
+    titular = str(h.get("titular", "")).strip()
     cuerpo = _cmf(h.get("cuerpo", ""))
-    titular = h.get("titular", "").strip()
     if not cuerpo or not titular or not es_publicable(titular):
         return None
-    return {"emoji": (h.get("emoji") or "").strip()[:4],
-            "titular": titular[:140], "cuerpo": cuerpo}
+    return {
+        "kicker": _texto_cmf(h.get("kicker"))[:60],
+        "emoji": str(h.get("emoji", "") or "").strip()[:4],
+        "titular": titular[:160],
+        "dek": _texto_cmf(h.get("dek"))[:200],
+        "cuerpo": cuerpo,
+        "bottom_line": _texto_cmf(h.get("bottom_line"))[:280],
+        "grafico": _grafico_valido(h.get("grafico")),
+    }
 
 
 def _validar(datos: dict) -> dict | None:
@@ -204,13 +266,11 @@ def _validar(datos: dict) -> dict | None:
     if not isinstance(datos, dict):
         return None
     buenos = _cmf(datos.get("buenos_dias", ""))
-    estrella = datos.get("historia_estrella")
-    estrella = _sanear_historia(estrella) if isinstance(estrella, dict) else None
     historias = [s for s in (_sanear_historia(h) for h in (datos.get("historias") or [])
                              if isinstance(h, dict)) if s]
-    if not buenos and not estrella:
-        return None  # sin apertura ni estrella, no hay diario que valga
-    return {"buenos_dias": buenos, "historia_estrella": estrella, "historias": historias[:2]}
+    if not historias and not buenos:
+        return None  # sin historias ni apertura, no hay diario que valga
+    return {"buenos_dias": buenos, "historias": historias[:4]}
 
 
 def _extraer_json(texto: str) -> dict | None:
@@ -226,14 +286,14 @@ def _extraer_json(texto: str) -> dict | None:
 # ---------- punto de entrada ----------
 
 def redactar(brief: dict, enjambre: dict | None = None, cuando: dict | None = None) -> dict | None:
-    """Reescribe el brief del día con la voz de El Pulso. Devuelve el dict
-    {buenos_dias, historia_estrella, historias} o None si no se puede (sin
-    clave, API caída, JSON roto, todo filtrado por CMF) — el boletín cae a
-    su plantilla. `cuando` (día/fecha/momento) se calcula solo si no se pasa.
-    NUNCA lanza."""
+    """Reescribe el brief del día como diario: {buenos_dias, historias[]}. None
+    si no se puede (sin clave, API caída, JSON roto, todo filtrado por CMF) — el
+    boletín cae a su respaldo. `enjambre` se mantiene por compatibilidad de firma
+    pero ya no se usa (las historias son de las noticias, no del enjambre).
+    `cuando` se calcula solo si no se pasa. NUNCA lanza."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return None
-    if not brief or not (brief.get("mercado") or enjambre):
+    if not brief or not (brief.get("mercado") or brief.get("observa")):
         return None  # sin hechos, no hay nada que redactar
     try:
         import anthropic
@@ -243,7 +303,7 @@ def redactar(brief: dict, enjambre: dict | None = None, cuando: dict | None = No
             model=MODELO,
             max_tokens=MAX_TOKENS,
             system=PROMPT_MAESTRO,
-            messages=[{"role": "user", "content": _mensaje_del_dia(brief, enjambre, cuando)}],
+            messages=[{"role": "user", "content": _mensaje_del_dia(brief, cuando=cuando)}],
         )
         datos = _extraer_json(respuesta.content[0].text)
         return _validar(datos) if datos else None

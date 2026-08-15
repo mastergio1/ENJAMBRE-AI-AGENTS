@@ -61,8 +61,8 @@ def test_html_del_pulso_lleva_disclaimer_y_vocabulario_limpio(dia):
     assert verificar_pieza(html) == []
     # el link de baja usa el token del suscriptor
     assert "/api/baja/ABC" in html
-    # referencia la imagen del momento dramático
-    assert "/imagen" in html
+    # el rediseño: cabecera de El Pulso y El Enjambre invitado al pie
+    assert "El Pulso" in html and "Probar El Enjambre" in html
 
 
 def test_correo_de_confirmacion_lleva_disclaimer():
@@ -188,19 +188,26 @@ def test_endpoint_pipeline_exige_token(monkeypatch):
 
 
 def test_html_usa_la_voz_de_ia_cuando_existe(dia):
-    """Si el brief trae 'redactado' (voz del redactor de IA), el correo lo usa;
-    y sigue pasando el filtro CMF con el disclaimer."""
+    """Con 'redactado' (voz del redactor de IA), el correo lo usa: historias con
+    análisis, gráfico real y 'en una línea'; sigue pasando el filtro CMF."""
     destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
     brief = {"mercado": [], "observa": [], "redactado": {
         "buenos_dias": "Wall Street amaneció en verde y el Nasdaq sacó pecho.",
-        "historia_estrella": {"emoji": "🩸", "titular": "Insulet cayó pese a vender más",
-                              "cuerpo": "Recortó su previsión.\n\nEl enjambre se hundió tick a tick."},
-        "historias": [{"emoji": "🟢", "titular": "Nvidia subió", "cuerpo": "Los chips mandan."}],
+        "historias": [
+            {"kicker": "Tecnología · catalizador", "emoji": "🍎",
+             "titular": "Apple busca acuerdo con Epic", "dek": "El que peleaba, negocia.",
+             "cuerpo": "Años de pelea.\n\nHoy ofrece café.\n\nEso dice mucho.",
+             "bottom_line": "Apple no cambia de libreto por gusto.",
+             "grafico": {"ticker": "AAPL", "nombre": "Apple Inc.", "periodo": "semana", "moneda": "$"}},
+            {"kicker": "Small-cap · movida", "emoji": "🟢", "titular": "Nvidia subió",
+             "dek": "", "cuerpo": "Los chips mandan.", "bottom_line": "", "grafico": None},
+        ],
     }}
     html = boletin.construir_html(destacadas, "miércoles 5 de agosto", brief=brief)
     assert "Buenos días" in html
-    assert "Insulet cayó pese a vender más" in html
-    assert "Nvidia subió" in html
+    assert "Apple busca acuerdo con Epic" in html and "Nvidia subió" in html
+    assert "/api/grafico/AAPL" in html          # el gráfico real de la historia
+    assert "En una línea:" in html               # el bottom line
     assert DISCLAIMER in html
     assert verificar_pieza(html) == []
 
@@ -221,11 +228,13 @@ def test_tabla_mercado_dia_mes_ano(dia):
     assert verificar_pieza(html) == []
 
 
-def test_html_cae_a_plantilla_sin_voz(dia):
-    """Sin 'redactado', el correo usa la plantilla de siempre (no se cae)."""
+def test_html_respaldo_sin_redactado(dia):
+    """Sin 'redactado' ni brief, el correo se arma igual (no se cae): cabecera de
+    El Pulso, El Enjambre al pie y el disclaimer."""
     destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
     html = boletin.construir_html(destacadas, "miércoles 5 de agosto")  # sin brief
-    assert "simulación educativa" in html
+    assert html.startswith("<!doctype")
+    assert "El Pulso" in html and "Probar El Enjambre" in html
     assert DISCLAIMER in html
 
 
@@ -268,26 +277,24 @@ def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
 
 # ---------- el correo no deja pasar marcado ajeno ----------
 
-def test_el_correo_escapa_titulares_y_frases_hostiles():
-    """Los titulares llegan de fuentes externas (Alpaca) y las frases las
-    escribe la IA leyendo un titular que puede venir del público: ni unos ni
-    otras pueden inyectar HTML en el correo que reciben los suscriptores."""
-    titular_hostil = '<img src=x onerror=alert(1)> La Fed sube las tasas'
-    destacadas = [
-        {"titular": titular_hostil, "sim_id": "a" * 16,
-         "resumen": {"direccion_pct": -3.2, "agitacion": "alto"},
-         "lideres_frases": [
-             {"arquetipo": "doomer", "senal": -0.9,
-              "frase": '</p><a href="http://sitio-falso.cl">entra aquí</a>'},
-             {"arquetipo": "fomo_evangelista", "senal": 0.8, "frase": "Momento histórico"},
-         ]},
-        {"titular": titular_hostil, "sim_id": "b" * 16, "resumen": {"direccion_pct": 1.1}},
-    ]
-    html = boletin.construir_html(destacadas, "lunes 4 de agosto", token_baja="ABC")
+def test_el_correo_escapa_texto_hostil_del_redactado():
+    """El texto del redactor de IA (titular, cuerpo, bottom_line) sale de un
+    titular que puede venir del público: no puede inyectar HTML en el correo
+    que reciben los suscriptores."""
+    brief = {"mercado": [], "redactado": {
+        "buenos_dias": "Un día normal.",
+        "historias": [{
+            "kicker": "Test", "emoji": "🧪",
+            "titular": '<img src=x onerror=alert(1)> Titular hostil',
+            "dek": "", "cuerpo": '</p><a href="http://sitio-falso.cl">entra aquí</a>\n\nOtro párrafo.',
+            "bottom_line": "<script>alert(1)</script> cierre",
+            "grafico": None,
+        }]}}
+    html = boletin.construir_html([], "lunes 4 de agosto", token_baja="ABC", brief=brief)
     assert "<img src=x" not in html
-    assert "&lt;img src=x" in html                       # se ve como texto, no se ejecuta
+    assert "&lt;img src=x" in html                        # se ve como texto, no se ejecuta
     assert '<a href="http://sitio-falso.cl"' not in html  # sin enlaces colados
-    assert "&lt;/p&gt;" in html
+    assert "<script>alert(1)</script>" not in html and "&lt;script&gt;" in html
 
 
 def test_el_correo_solo_acepta_enlaces_http():

@@ -35,6 +35,7 @@ from brains.cerebro import analizar_titular_async
 from contenido import limites, persistencia, portero, seguridad, vocabulario
 from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
+from llm_texto import texto_de
 
 TICKS_CALENTAMIENTO = 60  # el mercado encuentra su ritmo (no se transmite)
 TICKS_PREVIOS = 10        # calma visible antes de la noticia
@@ -1333,7 +1334,7 @@ def pulso_diagnostico(clave: str = "", enviar: str = ""):
                     system=redaccion_ia.PROMPT_ANALISIS,
                     messages=[{"role": "user",
                                "content": redaccion_ia._mensaje_analisis(analisis, cuando=cuando)}])
-                texto = resp.content[0].text
+                texto = texto_de(resp)
                 ia["stop_reason"] = resp.stop_reason
                 ia["salida_tokens"] = resp.usage.output_tokens
                 ia["len_texto"] = len(texto)
@@ -1491,7 +1492,7 @@ def api_diagnostico(x_pipeline_token: str = Header(default="")) -> dict:
             messages=[{"role": "user", "content": "Di solo: hola"}],
         )
         resultado["veredicto"] = "OK: la IA respondió — los cerebros reales funcionan"
-        resultado["respuesta"] = r.content[0].text[:40]
+        resultado["respuesta"] = texto_de(r)[:40]
     except Exception as error:
         resultado["veredicto"] = f"FALLA {type(error).__name__}: {str(error)[:300]}"
     return resultado

@@ -23,8 +23,13 @@ y el fin de semana cae a la edición normal (o a nada). NUNCA lanza.
 
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 from contenido.fuentes import yahoo
+
+# cuántas descargas de precio en paralelo (el universo puede tener cientos de
+# empresas; en serie sería lentísimo). Yahoo tolera bien esta concurrencia.
+HILOS_PRECIO = 12
 
 # el universo curado vive junto al código; se puede crecer sin tocar Python
 _RUTA_UNIVERSO = os.path.join(os.path.dirname(__file__), "config", "universo_semanal.json")
@@ -94,21 +99,31 @@ def _movida(serie, ruedas: int = RUEDAS_SEMANA) -> dict | None:
     }
 
 
+def _rankear_por_atencion(candidatos: list[dict], simbolo_de, fetch) -> list[dict]:
+    """Descarga en PARALELO la movida de la semana de cada candidato y los
+    devuelve ordenados por atención (mayor movida absoluta primero). Los que
+    Yahoo no responde se omiten. Nunca lanza (un fallo aislado no tumba el lote).
+    En paralelo porque el universo puede tener cientos de empresas."""
+    def _una(c):
+        try:
+            serie = fetch(simbolo_de(c), rango="1mo", intervalo="1d")
+            movida = _movida(serie)
+            return {**c, **movida, "serie": serie} if movida else None
+        except Exception:
+            return None
+
+    if not candidatos:
+        return []
+    with ThreadPoolExecutor(max_workers=HILOS_PRECIO) as pool:
+        enriquecidos = [e for e in pool.map(_una, candidatos) if e]
+    enriquecidos.sort(key=lambda x: -abs(x["var_semana_pct"]))
+    return enriquecidos
+
+
 def _mayor_atencion(candidatos: list[dict], simbolo_de, fetch) -> dict | None:
-    """De una lista de candidatos, devuelve el que MÁS se movió esta semana
-    (en valor absoluto), enriquecido con su movida y su serie. None si ninguno
-    trae datos (todos fallaron en Yahoo)."""
-    mejor = None
-    for c in candidatos:
-        simbolo = simbolo_de(c)
-        serie = fetch(simbolo, rango="1mo", intervalo="1d")
-        movida = _movida(serie)
-        if not movida:
-            continue
-        enriquecido = {**c, **movida, "serie": serie}
-        if mejor is None or abs(movida["var_semana_pct"]) > abs(mejor["var_semana_pct"]):
-            mejor = enriquecido
-    return mejor
+    """El candidato que MÁS se movió esta semana. None si ninguno trae datos."""
+    ranked = _rankear_por_atencion(candidatos, simbolo_de, fetch)
+    return ranked[0] if ranked else None
 
 
 def _grafico_de(ticker: str, nombre: str) -> dict:
@@ -127,12 +142,7 @@ def seleccionar_accion(universo: dict, fetch=yahoo.serie_reciente,
     la capitalización de un candidato, se acepta (el universo ya es curado). None
     si ninguno trae datos o todos quedan verificadamente fuera de banda."""
     acciones = universo.get("acciones") or []
-    rankeados = []
-    for c in acciones:
-        movida = _movida(fetch(c.get("ticker", ""), rango="1mo", intervalo="1d"))
-        if movida:
-            rankeados.append({**c, **movida})
-    rankeados.sort(key=lambda x: -abs(x["var_semana_pct"]))
+    rankeados = _rankear_por_atencion(acciones, lambda c: c.get("ticker", ""), fetch)
 
     elegida, fundamentales = None, None
     for c in rankeados:

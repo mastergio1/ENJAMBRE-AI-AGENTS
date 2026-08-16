@@ -236,6 +236,25 @@ def test_ritual_de_sabado_arma_el_resumen(monkeypatch):
     assert DISCLAIMER in html
 
 
+def test_reenviar_manda_aunque_ya_este_enviada(monkeypatch):
+    """El reenvío manual SÍ manda de nuevo a todos, aunque la edición ya se
+    hubiera enviado (a diferencia de aprobar_y_enviar, que es idempotente)."""
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "lector@medio.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    hoy = persistencia.ahora_iso()[:10]
+    persistencia.guardar_edicion(conexion, hoy, {"redactado": {}}, "<html>edición</html>",
+                                 "Asunto", "t" * 24, persistencia.ahora_iso())
+    persistencia.marcar_enviada(conexion, hoy, 1, 1, persistencia.ahora_iso())  # ya enviada
+    conexion.close()
+
+    enviados = []
+    monkeypatch.setattr(boletin, "enviar", lambda *a, **k: enviados.append(a) or True)
+    res = pipeline.reenviar_a_suscriptores(fecha=hoy)
+    assert res["ok"] and res.get("reenviada") and res["enviados"] == 1
+    assert enviados and enviados[0][0] == "lector@medio.cl"  # reenvió pese a estar 'enviada'
+
+
 def test_endpoint_pipeline_exige_token(monkeypatch):
     cliente = TestClient(server.app)
     # sin token configurado → 403

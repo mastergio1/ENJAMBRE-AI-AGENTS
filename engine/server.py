@@ -1318,6 +1318,26 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
 
 
 
+@app.get("/api/pulso/suscriptores")
+def pulso_suscriptores(clave: str = ""):
+    """Conteo de suscriptores (solo números, sin correos): registrados, activos
+    (confirmados), sin confirmar (double opt-in pendiente) y bajas. De solo
+    lectura; protegido con clave."""
+    if clave != "revisar-pulso-2026":
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        q = lambda sql: conexion.execute(sql).fetchone()[0]
+        total = q("SELECT COUNT(*) FROM suscriptores")
+        activos = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 1")
+        sin_confirmar = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 0 AND token_confirma IS NOT NULL")
+        bajas = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 0 AND token_confirma IS NULL")
+    finally:
+        conexion.close()
+    return {"registrados": total, "activos": activos,
+            "sin_confirmar": sin_confirmar, "bajas": bajas}
+
+
 @app.post("/api/panel/edicion/{fecha}/aprobar")
 def panel_aprobar(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
     if not _token_admin_ok(x_pipeline_token):

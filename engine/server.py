@@ -1314,6 +1314,44 @@ def pulso_diagnostico(clave: str = "", enviar: str = ""):
         "remitente": _os.environ.get("PULSO_REMITENTE", ""),  # no es secreto
     }
     cuando = redaccion_ia.contexto_temporal()
+
+    # Introspección de la IA del deep-dive: por qué redactar_analisis devuelve None
+    # (stop_reason del modelo, si el JSON se extrajo, si pasó el filtro CMF).
+    if enviar == "ia":
+        from contenido import analisis_semanal
+        from contenido.vocabulario import es_publicable
+        ia: dict = {}
+        try:
+            analisis = analisis_semanal.preparar_analisis(cuando=cuando)
+            ia["hechos"] = bool(analisis)
+            ia["protagonista"] = (analisis or {}).get("nombre")
+            if analisis:
+                import anthropic
+                cli = anthropic.Anthropic(timeout=redaccion_ia.TIMEOUT_SEGUNDOS)
+                resp = cli.messages.create(
+                    model=redaccion_ia.MODELO, max_tokens=redaccion_ia.MAX_TOKENS,
+                    system=redaccion_ia.PROMPT_ANALISIS,
+                    messages=[{"role": "user",
+                               "content": redaccion_ia._mensaje_analisis(analisis, cuando=cuando)}])
+                texto = resp.content[0].text
+                ia["stop_reason"] = resp.stop_reason
+                ia["salida_tokens"] = resp.usage.output_tokens
+                ia["len_texto"] = len(texto)
+                ia["ultimos_120"] = texto[-120:]
+                datos = redaccion_ia._extraer_json(texto)
+                ia["json_ok"] = bool(datos)
+                if datos:
+                    val = redaccion_ia._validar_analisis(datos)
+                    ia["validado"] = bool(val)
+                    ia["titular"] = str(datos.get("titular", ""))[:90]
+                    ia["titular_publicable"] = es_publicable(str(datos.get("titular", "")))
+                    ia["contexto_publicable"] = bool(redaccion_ia._cmf(str(datos.get("contexto", ""))))
+        except Exception as error:
+            import traceback
+            ia["error"] = f"{type(error).__name__}: {error}"
+            ia["trace"] = traceback.format_exc()[-1200:]
+        return {"cuando": cuando, "claves": presencia, "ia_deep_dive": ia}
+
     try:
         r = pipeline.ritual_matutino(enviar=(enviar == "si"))
         ritual = {k: r.get(k) for k in ("origen", "estado", "edicion", "destacadas", "token")}

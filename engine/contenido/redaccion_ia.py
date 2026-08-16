@@ -63,7 +63,8 @@ def contexto_temporal(ahora: datetime | None = None) -> dict:
     }
 
 MODELO = "claude-sonnet-5"   # calidad de escritura; sin temperature (Sonnet-5 la rechaza)
-MAX_TOKENS = 4000            # análisis extenso: 4 historias con profundidad
+MAX_TOKENS = 8000            # análisis extenso (deep-dive con debate + números):
+                             # holgura para que el JSON NUNCA se corte a medias
 TIMEOUT_SEGUNDOS = 90.0      # corre en el ritual de fondo, no en un request web
 
 # ---------- EL PROMPT MAESTRO (rediseño estilo diario, 14-ago-2026) ----------

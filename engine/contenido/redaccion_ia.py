@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 
 from brains.arquetipos import ARQUETIPOS, POR_ID
 from contenido.vocabulario import es_publicable
+from llm_texto import texto_de
 
 # los lectores viven en Chile/LatAm; el saludo se calcula en hora local de
 # Chile (zoneinfo maneja el horario de verano solo). Si no está la zona
@@ -308,7 +309,7 @@ def redactar(brief: dict, enjambre: dict | None = None, cuando: dict | None = No
             system=PROMPT_MAESTRO,
             messages=[{"role": "user", "content": _mensaje_del_dia(brief, cuando=cuando)}],
         )
-        datos = _extraer_json(respuesta.content[0].text)
+        datos = _extraer_json(texto_de(respuesta))
         return _validar(datos) if datos else None
     except Exception:
         return None  # cualquier falla → fallback a plantilla
@@ -515,7 +516,7 @@ def redactar_analisis(analisis: dict, cuando: dict | None = None) -> dict | None
             system=PROMPT_ANALISIS,
             messages=[{"role": "user", "content": _mensaje_analisis(analisis, cuando=cuando)}],
         )
-        datos = _extraer_json(respuesta.content[0].text)
+        datos = _extraer_json(texto_de(respuesta))
         return _validar_analisis(datos) if datos else None
     except Exception:
         return None
@@ -670,7 +671,7 @@ def redactar_resumen(resumen: dict, cuando: dict | None = None) -> dict | None:
             system=PROMPT_RESUMEN,
             messages=[{"role": "user", "content": _mensaje_resumen(resumen, cuando=cuando)}],
         )
-        datos = _extraer_json(respuesta.content[0].text)
+        datos = _extraer_json(texto_de(respuesta))
         return _validar_resumen(datos) if datos else None
     except Exception:
         return None

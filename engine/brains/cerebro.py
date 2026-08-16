@@ -15,6 +15,7 @@ from pathlib import Path
 
 from brains.arquetipos import INSTRUCCION_JSON, POR_ID
 from brains.fallback import respuesta_fallback
+from llm_texto import texto_de
 
 MODELO = "claude-sonnet-5"
 # Nota: claude-sonnet-5 ya no acepta `temperature` (devuelve 400 si se envía).
@@ -101,7 +102,7 @@ async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, s
                 ),
                 timeout=TIMEOUT_SEGUNDOS,
             )
-            datos = _validar_respuesta(respuesta.content[0].text)
+            datos = _validar_respuesta(texto_de(respuesta))
             if datos is not None:
                 datos["fuente"] = "api"
                 return datos

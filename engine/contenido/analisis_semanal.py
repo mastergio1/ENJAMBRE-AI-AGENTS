@@ -32,11 +32,23 @@ _RUTA_UNIVERSO = os.path.join(os.path.dirname(__file__), "config", "universo_sem
 # cuántas sesiones (ruedas) atrás miramos para "la movida de la semana"
 RUEDAS_SEMANA = 5
 
-# la franja de capitalización del protagonista (foco de Giorgio: ~1 a 20 mil
+# la franja de capitalización del protagonista (foco de Giorgio: ~1 a 50 mil
 # millones de dólares). Se verifica con la capitalización REAL de Yahoo cuando
 # está disponible; si no, se acepta el candidato (el universo ya es curado).
 CAP_MIN = 1_000_000_000        # 1 000 millones (1B)
-CAP_MAX = 20_000_000_000       # 20 000 millones (20B)
+CAP_MAX = 50_000_000_000       # 50 000 millones (50B)
+
+
+def _encuadre_por_cap(cap: float | None) -> str:
+    """La etiqueta de tamaño que se muestra en el correo, según la capitalización
+    REAL. Sin dato → una etiqueta neutra que sirve para toda la franja."""
+    if not cap:
+        return "capitalización mediana o grande"
+    if cap < 10_000_000_000:
+        return "pequeña o mediana capitalización"
+    if cap < 30_000_000_000:
+        return "mediana capitalización"
+    return "gran capitalización"
 
 
 def cargar_universo(ruta: str | None = None) -> dict:
@@ -135,7 +147,7 @@ def seleccionar_accion(universo: dict, fetch=yahoo.serie_reciente,
     return {
         "modo": "accion",
         "titulo": "Acción seleccionada",
-        "encuadre": "mediana capitalización",
+        "encuadre": _encuadre_por_cap((fundamentales or {}).get("market_cap_num")),
         "ticker": elegida["ticker"],
         "nombre": elegida["nombre"],
         "sector": elegida.get("sector", ""),

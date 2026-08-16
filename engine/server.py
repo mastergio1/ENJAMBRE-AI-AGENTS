@@ -1292,6 +1292,45 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
     }
 
 
+# Diagnóstico temporal del ritual: corre el ritual del día de forma SÍNCRONA y
+# reporta exactamente qué pasó (y, con enviar=si, manda el correo de revisión).
+# Sirve para depurar por qué no sale el correo del fin de semana sin ver los logs
+# de Render. Protegido con una clave fija (no secreta, pero frena el abuso). Se
+# quita cuando el problema quede resuelto. Nunca expone valores de claves, solo si
+# están presentes (booleanos).
+@app.get("/api/pulso/diagnostico")
+def pulso_diagnostico(clave: str = "", enviar: str = ""):
+    if clave != "revisar-pulso-2026":
+        return Response(status_code=404)  # type: ignore[return-value]
+    import os as _os
+
+    from contenido import pipeline, redaccion_ia
+    presencia = {
+        "anthropic": bool(_os.environ.get("ANTHROPIC_API_KEY")),
+        "resend": bool(_os.environ.get("RESEND_API_KEY")),
+        "admin_email": bool(_os.environ.get("PULSO_ADMIN_EMAIL")),
+        "alpaca": bool(_os.environ.get("ALPACA_API_KEY_ID")),
+        "barchart": bool(_os.environ.get("BARCHART_API_KEY")),
+        "remitente": _os.environ.get("PULSO_REMITENTE", ""),  # no es secreto
+    }
+    cuando = redaccion_ia.contexto_temporal()
+    try:
+        r = pipeline.ritual_matutino(enviar=(enviar == "si"))
+        ritual = {k: r.get(k) for k in ("origen", "estado", "edicion", "destacadas", "token")}
+        ritual["html_preview"] = bool(r.get("html_preview"))
+        brief = r.get("brief") or {}
+        ritual["analisis_redactado"] = bool(brief.get("analisis_redactado"))
+        ritual["resumen_redactado"] = bool(brief.get("resumen_redactado"))
+        ritual["analisis_hechos"] = bool(brief.get("analisis"))
+        ritual["resumen_hechos"] = bool(brief.get("resumen"))
+        return {"cuando": cuando, "claves": presencia, "ritual": ritual}
+    except Exception as error:
+        import traceback
+        return {"cuando": cuando, "claves": presencia,
+                "error": f"{type(error).__name__}: {error}",
+                "trace": traceback.format_exc()[-1800:]}
+
+
 @app.post("/api/panel/edicion/{fecha}/aprobar")
 def panel_aprobar(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
     if not _token_admin_ok(x_pipeline_token):

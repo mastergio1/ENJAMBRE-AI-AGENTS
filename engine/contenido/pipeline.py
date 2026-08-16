@@ -292,6 +292,32 @@ def aprobar_y_enviar(conexion=None, fecha: str | None = None) -> dict:
             conexion.close()
 
 
+def reenviar_a_suscriptores(conexion=None, fecha: str | None = None) -> dict:
+    """Reenvía la edición del día a TODOS los suscriptores activos, aunque YA se
+    haya enviado (envío manual a pedido de Giorgio). A diferencia de
+    aprobar_y_enviar, NO es idempotente: reenvía a propósito. Requiere que exista
+    el preview y que la edición no esté descartada."""
+    from contenido import boletin
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        fecha = fecha or persistencia.ahora_iso()[:10]
+        ed = persistencia.obtener_edicion(conexion, fecha)
+        if ed is None or not ed.get("html_preview"):
+            return {"ok": False, "motivo": "no hay edición para ese día"}
+        if ed["estado"] == "descartada":
+            return {"ok": False, "motivo": "la edición fue descartada"}
+        conteo = boletin.enviar_a_suscriptores(
+            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha)
+        persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
+                                    conteo["suscriptores"], persistencia.ahora_iso())
+        return {"ok": True, "reenviada": True, **conteo}
+    finally:
+        if propia:
+            conexion.close()
+
+
 def descartar_edicion(conexion=None, fecha: str | None = None) -> dict:
     """Descarta la edición del día (no se enviará)."""
     propia = conexion is None

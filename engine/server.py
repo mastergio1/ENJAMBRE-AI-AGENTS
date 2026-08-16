@@ -1049,7 +1049,11 @@ def pulso_revisar(token: str) -> HTMLResponse:
     estado = ed["estado"]
     if estado == "enviada":
         cabecera = f'<h1>Ya enviada ✓</h1><p>Salió a {ed["enviados"]} de {ed["suscriptores"]} suscriptores.</p>'
-        acciones = ""
+        acciones = (f'<div class="acc">'
+                    f'<form method="post" action="/pulso/reenviar/{token}" style="margin:0;" '
+                    f"onsubmit=\"return confirm('¿Reenviar esta edición a TODOS los suscriptores? "
+                    f"Quienes ya la recibieron tendrán un correo duplicado.');\">"
+                    f'<button class="btn ok" type="submit">📤 Reenviar a todos</button></form></div>')
     elif estado == "descartada":
         cabecera = '<h1>Descartada</h1><p>Esta edición no se enviará.</p>'
         acciones = ""
@@ -1083,6 +1087,26 @@ def pulso_aprobar(token: str) -> HTMLResponse:
         msg = res.get("motivo", "No se pudo enviar.")
     return _pagina_pulso("Aprobada",
         f'<div class="aviso"><h1 style="color:#2f8f66;">✅ Listo</h1><p>{msg}</p></div>')
+
+
+@app.post("/pulso/reenviar/{token}")
+def pulso_reenviar(token: str) -> HTMLResponse:
+    """Reenvía la edición a TODOS los suscriptores, a pedido (aunque ya se envió)."""
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        if not ed:
+            return _pagina_pulso("Enlace no válido", '<div class="aviso"><h1>Enlace no válido</h1></div>', status=404)
+        from contenido import pipeline
+        res = pipeline.reenviar_a_suscriptores(conexion, ed["fecha"])
+    finally:
+        conexion.close()
+    if res.get("ok"):
+        msg = f'Reenviada a {res.get("enviados", 0)} de {res.get("suscriptores", 0)} suscriptores. 🎉'
+    else:
+        msg = res.get("motivo", "No se pudo reenviar.")
+    return _pagina_pulso("Reenviada",
+        f'<div class="aviso"><h1 style="color:#2f8f66;">📤 Listo</h1><p>{msg}</p></div>')
 
 
 @app.post("/pulso/descartar/{token}")

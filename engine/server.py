@@ -1319,10 +1319,10 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
 
 
 @app.get("/api/pulso/suscriptores")
-def pulso_suscriptores(clave: str = ""):
+def pulso_suscriptores(clave: str = "", email: str = ""):
     """Conteo de suscriptores (solo números, sin correos): registrados, activos
-    (confirmados), sin confirmar (double opt-in pendiente) y bajas. De solo
-    lectura; protegido con clave."""
+    (confirmados), sin confirmar (double opt-in pendiente) y bajas. Con `email`,
+    reporta el estado de ESE correo. De solo lectura; protegido con clave."""
     if clave != "revisar-pulso-2026":
         return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
@@ -1332,10 +1332,24 @@ def pulso_suscriptores(clave: str = ""):
         activos = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 1")
         sin_confirmar = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 0 AND token_confirma IS NOT NULL")
         bajas = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 0 AND token_confirma IS NULL")
+        estado_email = None
+        if email:
+            fila = conexion.execute(
+                "SELECT activo, token_confirma FROM suscriptores WHERE lower(email) = lower(?)",
+                (email.strip(),)).fetchone()
+            if fila is None:
+                estado_email = "no registrado"
+            elif fila["activo"] == 1:
+                estado_email = "activo (confirmado, recibe el newsletter)"
+            elif fila["token_confirma"]:
+                estado_email = "PENDIENTE de confirmar (no recibe el newsletter)"
+            else:
+                estado_email = "baja (se desuscribió)"
     finally:
         conexion.close()
     return {"registrados": total, "activos": activos,
-            "sin_confirmar": sin_confirmar, "bajas": bajas}
+            "sin_confirmar": sin_confirmar, "bajas": bajas,
+            "email_consultado": email or None, "estado_email": estado_email}
 
 
 @app.post("/api/panel/edicion/{fecha}/aprobar")

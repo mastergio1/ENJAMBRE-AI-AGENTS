@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; }
+    .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .sans { font-family: 'Jost', system-ui, sans-serif; }
+  </style>
+</helmet>
+
+<div class="sans" style="width: 760px; background: #faf8f4; padding: 40px 28px; box-sizing: border-box;">
+
+  <!-- encabezado -->
+  <div style="text-align: center; margin-bottom: 30px;">
+    <div style="font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #b0831a; margin-bottom: 10px;">El Pulso</div>
+    <h1 class="serif" style="margin: 0; font-size: 34px; line-height: 1.15; color: #1e1b17; font-weight: 700;">Elige cómo leer el mercado</h1>
+    <p style="margin: 10px auto 0; max-width: 460px; font-size: 15px; line-height: 1.5; color: #6f6a5f;">El enjambre lee las noticias del día y te cuenta qué está viendo. Gratis todos los días; Premium cuando quieres ir a fondo.</p>
+  </div>
+
+  <!-- tarjetas -->
+  <div style="display: flex; gap: 20px; align-items: stretch;">
+
+    <!-- GRATIS -->
+    <div style="flex: 1; background: #ffffff; border: 1px solid #eae5db; border-radius: 14px; padding: 28px 26px; display: flex; flex-direction: column;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6f6a5f;">Gratis</div>
+      <div style="display: flex; align-items: baseline; gap: 6px; margin: 14px 0 4px;">
+        <span class="serif" style="font-size: 46px; font-weight: 700; color: #1e1b17;">$0</span>
+        <span style="font-size: 14px; color: #6f6a5f;">para siempre</span>
+      </div>
+      <p style="margin: 0 0 20px; font-size: 14px; line-height: 1.5; color: #6f6a5f;">El ritual diario del mercado en tu correo.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; flex: 1;">
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #3c382f;">El Pulso diario (lunes a viernes)</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #3c382f;">El resumen del sábado</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #3c382f;">Vista previa del análisis del domingo</span></div>
+      </div>
+
+      <a href="#" style="display: block; text-align: center; margin-top: 24px; background: #ffffff; color: #1e1b17; border: 1.5px solid #d8d1c4; text-decoration: none; font-weight: 600; font-size: 15px; padding: 13px; border-radius: 9px;">Suscribirme</a>
+    </div>
+
+    <!-- PREMIUM -->
+    <div style="flex: 1; position: relative; background: #1e1b17; border: 1px solid #1e1b17; border-radius: 14px; padding: 28px 26px; display: flex; flex-direction: column; box-shadow: 0 18px 40px rgba(30,27,23,0.22);">
+      <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #b0831a; color: #ffffff; font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px;">Recomendado</div>
+
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #d8a93e;">Premium</div>
+      <div style="display: flex; align-items: baseline; gap: 6px; margin: 14px 0 4px;">
+        <span class="serif" style="font-size: 46px; font-weight: 700; color: #faf8f4;">6,99</span>
+        <span style="font-size: 14px; color: #a49b8a;">USD / mes</span>
+      </div>
+      <p style="margin: 0 0 20px; font-size: 14px; line-height: 1.5; color: #a49b8a;">Todo lo Gratis, y además:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; flex: 1;">
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #d8a93e; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #f3efe6;">El análisis completo del domingo, a fondo</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #d8a93e; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #f3efe6;">El debate de los 8 perfiles sobre el caso</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #d8a93e; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #f3efe6;">El enjambre vs. la realidad: qué acertó</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #d8a93e; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #f3efe6;">Simula tus propios titulares</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #d8a93e; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #f3efe6;">Archivo completo + PDF de cada edición</span></div>
+        <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #d8a93e; flex-shrink: 0; margin-top: 1px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span style="font-size: 14.5px; line-height: 1.4; color: #f3efe6;">Sin publicidad · entrega anticipada</span></div>
+      </div>
+
+      <a href="#" style="display: block; text-align: center; margin-top: 24px; background: #b0831a; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 9px;">Hazte Premium</a>
+      <span style="display: block; text-align: center; margin-top: 9px; font-size: 12px; color: #8a8272;">Cancela cuando quieras · sin permanencia</span>
+    </div>
+
+  </div>
+
+  <!-- disclaimer CMF -->
+  <div style="text-align: center; margin-top: 26px;">
+    <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: #6f6a5f; background: #fbf5e6; border: 1px solid #ecdcb4; border-radius: 20px; padding: 8px 16px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0831a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+      No es asesoría de inversión · Herramienta educativa · El Pulso informa, no recomienda
+    </span>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¡Bienvenido a El Pulso Premium! 🐝</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600;700&display=swap">
+<style>
+  :root { --papel:#faf8f4; --tinta:#1e1b17; --tinta-2:#3c382f; --mute:#6f6a5f; --oro:#b0831a; --oro-claro:#d8a93e; --teal:#2f7a6f; --sube:#2f8f66; --linea:#eae5db; --ink:#12100d; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 20px;
+    background: radial-gradient(120% 120% at 50% -10%, #241f18 0%, var(--ink) 60%); color:#f4efe6;
+    font-family:'Jost',system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-align:center; }
+  .serif { font-family:'Cormorant Garamond',Georgia,serif; }
+  .tarjeta { max-width:520px; width:100%; background:rgba(255,255,255,0.03); border:1px solid #332e24; border-radius:18px; padding:44px 34px; }
+  .sello { width:74px; height:74px; margin:0 auto 8px; border-radius:50%; background:rgba(216,169,62,0.14); border:1px solid rgba(216,169,62,0.4); display:flex; align-items:center; justify-content:center; font-size:34px; }
+  .kicker { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--oro-claro); font-weight:700; margin-top:14px; }
+  h1 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; font-size:clamp(30px,6vw,42px); line-height:1.12; margin:10px 0 0; color:#fbf7ee; }
+  p { color:#cfc7b6; font-size:16px; line-height:1.6; margin:16px auto 0; max-width:42ch; }
+  .pasos { text-align:left; margin:26px auto 0; max-width:400px; display:flex; flex-direction:column; gap:14px; }
+  .paso { display:flex; gap:12px; align-items:flex-start; }
+  .paso .n { flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--oro); color:#fff; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .paso span { color:#e6ded0; font-size:15px; line-height:1.45; }
+  .cta { display:inline-block; margin-top:30px; background:var(--oro); color:#fff; text-decoration:none; font-weight:700; font-size:15px; padding:14px 30px; border-radius:10px; }
+  .cta:hover { background:#c8951e; }
+  .cmf { margin-top:26px; font-size:12px; color:#8a8272; font-style:italic; line-height:1.5; }
+  a.link { color:var(--oro-claro); }
+</style>
+</head>
+<body>
+  <div class="tarjeta">
+    <div class="sello">🐝</div>
+    <div class="kicker">Suscripción confirmada</div>
+    <h1 class="serif">¡Bienvenido a El Pulso Premium!</h1>
+    <p>Gracias por sumarte. Desde ahora recibes el análisis del domingo <b>completo</b> — la empresa, sus números, el debate de nuestros analistas IA y el “qué observar”.</p>
+
+    <div class="pasos">
+      <div class="paso"><span class="n">1</span><span>Revisa tu correo: si aún no estabas suscrito, te llegará una bienvenida.</span></div>
+      <div class="paso"><span class="n">2</span><span>Este domingo recibes tu primer análisis a fondo, sin cortes.</span></div>
+      <div class="paso"><span class="n">3</span><span>Puedes cancelar cuando quieras desde el portal de tu suscripción.</span></div>
+    </div>
+
+    <a class="cta" href="https://diarioelpulso.com">Volver a El Pulso</a>
+
+    <div class="cmf">El Pulso es contenido educativo. No es asesoría de inversión: informamos, no recomendamos.</div>
+  </div>
+</body>
+</html>

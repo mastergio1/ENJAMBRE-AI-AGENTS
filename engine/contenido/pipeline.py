@@ -282,8 +282,11 @@ def aprobar_y_enviar(conexion=None, fecha: str | None = None) -> dict:
                     "enviados": ed["enviados"], "suscriptores": ed["suscriptores"]}
         if ed["estado"] == "descartada":
             return {"ok": False, "motivo": "la edición fue descartada"}
+        # el deep-dive del domingo es Premium: gratis → teaser; de pago → completo
+        teaser_html, asunto_teaser = boletin.teaser_para(ed.get("brief"), fecha)
         conteo = boletin.enviar_a_suscriptores(
-            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha)
+            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha,
+            teaser_html=teaser_html, asunto_teaser=asunto_teaser)
         persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
                                     conteo["suscriptores"], persistencia.ahora_iso())
         return {"ok": True, **conteo}
@@ -308,8 +311,11 @@ def reenviar_a_suscriptores(conexion=None, fecha: str | None = None) -> dict:
             return {"ok": False, "motivo": "no hay edición para ese día"}
         if ed["estado"] == "descartada":
             return {"ok": False, "motivo": "la edición fue descartada"}
+        # el deep-dive del domingo es Premium: gratis → teaser; de pago → completo
+        teaser_html, asunto_teaser = boletin.teaser_para(ed.get("brief"), fecha)
         conteo = boletin.enviar_a_suscriptores(
-            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha)
+            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha,
+            teaser_html=teaser_html, asunto_teaser=asunto_teaser)
         persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
                                     conteo["suscriptores"], persistencia.ahora_iso())
         return {"ok": True, "reenviada": True, **conteo}

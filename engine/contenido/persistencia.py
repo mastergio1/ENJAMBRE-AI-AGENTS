@@ -51,7 +51,9 @@ CREATE TABLE IF NOT EXISTS suscriptores (
   origen         TEXT,
   activo         INTEGER DEFAULT 0,   -- 0 hasta confirmar (double opt-in)
   token_baja     TEXT NOT NULL,
-  token_confirma TEXT
+  token_confirma TEXT,
+  premium        INTEGER DEFAULT 0,   -- 1 = suscriptor de pago (recibe el deep-dive completo)
+  premium_hasta  TEXT                 -- vencimiento ISO (AAAA-MM-DD); NULL = sin vencimiento
 );
 CREATE TABLE IF NOT EXISTS contactos (
   id           INTEGER PRIMARY KEY AUTOINCREMENT,  -- leads B2B (organizaciones)
@@ -109,6 +111,8 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("titulares", "impacto", "INTEGER DEFAULT 0"),
             ("suscriptores", "token_confirma", "TEXT"),
             ("suscriptores", "fecha_confirma", "TEXT"),  # anti-reenvío (auditoría C)
+            ("suscriptores", "premium", "INTEGER DEFAULT 0"),  # suscripción de pago (Premium)
+            ("suscriptores", "premium_hasta", "TEXT"),         # vencimiento del Premium (ISO)
             ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
             ("simulaciones", "reaccion_real", "TEXT"),  # corrector automático (calibración)
             # centro de mando de El Pulso: la edición como máquina de estados
@@ -570,6 +574,24 @@ def agregar_suscriptor(conexion, email: str, origen: str = "web") -> dict:
             "token_baja": token_baja, "ya_activo": False, "reenviar": True}
 
 
+def alta_directa(conexion, email: str, origen: str = "premium") -> str:
+    """Alta ACTIVA sin doble opt-in: para pagadores (Premium), que ya dieron
+    consentimiento explícito al pagar. Crea el suscriptor activo o reactiva uno
+    dado de baja, conservando su token. Devuelve el email normalizado."""
+    email = email.strip().lower()
+    fila = conexion.execute("SELECT token_baja FROM suscriptores WHERE email = ?", (email,)).fetchone()
+    if fila:
+        conexion.execute("UPDATE suscriptores SET activo = 1, token_confirma = NULL WHERE email = ?", (email,))
+    else:
+        conexion.execute(
+            "INSERT INTO suscriptores (email, fecha_alta, origen, activo, token_baja) "
+            "VALUES (?, ?, ?, 1, ?)",
+            (email, ahora_iso(), origen, secrets.token_urlsafe(24)),
+        )
+    conexion.commit()
+    return email
+
+
 def confirmar_suscriptor(conexion, token: str) -> str | None:
     """Segundo paso del opt-in: activa al suscriptor. Devuelve su email o None."""
     fila = conexion.execute(
@@ -592,11 +614,47 @@ def dar_de_baja(conexion, token: str) -> bool:
 
 
 def suscriptores_activos(conexion) -> list[dict]:
-    """Los que confirmaron: a quienes se envía el Pulso."""
+    """Los que confirmaron: a quienes se envía el Pulso. Cada uno trae su
+    estado `premium` (1/0) YA calculado (respetando el vencimiento), para que
+    el envío decida quién recibe el análisis completo y quién el teaser."""
     filas = conexion.execute(
-        "SELECT email, token_baja FROM suscriptores WHERE activo = 1"
+        "SELECT email, token_baja, "
+        "  CASE WHEN premium = 1 AND (premium_hasta IS NULL OR premium_hasta >= date('now')) "
+        "       THEN 1 ELSE 0 END AS premium "
+        "FROM suscriptores WHERE activo = 1"
     ).fetchall()
     return [dict(f) for f in filas]
+
+
+# ---------- Premium: la llave que decide quién recibe el deep-dive completo ----------
+
+def set_premium(conexion, email: str, activo: bool = True, hasta: str | None = None) -> bool:
+    """Prende o apaga el Premium de un suscriptor. `hasta` = vencimiento ISO
+    (AAAA-MM-DD) o None para sin vencimiento. True si el correo existe."""
+    cursor = conexion.execute(
+        "UPDATE suscriptores SET premium = ?, premium_hasta = ? WHERE email = ?",
+        (1 if activo else 0, (hasta or None), email.strip().lower()),
+    )
+    conexion.commit()
+    return cursor.rowcount > 0
+
+
+def es_premium(conexion, email: str) -> bool:
+    """True si el correo es un suscriptor Premium activo y no vencido."""
+    fila = conexion.execute(
+        "SELECT 1 FROM suscriptores WHERE email = ? AND activo = 1 AND premium = 1 "
+        "AND (premium_hasta IS NULL OR premium_hasta >= date('now'))",
+        (email.strip().lower(),),
+    ).fetchone()
+    return fila is not None
+
+
+def contar_premium(conexion) -> int:
+    """Cuántos suscriptores Premium activos (no vencidos) hay ahora mismo."""
+    return conexion.execute(
+        "SELECT COUNT(*) FROM suscriptores WHERE activo = 1 AND premium = 1 "
+        "AND (premium_hasta IS NULL OR premium_hasta >= date('now'))"
+    ).fetchone()[0]
 
 
 # ---------- tope de gasto diario (en disco, sobrevive a los reinicios) ----------

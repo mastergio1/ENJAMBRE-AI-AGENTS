@@ -24,6 +24,9 @@ URL_RESEND = "https://api.resend.com/emails"
 REMITENTE = os.environ.get("PULSO_REMITENTE", "El Enjambre <pulso@rubiconlab.cl>")
 BASE_WEB = os.environ.get("ENJAMBRE_WEB_URL", "https://enjambre-ai-agents.vercel.app")
 BASE_API = os.environ.get("ENJAMBRE_API_URL", "https://enjambre-motor.onrender.com")
+# la página donde el lector gratuito se hace Premium (el botón del teaser del domingo)
+PULSO_PREMIUM_URL = os.environ.get("PULSO_PREMIUM_URL", f"{BASE_WEB}/premium")
+PRECIO_PREMIUM = os.environ.get("PULSO_PREMIUM_PRECIO", "USD 6,99/mes")
 
 # --- paleta CLARA del correo (boceto aprobado) ---
 PAPEL = "#faf8f4"          # fondo de página, blanco cálido
@@ -408,6 +411,82 @@ def _bloque_analisis(brief: dict | None) -> str:
   </td></tr>"""
 
 
+def _mov_texto(pct) -> str:
+    """El movimiento semanal como texto en español ('+7,6%', '−4,2%'), sin
+    revelar nada más. '' si no hay dato."""
+    if pct is None:
+        return ""
+    signo = "+" if pct >= 0 else "−"
+    return f"{signo}{abs(pct):.1f}".replace(".", ",") + "%"
+
+
+def _bloque_analisis_teaser(brief: dict | None) -> str:
+    """El TEASER del deep-dive del domingo, para los suscriptores GRATUITOS.
+    Revela el sector y el gancho, pero NUNCA el nombre, los números, el debate
+    ni el 'qué observar' — eso es Premium. Termina en un botón de pago.
+    Mismo criterio de existencia que _bloque_analisis: '' si no hay análisis."""
+    brief = brief or {}
+    red = brief.get("analisis_redactado")
+    hechos = brief.get("analisis") or {}
+    if not isinstance(red, dict) or not red.get("contexto") or not red.get("titular"):
+        return ""
+
+    encuadre = _limpiar(str(hechos.get("encuadre", "mediana capitalización")))
+    sector = _limpiar(str(hechos.get("sector", "") or ""))
+    mov = _mov_texto(hechos.get("var_semana_pct"))
+
+    sector_txt = f"del sector {sector}" if sector and sector != "—" else "de mediana capitalización"
+    intro = (f"Esta semana nuestros inversionistas IA analizaron a fondo una empresa "
+             f"{_esc(encuadre.lower())} {sector_txt}.")
+
+    # el gancho: sector + movimiento de la semana, sin identificar la empresa
+    if sector and sector != "—" and mov:
+        gancho = (f"«El sector {sector} tuvo una semana de {mov}. El enjambre se detuvo en una "
+                  f"compañía que sus ocho perfiles no logran mirar igual…»")
+    else:
+        gancho = ("«El enjambre eligió una compañía para mirar a fondo — y sus ocho perfiles "
+                  "no se ponen de acuerdo…»")
+
+    items = [
+        "Qué hace la empresa y por qué entró al radar del enjambre",
+        "Sus números en simple: ingresos, crecimiento, márgenes, EBITDA, deuda y caja",
+        "El debate de los 8 perfiles sobre el mismo caso: el optimista vs. el escéptico vs. el macro",
+        "El gráfico real de su último mes",
+        "«Qué observar» de aquí en adelante",
+    ]
+    check = f'<span style="color:{SUBE};font-weight:bold;">✓</span>'
+    lista = "".join(
+        f'<tr><td style="padding:5px 0;color:{TEXTO_2};font-size:14px;line-height:1.45;">{check}&nbsp; {t}</td></tr>'
+        for t in items
+    )
+
+    return f"""
+  <tr><td style="padding:22px 32px 4px;text-align:center;border-top:1px solid {LINEA};">
+    <div style="font-size:11px;letter-spacing:3px;color:{ORO};text-transform:uppercase;font-weight:700;">🔒 El análisis de la semana · Premium</div>
+  </td></tr>
+  <tr><td style="padding:8px 32px 2px;">
+    <div style="font-family:Georgia,serif;font-size:21px;font-weight:bold;color:{TEXTO};line-height:1.3;">{intro}</div>
+  </td></tr>
+  <tr><td style="padding:10px 32px 2px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{lista}</table>
+  </td></tr>
+  <tr><td style="padding:14px 32px 2px;">
+    <div style="position:relative;background:{PAPEL};border-left:3px solid {ORO};border-radius:6px;padding:14px 16px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:{MUTE};font-weight:700;margin-bottom:6px;">Vista previa</div>
+      <div style="font-family:Georgia,serif;font-style:italic;font-size:16px;line-height:1.5;color:{TEXTO_2};">{_esc(gancho)}</div>
+      <div style="text-align:right;font-size:12px;font-weight:700;color:{ORO};margin-top:6px;">continúa en Premium →</div>
+    </div>
+  </td></tr>
+  <tr><td style="padding:18px 32px 6px;text-align:center;">
+    <a href="{_url_segura(PULSO_PREMIUM_URL)}" style="display:inline-block;background:{ORO};color:#ffffff;text-decoration:none;
+      font-weight:bold;font-size:15px;letter-spacing:.3px;padding:14px 30px;border-radius:8px;">Leer el análisis completo →</a>
+    <div style="color:{MUTE};font-size:12px;margin-top:8px;">Desde {_esc(PRECIO_PREMIUM)} · cancela cuando quieras</div>
+  </td></tr>
+  <tr><td style="padding:2px 32px 8px;">
+    <div style="color:{MUTE};font-size:12px;font-style:italic;line-height:1.5;">Análisis educativo elaborado por un sistema de IA. No es recomendación ni asesoría de inversión.</div>
+  </td></tr>"""
+
+
 def _tabla_semana(foto: list[dict]) -> str:
     """'La semana en números': el movimiento SEMANAL del telón (índices, petróleo,
     oro), una sola columna con su píldora verde/roja. '' si no hay datos."""
@@ -492,6 +571,40 @@ def asunto_resumen(hechos: dict | None = None) -> str:
     return "🐝 El Pulso — La semana en el mercado"
 
 
+def asunto_teaser_premium() -> str:
+    """El asunto del correo del domingo para los suscriptores GRATUITOS: NO
+    revela el nombre de la empresa (eso es el gancho Premium)."""
+    return "🐝 El Pulso — El análisis de la semana (Premium)"
+
+
+_DIAS_ES = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+_MESES_ES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+             "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+
+
+def fecha_es_de_iso(iso: str) -> str:
+    """Convierte 'AAAA-MM-DD' en 'domingo 17 de agosto' (para rearmar el teaser
+    al enviar, cuando solo tenemos la fecha ISO de la edición)."""
+    from datetime import date
+    try:
+        d = date.fromisoformat(str(iso)[:10])
+        return f"{_DIAS_ES[d.weekday()]} {d.day} de {_MESES_ES[d.month - 1]}"
+    except Exception:
+        return str(iso)
+
+
+def teaser_para(brief: dict | None, fecha_iso: str) -> tuple[str | None, str | None]:
+    """Si la edición del día es el deep-dive del domingo (Premium), arma el
+    (html_teaser, asunto_teaser) para los suscriptores gratuitos. Si no es una
+    edición con deep-dive, devuelve (None, None) → todos reciben la completa."""
+    if not (isinstance(brief, dict) and _bloque_analisis_teaser(brief)):
+        return None, None
+    fecha_es = fecha_es_de_iso(fecha_iso)
+    html = construir_html([], fecha_es, token_baja=persistencia.TOKEN_BAJA_SENTINEL,
+                          brief=brief, premium=False)
+    return html, asunto_teaser_premium()
+
+
 def _footer_enjambre() -> str:
     """El Enjambre al pie, como herramienta HERMANA (no como autor de El Pulso):
     una invitación a probarlo + su descripción. Nada de 'esto lo escribe el
@@ -510,19 +623,32 @@ def _footer_enjambre() -> str:
 
 
 def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN",
-                   brief: dict | None = None) -> str:
+                   brief: dict | None = None, premium: bool = True) -> str:
     """El HTML del correo (rediseño estilo diario): las NOTICIAS con análisis y
     gráficos reales son el cuerpo; El Enjambre baja al pie como herramienta
     hermana. `destacadas` ya no arma el cuerpo (el correo es noticioso), pero se
-    mantiene la firma por compatibilidad. brief["redactado"] trae las historias."""
+    mantiene la firma por compatibilidad. brief["redactado"] trae las historias.
+
+    `premium`: solo afecta al deep-dive del domingo. Con premium=True se manda el
+    análisis completo; con premium=False, el TEASER con botón de pago (versión
+    gratuita). El resumen del sábado y las ediciones de la semana son iguales
+    para todos (no se cobran)."""
     brief = brief or {}
     red = brief.get("redactado") or {}
     url_baja = f"{BASE_API}/api/baja/{token_baja}"
 
     # EDICIÓN DE FIN DE SEMANA: si hay resumen de la semana (sábado) o deep-dive
     # (domingo) redactado, ESE es el correo (reemplaza las noticias del día).
+    # El deep-dive del domingo es Premium: gratis → teaser; de pago → completo.
     resumen_html = _bloque_resumen(brief)
-    analisis_html = "" if resumen_html else _bloque_analisis(brief)
+    if resumen_html:
+        analisis_html = ""  # sábado: para todos, no se cobra
+    else:
+        analisis_completo = _bloque_analisis(brief)
+        if analisis_completo and not premium:
+            analisis_html = _bloque_analisis_teaser(brief)
+        else:
+            analisis_html = analisis_completo
     finde_html = resumen_html or analisis_html
     es_finde = bool(finde_html)
 
@@ -687,14 +813,27 @@ def enviar_revision(fecha_es: str, preview_html: str, token: str, suscriptores: 
 
 
 def enviar_a_suscriptores(conexion, preview_html: str, asunto: str,
-                          fecha_edicion: str | None = None) -> dict:
+                          fecha_edicion: str | None = None,
+                          teaser_html: str | None = None,
+                          asunto_teaser: str | None = None) -> dict:
     """Envía la edición YA APROBADA a los suscriptores activos, reemplazando el
     marcador del token de baja por el de cada uno (WYSIWYG con lo revisado).
-    Cada correo va etiquetado con `fecha_edicion` para medir su apertura."""
+    Cada correo va etiquetado con `fecha_edicion` para medir su apertura.
+
+    Si se pasa `teaser_html` (edición Premium del domingo), los suscriptores
+    GRATUITOS reciben ese teaser y los Premium el `preview_html` completo. Sin
+    `teaser_html`, todos reciben lo mismo (comportamiento de siempre)."""
     activos = persistencia.suscriptores_activos(conexion)
     enviados = 0
+    premium_enviados = 0
     for s in activos:
-        html = preview_html.replace(persistencia.TOKEN_BAJA_SENTINEL, s["token_baja"])
-        if enviar(s["email"], asunto, html, fecha_edicion=fecha_edicion):
+        gratuito = teaser_html is not None and not s.get("premium")
+        base = teaser_html if gratuito else preview_html
+        subj = (asunto_teaser or asunto) if gratuito else asunto
+        html = base.replace(persistencia.TOKEN_BAJA_SENTINEL, s["token_baja"])
+        if enviar(s["email"], subj, html, fecha_edicion=fecha_edicion):
             enviados += 1
-    return {"suscriptores": len(activos), "enviados": enviados, "fallidos": len(activos) - enviados}
+            if not gratuito:
+                premium_enviados += 1
+    return {"suscriptores": len(activos), "enviados": enviados,
+            "fallidos": len(activos) - enviados, "premium": premium_enviados}

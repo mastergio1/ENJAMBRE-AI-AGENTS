@@ -1203,6 +1203,31 @@ async def webhook_resend(request: Request) -> Response:
     return JSONResponse({"ok": True})  # 200 siempre que la firma sea válida
 
 
+@app.post("/pulso/webhook/polar")
+async def webhook_polar(request: Request) -> Response:
+    """Recibe los eventos de pago de Polar (El Pulso Premium) y prende/apaga la
+    llave `premium` del suscriptor. Firma Standard Webhooks obligatoria: sin ella,
+    401. Devuelve 200 en todo evento con firma válida (aunque no aplique), para
+    que Polar no lo reintente en vano."""
+    from contenido import pagos
+
+    cuerpo = await request.body()
+    if len(cuerpo) > 96_000:  # un evento legítimo es pequeño; corta abusos
+        return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+    if not pagos.verificar_firma(cuerpo, request.headers):
+        return JSONResponse({"error": "firma no válida"}, status_code=401)
+    try:
+        evento = json.loads(cuerpo)
+    except (ValueError, TypeError):
+        return JSONResponse({"error": "json no válido"}, status_code=400)
+    conexion = persistencia.conectar()
+    try:
+        resultado = pagos.procesar_evento(conexion, evento)
+    finally:
+        conexion.close()
+    return JSONResponse(resultado)
+
+
 # ---------- Centro de Mando de El Pulso (dashboard, protegido por token) ----------
 
 class PeticionEditar(BaseModel):

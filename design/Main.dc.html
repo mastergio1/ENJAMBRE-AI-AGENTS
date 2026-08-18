@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; }
+    .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .sans { font-family: 'Jost', system-ui, sans-serif; }
+    a { color: #2f7a6f; }
+    a:hover { color: #245e55; }
+  </style>
+</helmet>
+
+<div class="sans" style="width: 600px; background: #faf8f4; padding: 28px 20px; box-sizing: border-box;">
+  <div style="background: #ffffff; border: 1px solid #eae5db; border-radius: 10px; overflow: hidden;">
+
+    <!-- kicker -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 22px 30px 0; color: #b0831a;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;">El análisis de la semana · Premium</span>
+    </div>
+
+    <!-- intro -->
+    <div style="padding: 14px 30px 0;">
+      <p class="serif" style="margin: 0; font-size: 22px; line-height: 1.32; color: #1e1b17; font-weight: 600;">Esta semana nuestros inversionistas IA analizaron a fondo una empresa de mediana capitalización del sector Energía.</p>
+    </div>
+
+    <!-- checklist -->
+    <div style="display: flex; flex-direction: column; gap: 11px; padding: 20px 30px 0;">
+      <div style="display: flex; align-items: flex-start; gap: 11px;">
+        <span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span style="font-size: 15px; line-height: 1.45; color: #3c382f;">Qué hace la empresa y por qué entró al radar del enjambre</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 11px;">
+        <span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span style="font-size: 15px; line-height: 1.45; color: #3c382f;">Sus números en simple: ingresos, crecimiento, márgenes, EBITDA, deuda y caja</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 11px;">
+        <span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span style="font-size: 15px; line-height: 1.45; color: #3c382f;">El debate de los 8 perfiles: el optimista vs. el escéptico vs. el macro vs. el doomer, sobre el mismo caso</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 11px;">
+        <span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span style="font-size: 15px; line-height: 1.45; color: #3c382f;">El gráfico de su último mes</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 11px;">
+        <span style="color: #2f8f66; flex-shrink: 0; margin-top: 1px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span style="font-size: 15px; line-height: 1.45; color: #3c382f;">"Qué observar" de aquí en adelante</span>
+      </div>
+    </div>
+
+    <!-- preview / teaser con fade -->
+    <div style="margin: 22px 30px 0; position: relative; background: #faf8f4; border-left: 3px solid #b0831a; border-radius: 6px; padding: 16px 18px 26px;">
+      <div style="font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6f6a5f; margin-bottom: 8px;">Vista previa</div>
+      <p class="serif" style="margin: 0; font-style: italic; font-size: 18px; line-height: 1.5; color: #3c382f;">«El sector tuvo una semana de +7,6%. El enjambre se fijó en una compañía que crece a doble dígito pero con una deuda que divide a nuestros perfiles…»</p>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 46px; border-radius: 0 0 6px 6px; background: linear-gradient(to bottom, rgba(250,248,244,0), #faf8f4 78%);"></div>
+      <div style="position: absolute; right: 16px; bottom: 8px; font-size: 12px; font-weight: 600; color: #b0831a;">continúa en Premium →</div>
+    </div>
+
+    <!-- disclaimer CMF visible -->
+    <div style="margin: 20px 30px 0; padding: 12px 14px; background: #fbf5e6; border: 1px solid #ecdcb4; border-radius: 6px; display: flex; gap: 10px; align-items: flex-start;">
+      <span style="color: #b0831a; flex-shrink: 0; margin-top: 1px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg></span>
+      <span style="font-size: 12.5px; line-height: 1.5; color: #6f6a5f;">Análisis educativo elaborado por un sistema de IA. <b style="color: #3c382f;">No es recomendación ni asesoría de inversión.</b> El Pulso no dice qué comprar ni vender.</span>
+    </div>
+
+    <!-- CTA -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 30px 30px;">
+      <a href="#" style="display: inline-flex; align-items: center; gap: 8px; background: #b0831a; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; padding: 14px 28px; border-radius: 8px;">
+        Leer el análisis completo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+      <span style="font-size: 12px; color: #6f6a5f;">Desde USD 6,99/mes · cancela cuando quieras</span>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

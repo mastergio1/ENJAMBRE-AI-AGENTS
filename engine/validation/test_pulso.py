@@ -448,3 +448,104 @@ def test_panel_edicion_finde_marca_deep_dive_y_regenera_preview(monkeypatch):
                        headers={"X-Pipeline-Token": "secreto"},
                        json={"redactado": {}}).json()
     assert res["ok"] is True and res["preview_actualizado"] is True  # se regeneró el deep-dive
+
+
+# ---------- Premium: el deep-dive del domingo se parte en gratis (teaser) y de pago ----------
+
+def _brief_domingo() -> dict:
+    """Un brief de domingo (deep-dive) para probar el gating Premium."""
+    return {
+        "analisis": {"modo": "accion", "titulo": "Acción seleccionada",
+                     "encuadre": "mediana capitalización", "ticker": "ROKU", "nombre": "Roku",
+                     "sector": "Streaming", "var_semana_pct": 8.4,
+                     "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"}},
+        "analisis_redactado": {
+            "titular": "Roku vuelve a la conversación", "dek": "Semana movida",
+            "contexto": "Roku hace el sistema de sus televisores.\n\nGana con publicidad.",
+            "lectura": "Avanzó tras un anuncio.",
+            "debate": [{"arquetipo": "doomer", "nombre": "El Doomer",
+                        "mirada": "La publicidad es lo primero que se recorta."}],
+            "que_observar": "Habrá que ver si sostiene el ritmo."},
+    }
+
+
+def test_premium_deep_dive_completo_vs_teaser():
+    """El correo completo (Premium) muestra el análisis; el teaser (gratis) lo
+    reemplaza por el gancho + botón de pago, SIN revelar nombre ni debate."""
+    brief = _brief_domingo()
+    completo = boletin.construir_html([], "domingo 17 de agosto", brief=brief, premium=True)
+    teaser = boletin.construir_html([], "domingo 17 de agosto", brief=brief, premium=False)
+
+    # el completo lleva el análisis de verdad
+    assert "Qué es" in completo and "Lo que ven nuestros inversionistas IA" in completo
+    assert "Roku" in completo
+
+    # el teaser NO revela lo pagado, sí el gancho + botón + sector
+    assert "Premium" in teaser and "continúa en Premium" in teaser
+    assert "Leer el análisis completo" in teaser
+    assert "Streaming" in teaser              # el sector sí se muestra (el gancho)
+    assert "Roku" not in teaser               # el nombre NO se revela
+    assert "El Doomer" not in teaser          # el debate es Premium
+    assert DISCLAIMER in teaser               # sigue llevando el pie legal
+
+
+def test_premium_envio_separa_gratis_y_pago(monkeypatch):
+    """Al enviar el domingo: el Premium recibe el completo; el gratuito, el teaser."""
+    conexion = persistencia.conectar()
+    for correo in ("gratis@lector.cl", "pago@lector.cl"):
+        alta = persistencia.agregar_suscriptor(conexion, correo)
+        persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    assert persistencia.set_premium(conexion, "pago@lector.cl", True)
+    assert persistencia.es_premium(conexion, "pago@lector.cl")
+    assert not persistencia.es_premium(conexion, "gratis@lector.cl")
+    assert persistencia.contar_premium(conexion) == 1
+    conexion.close()
+
+    # capturamos (destinatario, asunto, html) de cada envío
+    enviados = []
+    monkeypatch.setattr(boletin, "enviar",
+                        lambda dest, asunto, html, **k: enviados.append((dest, asunto, html)) or True)
+
+    brief = _brief_domingo()
+    hoy = persistencia.ahora_iso()[:10]
+    conexion = persistencia.conectar()
+    completo = boletin.construir_html([], "domingo 17 de agosto", token_baja=persistencia.TOKEN_BAJA_SENTINEL,
+                                      brief=brief, premium=True)
+    persistencia.guardar_edicion(conexion, hoy, brief, completo,
+                                 boletin.asunto_finde(brief["analisis"]), "t" * 24, persistencia.ahora_iso())
+    conexion.close()
+
+    res = pipeline.aprobar_y_enviar(fecha=hoy)
+    assert res["ok"] and res["enviados"] == 2 and res["premium"] == 1
+
+    por_correo = {dest: (asunto, html) for dest, asunto, html in enviados}
+    asunto_pago, html_pago = por_correo["pago@lector.cl"]
+    asunto_gratis, html_gratis = por_correo["gratis@lector.cl"]
+
+    assert "Roku" in html_pago and "El Doomer" in html_pago            # completo
+    assert "continúa en Premium" in html_gratis and "Roku" not in html_gratis  # teaser
+    assert "Premium" in asunto_gratis and "Roku" not in asunto_gratis  # asunto sin nombre
+
+
+def test_premium_vence_y_deja_de_contar():
+    """Un Premium con fecha vencida ya no cuenta como Premium activo."""
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "vencido@lector.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    persistencia.set_premium(conexion, "vencido@lector.cl", True, hasta="2020-01-01")
+    assert not persistencia.es_premium(conexion, "vencido@lector.cl")
+    activos = {s["email"]: s["premium"] for s in persistencia.suscriptores_activos(conexion)}
+    assert activos["vencido@lector.cl"] == 0
+    conexion.close()
+
+
+def test_sabado_no_se_cobra():
+    """El resumen del sábado es igual para todos (no hay teaser Premium)."""
+    brief = {"resumen": {"titulo": "El Pulso de la semana", "foto": []},
+             "resumen_redactado": {"intro": "Semana de nervios.",
+                                   "temas": [{"kicker": "Macro", "emoji": "🏦",
+                                              "titular": "La Fed marcó el tono",
+                                              "analisis": "Subió el tono.", "que_observar": ""}],
+                                   "cierre": ""}}
+    teaser_html, asunto_teaser = boletin.teaser_para(brief, "2026-08-15")
+    assert teaser_html is None and asunto_teaser is None   # el sábado NO gatea

@@ -574,6 +574,24 @@ def agregar_suscriptor(conexion, email: str, origen: str = "web") -> dict:
             "token_baja": token_baja, "ya_activo": False, "reenviar": True}
 
 
+def alta_directa(conexion, email: str, origen: str = "premium") -> str:
+    """Alta ACTIVA sin doble opt-in: para pagadores (Premium), que ya dieron
+    consentimiento explícito al pagar. Crea el suscriptor activo o reactiva uno
+    dado de baja, conservando su token. Devuelve el email normalizado."""
+    email = email.strip().lower()
+    fila = conexion.execute("SELECT token_baja FROM suscriptores WHERE email = ?", (email,)).fetchone()
+    if fila:
+        conexion.execute("UPDATE suscriptores SET activo = 1, token_confirma = NULL WHERE email = ?", (email,))
+    else:
+        conexion.execute(
+            "INSERT INTO suscriptores (email, fecha_alta, origen, activo, token_baja) "
+            "VALUES (?, ?, ?, 1, ?)",
+            (email, ahora_iso(), origen, secrets.token_urlsafe(24)),
+        )
+    conexion.commit()
+    return email
+
+
 def confirmar_suscriptor(conexion, token: str) -> str | None:
     """Segundo paso del opt-in: activa al suscriptor. Devuelve su email o None."""
     fila = conexion.execute(

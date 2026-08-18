@@ -323,9 +323,10 @@
   // Recuerda: el dominio de esta landing debe estar en ENJAMBRE_ORIGENES
   // (CORS) para que el alta funcione desde aquí.
   var API = "https://enjambre-motor.onrender.com";
-  // Cuando Stripe esté listo (Pieza 3): pega aquí el enlace de Checkout.
-  // Mientras esté vacío, el botón Premium capta el interés y ofrece el alta gratis.
-  var STRIPE_CHECKOUT_URL = "";
+  // Cuando Polar esté listo (Pieza 3): pega aquí el enlace de Checkout del
+  // producto "El Pulso Premium". Mientras esté vacío, el botón Premium capta
+  // el interés y ofrece el alta gratis.
+  var CHECKOUT_URL = "";
 
   var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
@@ -390,8 +391,8 @@
   // botón "Hazte Premium"
   var ctaPrem = document.getElementById("cta-prem");
   if (ctaPrem) ctaPrem.addEventListener("click", function () {
-    if (STRIPE_CHECKOUT_URL) {
-      window.location.href = STRIPE_CHECKOUT_URL;
+    if (CHECKOUT_URL) {
+      window.location.href = CHECKOUT_URL;
     } else {
       // Stripe aún no está activo: captamos el interés vía alta gratis.
       document.getElementById("suscribirse").scrollIntoView();

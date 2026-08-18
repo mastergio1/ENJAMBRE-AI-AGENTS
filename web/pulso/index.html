@@ -323,10 +323,9 @@
   // Recuerda: el dominio de esta landing debe estar en ENJAMBRE_ORIGENES
   // (CORS) para que el alta funcione desde aquí.
   var API = "https://enjambre-motor.onrender.com";
-  // Cuando Polar esté listo (Pieza 3): pega aquí el enlace de Checkout del
-  // producto "El Pulso Premium". Mientras esté vacío, el botón Premium capta
-  // el interés y ofrece el alta gratis.
-  var CHECKOUT_URL = "";
+  // Enlace de Checkout de Polar (producto "El Pulso Premium"). Al pagar,
+  // Polar avisa a POST /pulso/webhook/polar y se prende la llave Premium.
+  var CHECKOUT_URL = "https://buy.polar.sh/polar_cl_hy8qjPfruFrefdpCyLWJB043I99rOwHIcqE270kLphF";
 
   var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 

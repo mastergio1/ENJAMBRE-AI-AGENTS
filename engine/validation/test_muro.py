@@ -109,15 +109,36 @@ def test_api_simular_titular_pendiente(dia_preparado):
     assert cliente.post("/api/simular-titular", json={"id": "no-existe"}).status_code == 404
 
 
-def test_limite_por_ip():
-    for _ in range(limites.LIMITE_IP_HORA):
+def test_limite_gratis_por_dia():
+    # gratis: 3 simulaciones al día por IP; la 4.ª se bloquea e invita a Premium
+    for _ in range(limites.tope_dia_gratis()):
         permitido, _ = limites.permitir("1.2.3.4")
         assert permitido
     permitido, motivo = limites.permitir("1.2.3.4")
     assert not permitido
-    assert motivo == limites.MENSAJE_IP
-    # otra IP sigue pudiendo
+    assert "Premium" in motivo
+    # otra IP sigue pudiendo (el cupo es por persona)
     assert limites.permitir("5.6.7.8")[0]
+
+
+def test_limite_premium_por_dia():
+    # un suscriptor Premium tiene 10/día por su correo; una IP anónima, 3/día
+    from contenido import persistencia
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "vip@lector.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    persistencia.set_premium(conexion, "vip@lector.cl", True)
+    conexion.close()
+
+    # gasta las 3 gratis de su IP: aun así, como Premium tiene su propio cupo
+    for _ in range(limites.tope_dia_gratis()):
+        limites.permitir("9.9.9.9")
+    # con su correo Premium: llega a 10, no lo frena el límite gratis de la IP
+    for i in range(limites.tope_dia_premium()):
+        permitido, _ = limites.permitir("9.9.9.9", premium_email="vip@lector.cl")
+        assert permitido, f"la simulación Premium #{i+1} debería permitirse"
+    permitido, motivo = limites.permitir("9.9.9.9", premium_email="vip@lector.cl")
+    assert not permitido and "mañana" in motivo
 
 
 def test_tope_global_diario(monkeypatch):

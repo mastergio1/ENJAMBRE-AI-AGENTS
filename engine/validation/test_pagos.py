@@ -110,3 +110,18 @@ def test_endpoint_webhook_rechaza_sin_firma():
     cuerpo = _evento("subscription.active")
     r = cliente.post("/pulso/webhook/polar", content=cuerpo)  # sin cabeceras de firma
     assert r.status_code == 401
+
+
+def test_endpoint_estado_premium():
+    """El Enjambre pregunta si un correo es Premium para elevar su cupo diario."""
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "vip@lector.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    persistencia.set_premium(conexion, "vip@lector.cl", True)
+    conexion.close()
+
+    cliente = TestClient(server.app)
+    r = cliente.get("/api/pulso/premium", params={"email": "vip@lector.cl"}).json()
+    assert r["premium"] is True and r["limite"] == 10
+    r2 = cliente.get("/api/pulso/premium", params={"email": "nadie@lector.cl"}).json()
+    assert r2["premium"] is False and r2["limite"] == 3

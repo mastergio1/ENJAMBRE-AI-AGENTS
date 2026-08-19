@@ -42,6 +42,47 @@ export function guardarCorreo(email) {
   }
 }
 
+/** El correo Premium desbloqueado (suscriptor de pago de El Pulso): eleva el
+ * cupo diario de simulaciones de 3 a 10. Se recuerda en el navegador y viaja
+ * con cada simulación; el motor lo verifica en vivo (si canceló, vuelve a 3). */
+export function correoPremium() {
+  try {
+    return localStorage.getItem('enjambre-premium') || ''
+  } catch {
+    return ''
+  }
+}
+
+export function guardarPremium(email) {
+  try {
+    localStorage.setItem('enjambre-premium', String(email || '').trim().toLowerCase())
+  } catch {
+    /* da igual */
+  }
+}
+
+export function borrarPremium() {
+  try {
+    localStorage.removeItem('enjambre-premium')
+  } catch {
+    /* da igual */
+  }
+}
+
+/** Pregunta al motor si un correo es Premium activo. Devuelve {premium, limite}
+ * o null si no se pudo verificar (sin motor / red). NO consume cupo. */
+export async function verificarPremium(email) {
+  const base = urlApi()
+  if (!base) return null
+  try {
+    const r = await fetch(`${base}/api/pulso/premium?email=${encodeURIComponent(email)}`)
+    if (!r.ok) return null
+    return await r.json()
+  } catch {
+    return null
+  }
+}
+
 export class MotorRemoto {
   constructor(url) {
     this.url = url
@@ -117,7 +158,7 @@ export class MotorRemoto {
     const seed = Math.floor(Math.random() * 2_000_000_000)
     this.ws.send(JSON.stringify({
       tipo: 'simular', titular, seed,
-      acceso: claveAcceso(), email: correoUsuario(), ...extras,
+      acceso: claveAcceso(), email: correoUsuario(), premium_email: correoPremium(), ...extras,
     }))
   }
 
@@ -143,7 +184,7 @@ export class MotorRemoto {
     }
     ws.send(JSON.stringify({
       tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000),
-      acceso: claveAcceso(), email: correoUsuario(),
+      acceso: claveAcceso(), email: correoUsuario(), premium_email: correoPremium(),
     }))
     return {
       soltarNoticia(t) {

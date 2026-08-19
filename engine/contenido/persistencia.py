@@ -70,6 +70,14 @@ CREATE TABLE IF NOT EXISTS gasto_diario (
   fecha       TEXT PRIMARY KEY,     -- AAAA-MM-DD (UTC)
   consumidas  INTEGER DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS gasto_premium (
+  -- el cupo MENSUAL de simulaciones de cada suscriptor Premium, en DISCO: un
+  -- reinicio de Render no debe regalarle el mes de nuevo a mitad de camino.
+  email       TEXT NOT NULL,
+  mes         TEXT NOT NULL,        -- AAAA-MM (UTC)
+  consumidas  INTEGER DEFAULT 0,
+  PRIMARY KEY (email, mes)
+);
 CREATE TABLE IF NOT EXISTS eventos_correo (
   -- eventos de Resend (webhook firmado): aperturas y clics por edición.
   -- UNIQUE(fecha_ed,email,tipo) → un opened por persona = apertura ÚNICA.
@@ -679,7 +687,30 @@ def sumar_gasto_dia(conexion, fecha: str, n: int = 1) -> int:
 def reiniciar_gasto(conexion) -> None:
     """Borra todo el gasto registrado (solo para los tests)."""
     conexion.execute("DELETE FROM gasto_diario")
+    conexion.execute("DELETE FROM gasto_premium")
     conexion.commit()
+
+
+# ---------- cupo mensual de Premium (en disco, sobrevive a los reinicios) ----------
+
+def gasto_premium_mes(conexion, email: str, mes: str) -> int:
+    """Cuántas simulaciones lleva este Premium en `mes` (AAAA-MM). 0 si ninguna."""
+    fila = conexion.execute(
+        "SELECT consumidas FROM gasto_premium WHERE email = ? AND mes = ?",
+        (email.strip().lower(), mes)).fetchone()
+    return fila[0] if fila else 0
+
+
+def sumar_gasto_premium(conexion, email: str, mes: str, n: int = 1) -> int:
+    """Suma `n` al cupo mensual de este Premium (crea la fila si no existe).
+    Devuelve el total del mes."""
+    email = email.strip().lower()
+    conexion.execute(
+        "INSERT INTO gasto_premium (email, mes, consumidas) VALUES (?, ?, ?) "
+        "ON CONFLICT(email, mes) DO UPDATE SET consumidas = consumidas + excluded.consumidas",
+        (email, mes, n))
+    conexion.commit()
+    return gasto_premium_mes(conexion, email, mes)
 
 
 # ---------- eventos de correo (aperturas/clics de Resend) ----------

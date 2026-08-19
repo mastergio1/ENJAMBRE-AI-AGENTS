@@ -161,10 +161,10 @@ def test_diagnostico_reporta_clave_faltante(monkeypatch):
 # ---------- el tope global por defecto (la muralla de la billetera) ----------
 
 def test_tope_diario_por_defecto(monkeypatch):
-    # el default sube a 60 con el freemium (para que quepan los 10/día Premium);
-    # en producción se fija con ENJAMBRE_MAX_SIM_DIA según el presupuesto.
+    # el default es 30 (la muralla de la billetera); en producción se fija con
+    # ENJAMBRE_MAX_SIM_DIA según el presupuesto.
     monkeypatch.delenv("ENJAMBRE_MAX_SIM_DIA", raising=False)
-    assert limites.tope_global_dia() == 60
+    assert limites.tope_global_dia() == 30
 
 
 # ---------- candado de pruebas privadas ----------

@@ -88,6 +88,14 @@ def _puerta_simulacion(mensaje: dict) -> tuple[bool, str | None]:
     return True, correo
 
 
+def _correo_premium(mensaje: dict) -> str | None:
+    """El correo Premium que el visitante desbloqueó en El Enjambre (lo manda el
+    frontend en cada simulación). Solo se usa para elevar su cupo diario; si no
+    es Premium, `limites` lo ignora y cae al nivel gratis."""
+    email = str(mensaje.get("premium_email", "")).strip().lower()
+    return email if seguridad.correo_valido(email) else None
+
+
 def _suscribir_silencioso(email: str) -> None:
     """Captura el lead SIN bloquear la simulación: alta + correo de confirmación
     (double opt-in). Corre en su propio hilo; cualquier falla se traga para no
@@ -300,8 +308,8 @@ async def canal(ws: WebSocket) -> None:
                 continue
             try:
                 # toda simulación pública gasta ~100 llamadas LLM:
-                # frenos por IP y global (tope diario)
-                permitido, motivo = limites.permitir(ip)
+                # frenos por persona (3/día gratis, 10/día Premium) y global
+                permitido, motivo = limites.permitir(ip, premium_email=_correo_premium(mensaje))
                 if not permitido:
                     await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
                     continue
@@ -375,8 +383,8 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
         detener.set()
 
     async def _inyectar(titular: str) -> None:
-        # cada noticia gasta ~100 llamadas LLM → bajo el tope diario
-        permitido, motivo = limites.permitir(ip)
+        # cada noticia gasta ~100 llamadas LLM → bajo el cupo diario de la persona
+        permitido, motivo = limites.permitir(ip, premium_email=_correo_premium(mensaje))
         if not permitido:
             await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
             return
@@ -967,6 +975,25 @@ def api_contactos(x_pipeline_token: str = Header(default="")) -> dict:
         return {"contactos": persistencia.listar_contactos(conexion)}
     finally:
         conexion.close()
+
+
+@app.get("/api/pulso/premium")
+def estado_premium(email: str = "") -> dict:
+    """¿Este correo es Premium activo? Lo usa El Enjambre para desbloquear el
+    cupo de 10/día. Devuelve {premium, limite}. Respuesta neutra si el correo es
+    inválido (no revela nada). NO consume cupo."""
+    from contenido import limites
+
+    correo = (email or "").strip().lower()
+    es_prem = False
+    if seguridad.correo_valido(correo):
+        conexion = persistencia.conectar()
+        try:
+            es_prem = persistencia.es_premium(conexion, correo)
+        finally:
+            conexion.close()
+    return {"premium": es_prem,
+            "limite": limites.tope_dia_premium() if es_prem else limites.tope_dia_gratis()}
 
 
 @app.get("/api/confirmar/{token}")

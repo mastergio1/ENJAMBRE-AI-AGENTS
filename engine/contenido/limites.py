@@ -1,15 +1,16 @@
 """Límites de las simulaciones disparadas por visitantes.
 
-Cada simulación pública cuesta ~100 llamadas LLM. Tres frenos:
-- por persona y día (FREEMIUM): gratis 3/día (por IP); Premium de El Pulso
-  10/día (por su correo verificado). En memoria: su reinicio es de horas y no
-  cuesta plata; la clave incluye la fecha, así se vacía sola cada día.
-- global: tope diario configurable (ENJAMBRE_MAX_SIM_DIA) — en DISCO (tabla
-  `gasto_diario`): NO se reinicia con cada despliegue de Render. Es la muralla
-  de la billetera: nada la traspasa, ni siquiera los Premium.
+Cada simulación pública cuesta ~$0,12 en llamadas LLM. Tres frenos:
+- GRATIS, por IP y día: 1/día (en memoria; su reinicio es de horas y no cuesta
+  plata; la clave lleva la fecha, así se vacía sola cada día).
+- PREMIUM, por correo y MES: 40/mes (en DISCO, tabla `gasto_premium`): un
+  reinicio de Render NO le regala el mes de nuevo. Tope pensado para que un
+  Premium a tope cueste ~$4,80 < los $6,99 que paga → nunca se pierde plata.
+- GLOBAL, por día: tope diario (ENJAMBRE_MAX_SIM_DIA) en DISCO — la muralla de
+  la billetera: manda sobre gratis y Premium por igual.
 
-El on-demand es un lujo, no un regalo; al agotar el cupo diario, el muro invita
-al Pulso (y al que ya es Premium, a volver mañana).
+El on-demand es un lujo, no un regalo; al agotar el cupo, el muro invita al
+Pulso (y al Premium, a esperar al próximo mes).
 """
 
 import os
@@ -17,8 +18,8 @@ from datetime import date
 
 from contenido import persistencia
 
-LIMITE_DIA_GRATIS = 3    # defecto; ENJAMBRE_SIM_DIA_GRATIS
-LIMITE_DIA_PREMIUM = 10  # defecto; ENJAMBRE_SIM_DIA_PREMIUM
+LIMITE_DIA_GRATIS = 1     # defecto; ENJAMBRE_SIM_DIA_GRATIS
+LIMITE_MES_PREMIUM = 40   # defecto; ENJAMBRE_SIM_MES_PREMIUM
 
 
 def tope_dia_gratis() -> int:
@@ -28,23 +29,22 @@ def tope_dia_gratis() -> int:
         return LIMITE_DIA_GRATIS
 
 
-def tope_dia_premium() -> int:
+def tope_mes_premium() -> int:
     try:
-        return max(0, int(os.environ.get("ENJAMBRE_SIM_DIA_PREMIUM", str(LIMITE_DIA_PREMIUM))))
+        return max(0, int(os.environ.get("ENJAMBRE_SIM_MES_PREMIUM", str(LIMITE_MES_PREMIUM))))
     except (TypeError, ValueError):
-        return LIMITE_DIA_PREMIUM
+        return LIMITE_MES_PREMIUM
 
 
 def tope_global_dia() -> int:
     try:
-        return max(0, int(os.environ.get("ENJAMBRE_MAX_SIM_DIA", "60")))
+        return max(0, int(os.environ.get("ENJAMBRE_MAX_SIM_DIA", "30")))
     except (TypeError, ValueError):
-        return 60
+        return 30
 
 
-# uso diario por persona: clave -> (fecha_iso, cuenta). La clave lleva prefijo
-# 'p:' (premium, por correo) o 'ip:' (gratis, por IP). La fecha en el valor hace
-# que el cupo se reinicie solo al cambiar el día, sin contador que rotar.
+# uso diario GRATIS por IP: clave -> (fecha_iso, cuenta). La fecha en el valor
+# hace que el cupo se reinicie solo al cambiar el día (el Premium va en disco).
 _uso: dict[str, tuple[str, int]] = {}
 
 MENSAJE_GLOBAL = (
@@ -54,23 +54,24 @@ MENSAJE_GLOBAL = (
 
 
 def _mensaje_gratis() -> str:
-    return (f"Llegaste a tus {tope_dia_gratis()} simulaciones gratis de hoy. "
-            f"Con El Pulso Premium son {tope_dia_premium()} al día — "
+    n = tope_dia_gratis()
+    cuantas = "tu simulación gratis de hoy" if n == 1 else f"tus {n} simulaciones gratis de hoy"
+    return (f"Usaste {cuantas}. Con El Pulso Premium son {tope_mes_premium()} al mes — "
             "y el análisis del domingo completo.")
 
 
 def _mensaje_premium() -> str:
-    return (f"Usaste tus {tope_dia_premium()} simulaciones Premium de hoy. "
-            "El enjambre te espera mañana.")
+    return (f"Usaste tus {tope_mes_premium()} simulaciones Premium del mes. "
+            "Se renuevan el día 1.")
 
 
 def permitir(ip: str, premium_email: str | None = None,
              consumir: bool = True) -> tuple[bool, str]:
     """¿Puede esta persona disparar una simulación ahora? (permitido, motivo).
 
-    Nivel según Premium: si `premium_email` es un suscriptor Premium activo, el
-    cupo es el de pago (10/día) contado por correo; si no, el gratis (3/día)
-    contado por IP. El tope global (billetera) manda sobre ambos.
+    Nivel según Premium: un suscriptor Premium activo tiene 40/MES (por correo,
+    en disco); el resto, 1/DÍA (por IP, en memoria). El tope global (billetera)
+    manda sobre ambos.
     """
     conexion = persistencia.conectar()
     try:
@@ -79,21 +80,27 @@ def permitir(ip: str, premium_email: str | None = None,
         if persistencia.gasto_dia(conexion, hoy) >= tope_global_dia():
             return False, MENSAJE_GLOBAL
 
-        # 2) nivel de la persona
         email = (premium_email or "").strip().lower()
         es_prem = bool(email) and persistencia.es_premium(conexion, email)
-        if es_prem:
-            clave, limite = f"p:{email}", tope_dia_premium()
-        else:
-            clave, limite = f"ip:{ip}", tope_dia_gratis()
 
+        if es_prem:
+            # PREMIUM: cupo mensual en disco
+            mes = hoy[:7]
+            if persistencia.gasto_premium_mes(conexion, email, mes) >= tope_mes_premium():
+                return False, _mensaje_premium()
+            if consumir:
+                persistencia.sumar_gasto_premium(conexion, email, mes, 1)
+                persistencia.sumar_gasto_dia(conexion, hoy, 1)
+            return True, ""
+
+        # GRATIS: cupo diario en memoria por IP
+        clave = f"ip:{ip}"
         fecha, cuenta = _uso.get(clave, (hoy, 0))
         if fecha != hoy:          # cambió el día: cupo fresco
             cuenta = 0
-        if cuenta >= limite:
+        if cuenta >= tope_dia_gratis():
             _uso[clave] = (hoy, cuenta)
-            return False, (_mensaje_premium() if es_prem else _mensaje_gratis())
-
+            return False, _mensaje_gratis()
         if consumir:
             _uso[clave] = (hoy, cuenta + 1)
             persistencia.sumar_gasto_dia(conexion, hoy, 1)

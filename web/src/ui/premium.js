@@ -57,12 +57,12 @@ export function montarPremium() {
     const correo = correoPremium()
     if (correo) {
       chip.classList.add('on')
-      chip.innerHTML = '⭐ Premium · 10/día'
+      chip.innerHTML = '⭐ Premium · 40/mes'
       chip.title = correo
     } else {
       chip.classList.remove('on')
       chip.innerHTML = '🔓 ¿Eres Premium?'
-      chip.title = 'Desbloquea 10 simulaciones al día'
+      chip.title = 'Desbloquea 40 simulaciones al mes'
     }
   }
 
@@ -78,10 +78,10 @@ export function montarPremium() {
     pop.className = 'pz-pop'
     pop.innerHTML = activo
       ? `<h4>Premium activo ⭐</h4>
-         <p>Tienes <b>10 simulaciones al día</b> con <b>${escapar(activo)}</b>.</p>
+         <p>Tienes <b>40 simulaciones al mes</b> con <b>${escapar(activo)}</b>.</p>
          <button class="pz-link" data-salir>Cerrar sesión Premium en este dispositivo</button>`
       : `<h4>Desbloquea tu Premium</h4>
-         <p>Suscriptor de El Pulso Premium: escribe tu correo y pasa de 3 a <b>10 simulaciones al día</b>.</p>
+         <p>Suscriptor de El Pulso Premium: escribe tu correo y desbloquea <b>40 simulaciones al mes</b> (el free es 1 al día).</p>
          <input type="email" inputmode="email" placeholder="tu@correo.com" aria-label="Tu correo Premium">
          <div class="row">
            <button class="pz-btn pz-go" data-go>Desbloquear</button>
@@ -114,7 +114,7 @@ export function montarPremium() {
       go.disabled = false; go.textContent = 'Desbloquear'
       if (estado && estado.premium) {
         guardarPremium(correo); pintarChip()
-        msg.textContent = '¡Listo! Ya tienes 10 simulaciones al día. 🐝'; msg.classList.add('ok')
+        msg.textContent = '¡Listo! Ya tienes 40 simulaciones al mes. 🐝'; msg.classList.add('ok')
         setTimeout(cerrar, 1400)
       } else if (estado) {
         msg.textContent = 'Ese correo no figura como Premium activo. ¿Aún no lo eres?'; msg.classList.add('err')

@@ -122,6 +122,6 @@ def test_endpoint_estado_premium():
 
     cliente = TestClient(server.app)
     r = cliente.get("/api/pulso/premium", params={"email": "vip@lector.cl"}).json()
-    assert r["premium"] is True and r["limite"] == 10
+    assert r["premium"] is True and r["limite"] == 40 and r["periodo"] == "mes"
     r2 = cliente.get("/api/pulso/premium", params={"email": "nadie@lector.cl"}).json()
-    assert r2["premium"] is False and r2["limite"] == 3
+    assert r2["premium"] is False and r2["limite"] == 1 and r2["periodo"] == "día"

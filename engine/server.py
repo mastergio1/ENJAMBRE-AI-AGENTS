@@ -992,8 +992,9 @@ def estado_premium(email: str = "") -> dict:
             es_prem = persistencia.es_premium(conexion, correo)
         finally:
             conexion.close()
-    return {"premium": es_prem,
-            "limite": limites.tope_dia_premium() if es_prem else limites.tope_dia_gratis()}
+    if es_prem:
+        return {"premium": True, "limite": limites.tope_mes_premium(), "periodo": "mes"}
+    return {"premium": False, "limite": limites.tope_dia_gratis(), "periodo": "día"}
 
 
 @app.get("/api/confirmar/{token}")

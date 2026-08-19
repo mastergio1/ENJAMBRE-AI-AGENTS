@@ -1,20 +1,20 @@
 // Desbloqueo Premium en El Enjambre: un chip discreto que deja al suscriptor
-// de pago de El Pulso elevar su cupo de 3 a 10 simulaciones al día. Sin cuentas
-// ni contraseñas: escribe su correo, el motor verifica que sea Premium y lo
-// recuerda en el navegador. Autónomo — inyecta su propio estilo y DOM.
+// de pago de El Pulso elevar su cupo de 1/día a 40 simulaciones al mes. Sin
+// cuentas ni contraseñas: escribe su correo, el motor verifica que sea Premium
+// y lo recuerda en el navegador. Autónomo — inyecta su propio estilo y DOM.
 
 import { borrarPremium, correoPremium, guardarPremium, verificarPremium } from './conexion.js'
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
 const ESTILO = `
-.pz-chip{position:fixed;left:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;gap:7px;
+.pz-chip{position:fixed;right:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;gap:7px;
   background:rgba(18,16,13,.82);backdrop-filter:blur(6px);border:1px solid #4a3f22;color:#e3c565;
   font:600 12px/1 'Jost',system-ui,sans-serif;letter-spacing:.3px;padding:9px 14px;border-radius:22px;
   cursor:pointer;transition:border-color .15s,transform .15s}
 .pz-chip:hover{border-color:#e3c565;transform:translateY(-1px)}
 .pz-chip.on{color:#f4efe6;border-color:#2f7a6f}
-.pz-pop{position:fixed;left:16px;bottom:60px;z-index:41;width:290px;max-width:calc(100vw - 32px);
+.pz-pop{position:fixed;right:16px;bottom:60px;z-index:41;width:290px;max-width:calc(100vw - 32px);
   background:#161009;border:1px solid #4a3f22;border-radius:14px;padding:18px;color:#f4efe6;
   font-family:'Jost',system-ui,sans-serif;box-shadow:0 18px 40px rgba(0,0,0,.5)}
 .pz-pop h4{margin:0 0 4px;font-family:'Cormorant Garamond',Georgia,serif;font-size:19px;color:#fbf7ee;font-weight:700}
@@ -66,7 +66,10 @@ export function montarPremium() {
     }
   }
 
+  let temporizadorCierre = null
+
   function cerrar() {
+    if (temporizadorCierre) { clearTimeout(temporizadorCierre); temporizadorCierre = null }
     pop?.remove()
     pop = null
   }
@@ -115,7 +118,8 @@ export function montarPremium() {
       if (estado && estado.premium) {
         guardarPremium(correo); pintarChip()
         msg.textContent = '¡Listo! Ya tienes 40 simulaciones al mes. 🐝'; msg.classList.add('ok')
-        setTimeout(cerrar, 1400)
+        const mio = pop
+        temporizadorCierre = setTimeout(() => { if (pop === mio) cerrar() }, 1400)
       } else if (estado) {
         msg.textContent = 'Ese correo no figura como Premium activo. ¿Aún no lo eres?'; msg.classList.add('err')
       } else {

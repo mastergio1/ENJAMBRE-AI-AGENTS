@@ -54,10 +54,13 @@ MENSAJE_GLOBAL = (
 
 
 def _mensaje_gratis() -> str:
+    # Honesto: el cupo gratis se cuenta por RED (IP), que muchas personas
+    # comparten (oficinas, móviles con CGNAT). No afirmamos "tú lo usaste"
+    # —puede haber sido otra persona de la misma red—, ofrecemos salida.
     n = tope_dia_gratis()
-    cuantas = "tu simulación gratis de hoy" if n == 1 else f"tus {n} simulaciones gratis de hoy"
-    return (f"Usaste {cuantas}. Con El Pulso Premium son {tope_mes_premium()} al mes — "
-            "y el análisis del domingo completo.")
+    veces = "una simulación" if n == 1 else f"{n} simulaciones"
+    return (f"El enjambre ya corrió {veces} desde tu red hoy. Mira las destacadas del "
+            f"día, o desbloquea {tope_mes_premium()} al mes con El Pulso Premium.")
 
 
 def _mensaje_premium() -> str:

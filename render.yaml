@@ -21,14 +21,17 @@ services:
         sync: false
       - key: ALPACA_API_SECRET_KEY
         sync: false
-      # 🔒 TOPES DE PRODUCCIÓN (sitio PÚBLICO, 15-ago-2026): 5 simulaciones
-      # NUEVAS al día como máximo (el resto se re-ve desde la caché sin costo)
-      # y 3 por IP/hora. Cada simulación ≈ 100 llamadas LLM: son la muralla de
-      # la billetera con la URL abierta.
+      # 🔒 TOPES DE PRODUCCIÓN (freemium, 19-ago-2026): la muralla de la
+      # billetera. Global = 30 simulaciones NUEVAS al día como máximo (manda
+      # sobre gratis y Premium por igual) ≈ $3,60/día ≈ $108/mes en el peor
+      # caso. Gratis = 1/día por IP; Premium = 40/mes por correo. Cada
+      # simulación ≈ 100 llamadas LLM. Ajustar aquí según el presupuesto.
       - key: ENJAMBRE_MAX_SIM_DIA
-        value: "5"
-      - key: ENJAMBRE_MAX_SIM_IP_HORA
-        value: "3"
+        value: "30"
+      - key: ENJAMBRE_SIM_DIA_GRATIS
+        value: "1"
+      - key: ENJAMBRE_SIM_MES_PREMIUM
+        value: "40"
       # orígenes permitidos por CORS: el dominio de Vercel de producción.
       # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
       - key: ENJAMBRE_ORIGENES

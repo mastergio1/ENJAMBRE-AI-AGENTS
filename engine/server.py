@@ -980,8 +980,8 @@ def api_contactos(x_pipeline_token: str = Header(default="")) -> dict:
 @app.get("/api/pulso/premium")
 def estado_premium(email: str = "") -> dict:
     """¿Este correo es Premium activo? Lo usa El Enjambre para desbloquear el
-    cupo de 10/día. Devuelve {premium, limite}. Respuesta neutra si el correo es
-    inválido (no revela nada). NO consume cupo."""
+    cupo de 40/mes. Devuelve {premium, limite, periodo}. Respuesta neutra si el
+    correo es inválido (no revela nada). NO consume cupo."""
     from contenido import limites
 
     correo = (email or "").strip().lower()

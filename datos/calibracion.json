@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-18T10:38:42+00:00",
+ "generado": "2026-08-19T10:38:05+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13539,6 +13539,46 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +36.5%. En el mercado real, AAPL cerró en 305.655 el 2026-08-17 (venía de 305.305 el 2026-08-13): +0.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "ec6968384e03f4a5",
+   "origen": "en_vivo",
+   "fecha": "2026-08-17T10:40:19+00:00",
+   "titular": "Stripe Nears $7 Billion-Plus OpenRouter Acquisition as Payments Giant Deepens AI Push: Report",
+   "simbolos": "GOOG,GOOGL,PYPL",
+   "direccion_pct": 44.24,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "GOOG",
+    "pct_real": -0.61,
+    "cierre_base": 343.525,
+    "cierre_final": 341.44,
+    "fecha_base": "2026-08-14",
+    "fecha_final": "2026-08-18",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +44.2%. En el mercado real, GOOG cerró en 341.44 el 2026-08-18 (venía de 343.525 el 2026-08-14): -0.6% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "eadcfa7f7916afc1",
+   "origen": "en_vivo",
+   "fecha": "2026-08-17T10:40:47+00:00",
+   "titular": "Home Depot Gears Up For Q2 Print; Here Are The Recent Forecast Changes From Wall Street's Most Accurate Analysts",
+   "simbolos": "HD",
+   "direccion_pct": 32.59,
+   "volatilidad_pct": 1.02,
+   "reaccion_real": {
+    "simbolo": "HD",
+    "pct_real": -0.33,
+    "cierre_base": 338.795,
+    "cierre_final": 337.67,
+    "fecha_base": "2026-08-14",
+    "fecha_final": "2026-08-18",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +32.6%. En el mercado real, HD cerró en 337.67 el 2026-08-18 (venía de 338.795 el 2026-08-14): -0.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

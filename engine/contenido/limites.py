@@ -54,10 +54,13 @@ MENSAJE_GLOBAL = (
 
 
 def _mensaje_gratis() -> str:
+    # Honesto: el cupo gratis se cuenta por RED (IP), que muchas personas
+    # comparten (oficinas, móviles con CGNAT). No afirmamos "tú lo usaste"
+    # —puede haber sido otra persona de la misma red—, ofrecemos salida.
     n = tope_dia_gratis()
-    cuantas = "tu simulación gratis de hoy" if n == 1 else f"tus {n} simulaciones gratis de hoy"
-    return (f"Usaste {cuantas}. Con El Pulso Premium son {tope_mes_premium()} al mes — "
-            "y el análisis del domingo completo.")
+    veces = "una simulación" if n == 1 else f"{n} simulaciones"
+    return (f"El enjambre ya corrió {veces} desde tu red hoy. Mira las destacadas del "
+            f"día, o desbloquea {tope_mes_premium()} al mes con El Pulso Premium.")
 
 
 def _mensaje_premium() -> str:
@@ -65,13 +68,15 @@ def _mensaje_premium() -> str:
             "Se renuevan el día 1.")
 
 
-def permitir(ip: str, premium_email: str | None = None,
+def permitir(ip: str, premium_token: str | None = None, cliente_id: str | None = None,
              consumir: bool = True) -> tuple[bool, str]:
     """¿Puede esta persona disparar una simulación ahora? (permitido, motivo).
 
-    Nivel según Premium: un suscriptor Premium activo tiene 40/MES (por correo,
-    en disco); el resto, 1/DÍA (por IP, en memoria). El tope global (billetera)
-    manda sobre ambos.
+    Nivel según Premium: si `premium_token` (el secreto del enlace mágico)
+    corresponde a un suscriptor Premium activo, tiene 40/MES (por correo, en
+    disco). El resto, 1/DÍA contado por `cliente_id` (huella del navegador) o,
+    si falta, por IP — así una oficina o una red móvil (CGNAT) no comparte un
+    solo cupo. El tope global (billetera) manda sobre ambos.
     """
     conexion = persistencia.conectar()
     try:
@@ -80,7 +85,8 @@ def permitir(ip: str, premium_email: str | None = None,
         if persistencia.gasto_dia(conexion, hoy) >= tope_global_dia():
             return False, MENSAJE_GLOBAL
 
-        email = (premium_email or "").strip().lower()
+        # el token (no el correo desnudo) prueba que es el dueño del buzón Premium
+        email = persistencia.email_por_token_enjambre(conexion, (premium_token or "").strip())
         es_prem = bool(email) and persistencia.es_premium(conexion, email)
 
         if es_prem:
@@ -93,8 +99,9 @@ def permitir(ip: str, premium_email: str | None = None,
                 persistencia.sumar_gasto_dia(conexion, hoy, 1)
             return True, ""
 
-        # GRATIS: cupo diario en memoria por IP
-        clave = f"ip:{ip}"
+        # GRATIS: cupo diario en memoria, por dispositivo (o IP si no hay huella)
+        cid = (cliente_id or "").strip()[:64]
+        clave = f"cid:{cid}" if cid else f"ip:{ip}"
         fecha, cuenta = _uso.get(clave, (hoy, 0))
         if fecha != hoy:          # cambió el día: cupo fresco
             cuenta = 0

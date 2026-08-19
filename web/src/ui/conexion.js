@@ -42,40 +42,74 @@ export function guardarCorreo(email) {
   }
 }
 
-/** El correo Premium desbloqueado (suscriptor de pago de El Pulso): eleva el
- * cupo diario de simulaciones de 3 a 10. Se recuerda en el navegador y viaja
- * con cada simulación; el motor lo verifica en vivo (si canceló, vuelve a 3). */
-export function correoPremium() {
+/** El TOKEN Premium desbloqueado (secreto del enlace mágico): eleva el cupo a 40
+ * simulaciones/mes. Se recuerda en el navegador y viaja con cada simulación; el
+ * motor lo verifica en vivo (si canceló, vuelve a 1/día). Es un token, no el
+ * correo: solo lo tiene quien recibió el enlace en su buzón. */
+export function tokenPremium() {
   try {
-    return localStorage.getItem('enjambre-premium') || ''
+    return localStorage.getItem('enjambre-premium-token') || ''
   } catch {
     return ''
   }
 }
 
-export function guardarPremium(email) {
+export function guardarTokenPremium(token) {
   try {
-    localStorage.setItem('enjambre-premium', String(email || '').trim().toLowerCase())
+    localStorage.setItem('enjambre-premium-token', String(token || '').trim())
   } catch {
     /* da igual */
   }
 }
 
-export function borrarPremium() {
+export function borrarTokenPremium() {
   try {
-    localStorage.removeItem('enjambre-premium')
+    localStorage.removeItem('enjambre-premium-token')
   } catch {
     /* da igual */
   }
 }
 
-/** Pregunta al motor si un correo es Premium activo. Devuelve {premium, limite}
- * o null si no se pudo verificar (sin motor / red). NO consume cupo. */
-export async function verificarPremium(email) {
+/** Huella suave del navegador: un id aleatorio, propio de este dispositivo, para
+ * que el cupo gratis se cuente por dispositivo y no por IP (una red móvil o una
+ * oficina no comparte 1/día). Se crea la primera vez y se recuerda. */
+export function clienteId() {
+  try {
+    let id = localStorage.getItem('enjambre-cid')
+    if (!id) {
+      id = (crypto?.randomUUID?.() || String(Math.random()).slice(2) + Date.now().toString(36))
+      localStorage.setItem('enjambre-cid', id)
+    }
+    return id
+  } catch {
+    return ''
+  }
+}
+
+/** Pide el enlace mágico de desbloqueo para un correo. Respuesta neutra del
+ * motor (no revela si es Premium). Devuelve true si la petición salió. */
+export async function pedirDesbloqueo(email) {
+  const base = urlApi()
+  if (!base) return false
+  try {
+    const r = await fetch(`${base}/api/pulso/desbloqueo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+    return r.ok
+  } catch {
+    return false
+  }
+}
+
+/** Canjea un token del enlace mágico por el nivel Premium. {premium, limite,
+ * periodo} o null si no se pudo verificar. NO consume cupo. */
+export async function verificarToken(token) {
   const base = urlApi()
   if (!base) return null
   try {
-    const r = await fetch(`${base}/api/pulso/premium?email=${encodeURIComponent(email)}`)
+    const r = await fetch(`${base}/api/pulso/enjambre/verificar?token=${encodeURIComponent(token)}`)
     if (!r.ok) return null
     return await r.json()
   } catch {
@@ -158,7 +192,8 @@ export class MotorRemoto {
     const seed = Math.floor(Math.random() * 2_000_000_000)
     this.ws.send(JSON.stringify({
       tipo: 'simular', titular, seed,
-      acceso: claveAcceso(), email: correoUsuario(), premium_email: correoPremium(), ...extras,
+      acceso: claveAcceso(), email: correoUsuario(),
+      premium_token: tokenPremium(), cid: clienteId(), ...extras,
     }))
   }
 
@@ -184,7 +219,8 @@ export class MotorRemoto {
     }
     ws.send(JSON.stringify({
       tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000),
-      acceso: claveAcceso(), email: correoUsuario(), premium_email: correoPremium(),
+      acceso: claveAcceso(), email: correoUsuario(),
+      premium_token: tokenPremium(), cid: clienteId(),
     }))
     return {
       soltarNoticia(t) {

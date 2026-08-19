@@ -754,6 +754,27 @@ def enviar_confirmacion(email: str, token_confirma: str) -> bool:
     return enviar(email, "Confirma tu suscripción a El Pulso 🐝", html)
 
 
+def enviar_desbloqueo_enjambre(email: str, token: str) -> bool:
+    """El enlace mágico: un clic para desbloquear 40 simulaciones/mes en El
+    Enjambre. Solo llega a los suscriptores Premium (el servidor ya lo verificó)."""
+    url = f"{BASE_WEB}/?premium_token={token}"
+    html = f"""<!doctype html><html><body style="margin:0;background:{PAPEL};">
+<table role="presentation" width="100%" style="background:{PAPEL};"><tr><td align="center" style="padding:32px;">
+<table role="presentation" width="600" style="max-width:600px;background:{BLANCO};border:1px solid {LINEA};border-radius:8px;">
+  <tr><td style="padding:34px;text-align:center;">
+    <div style="font-family:Georgia,serif;font-size:30px;color:{ORO};font-weight:bold;">El Enjambre 🐝</div>
+    <p style="color:{TEXTO_2};font-size:16px;line-height:1.5;">Gracias por ser <b>Premium</b>. Con un clic desbloqueas
+      <b>40 simulaciones al mes</b> en El Enjambre en este dispositivo.</p>
+    <a href="{_url_segura(url)}" style="display:inline-block;background:{ORO};color:#ffffff;text-decoration:none;
+      font-weight:bold;padding:13px 28px;border-radius:6px;">Desbloquear El Enjambre</a>
+    <p style="color:{MUTE};font-size:12px;margin-top:18px;">Si no pediste esto, ignora este correo.
+      El enlace es personal — no lo compartas.</p>
+    <p style="color:{MUTE};font-size:11px;">{DISCLAIMER}</p>
+  </td></tr>
+</table></td></tr></table></body></html>"""
+    return enviar(email, "Desbloquea El Enjambre (Premium) 🐝", html)
+
+
 def enviar_pulso(conexion, destacadas: list[dict], fecha: str) -> dict:
     """Envía el Pulso a todos los suscriptores activos. Devuelve el conteo."""
     activos = persistencia.suscriptores_activos(conexion)

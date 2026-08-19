@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS suscriptores (
   token_baja     TEXT NOT NULL,
   token_confirma TEXT,
   premium        INTEGER DEFAULT 0,   -- 1 = suscriptor de pago (recibe el deep-dive completo)
-  premium_hasta  TEXT                 -- vencimiento ISO (AAAA-MM-DD); NULL = sin vencimiento
+  premium_hasta  TEXT,                -- vencimiento ISO (AAAA-MM-DD); NULL = sin vencimiento
+  token_enjambre TEXT                 -- secreto del enlace mágico que desbloquea 40/mes en El Enjambre
 );
 CREATE TABLE IF NOT EXISTS contactos (
   id           INTEGER PRIMARY KEY AUTOINCREMENT,  -- leads B2B (organizaciones)
@@ -121,6 +122,7 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("suscriptores", "fecha_confirma", "TEXT"),  # anti-reenvío (auditoría C)
             ("suscriptores", "premium", "INTEGER DEFAULT 0"),  # suscripción de pago (Premium)
             ("suscriptores", "premium_hasta", "TEXT"),         # vencimiento del Premium (ISO)
+            ("suscriptores", "token_enjambre", "TEXT"),        # enlace mágico de desbloqueo del enjambre
             ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
             ("simulaciones", "reaccion_real", "TEXT"),  # corrector automático (calibración)
             # centro de mando de El Pulso: la edición como máquina de estados
@@ -663,6 +665,36 @@ def contar_premium(conexion) -> int:
         "SELECT COUNT(*) FROM suscriptores WHERE activo = 1 AND premium = 1 "
         "AND (premium_hasta IS NULL OR premium_hasta >= date('now'))"
     ).fetchone()[0]
+
+
+# ---------- enlace mágico del enjambre (token en vez del correo desnudo) ----------
+
+def emitir_token_enjambre(conexion, email: str) -> str | None:
+    """Devuelve el token de desbloqueo del enjambre de este correo (lo crea si no
+    existe). Solo tiene sentido para un Premium — el que llama decide a quién se
+    lo emite. None si el correo no existe."""
+    email = email.strip().lower()
+    fila = conexion.execute(
+        "SELECT token_enjambre FROM suscriptores WHERE email = ?", (email,)).fetchone()
+    if fila is None:
+        return None
+    token = fila["token_enjambre"]
+    if not token:
+        token = secrets.token_urlsafe(24)
+        conexion.execute(
+            "UPDATE suscriptores SET token_enjambre = ? WHERE email = ?", (token, email))
+        conexion.commit()
+    return token
+
+
+def email_por_token_enjambre(conexion, token: str | None) -> str | None:
+    """El correo dueño de un token de desbloqueo (o None). El token ES el secreto:
+    quien lo tiene, tiene acceso al buzón que lo recibió."""
+    if not token or len(token) < 16:
+        return None
+    fila = conexion.execute(
+        "SELECT email FROM suscriptores WHERE token_enjambre = ?", (token,)).fetchone()
+    return fila["email"] if fila else None
 
 
 # ---------- tope de gasto diario (en disco, sobrevive a los reinicios) ----------

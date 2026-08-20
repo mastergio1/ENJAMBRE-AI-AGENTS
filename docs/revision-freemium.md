@@ -3,7 +3,8 @@
 > **Estado: ✅ los 6 hallazgos verificados como corregidos** en el PR #24
 > (commits `e532b10` + `84aa913`, fusionados en `main` el 19-ago-2026).
 > Ver la **[verificación](#verificación-de-los-arreglos-pr-24)** al final: cada
-> arreglo comprobado contra el código real, más pruebas ejecutadas.
+> arreglo comprobado contra el código real, más la suite completa en verde
+> (`239 passed`) y el ataque original reproducido y bloqueado.
 > Queda **1 punto abierto** (el Premium que choca con el tope global).
 >
 > Revisión del 19 de agosto de 2026 sobre los dos últimos cambios fusionados: el
@@ -536,10 +537,20 @@ python3 -m pytest validation/test_pagos.py validation/test_muro.py -q
 ```
 
 Son exactamente los archivos de test que el PR #24 modificó, y cubren los
-límites, el cobro y el muro. La suite completa (`validation/`) incluye además los
-tests de hechos estilizados, que simulan 10.000 agentes y tardan mucho más; los
-dos errores de colección que aparecieron al principio eran `Pillow` faltante en
-el contenedor de revisión, no fallas del código.
+límites, el cobro y el muro.
+
+Después instalé también `Pillow` (los dos errores de colección iniciales eran esa
+dependencia faltante en el contenedor, no fallas del código) y corrí la **suite
+completa**, incluidos los tests de hechos estilizados que simulan 10.000 agentes:
+
+```
+python3 -m pytest validation/ -q
+→ 239 passed in 1115.05s (18:35)
+```
+
+**Todo verde.** Ni los arreglos del freemium ni nada más rompieron el motor: las
+colas gordas, el clustering de volatilidad y el resto de hechos estilizados siguen
+pasando.
 
 ---
 

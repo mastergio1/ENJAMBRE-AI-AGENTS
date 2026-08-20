@@ -1,11 +1,16 @@
 # Revisión de código — el freemium (PR #22 + #23)
 
+> **Estado: ✅ los 6 hallazgos verificados como corregidos** en el PR #24
+> (commits `e532b10` + `84aa913`, fusionados en `main` el 19-ago-2026).
+> Ver la **[verificación](#verificación-de-los-arreglos-pr-24)** al final: cada
+> arreglo comprobado contra el código real, más pruebas ejecutadas.
+> Queda **1 punto abierto** (el Premium que choca con el tope global).
+>
 > Revisión del 19 de agosto de 2026 sobre los dos últimos cambios fusionados: el
 > paso a **1 simulación gratis al día** y **40 al mes para Premium**.
 > Archivos mirados: `engine/contenido/limites.py`, `engine/contenido/persistencia.py`,
 > `engine/server.py`, `web/src/ui/premium.js`, `web/pulso/*`, `render.yaml`.
 >
-> **Nada de esto está arreglado todavía** — este documento es el diagnóstico.
 > Cada punto trae *qué encontré*, *por qué importa* y *cómo se arregla*.
 
 ---
@@ -19,14 +24,14 @@ un "carnet Premium" que nadie revisa, y una puerta que dice en voz alta quién p
 
 Los seis hallazgos, de más grave a menos:
 
-| # | Dónde | Qué pasa | Gravedad |
-|---|-------|----------|:---:|
-| 1 | `render.yaml:28` | El servidor real corta a las 5 simulaciones diarias, no a las 30 | 🔴 Alta |
-| 2 | `engine/server.py:91` | Cualquiera puede decir "soy Premium" con el correo ajeno | 🔴 Alta |
-| 3 | `engine/server.py:980` | Una URL pública revela quién es suscriptor de pago | 🟠 Media-alta |
-| 4 | `engine/contenido/limites.py:96` | Una oficina entera comparte 1 simulación al día | 🟠 Media |
-| 5 | `web/src/ui/premium.js:11` | El chip Premium tapa el aviso legal CMF | 🟠 Media |
-| 6 | `web/src/ui/premium.js:118` | El panel se cierra solo en el momento equivocado | 🟡 Baja |
+| # | Dónde | Qué pasa | Gravedad | Estado |
+|---|-------|----------|:---:|:---:|
+| 1 | `render.yaml:28` | El servidor real corta a las 5 simulaciones diarias, no a las 30 | 🔴 Alta | ✅ |
+| 2 | `engine/server.py:91` | Cualquiera puede decir "soy Premium" con el correo ajeno | 🔴 Alta | ✅ |
+| 3 | `engine/server.py:980` | Una URL pública revela quién es suscriptor de pago | 🟠 Media-alta | ✅ |
+| 4 | `engine/contenido/limites.py:96` | Una oficina entera comparte 1 simulación al día | 🟠 Media | ✅ |
+| 5 | `web/src/ui/premium.js:11` | El chip Premium tapa el aviso legal CMF | 🟠 Media | ✅ |
+| 6 | `web/src/ui/premium.js:118` | El panel se cierra solo en el momento equivocado | 🟡 Baja | ✅ |
 
 *(Nota: la suite completa de `pytest` no pudo correr en este entorno porque
 faltan `mesa` y `numpy` instalados. Lo que sí probé directamente fue el módulo
@@ -416,3 +421,167 @@ Si hay que elegir un orden:
 ---
 
 *Rubicón Lab · El Enjambre · Revisión de código del freemium · 19 de agosto de 2026*
+
+---
+
+# Verificación de los arreglos (PR #24)
+
+> Comprobado el 19-ago-2026 contra `origin/main` (`1ba386e`), leyendo el código
+> final —no los mensajes de commit— y ejecutando pruebas.
+
+## Hallazgo por hallazgo
+
+### ✅ #1 — Topes de producción sincronizados
+
+`render.yaml` ahora declara las tres variables y borró la muerta:
+
+```yaml
+- key: ENJAMBRE_MAX_SIM_DIA      → "30"
+- key: ENJAMBRE_SIM_DIA_GRATIS   → "1"
+- key: ENJAMBRE_SIM_MES_PREMIUM  → "40"
+```
+
+`ENJAMBRE_MAX_SIM_IP_HORA` desapareció. El comentario documenta la cuenta
+(~$3,60/día ≈ $108/mes en el peor caso), que era justo lo que hacía falta para
+que el número se decida a conciencia.
+
+### ✅ #2 — El correo desnudo ya no concede Premium
+
+`_correo_premium` fue reemplazada por `_token_premium`, y `limites.permitir`
+cambió su firma: recibe `premium_token`, no un correo. El token es
+`secrets.token_urlsafe(24)` (192 bits de entropía) guardado en la columna
+`suscriptores.token_enjambre`, y `email_por_token_enjambre` exige largo ≥ 16.
+
+**Probado a mano** — el ataque original contra el código real:
+
+```
+--- ATAQUE: el impostor manda el CORREO en vez del token ---
+3 intentos con el correo desnudo: [True, False, False]
+→ BLOQUEADO tras 1 (cae al nivel gratis)
+cupo Premium de la víctima consumido por el impostor: 0 → INTACTO ✅
+
+--- El dueño real usa su TOKEN ---
+5 intentos con el token: [True, True, True, True, True] → PREMIUM ✅
+```
+
+El daño irreversible —quemarle el mes a quien pagó— está cerrado.
+
+### ✅ #3 — El oráculo de correos ya no existe
+
+`GET /api/pulso/premium?email=` fue **eliminado** (verificado: no queda ninguna
+referencia en `server.py`). Lo reemplazan dos piezas:
+
+- `POST /api/pulso/desbloqueo` — responde **siempre lo mismo**
+  (*"Si ese correo es Premium, te enviamos un enlace"*), sea o no suscriptor.
+  Un atacante no aprende nada. Además lleva una ventana anti-reenvío de 300 s
+  por correo, que evita usarlo para bombardear buzones.
+- `GET /api/pulso/enjambre/verificar?token=` — solo responde a un token válido,
+  que ya es un secreto en sí mismo. No se puede consultar por correo.
+
+### ✅ #4 — El cupo gratis se cuenta por dispositivo
+
+La clave pasó de `ip:{ip}` a `cid:{cliente_id}`, con la IP solo como respaldo si
+no hay huella. El frontend genera el `cid` con `crypto.randomUUID()` y lo guarda
+en `localStorage` (`conexion.js:76`); el servidor lo lee del campo `cid`
+(`server.py:98`). El cableado coincide en ambos extremos.
+
+**Probado a mano:**
+
+```
+--- Dos personas distintas tras la MISMA IP (oficina) ---
+A=True  B=True  A otra vez=False
+→ cada uno tiene su cupo ✅
+```
+
+Y el mensaje ya no acusa a nadie:
+
+> *"El enjambre ya corrió una simulación desde tu red hoy. Mira las destacadas
+> del día, o desbloquea 40 al mes con El Pulso Premium."*
+
+**La billetera sigue protegida.** El `cid` lo controla el visitante, así que
+borrando datos del navegador se consiguen simulaciones gratis extra — es el
+precio aceptado a cambio de no castigar al inocente. Lo que importa es que el
+tope global siga mandando, y **lo verifiqué**: con la muralla puesta en 3, un
+visitante que estrena `cid` en cada intento pasa 3 veces y a la cuarta choca.
+
+### ✅ #5 — El chip ya no tapa el aviso CMF
+
+Dos cambios, y el segundo es el que de verdad importa:
+
+- `.pz-chip` y `.pz-pop` se mudaron a `right:16px` — lado opuesto al badge.
+- **`.beta-badge` subió a `z-index: 41`**, con un comentario que lo fija como
+  regla del proyecto: *"el aviso legal CMF nunca debe quedar tapado por un
+  elemento comercial"*. Esto es mejor que solo separarlos: ahora el disclaimer
+  gana por diseño, no por coincidencia de coordenadas.
+
+### ✅ #6 — El auto-cierre desapareció
+
+El `setTimeout(cerrar, 1400)` ya no existe. El flujo cambió con el enlace mágico:
+el panel muestra *"revisa tu correo"* y se queda abierto, que es lo correcto —
+ahora hay algo que leer. `cerrar()` además limpia cualquier temporizador pendiente.
+
+### ✅ Comentarios desactualizados
+
+Corregidos: no queda ningún "10/día" ni "de 3 a 10" en `premium.js` ni en
+`server.py`. El encabezado de `premium.js` describe el flujo nuevo.
+
+## Pruebas ejecutadas
+
+En la revisión original no pude correr `pytest` (faltaban `mesa` y `numpy`).
+Esta vez instalé las dependencias y sí corrieron:
+
+```
+python3 -m pytest validation/test_pagos.py validation/test_muro.py -q
+→ 23 passed in 136.69s
+```
+
+Son exactamente los archivos de test que el PR #24 modificó, y cubren los
+límites, el cobro y el muro. La suite completa (`validation/`) incluye además los
+tests de hechos estilizados, que simulan 10.000 agentes y tardan mucho más; los
+dos errores de colección que aparecieron al principio eran `Pillow` faltante en
+el contenedor de revisión, no fallas del código.
+
+---
+
+## ⚠️ Lo que queda abierto
+
+### El Premium que llega tarde sigue viendo "Suscríbete al Pulso"
+
+Es el mismo agravio del hallazgo #1, movido de umbral. El tope global manda sobre
+todos (`limites.py:80`), así que cuando el día se agota, un suscriptor de pago con
+token válido recibe:
+
+> *"El enjambre agotó sus simulaciones públicas de hoy. **Suscríbete al Pulso** para
+> no perderte la reacción de mañana."*
+
+**Verificado a mano:** con la muralla en 3 y ya consumida, el Premium con token
+correcto queda bloqueado con ese texto.
+
+Con el global en 30 esto va a pasar poco, pero cuando pase le va a pasar
+justamente a quien paga, y en un día de tráfico alto — el peor momento. Dos
+arreglos posibles:
+
+1. **Barato (mensaje):** un texto distinto cuando el bloqueado es Premium. No le
+   pidas suscribirse a alguien que ya pagó: *"El enjambre alcanzó su tope del día.
+   Tus simulaciones Premium siguen intactas — vuelve mañana."*
+2. **Correcto (cupo reservado):** que el tope global corte antes a los gratis que
+   a los Premium — p. ej. gratis hasta 25, Premium hasta 30. Quien paga siempre
+   entra.
+
+Recomiendo el (1) ya y el (2) cuando haya suscriptores de verdad.
+
+### Nits menores (sin urgencia)
+
+- `web/src/ui/premium.js:58` — `temporizadorCierre` quedó declarado y se limpia en
+  `cerrar()`, pero **nunca se asigna**: es código muerto tras quitar el auto-cierre.
+- `web/src/ui/premium.js:4` — el comentario dice *"token firmado"*; en realidad es
+  un token **aleatorio guardado en la base**. La implementación está bien (de hecho
+  es revocable, cosa que un token firmado no sería); solo el comentario confunde.
+- `engine/server.py:993` — `_ultimo_desbloqueo` nunca se purga, a diferencia de
+  `seguridad.limpiar()` y `limites.limpiar()`. Crece una entrada por suscriptor
+  Premium que pide enlace, así que es despreciable — pero si algún día se toca esa
+  zona, vale sumarlo a la limpieza periódica.
+
+---
+
+*Verificación · El Enjambre · 19 de agosto de 2026*

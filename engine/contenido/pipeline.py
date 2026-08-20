@@ -93,6 +93,20 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
 
         # 1. RECOLECTAR (con degradación elegante a demo)
         titulares, origen = alpaca.obtener_titulares(horas=18, limite=50)
+        # 1b. CAZAR LOS MOVIMIENTOS REALES DEL DÍA: no basta con lo que el feed
+        # tituló (se perdía la gran historia). El reportero IA busca los mayores
+        # movers, investiga y VERIFICA su porqué con búsqueda web, y los suma al
+        # pool como titulares con contexto. Nunca rompe el ritual: si falla, sigue
+        # solo con Alpaca. Van al frente (ganan los empates de impacto).
+        try:
+            from contenido import investigador
+            from contenido.fuentes import yahoo
+
+            investigados = investigador.investigar_movers(yahoo.movers_del_dia(n=8))
+            if investigados:
+                titulares = investigados + list(titulares)
+        except Exception:
+            pass
         # 2. FILTRAR
         resultado = portero.procesar_dia(conexion, titulares, maximo=maximo)
         # 3. SIMULAR con seeds fijas del día + 7. PUBLICAR como destacadas

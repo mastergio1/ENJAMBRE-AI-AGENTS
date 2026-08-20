@@ -107,6 +107,54 @@ def _sesion_crumb():
         return None, None
 
 
+_URL_SCREENER = "https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved"
+
+
+def _valor(nodo):
+    """El número crudo de un campo de Yahoo, sea {raw,fmt} o un número pelado."""
+    if isinstance(nodo, dict):
+        return nodo.get("raw")
+    return nodo if isinstance(nodo, (int, float)) else None
+
+
+def movers_del_dia(n: int = 8, min_pct: float = 5.0) -> list[dict]:
+    """Los mayores movimientos del día del mercado de EE.UU. (gainers + losers):
+    lista de {ticker, nombre, var_pct, precio}, los más movidos primero. Es lo que
+    de verdad movió al mercado hoy, no solo lo que un feed decidió titular. [] ante
+    cualquier problema (degradación elegante). Nunca lanza."""
+    cliente, crumb = _sesion_crumb()
+    if not cliente or not crumb:
+        return []
+    vistos: set[str] = set()
+    movimientos: list[dict] = []
+    for tablero in ("day_gainers", "day_losers"):
+        try:
+            r = cliente.get(_URL_SCREENER,
+                            params={"count": 25, "scrIds": tablero, "crumb": crumb})
+            if r.status_code != 200:
+                continue
+            res = (r.json().get("finance", {}).get("result") or [None])[0]
+            quotes = (res or {}).get("quotes") or []
+        except Exception:
+            continue
+        for q in quotes:
+            tk = str(q.get("symbol", "")).strip().upper()
+            pct = _valor(q.get("regularMarketChangePercent"))
+            if not tk or tk in vistos or not isinstance(pct, (int, float)):
+                continue
+            if abs(pct) < min_pct:  # ignora ruido: solo movimientos con peso
+                continue
+            vistos.add(tk)
+            movimientos.append({
+                "ticker": tk,
+                "nombre": str(q.get("shortName") or q.get("longName") or tk)[:60],
+                "var_pct": round(float(pct), 2),
+                "precio": _valor(q.get("regularMarketPrice")),
+            })
+    movimientos.sort(key=lambda m: abs(m["var_pct"]), reverse=True)
+    return movimientos[:n]
+
+
 def _fmt(nodo) -> str | None:
     """El texto formateado de un campo de Yahoo ({raw, fmt}); None si no hay dato."""
     if isinstance(nodo, dict):

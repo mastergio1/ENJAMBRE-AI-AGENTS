@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Jost:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Jost', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #d8a93e; } a:hover { color: #b0831a; }
+  </style>
+</helmet>
+
+<div style="width: 880px; background: #12100d; color: #f4efe6; line-height: 1.6;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 34px; border-bottom: 1px solid #2a251d;">
+    <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 23px; color: #d8a93e;">El Pulso</span>
+    <div style="display: flex; gap: 22px; align-items: center;">
+      <span style="color: #9a927f; font-size: 10.5px; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 600;">En vivo</span>
+      <span style="display: inline-flex; align-items: center; gap: 7px; border: 1px solid #4a4335; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; color: #f4efe6;">Suscribirse</span>
+    </div>
+  </div>
+
+  <div style="position: relative; padding: 56px 34px 0; overflow: hidden;">
+
+    <div style="position: relative; height: 172px; margin-bottom: -18px;">
+      <svg viewBox="0 0 812 172" width="812" height="172" fill="none" style="display: block;">
+        <defs>
+          <linearGradient id="pulsoFade" x1="0" y1="0" x2="812" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#b0831a" stop-opacity="0"/>
+            <stop offset="0.18" stop-color="#d8a93e" stop-opacity="0.9"/>
+            <stop offset="0.62" stop-color="#d8a93e" stop-opacity="1"/>
+            <stop offset="1" stop-color="#2f8f66" stop-opacity="0.15"/>
+          </linearGradient>
+        </defs>
+        <path d="M0 112 L112 112 L138 108 L162 116 L196 104 L228 118 L262 96 L286 100 L308 62 L330 148 L352 34 L374 128 L396 86 L430 92 L470 74 L512 96 L556 58 L602 88 L648 46 L700 72 L752 30 L812 54" stroke="url(#pulsoFade)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="330" cy="148" r="5" fill="#c0504d"/>
+        <circle cx="352" cy="34" r="5" fill="#2f8f66"/>
+        <circle cx="812" cy="54" r="4.5" fill="#d8a93e"/>
+      </svg>
+      <div style="position: absolute; left: 296px; top: 156px; font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: #c0504d; font-weight: 700;">Pánico 09:41</div>
+    </div>
+
+    <div style="position: relative; text-align: center; padding-top: 26px;">
+      <div style="font-size: 11px; letter-spacing: 3.4px; text-transform: uppercase; color: #d8a93e; font-weight: 700;">Diario de mercado · Rubicón Lab</div>
+      <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 58px; line-height: 1.04; margin: 16px auto 0; max-width: 16ch; color: #fbf7ee;">El mercado tiene un pulso. Aquí lo ves latir.</h1>
+      <p style="font-size: 18px; color: #cfc7b6; max-width: 46ch; margin: 18px auto 0; line-height: 1.55;">Diez mil inversionistas simulados con IA reaccionan al titular del día. El resultado llega a tu correo cada mañana, en dos minutos.</p>
+
+      <div style="display: flex; gap: 10px; max-width: 470px; margin: 32px auto 0;">
+        <div style="flex: 1; padding: 15px 18px; border-radius: 8px; border: 1px solid #4a4335; background: rgba(255,255,255,0.05); color: #9a927f; font-size: 15px; text-align: left;">tucorreo@ejemplo.com</div>
+        <div style="background: #d8a93e; color: #12100d; padding: 15px 26px; border-radius: 8px; font-weight: 700; font-size: 15px; white-space: nowrap;">Suscribirme</div>
+      </div>
+      <div style="font-size: 12.5px; color: #7e7767; margin-top: 13px;">Gratis, todos los días · Un clic para darte de baja</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 52px; border-top: 1px solid #2a251d; border-bottom: 1px solid #2a251d; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));">
+    <div style="padding: 22px 24px; border-right: 1px solid #2a251d;">
+      <div style="font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #7e7767; font-weight: 700;">Sentimiento</div>
+      <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 700; color: #c0504d; line-height: 1.1; margin-top: 5px;">Miedo</div>
+    </div>
+    <div style="padding: 22px 24px; border-right: 1px solid #2a251d;">
+      <div style="font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #7e7767; font-weight: 700;">Reacción</div>
+      <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 700; color: #c0504d; line-height: 1.1; margin-top: 5px;">−2,4%</div>
+    </div>
+    <div style="padding: 22px 24px; border-right: 1px solid #2a251d;">
+      <div style="font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #7e7767; font-weight: 700;">Volatilidad</div>
+      <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 700; color: #d8a93e; line-height: 1.1; margin-top: 5px;">Alta</div>
+    </div>
+    <div style="padding: 22px 24px;">
+      <div style="font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #7e7767; font-weight: 700;">Agentes</div>
+      <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 700; color: #f4efe6; line-height: 1.1; margin-top: 5px;">10.000</div>
+    </div>
+  </div>
+
+  <div style="padding: 54px 34px 62px;">
+    <div style="font-size: 11px; letter-spacing: 2.6px; text-transform: uppercase; color: #d8a93e; font-weight: 700; text-align: center;">Qué llega a tu correo</div>
+    <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 38px; line-height: 1.14; text-align: center; margin: 12px auto 0; max-width: 20ch; color: #fbf7ee;">El mercado del día, contado en simple</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 42px;">
+
+      <div style="border: 1px solid #2a251d; border-radius: 10px; padding: 26px 24px; background: #171410;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#d8a93e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 20V11"/><path d="M12 20V5"/><path d="M18 20v-6"/></svg>
+        <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-weight: 700; margin: 14px 0 8px; color: #fbf7ee;">Lo que pasó</h3>
+        <p style="margin: 0; color: #a49b8a; font-size: 14.5px; line-height: 1.55;">Los hechos del día con su fuente. Verificados, no repetidos.</p>
+      </div>
+
+      <div style="border: 1px solid #2a251d; border-radius: 10px; padding: 26px 24px; background: #171410;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#d8a93e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="2.2"/><circle cx="16" cy="6" r="2.2"/><circle cx="12" cy="14" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8.8 8.7 13.9 12.9M14.3 7.4 12.7 11.7M14.2 14.7 16.9 15.6M10.2 15.3 7.8 16.9"/></svg>
+        <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-weight: 700; margin: 14px 0 8px; color: #fbf7ee;">Qué hizo el enjambre</h3>
+        <p style="margin: 0; color: #a49b8a; font-size: 14.5px; line-height: 1.55;">Diez mil simulados reaccionan al titular. Ves la manada formarse.</p>
+      </div>
+
+      <div style="border: 1px solid #2a251d; border-radius: 10px; padding: 26px 24px; background: #171410;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#d8a93e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.6-3.6"/><path d="M11 8.4v5.2M8.4 11h5.2"/></svg>
+        <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-weight: 700; margin: 14px 0 8px; color: #fbf7ee;">Qué observar hoy</h3>
+        <p style="margin: 0; color: #a49b8a; font-size: 14.5px; line-height: 1.55;">Dónde poner la atención. Nunca qué comprar ni vender.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

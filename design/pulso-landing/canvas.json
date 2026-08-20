@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",        "title": "Hoy (referencia)",      "x": 0,    "y": 0, "w": 880, "h": 1010 },
+    { "file": "A-Portada.dc.html",   "title": "A · Portada",           "x": 960,  "y": 0, "w": 880, "h": 1010 },
+    { "file": "B-Pulso.dc.html",     "title": "B · El pulso visible",  "x": 1920, "y": 0, "w": 880, "h": 1180 },
+    { "file": "C-Correo.dc.html",    "title": "C · El correo mismo",   "x": 2880, "y": 0, "w": 880, "h": 1120 },
+    { "file": "D-Manifiesto.dc.html","title": "D · Manifiesto",        "x": 3840, "y": 0, "w": 880, "h": 1080 }
+  ],
+  "annotations": [
+    { "id": "brief", "x": 0, "y": -190, "w": 460, "text": "El Pulso — cuatro direcciones para la landing\n\nA la izquierda, el diseño de hoy como referencia. Las cuatro de la derecha son direcciones distintas, no variaciones de la misma: elige UNA y la llevo a la landing completa.\n\nTodas usan el sistema real: Cormorant Garamond + Jost, papel #faf8f4, tinta #12100d, oro #b0831a." },
+    { "id": "nota-a", "x": 960,  "y": -110, "w": 380, "text": "A · PORTADA — se llama Pulso y es un diario: que lo parezca. Cabecera de broadsheet, fecha, columna lateral con lo que el enjambre dijo hoy, y el alta como cupón de suscripción." },
+    { "id": "nota-b", "x": 1920, "y": -110, "w": 380, "text": "B · EL PULSO VISIBLE — el dato es el héroe. La línea del pánico dibujada arriba, tira de instrumentos bajo el hero. Oscuro, cercano al Enjambre 3D." },
+    { "id": "nota-c", "x": 2880, "y": -110, "w": 380, "text": "C · EL CORREO MISMO — se ve la edición real, no una promesa. Es la que mejor convierte: el visitante sabe exactamente qué le va a llegar." },
+    { "id": "nota-d", "x": 3840, "y": -110, "w": 380, "text": "D · MANIFIESTO — una sola frase enorme y aire. Añade la sección 'lo que no vas a encontrar', que convierte el límite CMF en carácter de marca." }
+  ],
+  "launch": { "view": "canvas" }
+}

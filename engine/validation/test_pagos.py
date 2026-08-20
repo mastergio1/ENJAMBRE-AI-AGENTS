@@ -112,8 +112,9 @@ def test_endpoint_webhook_rechaza_sin_firma():
     assert r.status_code == 401
 
 
-def test_endpoint_estado_premium():
-    """El Enjambre pregunta si un correo es Premium para elevar su cupo diario."""
+def test_enlace_magico_desbloqueo_y_verificar():
+    """El enlace mágico: pedir (respuesta neutra) → canjear el token → Premium.
+    Y el oráculo por correo YA NO existe (cerrado el hallazgo #3)."""
     conexion = persistencia.conectar()
     alta = persistencia.agregar_suscriptor(conexion, "vip@lector.cl")
     persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
@@ -121,7 +122,23 @@ def test_endpoint_estado_premium():
     conexion.close()
 
     cliente = TestClient(server.app)
-    r = cliente.get("/api/pulso/premium", params={"email": "vip@lector.cl"}).json()
-    assert r["premium"] is True and r["limite"] == 40 and r["periodo"] == "mes"
-    r2 = cliente.get("/api/pulso/premium", params={"email": "nadie@lector.cl"}).json()
-    assert r2["premium"] is False and r2["limite"] == 1 and r2["periodo"] == "día"
+
+    # pedir el enlace: respuesta SIEMPRE neutra (no revela quién es Premium)
+    r = cliente.post("/api/pulso/desbloqueo", json={"email": "vip@lector.cl"})
+    assert r.json()["enviado"] is True
+    r_no = cliente.post("/api/pulso/desbloqueo", json={"email": "nadie@lector.cl"})
+    assert r_no.json()["enviado"] is True  # idéntica, sin filtrar nada
+
+    # el token quedó emitido en la base; el navegador lo canjea
+    conexion = persistencia.conectar()
+    token = persistencia.emitir_token_enjambre(conexion, "vip@lector.cl")
+    conexion.close()
+    v = cliente.get("/api/pulso/enjambre/verificar", params={"token": token}).json()
+    assert v["premium"] is True and v["limite"] == 40 and v["periodo"] == "mes"
+
+    # un token inválido → nivel gratis, sin revelar nada
+    v2 = cliente.get("/api/pulso/enjambre/verificar", params={"token": "x" * 20}).json()
+    assert v2["premium"] is False and v2["limite"] == 1
+
+    # el endpoint-oráculo por correo fue eliminado
+    assert cliente.get("/api/pulso/premium", params={"email": "vip@lector.cl"}).status_code == 404

@@ -88,12 +88,18 @@ def _puerta_simulacion(mensaje: dict) -> tuple[bool, str | None]:
     return True, correo
 
 
-def _correo_premium(mensaje: dict) -> str | None:
-    """El correo Premium que el visitante desbloqueó en El Enjambre (lo manda el
-    frontend en cada simulación). Solo se usa para elevar su cupo diario; si no
-    es Premium, `limites` lo ignora y cae al nivel gratis."""
-    email = str(mensaje.get("premium_email", "")).strip().lower()
-    return email if seguridad.correo_valido(email) else None
+def _token_premium(mensaje: dict) -> str:
+    """El token del enlace mágico que el navegador manda para reclamar su nivel
+    Premium (40/mes). `limites` lo verifica contra la base: solo el que recibió
+    el enlace en su buzón lo tiene, así nadie usa el correo de otro."""
+    return str(mensaje.get("premium_token", "")).strip()[:80]
+
+
+def _cliente_id(mensaje: dict) -> str:
+    """Huella suave del navegador (id aleatorio guardado en el dispositivo): el
+    cupo gratis se cuenta por dispositivo, no por IP — una oficina o una red
+    móvil (CGNAT) no comparte una sola simulación al día."""
+    return str(mensaje.get("cid", "")).strip()[:64]
 
 
 def _suscribir_silencioso(email: str) -> None:
@@ -308,8 +314,9 @@ async def canal(ws: WebSocket) -> None:
                 continue
             try:
                 # toda simulación pública gasta ~100 llamadas LLM:
-                # frenos por persona (3/día gratis, 10/día Premium) y global
-                permitido, motivo = limites.permitir(ip, premium_email=_correo_premium(mensaje))
+                # frenos por persona (1/día gratis, 40/mes Premium) y global
+                permitido, motivo = limites.permitir(
+                    ip, premium_token=_token_premium(mensaje), cliente_id=_cliente_id(mensaje))
                 if not permitido:
                     await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
                     continue
@@ -383,8 +390,9 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
         detener.set()
 
     async def _inyectar(titular: str) -> None:
-        # cada noticia gasta ~100 llamadas LLM → bajo el cupo diario de la persona
-        permitido, motivo = limites.permitir(ip, premium_email=_correo_premium(mensaje))
+        # cada noticia gasta ~100 llamadas LLM → bajo el cupo de la persona
+        permitido, motivo = limites.permitir(
+            ip, premium_token=_token_premium(mensaje), cliente_id=_cliente_id(mensaje))
         if not permitido:
             await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
             return
@@ -977,21 +985,53 @@ def api_contactos(x_pipeline_token: str = Header(default="")) -> dict:
         conexion.close()
 
 
-@app.get("/api/pulso/premium")
-def estado_premium(email: str = "") -> dict:
-    """¿Este correo es Premium activo? Lo usa El Enjambre para desbloquear el
-    cupo de 10/día. Devuelve {premium, limite}. Respuesta neutra si el correo es
-    inválido (no revela nada). NO consume cupo."""
+class PeticionDesbloqueo(BaseModel):
+    email: str
+
+
+# antibombardeo del enlace mágico: no reenviar al mismo correo más seguido que esto
+_ultimo_desbloqueo: dict[str, float] = {}
+_VENTANA_DESBLOQUEO = 300  # segundos
+
+
+@app.post("/api/pulso/desbloqueo")
+def desbloqueo_enjambre(peticion: PeticionDesbloqueo) -> dict:
+    """El enlace mágico: si el correo es Premium activo, le enviamos un enlace que
+    desbloquea 40/mes en El Enjambre. La respuesta es SIEMPRE la misma —no revela
+    quién es suscriptor de pago (cierra el oráculo)— y no consume cupo."""
+    from contenido import boletin
+
+    correo = (peticion.email or "").strip().lower()
+    if seguridad.correo_valido(correo) and len(correo) <= 200:
+        ahora = _time.time()
+        reciente = ahora - _ultimo_desbloqueo.get(correo, 0) < _VENTANA_DESBLOQUEO
+        if not reciente:
+            conexion = persistencia.conectar()
+            try:
+                if persistencia.es_premium(conexion, correo):
+                    token = persistencia.emitir_token_enjambre(conexion, correo)
+                    if token:
+                        _ultimo_desbloqueo[correo] = ahora
+                        boletin.enviar_desbloqueo_enjambre(correo, token)
+            finally:
+                conexion.close()
+    return {"enviado": True,
+            "mensaje": "Si ese correo es Premium, te enviamos un enlace para desbloquear."}
+
+
+@app.get("/api/pulso/enjambre/verificar")
+def verificar_desbloqueo(token: str = "") -> dict:
+    """El navegador canjea el token del enlace mágico por su nivel. NO es un
+    oráculo de correos: solo responde a un token válido, que es un secreto en sí
+    mismo. Devuelve {premium, limite, periodo}. NO consume cupo."""
     from contenido import limites
 
-    correo = (email or "").strip().lower()
-    es_prem = False
-    if seguridad.correo_valido(correo):
-        conexion = persistencia.conectar()
-        try:
-            es_prem = persistencia.es_premium(conexion, correo)
-        finally:
-            conexion.close()
+    conexion = persistencia.conectar()
+    try:
+        correo = persistencia.email_por_token_enjambre(conexion, (token or "").strip())
+        es_prem = bool(correo) and persistencia.es_premium(conexion, correo)
+    finally:
+        conexion.close()
     if es_prem:
         return {"premium": True, "limite": limites.tope_mes_premium(), "periodo": "mes"}
     return {"premium": False, "limite": limites.tope_dia_gratis(), "periodo": "día"}

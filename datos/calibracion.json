@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-20T10:39:43+00:00",
+ "generado": "2026-08-21T10:41:12+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13639,6 +13639,66 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +52.7%. En el mercado real, AS cerró en 34.025 el 2026-08-19 (venía de 32.59 el 2026-08-17): +4.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "9d583b07de144a92",
+   "origen": "en_vivo",
+   "fecha": "2026-08-19T10:36:55+00:00",
+   "titular": "Target Raises FY2026 Adj EPS Guidance from $8.50 to $9.90-$10.90 vs $8.50 Est; Raises FY2026 Sales Guidance from $108.971B to $110.019B vs $109.096B Est",
+   "simbolos": "TGT",
+   "direccion_pct": 52.75,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "TGT",
+    "pct_real": 3.79,
+    "cierre_base": 152.485,
+    "cierre_final": 158.27,
+    "fecha_base": "2026-08-18",
+    "fecha_final": "2026-08-20",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +52.8%. En el mercado real, TGT cerró en 158.27 el 2026-08-20 (venía de 152.485 el 2026-08-18): +3.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "db0a21d2740a0eaa",
+   "origen": "en_vivo",
+   "fecha": "2026-08-19T10:37:26+00:00",
+   "titular": "Target Raises FY2026 GAAP EPS Guidance from $8.50 to $9.90-$10.90 vs $8.39 Est",
+   "simbolos": "TGT",
+   "direccion_pct": 57.57,
+   "volatilidad_pct": 1.22,
+   "reaccion_real": {
+    "simbolo": "TGT",
+    "pct_real": 3.79,
+    "cierre_base": 152.485,
+    "cierre_final": 158.27,
+    "fecha_base": "2026-08-18",
+    "fecha_final": "2026-08-20",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +57.6%. En el mercado real, TGT cerró en 158.27 el 2026-08-20 (venía de 152.485 el 2026-08-18): +3.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "4d3b6728e5e60a58",
+   "origen": "en_vivo",
+   "fecha": "2026-08-19T10:37:56+00:00",
+   "titular": "NVIDIA Supplier SK Hynix Rolls Out $29 Billion Buyback After AI Spending Fears Hammer Stock",
+   "simbolos": "EGGQ,EGGY,NVDA,SKHY",
+   "direccion_pct": 33.1,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "EGGQ",
+    "pct_real": -5.36,
+    "cierre_base": 53.88,
+    "cierre_final": 50.99,
+    "fecha_base": "2026-08-18",
+    "fecha_final": "2026-08-20",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +33.1%. En el mercado real, EGGQ cerró en 50.99 el 2026-08-20 (venía de 53.88 el 2026-08-18): -5.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-21T10:41:12+00:00",
+ "generado": "2026-08-22T10:23:45+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13699,6 +13699,46 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +33.1%. En el mercado real, EGGQ cerró en 50.99 el 2026-08-20 (venía de 53.88 el 2026-08-18): -5.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "c84a1e79c48312e4",
+   "origen": "en_vivo",
+   "fecha": "2026-08-20T10:39:01+00:00",
+   "titular": "UKMTO Post On Social Media That A Tanker In Gulf Of Aden Was Boarded By Six Armed People Who Took Control Of The Vessel And Redirected It To Somalia",
+   "simbolos": "USO",
+   "direccion_pct": -0.31,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "USO",
+    "pct_real": 2.83,
+    "cierre_base": 130.94,
+    "cierre_final": 134.65,
+    "fecha_base": "2026-08-19",
+    "fecha_final": "2026-08-21",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -0.3%. En el mercado real, USO cerró en 134.65 el 2026-08-21 (venía de 130.94 el 2026-08-19): +2.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "4f2a82adf16b3e1f",
+   "origen": "en_vivo",
+   "fecha": "2026-08-20T10:39:32+00:00",
+   "titular": "Morgan Stanley Upgrades Merck & Co to Overweight, Raises Price Target to $179",
+   "simbolos": "MRK",
+   "direccion_pct": 34.01,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "MRK",
+    "pct_real": 0.24,
+    "cierre_base": 152.19,
+    "cierre_final": 152.56,
+    "fecha_base": "2026-08-19",
+    "fecha_final": "2026-08-21",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +34.0%. En el mercado real, MRK cerró en 152.56 el 2026-08-21 (venía de 152.19 el 2026-08-19): +0.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

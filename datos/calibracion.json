@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-22T10:23:45+00:00",
+ "generado": "2026-08-25T10:44:19+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13739,6 +13739,46 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +34.0%. En el mercado real, MRK cerró en 152.56 el 2026-08-21 (venía de 152.19 el 2026-08-19): +0.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "657be3e0589fe407",
+   "origen": "en_vivo",
+   "fecha": "2026-08-21T10:40:35+00:00",
+   "titular": "Analyzing NVIDIA In Comparison To Competitors In Semiconductors &amp; Semiconductor Equipment Industry",
+   "simbolos": "NVDA",
+   "direccion_pct": 22.06,
+   "volatilidad_pct": 1.1,
+   "reaccion_real": {
+    "simbolo": "NVDA",
+    "pct_real": -3.88,
+    "cierre_base": 216.89,
+    "cierre_final": 208.47,
+    "fecha_base": "2026-08-20",
+    "fecha_final": "2026-08-24",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +22.1%. En el mercado real, NVDA cerró en 208.47 el 2026-08-24 (venía de 216.89 el 2026-08-20): -3.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "724f4f41f7cb4e94",
+   "origen": "en_vivo",
+   "fecha": "2026-08-21T10:41:02+00:00",
+   "titular": "Inquiry Into Broadcom's Competitor Dynamics In Semiconductors &amp; Semiconductor Equipment Industry",
+   "simbolos": "AVGO",
+   "direccion_pct": 26.51,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "AVGO",
+    "pct_real": -1.47,
+    "cierre_base": 364.13,
+    "cierre_final": 358.775,
+    "fecha_base": "2026-08-20",
+    "fecha_final": "2026-08-24",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +26.5%. En el mercado real, AVGO cerró en 358.775 el 2026-08-24 (venía de 364.13 el 2026-08-20): -1.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-25T10:44:19+00:00",
+ "generado": "2026-08-26T10:43:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13779,6 +13779,66 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +26.5%. En el mercado real, AVGO cerró en 358.775 el 2026-08-24 (venía de 364.13 el 2026-08-20): -1.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "d840b720bee37c15",
+   "origen": "en_vivo",
+   "fecha": "2026-08-24T10:46:33+00:00",
+   "titular": "Robinhood Markets (HOOD) sube 13.7% tras el impulso del Gobierno de Trump al proyecto de ley cripto 'Clarity Act' y un repunte de Bitcoin",
+   "simbolos": "HOOD",
+   "direccion_pct": 20.04,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "HOOD",
+    "pct_real": 3.64,
+    "cierre_base": 108.13,
+    "cierre_final": 112.07,
+    "fecha_base": "2026-08-21",
+    "fecha_final": "2026-08-25",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +20.0%. En el mercado real, HOOD cerró en 112.07 el 2026-08-25 (venía de 108.13 el 2026-08-21): +3.6% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "0534c9c76f23315d",
+   "origen": "en_vivo",
+   "fecha": "2026-08-24T10:47:00+00:00",
+   "titular": "Uranium Energy Corp. (UEC) sube 14.44% en el día",
+   "simbolos": "UEC",
+   "direccion_pct": 31.24,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "UEC",
+    "pct_real": 4.16,
+    "cierre_base": 12.74,
+    "cierre_final": 13.27,
+    "fecha_base": "2026-08-21",
+    "fecha_final": "2026-08-25",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +31.2%. En el mercado real, UEC cerró en 13.27 el 2026-08-25 (venía de 12.74 el 2026-08-21): +4.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "cca89d86d353a120",
+   "origen": "en_vivo",
+   "fecha": "2026-08-24T10:47:27+00:00",
+   "titular": "XPeng Sees Q3 Vehicle Deliveries 115K-121K Units",
+   "simbolos": "XPEV",
+   "direccion_pct": 40.3,
+   "volatilidad_pct": 1.09,
+   "reaccion_real": {
+    "simbolo": "XPEV",
+    "pct_real": -5.12,
+    "cierre_base": 12.2,
+    "cierre_final": 11.575,
+    "fecha_base": "2026-08-21",
+    "fecha_final": "2026-08-25",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +40.3%. En el mercado real, XPEV cerró en 11.575 el 2026-08-25 (venía de 12.2 el 2026-08-21): -5.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-26T10:43:01+00:00",
+ "generado": "2026-08-27T20:17:11+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13839,6 +13839,66 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +40.3%. En el mercado real, XPEV cerró en 11.575 el 2026-08-25 (venía de 12.2 el 2026-08-21): -5.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "a1d8fc1edfcd0ad4",
+   "origen": "en_vivo",
+   "fecha": "2026-08-25T10:43:07+00:00",
+   "titular": "Canada Threatens Trump’s Industrial Achilles' Heel",
+   "simbolos": "CARZ,CCJ,COPX,DRIV,EWC,GLCNF,REMX,SETM,SLX,URA,URNM,VALE",
+   "direccion_pct": -7.77,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "CARZ",
+    "pct_real": -1.83,
+    "cierre_base": 107.08,
+    "cierre_final": 105.12,
+    "fecha_base": "2026-08-24",
+    "fecha_final": "2026-08-26",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -7.8%. En el mercado real, CARZ cerró en 105.12 el 2026-08-26 (venía de 107.08 el 2026-08-24): -1.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "1a526e240e9b6cc9",
+   "origen": "en_vivo",
+   "fecha": "2026-08-26T10:42:26+00:00",
+   "titular": "Kevin Warsh Caught Between Fed's Inflation Fight and Scott Bessent’s 'Self-Defeating' Bond Strategy, Says Analyst: 'What He’s Supposed to Do…'",
+   "simbolos": "TLT",
+   "direccion_pct": -5.48,
+   "volatilidad_pct": 1.12,
+   "reaccion_real": {
+    "simbolo": "TLT",
+    "pct_real": -0.4,
+    "cierre_base": 83.46,
+    "cierre_final": 83.125,
+    "fecha_base": "2026-08-25",
+    "fecha_final": "2026-08-27",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -5.5%. En el mercado real, TLT cerró en 83.125 el 2026-08-27 (venía de 83.46 el 2026-08-25): -0.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "48f7997e41bcfbdb",
+   "origen": "en_vivo",
+   "fecha": "2026-08-26T10:42:59+00:00",
+   "titular": "Trump's 50% Tariff Threat on Canada May Directly Affect Some of the US's Best-Selling Vehicles",
+   "simbolos": "F,GM,HMC,STLA,TM",
+   "direccion_pct": -5.37,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "F",
+    "pct_real": 0.22,
+    "cierre_base": 13.94,
+    "cierre_final": 13.97,
+    "fecha_base": "2026-08-25",
+    "fecha_final": "2026-08-27",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -5.4%. En el mercado real, F cerró en 13.97 el 2026-08-27 (venía de 13.94 el 2026-08-25): +0.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-27T20:17:11+00:00",
+ "generado": "2026-08-28T21:10:02+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13899,6 +13899,26 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una caída de -5.4%. En el mercado real, F cerró en 13.97 el 2026-08-27 (venía de 13.94 el 2026-08-25): +0.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "43773f6ed21a643c",
+   "origen": "en_vivo",
+   "fecha": "2026-08-27T20:17:07+00:00",
+   "titular": "Trump's Tariffs Were Built to Close the Trade Gap. The AI Buildout Is Keeping It Open",
+   "simbolos": "MU,SKHY,SSNLF",
+   "direccion_pct": -10.51,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "MU",
+    "pct_real": -0.41,
+    "cierre_base": 936.375,
+    "cierre_final": 932.58,
+    "fecha_base": "2026-08-26",
+    "fecha_final": "2026-08-28",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -10.5%. En el mercado real, MU cerró en 932.58 el 2026-08-28 (venía de 936.375 el 2026-08-26): -0.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

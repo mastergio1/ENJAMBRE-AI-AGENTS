@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-28T21:10:02+00:00",
+ "generado": "2026-08-31T17:32:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13919,6 +13919,46 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una caída de -10.5%. En el mercado real, MU cerró en 932.58 el 2026-08-28 (venía de 936.375 el 2026-08-26): -0.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "6c65c1cb211b3dd5",
+   "origen": "en_vivo",
+   "fecha": "2026-08-28T21:09:39+00:00",
+   "titular": "Trilogy Metals  Executes Definitive Agreements With The U.S. Department Of War In Connection With The Previously Announced Strategic Equity Investment Of ~$35.6M To Advance Exploration And Development Of The Upper Kobuk Mineral Projects In Northwestern Alaska",
+   "simbolos": "TMQ,TSX:TMQ",
+   "direccion_pct": -12.04,
+   "volatilidad_pct": 1.18,
+   "reaccion_real": {
+    "simbolo": "TMQ",
+    "pct_real": -4.36,
+    "cierre_base": 3.785,
+    "cierre_final": 3.62,
+    "fecha_base": "2026-08-27",
+    "fecha_final": "2026-08-31",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -12.0%. En el mercado real, TMQ cerró en 3.62 el 2026-08-31 (venía de 3.785 el 2026-08-27): -4.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "4e2936205e599ef4",
+   "origen": "en_vivo",
+   "fecha": "2026-08-28T21:09:57+00:00",
+   "titular": "Warsh Sparks Rate-Hike Bets, Nvidia Reaffirms AI Growth Story: This Week on Wall Street",
+   "simbolos": "BUG,CRM,CRWD,MRVL,MU,NOW,NVDA,SOXX,VEEV,WDAY",
+   "direccion_pct": 1.03,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "BUG",
+    "pct_real": -1.69,
+    "cierre_base": 44.14,
+    "cierre_final": 43.395,
+    "fecha_base": "2026-08-27",
+    "fecha_final": "2026-08-31",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +1.0%. En el mercado real, BUG cerró en 43.395 el 2026-08-31 (venía de 44.14 el 2026-08-27): -1.7% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

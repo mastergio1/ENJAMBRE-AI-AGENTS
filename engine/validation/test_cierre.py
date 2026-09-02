@@ -32,6 +32,52 @@ def test_bloque_cierre_renderiza():
     assert "No es asesoría de inversión" in html
 
 
+def test_bloque_cierre_con_voz_renderiza_minihistorias():
+    """Con voz Moby, el cierre son mini-historias (apertura + párrafos), no la
+    lista llana."""
+    cierre_con_voz = dict(CIERRE)
+    cierre_con_voz["redactado"] = {
+        "buenas_tardes": "El mercado cerró y, como siempre, los protagonistas no "
+                         "fueron los de siempre.",
+        "historias": [{
+            "kicker": "Salud · catalizador",
+            "emoji": "🧬",
+            "titular": "Moderna se disparó y recordó por qué la biotecnología no aburre",
+            "dek": "Un avance clínico encendió la acción",
+            "cuerpo": "Moderna subió con fuerza tras un avance en su vacuna contra el "
+                      "cáncer.\n\nEl dato importa porque cambia la conversación sobre "
+                      "sus ingresos futuros.",
+            "bottom_line": "La biotecnología volvió al centro de la mesa.",
+            "grafico": {"ticker": "MRNA", "nombre": "Moderna", "periodo": "dia", "moneda": "$"},
+            "var_pct": 40.0, "sesion": "sesión",
+        }],
+    }
+    html = boletin.construir_html([], "lunes 1 de septiembre · cierre",
+                                  brief={"cierre": cierre_con_voz})
+    assert "Edición de la tarde" in html
+    assert "Buenas tardes" in html
+    assert "la biotecnología no aburre" in html          # titular con voz
+    assert "cambia la conversación" in html              # cuerpo desarrollado
+    assert "No es asesoría de inversión" in html
+
+
+def test_validar_cierre_ata_pildora_por_ticker():
+    """El validador casa el % real del movimiento con la historia por su ticker."""
+    from contenido import redaccion_ia
+    parseado = {
+        "buenas_tardes": "Buenas tardes.",
+        "historias": [{
+            "titular": "Moderna vivió su mejor día en meses",
+            "cuerpo": "Subió tras un avance clínico.\n\nEl mercado lo celebró.",
+            "grafico": {"ticker": "MRNA", "nombre": "Moderna", "periodo": "dia", "moneda": "$"},
+        }],
+    }
+    salida = redaccion_ia._validar_cierre(parseado, CIERRE["movers"])
+    assert salida is not None
+    assert salida["historias"][0]["var_pct"] == 40.0     # atado desde el mover MRNA
+    assert salida["historias"][0]["sesion"] == "sesión"
+
+
 def test_ritual_tarde_arma_pendiente(monkeypatch):
     from contenido import cierre, notificar
     monkeypatch.setattr(notificar, "avisar", lambda m: True)

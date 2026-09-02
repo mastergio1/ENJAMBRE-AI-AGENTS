@@ -331,7 +331,7 @@ def _ritual_tarde(conexion=None, enviar: bool = True, cuando=None) -> dict:
     import secrets
     from datetime import datetime, timezone
 
-    from contenido import boletin, cierre as mod_cierre, notificar
+    from contenido import boletin, cierre as mod_cierre, notificar, redaccion_ia
 
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
@@ -343,6 +343,15 @@ def _ritual_tarde(conexion=None, enviar: bool = True, cuando=None) -> dict:
         if not datos:
             return {"estado": "sin_edicion", "edicion": "cierre",
                     "motivo": "sin movimientos del día"}
+
+        # Voz Moby ENCIMA de los hechos verificados: los movimientos se vuelven
+        # mini-historias con tono, no una lista plana. Si la IA no está o falla,
+        # 'redactado' queda None y el boletín cae a la lista de siempre.
+        cuando = cuando or redaccion_ia.contexto_temporal()
+        try:
+            datos["redactado"] = redaccion_ia.redactar_cierre(datos, cuando=cuando)
+        except Exception:
+            datos["redactado"] = None
 
         brief = {"cierre": datos}
         clave = _clave_tarde(persistencia.ahora_iso())

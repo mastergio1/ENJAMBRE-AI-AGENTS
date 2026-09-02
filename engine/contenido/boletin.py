@@ -818,12 +818,27 @@ def _espera_reintento(respuesta, intento: int) -> float:
     return min(2.0 ** (intento - 1), 30.0)
 
 
-def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None = None) -> bool:
-    """Envía un correo por Resend. False si no hay clave o falla (no lanza).
-    `fecha_edicion` etiqueta el correo para poder medir su apertura por edición."""
+def _motivo_resend(respuesta) -> str:
+    """Un motivo corto y legible del fallo de Resend (para el log y para la página
+    de 'Listo'). Resend suele mandar {"message": "...", "name": "..."} en el cuerpo."""
+    try:
+        datos = respuesta.json()
+        msg = str(datos.get("message") or datos.get("name") or "").strip()
+    except Exception:
+        msg = ""
+    if not msg:
+        msg = (respuesta.text or "").strip()[:120]
+    return f"HTTP {respuesta.status_code}: {msg}" if msg else f"HTTP {respuesta.status_code}"
+
+
+def _enviar_resend(destinatario: str, asunto: str, html: str,
+                   fecha_edicion: str | None = None) -> tuple[bool, str]:
+    """El envío real por Resend, con reintentos. Devuelve (ok, motivo): motivo es
+    "" si salió bien, o una razón corta del fallo (para el log y la página de
+    revisión). No lanza."""
     clave = os.environ.get("RESEND_API_KEY")
     if not clave:
-        return False
+        return False, "sin RESEND_API_KEY"
     cuerpo = {"from": REMITENTE, "to": [destinatario], "subject": asunto, "html": html}
     tags = _tag_edicion(fecha_edicion)
     if tags:
@@ -838,9 +853,9 @@ def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None 
             if intento < REINTENTOS_ENVIO:
                 time.sleep(2 ** (intento - 1))
                 continue
-            return False
+            return False, f"red: {type(e).__name__}"
         if respuesta.status_code < 300:
-            return True
+            return True, ""
         # 429 (límite de Resend) o 5xx: esperamos y reintentamos. Otros 4xx
         # (dirección inválida, etc.) no se arreglan reintentando: se cae y avisa.
         reintenta = respuesta.status_code == 429 or respuesta.status_code >= 500
@@ -850,10 +865,16 @@ def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None 
                         destinatario, respuesta.status_code, espera, intento, REINTENTOS_ENVIO)
             time.sleep(espera)
             continue
-        log.warning("Envío a %s falló: HTTP %d — %s",
-                    destinatario, respuesta.status_code, (respuesta.text or "")[:200])
-        return False
-    return False
+        motivo = _motivo_resend(respuesta)
+        log.warning("Envío a %s falló: %s", destinatario, motivo)
+        return False, motivo
+    return False, "reintentos agotados"
+
+
+def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None = None) -> bool:
+    """Envía un correo por Resend. False si no hay clave o falla (no lanza).
+    `fecha_edicion` etiqueta el correo para poder medir su apertura por edición."""
+    return _enviar_resend(destinatario, asunto, html, fecha_edicion)[0]
 
 
 def enviar_confirmacion(email: str, token_confirma: str) -> bool:
@@ -997,14 +1018,19 @@ def enviar_a_suscriptores(conexion, preview_html: str, asunto: str,
         activos = [s for s in activos if s.get("premium")]
     enviados = 0
     premium_enviados = 0
+    fallos = []
     for s in activos:
         gratuito = teaser_html is not None and not s.get("premium")
         base = teaser_html if gratuito else preview_html
         subj = (asunto_teaser or asunto) if gratuito else asunto
         html = base.replace(persistencia.TOKEN_BAJA_SENTINEL, s["token_baja"])
-        if enviar(s["email"], subj, html, fecha_edicion=fecha_edicion):
+        ok, motivo = _enviar_resend(s["email"], subj, html, fecha_edicion=fecha_edicion)
+        if ok:
             enviados += 1
             if not gratuito:
                 premium_enviados += 1
+        else:
+            fallos.append({"email": s["email"], "motivo": motivo})
     return {"suscriptores": len(activos), "enviados": enviados,
-            "fallidos": len(activos) - enviados, "premium": premium_enviados}
+            "fallidos": len(activos) - enviados, "premium": premium_enviados,
+            "fallos": fallos}

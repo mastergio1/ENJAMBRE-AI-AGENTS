@@ -576,16 +576,60 @@ def asunto_cierre() -> str:
     return "🐝 El Pulso — El cierre del mercado"
 
 
+def _cabecera_cierre(titulo: str) -> str:
+    """La cabecera de la edición de la tarde (sello Premium + título)."""
+    return f"""
+  <tr><td style="padding:22px 32px 4px;text-align:center;border-top:1px solid {LINEA};">
+    <div style="font-size:11px;letter-spacing:3px;color:{ORO};text-transform:uppercase;font-weight:700;">🌆 Edición de la tarde · Premium</div>
+    <div style="font-family:Georgia,serif;font-size:24px;color:{TEXTO};font-weight:bold;margin-top:6px;">{titulo}</div>
+    <div style="font-size:11px;letter-spacing:1px;color:{TEAL};text-transform:uppercase;font-weight:700;margin-top:4px;">Lo que de verdad se movió hoy, y por qué</div>
+  </td></tr>"""
+
+
+_PIE_CIERRE = (f'<tr><td style="padding:10px 32px 8px;">'
+               f'<div style="color:{{MUTE}};font-size:12px;font-style:italic;line-height:1.5;">'
+               f'Los movimientos y sus motivos, investigados y verificados por nuestro '
+               f'reportero IA. No es asesoría de inversión.</div></td></tr>')
+
+
+def _bloque_cierre_con_voz(titulo: str, apertura: str, historias: list[dict]) -> str:
+    """El cierre con VOZ Moby: apertura ('Buenas tardes') + mini-historias, con el
+    mismo tratamiento visual que las historias de la mañana (_bloque_historia)."""
+    apertura_html = ""
+    parrafos = _parrafos(str(apertura or ""))
+    if parrafos:
+        apertura_html = f"""
+  <tr><td style="padding:16px 32px 2px;">
+    <div style="font-size:11px;letter-spacing:2px;color:{MUTE};text-transform:uppercase;font-weight:700;">🌆 Buenas tardes</div>
+    {parrafos}
+  </td></tr>"""
+    cuerpo = "".join(_bloque_historia(h) for h in historias)
+    if not cuerpo and not apertura_html:
+        return ""
+    return (_cabecera_cierre(titulo) + apertura_html + cuerpo
+            + _PIE_CIERRE.format(MUTE=MUTE))
+
+
 def _bloque_cierre(brief: dict | None) -> str:
     """La EDICIÓN DE LA TARDE (Premium): 'el cierre del mercado'. Los mayores
-    movimientos REALES del día investigados por el reportero IA (titular + razón
-    + píldora del %). Todo escapado + filtrado CMF. '' si no hay movimientos."""
+    movimientos REALES del día investigados por el reportero IA. Con voz Moby son
+    mini-historias; sin IA, la lista llana (titular + razón + píldora del %).
+    Todo escapado + filtrado CMF. '' si no hay movimientos."""
     brief = brief or {}
     cierre = brief.get("cierre") or {}
     movers = cierre.get("movers") or []
     if not movers:
         return ""
     titulo = _limpiar(str(cierre.get("titulo", "El cierre del mercado")))
+
+    # CAMINO CON VOZ: si el redactor le puso voz Moby, el cierre son mini-historias
+    # (apertura + 2-3 párrafos por protagonista), igual que la edición de la mañana.
+    red = cierre.get("redactado") or {}
+    historias = [h for h in (red.get("historias") or []) if isinstance(h, dict)]
+    if historias:
+        return _bloque_cierre_con_voz(titulo, red.get("buenas_tardes", ""), historias)
+
+    # CAMINO LLANO (respaldo): sin IA, la lista de siempre (píldora + titular + razón).
     filas = ""
     for m in movers:
         if not isinstance(m, dict):
@@ -604,18 +648,10 @@ def _bloque_cierre(brief: dict | None) -> str:
       </td></tr>"""
     if not filas:
         return ""
-    return f"""
-  <tr><td style="padding:22px 32px 4px;text-align:center;border-top:1px solid {LINEA};">
-    <div style="font-size:11px;letter-spacing:3px;color:{ORO};text-transform:uppercase;font-weight:700;">🌆 Edición de la tarde · Premium</div>
-    <div style="font-family:Georgia,serif;font-size:24px;color:{TEXTO};font-weight:bold;margin-top:6px;">{titulo}</div>
-    <div style="font-size:11px;letter-spacing:1px;color:{TEAL};text-transform:uppercase;font-weight:700;margin-top:4px;">Lo que de verdad se movió hoy, y por qué</div>
-  </td></tr>
+    return _cabecera_cierre(titulo) + f"""
   <tr><td style="padding:6px 32px 2px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{filas}</table>
-  </td></tr>
-  <tr><td style="padding:10px 32px 8px;">
-    <div style="color:{MUTE};font-size:12px;font-style:italic;line-height:1.5;">Los movimientos y sus motivos, investigados y verificados por nuestro reportero IA. No es asesoría de inversión.</div>
-  </td></tr>"""
+  </td></tr>""" + _PIE_CIERRE.format(MUTE=MUTE)
 
 
 def asunto_teaser_premium() -> str:

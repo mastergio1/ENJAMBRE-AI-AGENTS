@@ -316,6 +316,152 @@ def redactar(brief: dict, enjambre: dict | None = None, cuando: dict | None = No
 
 
 # ══════════════════════════════════════════════════════════════════════════
+#  LA EDICIÓN DE LA TARDE — 'el cierre del mercado' (Premium) CON VOZ
+# ══════════════════════════════════════════════════════════════════════════
+# El investigador (investigador.py) ya cazó y VERIFICÓ los mayores movimientos
+# del día con su porqué. Aquí les ponemos ENCIMA la voz Moby: en vez de una lista
+# plana ("FRVO sube 28%"), los 3 protagonistas se vuelven mini-historias con
+# tono cálido-filoso, igual que la edición de la mañana. Voz sobre hechos ya
+# verificados: los números, tickers y el motivo vienen dados; la IA no los toca.
+
+PROMPT_CIERRE = """\
+Eres el redactor jefe de EL PULSO (by Rubicón Lab). Esta es la EDICIÓN DE LA
+TARDE: 'el cierre del mercado', el premio de los suscriptores Premium. Cerró la
+bolsa de EE.UU. y te entrego los MAYORES movimientos del día, YA investigados y
+VERIFICADOS por nuestro reportero (cada uno con su cifra y su motivo confirmado).
+Tu trabajo: convertir los 3 que MÁS llamen la atención en mini-historias con
+voz, no en una lista plana de porcentajes.
+
+TU VOZ (la de siempre, la "Moby")
+- Cálido y filoso, como un amigo brillante que sabe de mercados y te lo cuenta en
+  el café al cierre del día. Cercano, nunca solemne.
+- Humor seco e ironía sobre LOS HECHOS (jamás sobre el lector).
+- Frases cortas, ritmo. Analogías cotidianas para lo complejo. Si usas un término
+  técnico, lo explicas en la misma frase.
+
+CADA MINI-HISTORIA (2 a 3 párrafos, desarrollada)
+1. QUÉ PASÓ — el movimiento con su cifra (la que te doy) y el motivo verificado.
+2. POR QUÉ IMPORTA — la tesis: qué significa de verdad, más allá del salto de precio.
+3. LA CONEXIÓN — el hilo con lo macro (tasas, la Fed, el sector, la narrativa del
+   momento). Aquí está el valor: conectas puntos.
+Cierra con un "bottom_line": una frase que remata.
+
+REGLAS DE ORO (INNEGOCIABLES)
+A. Candado CMF (regulación chilena): NUNCA recomiendas comprar, vender ni mantener.
+   Prohibidas: "conviene", "oportunidad", "deberías", "podría subir/bajar",
+   "precio objetivo", "es buen momento". NUNCA predices el futuro: cuentas lo que
+   YA pasó; hacia adelante es "qué observar", nunca "qué va a pasar".
+B. Integridad: los NÚMEROS, TICKERS y el MOTIVO vienen dados. Cópialos TEXTUALES.
+   Si algo no está en lo que te di, NO lo inventas. Si un movimiento vino marcado
+   como SIN motivo verificado, cuéntalo así ("subió con fuerza; el mercado aún no
+   fija una causa clara") — jamás inventes la razón.
+
+EL GRÁFICO: en "grafico" pon el TICKER que te doy junto a ese activo (textual, NO
+inventes) y su nombre. "periodo": "dia". "moneda": "$".
+
+NO menciones "el enjambre" ni simulaciones: El Pulso es un diario de mercado serio.
+
+QUÉ DEVUELVES: SOLO un objeto JSON válido, sin texto alrededor, con esta forma:
+{
+  "buenas_tardes": "1-2 párrafos de apertura que amarran el cierre del día, separados por \\n\\n.",
+  "historias": [
+    {
+      "kicker": "etiqueta corta, ej: 'Energía · movida del día', 'Small-cap · catalizador'",
+      "emoji": "un emoji que resuma la historia",
+      "titular": "titular con gancho, en tu voz",
+      "dek": "una bajada de una línea",
+      "cuerpo": "2 a 3 párrafos separados por \\n\\n: qué pasó + por qué importa + la conexión",
+      "bottom_line": "una frase de cierre (sin escribir 'En una línea:', solo la frase)",
+      "grafico": {"ticker": "FRVO", "nombre": "Fervo Energy", "periodo": "dia", "moneda": "$"}
+    }
+  ]
+}
+Devuelve las 3 historias más llamativas. Escribe SIEMPRE en español. Cada una
+DESARROLLADA, no en dos frases."""
+
+
+def _mensaje_cierre(datos: dict, cuando: dict | None = None) -> str:
+    """Serializa los movimientos YA verificados para el redactor del cierre."""
+    cuando = cuando or contexto_temporal()
+    movers = [m for m in (datos.get("movers") or []) if isinstance(m, dict)]
+    lineas = [
+        f'HOY es {cuando["dia_semana"]} {cuando["fecha"]}. Es la EDICIÓN DE LA '
+        f'TARDE, tras el cierre del mercado de EE.UU. Saluda con "Buenas tardes" '
+        f'y usa esta fecha; NO inventes otra.\n',
+        "LOS PROTAGONISTAS DEL CIERRE — movimientos verificados (elige los 3 que "
+        "MÁS llamen la atención y desarróllalos; usa el [TICKER] para el gráfico):",
+    ]
+    for m in movers:
+        tk = str(m.get("simbolos", "") or "?").split(",")[0].strip() or "?"
+        pct = m.get("var_pct")
+        signo = "sube" if (pct or 0) >= 0 else "cae"
+        linea = f'- [{tk}] {m.get("titular","")}'
+        if pct is not None:
+            linea += f' — dato: {signo} {abs(pct)}%'
+        razon = str(m.get("razon", "") or "").strip()
+        if m.get("verificado") and razon:
+            linea += f'. Motivo verificado: «{razon}»'
+        else:
+            linea += ". SIN motivo verificado (no inventes la causa)."
+        if m.get("fuente"):
+            linea += f' (fuente: {m["fuente"]})'
+        lineas.append(linea)
+    return "\n".join(lineas)
+
+
+def _validar_cierre(datos: dict, fuente_movers: list[dict]) -> dict | None:
+    """Valida la forma del JSON del cierre y pasa TODO por el filtro CMF. Ata a
+    cada historia el % real del movimiento (la píldora) casando su ticker con el
+    del movimiento de origen. None si no quedó ni apertura ni historia."""
+    if not isinstance(datos, dict):
+        return None
+    apertura = _cmf(datos.get("buenas_tardes", ""))
+    historias = [s for s in (_sanear_historia(h) for h in (datos.get("historias") or [])
+                             if isinstance(h, dict)) if s]
+    if not historias and not apertura:
+        return None
+    # píldora del %: casa el ticker del gráfico con el movimiento de origen
+    por_ticker = {}
+    for m in fuente_movers:
+        tk = str(m.get("simbolos", "") or "").split(",")[0].strip().upper()
+        if tk:
+            por_ticker[tk] = m
+    for h in historias:
+        g = h.get("grafico") or {}
+        origen = por_ticker.get(str(g.get("ticker", "")).strip().upper())
+        if origen:
+            h["var_pct"] = origen.get("var_pct")
+            h["sesion"] = origen.get("sesion")
+    return {"buenas_tardes": apertura, "historias": historias[:3]}
+
+
+def redactar_cierre(datos: dict, cuando: dict | None = None) -> dict | None:
+    """Le pone VOZ Moby al cierre del día: toma los movimientos verificados por el
+    investigador y devuelve {buenas_tardes, historias[]}. None si no se puede
+    (sin clave, API caída, JSON roto, todo filtrado por CMF) — el boletín cae a la
+    lista llana de siempre. NUNCA lanza."""
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return None
+    movers = [m for m in (datos.get("movers") or []) if isinstance(m, dict)]
+    if not movers:
+        return None
+    try:
+        import anthropic
+
+        cliente = anthropic.Anthropic(timeout=TIMEOUT_SEGUNDOS)
+        respuesta = cliente.messages.create(
+            model=MODELO,
+            max_tokens=MAX_TOKENS,
+            system=PROMPT_CIERRE,
+            messages=[{"role": "user", "content": _mensaje_cierre(datos, cuando=cuando)}],
+        )
+        parseado = _extraer_json(texto_de(respuesta))
+        return _validar_cierre(parseado, movers) if parseado else None
+    except Exception:
+        return None  # cualquier falla → fallback a la lista llana
+
+
+# ══════════════════════════════════════════════════════════════════════════
 #  LA EDICIÓN DE FIN DE SEMANA — el deep-dive de una mid-cap o un sector
 # ══════════════════════════════════════════════════════════════════════════
 # Formato distinto al diario: CONTEXTO primero (qué ES), luego el DEBATE de

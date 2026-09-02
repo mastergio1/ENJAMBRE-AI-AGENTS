@@ -59,11 +59,18 @@ def _direccion(pct: float) -> str:
     return "sube" if pct >= 0 else "cae"
 
 
+_CONTEXTO_SESION = {"pre-market": "en pre-market", "post-cierre": "tras el cierre"}
+
+
+def _cuando(m: dict) -> str:
+    return _CONTEXTO_SESION.get(m.get("sesion", ""), "en la sesión")
+
+
 def _titular_llano(m: dict) -> dict:
     """El respaldo sin IA: el dato duro como titular (el movimiento igual entra)."""
     return {
         "titular": f"{m['nombre']} ({m['ticker']}) {_direccion(m['var_pct'])} "
-                   f"{abs(m['var_pct'])}% en el día",
+                   f"{abs(m['var_pct'])}% {_cuando(m)}",
         "fuente": "movimiento de mercado", "simbolos": m["ticker"],
         "verificado": False, "razon": "",
     }
@@ -76,7 +83,7 @@ def _investigar_uno(m: dict) -> dict:
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return llano
     dato = (f"{m['nombre']} ({m['ticker']}) {_direccion(m['var_pct'])} "
-            f"{abs(m['var_pct'])}% hoy. ¿Por qué se movió?")
+            f"{abs(m['var_pct'])}% {_cuando(m)} hoy. ¿Por qué se movió?")
     try:
         import anthropic
         from llm_texto import texto_de

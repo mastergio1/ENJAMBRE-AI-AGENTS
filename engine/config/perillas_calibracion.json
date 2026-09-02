@@ -1,0 +1,67 @@
+{
+  "version": "perillas_v1",
+  "descripcion": "Perillas de calibración de magnitud (Fase 1). El conjunto 'baseline' reproduce el comportamiento actual: no cambia dirección ni hechos estilizados. 'hipotesis_v1b' es el experimento 2.0× + umbral 0.45 del plan. Activar con ENJAMBRE_PERILLAS=hipotesis_v1b.",
+  "conjunto_activo": "baseline",
+  "globales": {
+    "impacto_base": 1.0,
+    "umbral_panico": 1.01,
+    "amplificacion_panico": 2.0,
+    "asimetria_downside": 1.0,
+    "ganancia_contagio": 0.7,
+    "ruido_lider_sigma": 0.0,
+    "ganancia_consenso": 0.8,
+    "factor_shock_max": 3.0,
+    "peso_cerebro_fomo_evangelista": 1.0,
+    "peso_cerebro_influencer_optimista": 1.0
+  },
+  "conjuntos": {
+    "baseline": {
+      "nota": "Identidad. Misma reacción que antes de esta rama."
+    },
+    "hipotesis_v1b": {
+      "nota": "Quick win del plan: multiplicador 2.0× + umbral de pánico 0.45. No tocar más de estas perillas a la vez.",
+      "globales": {
+        "impacto_base": 2.0,
+        "umbral_panico": 0.45,
+        "amplificacion_panico": 2.0,
+        "asimetria_downside": 1.3,
+        "ganancia_contagio": 0.7,
+        "ruido_lider_sigma": 0.10,
+        "peso_cerebro_fomo_evangelista": 1.35,
+        "peso_cerebro_influencer_optimista": 1.35
+      },
+      "por_mercado": {
+        "indice": {
+          "impacto_base": 1.8,
+          "umbral_panico": 0.55,
+          "amplificacion_panico": 1.8,
+          "asimetria_downside": 1.25
+        },
+        "accion": {
+          "impacto_base": 2.2,
+          "umbral_panico": 0.45,
+          "amplificacion_panico": 2.2,
+          "asimetria_downside": 1.5
+        },
+        "cripto": {
+          "impacto_base": 2.6,
+          "umbral_panico": 0.40,
+          "amplificacion_panico": 2.6,
+          "asimetria_downside": 1.45
+        },
+        "petroleo": {
+          "impacto_base": 2.1,
+          "umbral_panico": 0.48,
+          "amplificacion_panico": 2.0,
+          "asimetria_downside": 1.4
+        },
+        "oro": {
+          "impacto_base": 1.6,
+          "umbral_panico": 0.50,
+          "amplificacion_panico": 1.6,
+          "asimetria_downside": 1.15
+        }
+      }
+    }
+  }
+}

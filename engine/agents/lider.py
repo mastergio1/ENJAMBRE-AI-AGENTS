@@ -33,7 +33,8 @@ class LiderOpinion(AgenteBase):
     def step(self):
         if abs(self.senal) < 0.05:
             return
-        cantidad = abs(self.senal) * self.confianza * 0.4 * self.capital_inicial / self.precio
+        factor = getattr(self.model, "intensidad_shock", 1.0)
+        cantidad = abs(self.senal) * self.confianza * 0.4 * factor * self.capital_inicial / self.precio
         # convicción alta = urgencia alta: cruza el libro sin regatear
         urgencia = 0.005 + 0.04 * abs(self.senal)
         if self.senal > 0:

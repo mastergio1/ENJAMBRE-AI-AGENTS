@@ -28,15 +28,36 @@ def _cerebros_por_arquetipo(conteo: dict[str, int], objetivo: int) -> dict[str, 
 
     Cada arquetipo recibe al menos 1 cerebro y nunca más cerebros que
     líderes. La suma se acerca a `objetivo` sin pasarse (salvo por el
-    mínimo de 1 por arquetipo)."""
+    mínimo de 1 por arquetipo). FOMO Evangelista e Influencer Optimista
+    pueden pesar más (perillas de calibración) sin subir el techo total.
+    """
     total = sum(conteo.values())
     if total == 0:
         return {}
     if total <= objetivo:
         return dict(conteo)  # cada líder es su propio cerebro (como antes)
+    try:
+        from brains.impacto import pesos_cerebro
+        pesos = pesos_cerebro()
+    except Exception:
+        pesos = {}
+    ponderado = {arq: n * float(pesos.get(arq, 1.0)) for arq, n in conteo.items()}
+    masa = sum(ponderado.values()) or 1.0
     cerebros = {}
     for arq, n in conteo.items():
-        cerebros[arq] = max(1, min(n, round(n * objetivo / total)))
+        cerebros[arq] = max(1, min(n, round(ponderado[arq] * objetivo / masa)))
+    # si el redondeo se pasó del techo, recorta de los más grandes
+    extra = sum(cerebros.values()) - objetivo
+    if extra > 0:
+        for arq, _ in sorted(cerebros.items(), key=lambda kv: -kv[1]):
+            if extra <= 0:
+                break
+            puedo = cerebros[arq] - 1
+            if puedo <= 0:
+                continue
+            baja = min(puedo, extra)
+            cerebros[arq] -= baja
+            extra -= baja
     return cerebros
 
 

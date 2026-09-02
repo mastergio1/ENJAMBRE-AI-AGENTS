@@ -56,6 +56,8 @@ CAPITAL_BASE = 10_000.0  # capital de un agente retail 1x
 # real/sim ~0.5). Como el cambio de magnitud vino entero de este ambiente,
 # bajamos la perilla ~×0.54 para volver a la escala calibrada (real/sim ~0.9).
 # La dirección NO se toca (es el signo del consenso, no su tamaño).
+# El valor por defecto vive también en config/perillas_calibracion.json
+# (ganancia_consenso) para poder experimentarlo sin tocar código.
 GANANCIA_CONSENSO = 0.8
 
 # Fracción mínima de líderes que deben haber hablado con la IA real para
@@ -85,6 +87,7 @@ class MercadoEnjambre(mesa.Model):
         # de petróleo/oro/cripto lo cambia y con él la reacción del enjambre
         from brains.mercado import perfil_de
         self.perfil = perfil_de("indice")
+        self.intensidad_shock = 1.0  # >1 solo si el impacto no lineal se recortó
         self.historial_precios: list[float] = [precio_inicial]
         self.retornos: list[float] = []
         self.flujo_compras: list[float] = []  # volumen agresor comprador por tick
@@ -124,6 +127,10 @@ class MercadoEnjambre(mesa.Model):
     def aplicar_noticia(self, sentimiento: float) -> None:
         """Inyecta una noticia como número (para tests y calibración).
         Cada líder forma su señal y la propaga por la red de influencia."""
+        from brains.impacto import factor_residual, transformar_senal
+
+        self.intensidad_shock = factor_residual(sentimiento, self.perfil)
+        sentimiento = transformar_senal(sentimiento, self.perfil)
         self.sentimiento = max(-1.0, min(1.0, self.sentimiento + sentimiento))
         for lider in self._lideres:
             lider.recibir_noticia(sentimiento)
@@ -145,8 +152,13 @@ class MercadoEnjambre(mesa.Model):
             respuestas = reparto.expandir(respuestas_cerebros, asignacion)
         if perfil is not None:
             self.perfil = perfil
+        from brains.impacto import ruido_lider_sigma
+        sigma = ruido_lider_sigma()
         for lider, respuesta in zip(self._lideres, respuestas):
-            lider.senal = respuesta["senal"]
+            senal = respuesta["senal"]
+            if sigma:
+                senal = max(-1.0, min(1.0, senal + self.random.gauss(0.0, sigma)))
+            lider.senal = senal
             lider.confianza = respuesta["confianza"]
             lider.frase = respuesta["frase"]
         # el "tono de la prensa": el ambiente de fondo que sienten todos los
@@ -180,7 +192,9 @@ class MercadoEnjambre(mesa.Model):
         if len(ia) < len(respuestas) * MINIMO_IA_CONSENSO or peso <= 0:
             return sentimiento_lexico(titular)  # la IA no opinó lo suficiente
         consenso = sum(r["senal"] * r["confianza"] for r in ia) / peso
-        return max(-1.0, min(1.0, consenso * GANANCIA_CONSENSO))
+        from brains.impacto import ganancia_consenso
+        ganancia = ganancia_consenso()
+        return max(-1.0, min(1.0, consenso * ganancia))
 
     def _aplicar_perfil(self, tono: float) -> float:
         """La personalidad del mercado transforma el tono de la noticia.
@@ -188,22 +202,30 @@ class MercadoEnjambre(mesa.Model):
         - sensibilidad: cuánto mueve el sentimiento a este mercado.
         - refugio (oro): el miedo (tono<0) se refleja parcialmente a compra;
           con refugio=0.5 el miedo se neutraliza, >0.5 lo hace SUBIR.
+        - impacto no lineal: umbral de pánico + asimetría (brains/impacto.py).
         """
+        from brains.impacto import calcular_impacto, factor_residual
+
         tono *= self.perfil.get("sensibilidad", 1.0)
         refugio = self.perfil.get("refugio", 0.0)
         if refugio and tono < 0:
             tono *= (1.0 - 2.0 * refugio)
-        return max(-1.0, min(1.0, tono))
+        self.intensidad_shock = factor_residual(tono, self.perfil)
+        return max(-1.0, min(1.0, calcular_impacto(tono, self.perfil)))
 
     def _propagar_desde_lideres(self) -> None:
         """La señal de cada líder viaja a sus seguidores con retardo de
-        1-4 ticks y atenuación 0.7 por salto — esto crea la ola visual."""
+        1-4 ticks y atenuación (ganancia_contagio) por salto — esto crea la ola visual."""
+        from brains.impacto import ganancia_contagio
+
         sensibilidad = self.perfil.get("sensibilidad", 1.0)
+        contagio = ganancia_contagio(self.perfil)
+        factor = getattr(self, "intensidad_shock", 1.0)
         for lider in self._lideres:
             if abs(lider.senal) < 0.05:
                 continue
             # la personalidad del mercado escala cuánto arrastra cada líder
-            valor = lider.senal * lider.confianza * 0.7 * sensibilidad
+            valor = lider.senal * lider.confianza * contagio * sensibilidad * factor
             for seguidor in lider.seguidores:
                 retardo = self.random.randint(1, 4)
                 self.cola_senales.append((self.tick + retardo, seguidor, valor, 1))
@@ -211,6 +233,9 @@ class MercadoEnjambre(mesa.Model):
     def _entregar_senales(self) -> None:
         """Entrega el rumor que vence este tick y lo reenvía a los pares
         (segundo salto, atenuado otra vez; ahí muere la cadena)."""
+        from brains.impacto import ganancia_contagio
+
+        contagio = ganancia_contagio(self.perfil)
         pendientes = []
         for tick_entrega, agente, valor, salto in self.cola_senales:
             if tick_entrega > self.tick:
@@ -220,7 +245,7 @@ class MercadoEnjambre(mesa.Model):
             if salto == 1:
                 for par in agente.pares:
                     retardo = self.random.randint(1, 4)
-                    pendientes.append((self.tick + retardo, par, valor * 0.7, 2))
+                    pendientes.append((self.tick + retardo, par, valor * contagio, 2))
         self.cola_senales = pendientes
 
     # ---------- ciclo ----------

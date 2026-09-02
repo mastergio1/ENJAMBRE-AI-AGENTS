@@ -136,3 +136,18 @@ def test_endpoints_del_corrector_exigen_token(monkeypatch):
     libreta = cliente.get("/api/libreta", headers={"X-Pipeline-Token": "secreto-de-prueba"})
     assert libreta.status_code == 200
     assert libreta.json()["casos"] == 0
+
+
+def test_libreta_incluye_loss_y_ratio_fuerza():
+    conexion = persistencia.conectar()
+    a = _destacada(conexion, "Caso acierto fuerte", 8.0, "AAA")
+    b = _destacada(conexion, "Caso acierto corto", 3.0, "BBB")
+    persistencia.guardar_reaccion_real(conexion, a, {"pct_real": 10.0})
+    persistencia.guardar_reaccion_real(conexion, b, {"pct_real": 9.0})
+    resumen = corrector.libreta(conexion)
+    conexion.close()
+    assert resumen["tasa_acierto"] == 1.0
+    assert resumen["ratio_fuerza_medio"] is not None
+    assert resumen["loss"] is not None
+    assert "listo_produccion" in resumen
+

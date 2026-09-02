@@ -34,6 +34,21 @@ FRASES_CLAVE = {
     "misses expectations": -0.6,
     "all-time high": 0.8,
     "record high": 0.7,
+    "wipes out": -0.9,
+    "wipeout": -0.9,
+    "slash tariffs": 0.6,
+    "slashes tariffs": 0.6,
+    "recortan aranceles": 0.6,
+    "recorte de aranceles": 0.6,
+    "tariff cut": 0.5,
+    "cuts tariffs": 0.6,
+    "bank run": -0.9,
+    "circuit breaker": -0.8,
+    "halted trading": -0.7,
+    "short squeeze": 0.6,
+    "rate pause": 0.3,
+    "dovish": 0.5,
+    "hawkish": -0.5,
 }
 
 PALABRAS = {

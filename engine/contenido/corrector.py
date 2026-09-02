@@ -107,17 +107,92 @@ def _signo(x: float) -> int:
     return 0 if abs(x) < UMBRAL_PLANO else (1 if x > 0 else -1)
 
 
-def _resumir(casos: list[tuple[float, float]]) -> dict:
-    """Las métricas de un conjunto de casos (sim_pct, real_pct)."""
+def ratio_fuerza(sim_pct: float, real_pct: float, tope: float = 1.5) -> float | None:
+    """|retorno_sim| / |retorno_real|, capeado. None si el real no se movió."""
+    if abs(real_pct) < UMBRAL_PLANO:
+        return None
+    return min(tope, abs(sim_pct) / abs(real_pct))
+
+
+def error_trayectoria(sim_pct: float, real_pct: float) -> float:
+    """Error de extremo a extremo, normalizado a [0, 1]."""
+    denom = max(abs(real_pct), 1.0)
+    return min(1.0, abs(sim_pct - real_pct) / denom)
+
+
+def evaluar_casos(casos: list[tuple[float, float]],
+                  error_estilizados: float | None = None) -> dict:
+    """Loss oficial de calibración sobre pares (sim_pct, real_pct).
+
+    Loss = 0.40·E_dir + 0.35·(1-R_fuerza) + 0.15·E_estilizados + 0.10·E_trayectoria
+    Si no hay hechos estilizados, se reparte ese 0.15 entre dirección y fuerza.
+    """
+    if not casos:
+        return {
+            "casos": 0, "evaluables": 0, "aciertos_direccion": 0,
+            "tasa_acierto": None, "ratio_fuerza_medio": None,
+            "pct_dentro_30": None, "error_trayectoria": None,
+            "loss": None, "listo_produccion": False,
+            "magnitud_media_sim": None, "magnitud_media_real": None,
+        }
     evaluables = [(s, r) for s, r in casos if _signo(s) or _signo(r)]
     aciertos = sum(1 for s, r in evaluables if _signo(s) == _signo(r))
+    e_dir = 1.0 - (aciertos / len(evaluables)) if evaluables else 1.0
+    ratios = [x for x in (ratio_fuerza(s, r) for s, r in casos) if x is not None]
+    r_fuerza = mean(ratios) if ratios else 0.0
+    tray = [error_trayectoria(s, r) for s, r in casos]
+    e_tray = mean(tray) if tray else 1.0
+    denom_dentro = sum(1 for _, r in casos if abs(r) >= UMBRAL_PLANO)
+    dentro = sum(1 for s, r in casos
+                 if abs(r) >= UMBRAL_PLANO and abs(s - r) / abs(r) <= 0.30)
+    pct_dentro = (dentro / denom_dentro) if denom_dentro else None
+
+    if error_estilizados is None:
+        w_dir, w_fza, w_est, w_tray = 0.48, 0.42, 0.0, 0.10
+        e_est = 0.0
+    else:
+        w_dir, w_fza, w_est, w_tray = 0.40, 0.35, 0.15, 0.10
+        e_est = max(0.0, min(1.0, error_estilizados))
+    loss = (w_dir * e_dir
+            + w_fza * (1.0 - min(1.0, r_fuerza))
+            + w_est * e_est
+            + w_tray * e_tray)
+    tasa = round(aciertos / len(evaluables), 2) if evaluables else None
     return {
         "casos": len(casos),
-        "evaluables": len(evaluables),  # al menos un lado se movió
+        "evaluables": len(evaluables),
         "aciertos_direccion": aciertos,
-        "tasa_acierto": round(aciertos / len(evaluables), 2) if evaluables else None,
-        "magnitud_media_sim": round(mean(abs(s) for s, _ in casos), 2) if casos else None,
-        "magnitud_media_real": round(mean(abs(r) for _, r in casos), 2) if casos else None,
+        "tasa_acierto": tasa,
+        "ratio_fuerza_medio": round(r_fuerza, 3) if ratios else None,
+        "pct_dentro_30": round(pct_dentro, 3) if pct_dentro is not None else None,
+        "error_trayectoria": round(e_tray, 3),
+        "error_estilizados": error_estilizados,
+        "loss": round(loss, 4),
+        "listo_produccion": bool(
+            tasa is not None and tasa >= 0.70
+            and r_fuerza >= 0.70
+            and (pct_dentro or 0) >= 0.40
+        ),
+        "magnitud_media_sim": round(mean(abs(s) for s, _ in casos), 2),
+        "magnitud_media_real": round(mean(abs(r) for _, r in casos), 2),
+    }
+
+
+def _resumir(casos: list[tuple[float, float]]) -> dict:
+    """Las métricas de un conjunto de casos (sim_pct, real_pct)."""
+    extra = evaluar_casos(casos)
+    return {
+        "casos": extra["casos"],
+        "evaluables": extra["evaluables"],
+        "aciertos_direccion": extra["aciertos_direccion"],
+        "tasa_acierto": extra["tasa_acierto"],
+        "magnitud_media_sim": extra.get("magnitud_media_sim"),
+        "magnitud_media_real": extra.get("magnitud_media_real"),
+        "ratio_fuerza_medio": extra["ratio_fuerza_medio"],
+        "pct_dentro_30": extra["pct_dentro_30"],
+        "error_trayectoria": extra["error_trayectoria"],
+        "loss": extra["loss"],
+        "listo_produccion": extra["listo_produccion"],
     }
 
 

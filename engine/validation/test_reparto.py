@@ -60,3 +60,23 @@ def test_pocos_lideres_es_uno_a_uno_como_antes():
     consultas, asignacion = reparto.planificar(lideres, lambda uid: uid)
     assert len(consultas) == 100
     assert sorted(asignacion) == list(range(100))
+
+
+def test_hipotesis_no_rompe_el_techo(monkeypatch):
+    """Más cerebros a FOMO/Influencer, pero el presupuesto sigue ≤ 120."""
+    from collections import Counter
+
+    from brains import impacto
+
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1b")
+    impacto.reiniciar_cache()
+    lideres = _mil_lideres()
+    consultas, asignacion = reparto.planificar(lideres, lambda uid: uid)
+    assert len(consultas) <= 120
+    assert len(asignacion) == 1000
+    tipos = Counter(arq for _, arq in consultas)
+    # mismo tamaño de arquetipo (150): FOMO e influencer no quedan por debajo
+    # de doomer, que no tiene peso extra
+    assert tipos["fomo_evangelista"] >= tipos["doomer"]
+    assert tipos["influencer_optimista"] >= tipos["doomer"]
+

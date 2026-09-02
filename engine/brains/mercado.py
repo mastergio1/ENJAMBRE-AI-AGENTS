@@ -82,9 +82,18 @@ MODELO_CLASIFICADOR = "claude-haiku-4-5-20251001"  # barato: 1 llamada por titul
 
 
 def perfil_de(tipo: str) -> dict:
-    """El perfil de personalidad de un tipo de mercado (o el índice)."""
-    return {"tipo": tipo if tipo in PERFILES else PERFIL_DEFECTO,
-            **PERFILES.get(tipo, PERFILES[PERFIL_DEFECTO])}
+    """El perfil de personalidad de un tipo de mercado (o el índice).
+
+    Si el conjunto de perillas activo declara `volatilidad_base` para este
+    tipo, pisa el dial de volatilidad. Si no (baseline), queda igual.
+    """
+    perfil = {"tipo": tipo if tipo in PERFILES else PERFIL_DEFECTO,
+              **PERFILES.get(tipo, PERFILES[PERFIL_DEFECTO])}
+    try:
+        from brains.impacto import overlay_perfil
+        return overlay_perfil(perfil)
+    except Exception:
+        return perfil
 
 
 # ---------- fallback léxico (sin IA o si la clasificación falla) ----------

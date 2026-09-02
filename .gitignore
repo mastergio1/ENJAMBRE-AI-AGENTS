@@ -25,6 +25,10 @@ engine/brains/cache/
 # Base de datos local (en Render vive en el disco persistente)
 engine/datos/
 
+# Resultados locales de experimentos de calibración (se regeneran)
+engine/config/experimentos/*.json
+!engine/config/experimentos/.gitkeep
+
 # Obsidian (notas en docs/): estado de sesión local, no versionar
 .obsidian/workspace.json
 .obsidian/app.json

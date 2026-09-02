@@ -93,9 +93,28 @@ def test_envio_reporta_fallos_con_motivo(monkeypatch):
     monkeypatch.setattr(boletin, "_enviar_resend", fake_enviar)
 
     conteo = boletin.enviar_a_suscriptores(conexion, "<html>x</html>", "Asunto")
-    conexion.close()
     assert conteo["enviados"] == 1 and conteo["fallidos"] == 1
-    assert conteo["fallos"] == [{"email": "malo@lector.cl", "motivo": "HTTP 422: dirección inválida"}]
+    assert conteo["fallos"][0]["email"] == "malo@lector.cl"
+    assert conteo["fallos"][0]["motivo"] == "HTTP 422: dirección inválida"
+    # 422 = dirección inválida permanente → se da de baja sola
+    assert conteo["fallos"][0].get("desactivado") is True
+    assert not persistencia.es_activo(conexion, "malo@lector.cl")   # ya no está activa
+    assert persistencia.es_activo(conexion, "bueno@lector.cl")      # la buena sigue
+    conexion.close()
+
+
+def test_envio_no_desactiva_ante_error_transitorio(monkeypatch):
+    """Un 429/5xx (transitorio) NO da de baja al suscriptor: puede ser el límite
+    de Resend o una caída pasajera, no una dirección mala."""
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "temporal@lector.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    monkeypatch.setattr(boletin, "_enviar_resend",
+                        lambda *a, **k: (False, "HTTP 429: rate limit"))
+    conteo = boletin.enviar_a_suscriptores(conexion, "<html>x</html>", "Asunto")
+    assert conteo["fallos"][0].get("desactivado") is not True
+    assert persistencia.es_activo(conexion, "temporal@lector.cl")   # sigue activa
+    conexion.close()
 
 
 def test_ritual_tarde_arma_pendiente(monkeypatch):

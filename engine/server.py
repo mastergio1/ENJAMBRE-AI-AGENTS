@@ -1180,10 +1180,14 @@ def _detalle_fallos(fallos) -> str:
     Esta página solo se alcanza con el token del correo de revisión (privada)."""
     if not fallos:
         return ""
-    filas = "".join(
-        f'<li><b>{html_escape(str(f.get("email", "")))}</b> — '
-        f'{html_escape(str(f.get("motivo", "")))}</li>'
-        for f in fallos if isinstance(f, dict))
+    filas = ""
+    for f in fallos:
+        if not isinstance(f, dict):
+            continue
+        baja = (' <span style="color:#2f8f66;">(dado de baja automáticamente)</span>'
+                if f.get("desactivado") else "")
+        filas += (f'<li><b>{html_escape(str(f.get("email", "")))}</b> — '
+                  f'{html_escape(str(f.get("motivo", "")))}{baja}</li>')
     if not filas:
         return ""
     return ('<p style="margin-top:14px;color:#c0504d;">No llegaron '

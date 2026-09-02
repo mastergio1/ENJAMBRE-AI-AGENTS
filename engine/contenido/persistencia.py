@@ -649,6 +649,17 @@ def dar_de_baja(conexion, token: str) -> bool:
     return cursor.rowcount > 0
 
 
+def desactivar_por_email(conexion, email: str) -> bool:
+    """Baja un suscriptor por su correo (no por token). Se usa para limpiar solo
+    las direcciones que el proveedor marca como PERMANENTEMENTE inválidas (p. ej.
+    @example.com o un correo mal escrito): así dejan de reintentarse en cada
+    edición y de inflar la cuenta de 'enviados'. True si el correo existía."""
+    cursor = conexion.execute(
+        "UPDATE suscriptores SET activo = 0 WHERE email = ?", (email.strip().lower(),))
+    conexion.commit()
+    return cursor.rowcount > 0
+
+
 def suscriptores_activos(conexion) -> list[dict]:
     """Los que confirmaron: a quienes se envía el Pulso. Cada uno trae su
     estado `premium` (1/0) YA calculado (respetando el vencimiento), para que

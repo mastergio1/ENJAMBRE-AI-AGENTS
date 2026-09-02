@@ -11,7 +11,9 @@ movimientos. El enjambre 3D vive en oscuro; el diario se lee en claro.
 """
 
 import html
+import logging
 import os
+import time
 
 import httpx
 
@@ -19,6 +21,12 @@ from contenido import persistencia
 from contenido.vocabulario import DISCLAIMER, es_publicable
 
 _esc = html.escape
+log = logging.getLogger("enjambre.boletin")
+
+# Resend limita a ~2 correos/segundo. El bucle de envío dispara uno tras otro,
+# así que en ráfaga los últimos reciben 429 ("demasiadas peticiones") y antes se
+# perdían en silencio (de ahí un "enviada a 3 de 6"). Reintentamos con espera.
+REINTENTOS_ENVIO = 4
 
 URL_RESEND = "https://api.resend.com/emails"
 REMITENTE = os.environ.get("PULSO_REMITENTE", "El Enjambre <pulso@rubiconlab.cl>")
@@ -798,6 +806,18 @@ def _tag_edicion(fecha: str | None) -> list[dict] | None:
     return [{"name": "edicion", "value": limpio}] if limpio else None
 
 
+def _espera_reintento(respuesta, intento: int) -> float:
+    """Segundos a esperar antes de reintentar: respeta el 'Retry-After' de Resend
+    si viene; si no, retroceso exponencial suave (1, 2, 4…). Tope de 30s."""
+    ra = respuesta.headers.get("Retry-After") or respuesta.headers.get("retry-after")
+    if ra:
+        try:
+            return min(float(ra), 30.0)
+        except (TypeError, ValueError):
+            pass
+    return min(2.0 ** (intento - 1), 30.0)
+
+
 def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None = None) -> bool:
     """Envía un correo por Resend. False si no hay clave o falla (no lanza).
     `fecha_edicion` etiqueta el correo para poder medir su apertura por edición."""
@@ -808,16 +828,32 @@ def enviar(destinatario: str, asunto: str, html: str, fecha_edicion: str | None 
     tags = _tag_edicion(fecha_edicion)
     if tags:
         cuerpo["tags"] = tags
-    try:
-        respuesta = httpx.post(
-            URL_RESEND,
-            headers={"Authorization": f"Bearer {clave}", "Content-Type": "application/json"},
-            json=cuerpo,
-            timeout=20,
-        )
-        return respuesta.status_code < 300
-    except Exception:
+    cabeceras = {"Authorization": f"Bearer {clave}", "Content-Type": "application/json"}
+    for intento in range(1, REINTENTOS_ENVIO + 1):
+        try:
+            respuesta = httpx.post(URL_RESEND, headers=cabeceras, json=cuerpo, timeout=20)
+        except Exception as e:
+            log.warning("Envío a %s falló (%s); reintento %d/%d.",
+                        destinatario, type(e).__name__, intento, REINTENTOS_ENVIO)
+            if intento < REINTENTOS_ENVIO:
+                time.sleep(2 ** (intento - 1))
+                continue
+            return False
+        if respuesta.status_code < 300:
+            return True
+        # 429 (límite de Resend) o 5xx: esperamos y reintentamos. Otros 4xx
+        # (dirección inválida, etc.) no se arreglan reintentando: se cae y avisa.
+        reintenta = respuesta.status_code == 429 or respuesta.status_code >= 500
+        if reintenta and intento < REINTENTOS_ENVIO:
+            espera = _espera_reintento(respuesta, intento)
+            log.warning("Envío a %s: HTTP %d; espero %.1fs y reintento %d/%d.",
+                        destinatario, respuesta.status_code, espera, intento, REINTENTOS_ENVIO)
+            time.sleep(espera)
+            continue
+        log.warning("Envío a %s falló: HTTP %d — %s",
+                    destinatario, respuesta.status_code, (respuesta.text or "")[:200])
         return False
+    return False
 
 
 def enviar_confirmacion(email: str, token_confirma: str) -> bool:

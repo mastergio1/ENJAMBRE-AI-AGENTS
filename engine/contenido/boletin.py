@@ -1030,7 +1030,20 @@ def enviar_a_suscriptores(conexion, preview_html: str, asunto: str,
             if not gratuito:
                 premium_enviados += 1
         else:
-            fallos.append({"email": s["email"], "motivo": motivo})
+            fallo = {"email": s["email"], "motivo": motivo}
+            # 422 = dirección permanentemente inválida (p. ej. @example.com o un
+            # correo mal escrito): se da de baja sola para no reintentarla en cada
+            # edición ni inflar la cuenta. Los errores transitorios (429/5xx) NO
+            # tocan al suscriptor: ya se reintentaron dentro de _enviar_resend.
+            if motivo.startswith("HTTP 422"):
+                try:
+                    persistencia.desactivar_por_email(conexion, s["email"])
+                    fallo["desactivado"] = True
+                    log.warning("Suscriptor %s dado de baja: dirección inválida (%s).",
+                                s["email"], motivo)
+                except Exception:
+                    pass
+            fallos.append(fallo)
     return {"suscriptores": len(activos), "enviados": enviados,
             "fallidos": len(activos) - enviados, "premium": premium_enviados,
             "fallos": fallos}

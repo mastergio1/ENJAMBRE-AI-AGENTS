@@ -804,6 +804,28 @@ def enviar_confirmacion(email: str, token_confirma: str) -> bool:
     return enviar(email, "Confirma tu suscripción a El Pulso 🐝", html)
 
 
+def enviar_bienvenida(email: str, token_baja: str) -> bool:
+    """El correo de bienvenida del opt-in SIMPLE: ya quedó suscrito con un clic
+    (sin confirmar). Le damos la bienvenida y el enlace de baja siempre visible
+    (todo correo lo debe llevar)."""
+    url_baja = f"{BASE_API}/api/baja/{token_baja}"
+    html = f"""<!doctype html><html><body style="margin:0;background:{PAPEL};">
+<table role="presentation" width="100%" style="background:{PAPEL};"><tr><td align="center" style="padding:32px;">
+<table role="presentation" width="600" style="max-width:600px;background:{BLANCO};border:1px solid {LINEA};border-radius:8px;">
+  <tr><td style="padding:34px;text-align:center;">
+    <div style="font-family:Georgia,serif;font-size:30px;color:{ORO};font-weight:bold;">El Pulso 🐝</div>
+    <p style="color:{TEXTO_2};font-size:16px;line-height:1.5;">¡Bienvenido! Ya estás suscrito a <b>El Pulso</b>,
+      el diario de mercado donde el enjambre reacciona a los titulares del día. Te llega cada mañana temprano.</p>
+    <a href="{BASE_WEB}" style="display:inline-block;background:{ORO};color:#ffffff;text-decoration:none;
+      font-weight:bold;padding:13px 28px;border-radius:6px;">Conoce El Enjambre →</a>
+    <p style="color:{MUTE};font-size:12px;margin-top:20px;">
+      ¿No querías suscribirte? <a href="{url_baja}" style="color:{TEAL};">Desuscríbete en un clic</a>.</p>
+    <p style="color:{MUTE};font-size:11px;">{DISCLAIMER}</p>
+  </td></tr>
+</table></td></tr></table></body></html>"""
+    return enviar(email, "¡Bienvenido a El Pulso! 🐝", html)
+
+
 def enviar_desbloqueo_enjambre(email: str, token: str) -> bool:
     """El enlace mágico: un clic para desbloquear 40 simulaciones/mes en El
     Enjambre. Solo llega a los suscriptores Premium (el servidor ya lo verificó)."""

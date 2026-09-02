@@ -602,6 +602,32 @@ def alta_directa(conexion, email: str, origen: str = "premium") -> str:
     return email
 
 
+def es_activo(conexion, email: str) -> bool:
+    """True si el correo ya es un suscriptor activo (confirmado)."""
+    fila = conexion.execute(
+        "SELECT 1 FROM suscriptores WHERE email = ? AND activo = 1", (email.strip().lower(),)).fetchone()
+    return fila is not None
+
+
+def token_baja_de(conexion, email: str) -> str | None:
+    """El token de baja de un correo (para el enlace de desuscripción). None si no existe."""
+    fila = conexion.execute(
+        "SELECT token_baja FROM suscriptores WHERE email = ?", (email.strip().lower(),)).fetchone()
+    return fila["token_baja"] if fila else None
+
+
+def activar_pendientes(conexion) -> int:
+    """Activa a TODOS los suscriptores pendientes de confirmar (dieron su correo
+    al suscribirse pero no confirmaron). Es el paso a opt-in simple: el clic en
+    'Suscribirme' ya es su consentimiento. NO toca a los que se dieron de baja
+    (esos no tienen token_confirma). Devuelve cuántos activó."""
+    cursor = conexion.execute(
+        "UPDATE suscriptores SET activo = 1, token_confirma = NULL "
+        "WHERE activo = 0 AND token_confirma IS NOT NULL")
+    conexion.commit()
+    return cursor.rowcount
+
+
 def confirmar_suscriptor(conexion, token: str) -> str | None:
     """Segundo paso del opt-in: activa al suscriptor. Devuelve su email o None."""
     fila = conexion.execute(

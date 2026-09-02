@@ -904,7 +904,9 @@ def boletin_base_web() -> str:
 
 @app.post("/api/suscribir")
 def suscribir(peticion: PeticionSuscribir) -> dict:
-    """Alta pendiente + correo de confirmación (double opt-in)."""
+    """Alta con OPT-IN SIMPLE: un clic y queda suscrito de inmediato (sin correo
+    de confirmación). El clic en 'Suscribirme' ya es el consentimiento. Se le
+    manda una bienvenida con el enlace de baja siempre visible."""
     email = peticion.email.strip().lower()
     if not _EMAIL.match(email) or len(email) > 200:
         return JSONResponse({"error": "correo inválido"}, status_code=400)
@@ -912,21 +914,34 @@ def suscribir(peticion: PeticionSuscribir) -> dict:
 
     conexion = persistencia.conectar()
     try:
-        alta = persistencia.agregar_suscriptor(conexion, email, origen=origen)
+        ya_activo = persistencia.es_activo(conexion, email)
+        persistencia.alta_directa(conexion, email, origen=origen)   # activo de inmediato
+        token_baja = persistencia.token_baja_de(conexion, email)
     finally:
         conexion.close()
 
-    if alta["ya_activo"]:
+    if ya_activo:
         return {"estado": "ya_suscrito", "mensaje": "Ya estabas suscrito al Pulso. ¡Gracias!"}
 
-    # solo se envía si no hubo una confirmación reciente (antibombardeo, auditoría C).
-    # La respuesta es idéntica en ambos casos: no revela si el correo ya existía.
-    if alta.get("reenviar", True):
-        from contenido import boletin
+    from contenido import boletin
+    boletin.enviar_bienvenida(email, token_baja or "")  # sin Resend, no envía (dev)
+    return {"estado": "suscrito",
+            "mensaje": "¡Listo! Ya estás suscrito a El Pulso. Te llega mañana temprano. 🐝"}
 
-        boletin.enviar_confirmacion(email, alta["token_confirma"])  # sin Resend, no envía (dev)
-    return {"estado": "pendiente",
-            "mensaje": "Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja."}
+
+@app.post("/api/pulso/activar-pendientes")
+def activar_pendientes(x_pipeline_token: str = Header(default="")) -> dict:
+    """Activa a los suscriptores que quedaron pendientes de confirmar (del viejo
+    doble opt-in): ahora que el alta es de un clic, ya dieron su consentimiento.
+    Protegido por el token de admin. Se corre UNA vez tras el cambio."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        n = persistencia.activar_pendientes(conexion)
+    finally:
+        conexion.close()
+    return {"ok": True, "activados": n}
 
 
 class PeticionContacto(BaseModel):

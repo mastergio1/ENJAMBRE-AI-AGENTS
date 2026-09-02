@@ -85,30 +85,20 @@ def test_correo_de_confirmacion_lleva_disclaimer():
 
 # ---------- suscripción por la API (double opt-in) ----------
 
-def test_flujo_suscripcion_completo():
+def test_flujo_suscripcion_opt_in_simple():
     cliente = TestClient(server.app)
 
     # alta con correo inválido → 400
     assert cliente.post("/api/suscribir", json={"email": "no-es-correo"}).status_code == 400
 
-    # alta válida → pendiente
+    # alta válida → OPT-IN SIMPLE: queda suscrito de inmediato (sin confirmar)
     respuesta = cliente.post("/api/suscribir", json={"email": "giorgio@rubicon.cl"}).json()
-    assert respuesta["estado"] == "pendiente"
+    assert respuesta["estado"] == "suscrito"
 
-    # aún no está activo
     conexion = persistencia.conectar()
-    assert persistencia.suscriptores_activos(conexion) == []
-    token = conexion.execute("SELECT token_confirma FROM suscriptores").fetchone()[0]
+    activos = persistencia.suscriptores_activos(conexion)
+    assert len(activos) == 1          # activo de una vez, sin paso de confirmación
     baja = conexion.execute("SELECT token_baja FROM suscriptores").fetchone()[0]
-    conexion.close()
-
-    # confirmar por el link → página HTML de éxito
-    conf = cliente.get(f"/api/confirmar/{token}")
-    assert conf.status_code == 200
-    assert "confirmada" in conf.text.lower()
-
-    conexion = persistencia.conectar()
-    assert len(persistencia.suscriptores_activos(conexion)) == 1
     conexion.close()
 
     # baja de un clic
@@ -116,6 +106,25 @@ def test_flujo_suscripcion_completo():
     conexion = persistencia.conectar()
     assert persistencia.suscriptores_activos(conexion) == []
     conexion.close()
+
+
+def test_activar_pendientes_migra_a_los_del_viejo_opt_in():
+    """Los que quedaron pendientes del doble opt-in se activan de una vez."""
+    conexion = persistencia.conectar()
+    persistencia.agregar_suscriptor(conexion, "pendiente@lector.cl")  # activo=0 + token_confirma
+    persistencia.alta_directa(conexion, "yaactivo@lector.cl")         # activo=1
+    n = persistencia.activar_pendientes(conexion)
+    assert n == 1                                    # solo el pendiente
+    assert len(persistencia.suscriptores_activos(conexion)) == 2
+    conexion.close()
+
+
+def test_activar_pendientes_endpoint_exige_token(monkeypatch):
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto")
+    cliente = TestClient(server.app)
+    assert cliente.post("/api/pulso/activar-pendientes").status_code == 403
+    r = cliente.post("/api/pulso/activar-pendientes", headers={"X-Pipeline-Token": "secreto"})
+    assert r.status_code == 200 and r.json()["ok"] is True
 
 
 def test_suscribir_silencioso_captura_el_lead():

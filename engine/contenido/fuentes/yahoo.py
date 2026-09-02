@@ -117,17 +117,39 @@ def _valor(nodo):
     return nodo if isinstance(nodo, (int, float)) else None
 
 
+# qué % mirar según el momento del día (para que el enjambre vea lo que se
+# mueve AHORA: en la madrugada el pre-market; en la tarde la sesión).
+_SESIONES = [
+    ("preMarketChangePercent", "pre-market"),
+    ("regularMarketChangePercent", "sesión"),
+    ("postMarketChangePercent", "post-cierre"),
+]
+
+
+def _cambio_efectivo(q: dict) -> tuple[float | None, str]:
+    """El movimiento más relevante de una acción y en qué momento ocurrió: el de
+    mayor magnitud entre pre-market, sesión y post-cierre (el que esté disponible).
+    Así funciona igual a las 6 AM (pre-market) que a las 4 PM (sesión cerrada)."""
+    mejor_pct, mejor_sesion = None, "sesión"
+    for campo, etiqueta in _SESIONES:
+        v = _valor(q.get(campo))
+        if isinstance(v, (int, float)) and (mejor_pct is None or abs(v) > abs(mejor_pct)):
+            mejor_pct, mejor_sesion = float(v), etiqueta
+    return mejor_pct, mejor_sesion
+
+
 def movers_del_dia(n: int = 8, min_pct: float = 5.0) -> list[dict]:
-    """Los mayores movimientos del día del mercado de EE.UU. (gainers + losers):
-    lista de {ticker, nombre, var_pct, precio}, los más movidos primero. Es lo que
-    de verdad movió al mercado hoy, no solo lo que un feed decidió titular. [] ante
-    cualquier problema (degradación elegante). Nunca lanza."""
+    """Los mayores movimientos del mercado de EE.UU. en este momento: lista de
+    {ticker, nombre, var_pct, sesion, precio}, los más movidos primero. Mira
+    pre-market + sesión + post-cierre, así sirve tanto en la madrugada (antes de
+    abrir) como en la tarde. Es lo que DE VERDAD se mueve, no solo lo titulado.
+    [] ante cualquier problema (degradación elegante). Nunca lanza."""
     cliente, crumb = _sesion_crumb()
     if not cliente or not crumb:
         return []
     vistos: set[str] = set()
     movimientos: list[dict] = []
-    for tablero in ("day_gainers", "day_losers"):
+    for tablero in ("day_gainers", "day_losers", "most_actives"):
         try:
             r = cliente.get(_URL_SCREENER,
                             params={"count": 25, "scrIds": tablero, "crumb": crumb})
@@ -139,8 +161,8 @@ def movers_del_dia(n: int = 8, min_pct: float = 5.0) -> list[dict]:
             continue
         for q in quotes:
             tk = str(q.get("symbol", "")).strip().upper()
-            pct = _valor(q.get("regularMarketChangePercent"))
-            if not tk or tk in vistos or not isinstance(pct, (int, float)):
+            pct, sesion = _cambio_efectivo(q)
+            if not tk or tk in vistos or pct is None:
                 continue
             if abs(pct) < min_pct:  # ignora ruido: solo movimientos con peso
                 continue
@@ -148,7 +170,8 @@ def movers_del_dia(n: int = 8, min_pct: float = 5.0) -> list[dict]:
             movimientos.append({
                 "ticker": tk,
                 "nombre": str(q.get("shortName") or q.get("longName") or tk)[:60],
-                "var_pct": round(float(pct), 2),
+                "var_pct": round(pct, 2),
+                "sesion": sesion,
                 "precio": _valor(q.get("regularMarketPrice")),
             })
     movimientos.sort(key=lambda m: abs(m["var_pct"]), reverse=True)

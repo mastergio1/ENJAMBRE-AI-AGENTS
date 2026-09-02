@@ -1,0 +1,45 @@
+# Tareas de mantenimiento puntuales de El Pulso (se disparan a mano).
+# Usa el mismo secreto ENJAMBRE_PIPELINE_TOKEN que el ritual. Se corre desde
+# Actions → "Mantenimiento" → Run workflow, eligiendo la acción.
+
+name: Mantenimiento
+
+on:
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: "Qué tarea correr"
+        required: true
+        default: "activar-pendientes"
+        type: choice
+        options:
+          - activar-pendientes
+
+jobs:
+  mantenimiento:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "Motor despierto (intento $intento)."; exit 0
+            fi
+            echo "Despertando… ($intento/20)"; sleep 15
+          done
+          echo "::error::El motor no despertó."; exit 1
+
+      - name: Correr la acción
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          ACCION: ${{ github.event.inputs.accion }}
+        run: |
+          if [ "$ACCION" = "activar-pendientes" ]; then
+            respuesta=$(curl -sf -m 30 -X POST \
+              https://enjambre-motor.onrender.com/api/pulso/activar-pendientes \
+              -H "X-Pipeline-Token: $TOKEN")
+            echo "Respuesta: $respuesta"
+          else
+            echo "::error::Acción desconocida: $ACCION"; exit 1
+          fi

@@ -140,14 +140,20 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
 
 
 def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int | None = None,
-                    enviar: bool = True, cuando: dict | None = None) -> dict:
+                    enviar: bool = True, cuando: dict | None = None,
+                    momento: str = "manana") -> dict:
     """El ritual completo (CONTENIDO.md sección 6.1): prepara el día
     (pasos 1-3, 7) y luego redacta y envía El Pulso (pasos 5-6) y avisa a
     Giorgio (paso 8). El paso 4 (imagen) se sirve on-the-fly desde el
     endpoint /api/simulacion/{id}/imagen — no hace falta pre-renderizar.
 
     `enviar=False` arma todo pero no manda correos (para pruebas/preview).
+    `momento="tarde"` arma la EDICIÓN DE LA TARDE (el cierre del mercado, Premium)
+    en vez de la de la mañana.
     """
+    if momento == "tarde":
+        return _ritual_tarde(conexion, enviar=enviar, cuando=cuando)
+
     from datetime import datetime, timezone
 
     from contenido import boletin, notificar, redaccion, redaccion_ia
@@ -298,12 +304,64 @@ def aprobar_y_enviar(conexion=None, fecha: str | None = None) -> dict:
             return {"ok": False, "motivo": "la edición fue descartada"}
         # el deep-dive del domingo es Premium: gratis → teaser; de pago → completo
         teaser_html, asunto_teaser = boletin.teaser_para(ed.get("brief"), fecha)
+        # la edición de la TARDE (el cierre) sale SOLO a los Premium
+        solo_premium = bool(isinstance(ed.get("brief"), dict) and ed["brief"].get("cierre"))
         conteo = boletin.enviar_a_suscriptores(
             conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha,
-            teaser_html=teaser_html, asunto_teaser=asunto_teaser)
+            teaser_html=teaser_html, asunto_teaser=asunto_teaser, solo_premium=solo_premium)
         persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
                                     conteo["suscriptores"], persistencia.ahora_iso())
         return {"ok": True, **conteo}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def _clave_tarde(fecha_iso: str) -> str:
+    """La clave de la edición de la tarde: la fecha con sufijo '-t' (así conviven
+    la edición de la mañana y la de la tarde del mismo día en la base)."""
+    return f"{fecha_iso[:10]}-t"
+
+
+def _ritual_tarde(conexion=None, enviar: bool = True, cuando=None) -> dict:
+    """La EDICIÓN DE LA TARDE (Premium): 'el cierre del mercado'. El reportero IA
+    caza los movers reales del día y explica por qué. Se guarda bajo 'AAAA-MM-DD-t'
+    y se manda a revisión; al aprobar, sale SOLO a los Premium. Sin simulaciones
+    del enjambre. Nunca rompe: si no hay movimientos, no hay edición de tarde."""
+    import secrets
+    from datetime import datetime, timezone
+
+    from contenido import boletin, cierre as mod_cierre, notificar
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        try:
+            datos = mod_cierre.preparar_cierre()
+        except Exception:
+            datos = None
+        if not datos:
+            return {"estado": "sin_edicion", "edicion": "cierre",
+                    "motivo": "sin movimientos del día"}
+
+        brief = {"cierre": datos}
+        clave = _clave_tarde(persistencia.ahora_iso())
+        fecha_es = _fecha_es(datetime.now(timezone.utc)) + " · cierre"
+        html_preview = boletin.construir_html(
+            [], fecha_es, token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
+        asunto = boletin.asunto_cierre()
+        token = secrets.token_urlsafe(24)
+        persistencia.guardar_edicion(conexion, clave, brief, html_preview, asunto, token,
+                                     persistencia.ahora_iso())
+        n_prem = persistencia.contar_premium(conexion)
+        if enviar:
+            boletin.enviar_revision(fecha_es, html_preview, token, n_prem)
+        try:
+            notificar.avisar("🌆 El cierre del mercado (Premium) espera tu revisión.")
+        except Exception:
+            pass
+        return {"estado": "pendiente", "edicion": "cierre", "clave": clave,
+                "html_preview": html_preview, "token": token, "premium": n_prem}
     finally:
         if propia:
             conexion.close()
@@ -327,9 +385,10 @@ def reenviar_a_suscriptores(conexion=None, fecha: str | None = None) -> dict:
             return {"ok": False, "motivo": "la edición fue descartada"}
         # el deep-dive del domingo es Premium: gratis → teaser; de pago → completo
         teaser_html, asunto_teaser = boletin.teaser_para(ed.get("brief"), fecha)
+        solo_premium = bool(isinstance(ed.get("brief"), dict) and ed["brief"].get("cierre"))
         conteo = boletin.enviar_a_suscriptores(
             conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha,
-            teaser_html=teaser_html, asunto_teaser=asunto_teaser)
+            teaser_html=teaser_html, asunto_teaser=asunto_teaser, solo_premium=solo_premium)
         persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
                                     conteo["suscriptores"], persistencia.ahora_iso())
         return {"ok": True, "reenviada": True, **conteo}

@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-02T13:50:37+00:00",
+ "generado": "2026-09-02T15:45:57+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14019,6 +14019,26 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una caída de -3.0%. En el mercado real, QQQ cerró en 705.88 el 2026-09-02 (venía de 716.69 el 2026-08-31): -1.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "5920a2a5f518e613",
+   "origen": "en_vivo",
+   "fecha": "2026-09-01T10:44:32+00:00",
+   "titular": "HC Wainwright & Co. Reiterates Buy on Kyntra Bio, Maintains $43 Price Target",
+   "simbolos": "KYNB",
+   "direccion_pct": 0.79,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "KYNB",
+    "pct_real": 2.47,
+    "cierre_base": 7.91,
+    "cierre_final": 8.105,
+    "fecha_base": "2026-08-31",
+    "fecha_final": "2026-09-02",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +0.8%. En el mercado real, KYNB cerró en 8.105 el 2026-09-02 (venía de 7.91 el 2026-08-31): +2.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

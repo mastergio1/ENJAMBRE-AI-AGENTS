@@ -30,7 +30,16 @@ on:
     # casos el motor detecta el día y arma la edición sola (un único llamado LLM,
     # sin simular el enjambre).
     - cron: "0 10 * * 0"
-  workflow_dispatch: {}  # disparo manual: Actions → este workflow → Run workflow
+    # 20:30 UTC = 16:30 en Nueva York (tras el cierre) = ~16:30 en Chile.
+    # Lunes a viernes: la EDICIÓN DE LA TARDE — 'el cierre del mercado' (Premium):
+    # los movers reales del día investigados. Sale SOLO a los suscriptores Premium.
+    - cron: "30 20 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      momento:
+        description: "manana (edición del día) o tarde (el cierre, Premium)"
+        required: false
+        default: "manana"
 
 jobs:
   despertar-y-preparar:
@@ -62,10 +71,19 @@ jobs:
       - name: Disparar el ritual (portero + 3 simulaciones + corrector)
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          # el cron de las 20:30 UTC (tarde) manda ?momento=tarde; los demás, la
+          # edición de la mañana. El disparo manual usa el input 'momento'.
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_MOMENTO: ${{ github.event.inputs.momento }}
         run: |
+          MOMENTO="manana"
+          if [ "$SCHEDULE" = "30 20 * * 1-5" ] || [ "$INPUT_MOMENTO" = "tarde" ]; then
+            MOMENTO="tarde"
+          fi
+          echo "Momento del ritual: $MOMENTO"
           respuesta=$(curl -sf -m 60 -X POST \
-            https://enjambre-motor.onrender.com/api/pipeline \
+            "https://enjambre-motor.onrender.com/api/pipeline?momento=$MOMENTO" \
             -H "X-Pipeline-Token: $TOKEN")
           echo "Respuesta del motor: $respuesta"
           # el ritual corre en segundo plano dentro del motor: esta respuesta
-          # solo confirma que arrancó; las 3 destacadas tardan ~3-4 minutos
+          # solo confirma que arrancó; la edición tarda ~1-4 minutos

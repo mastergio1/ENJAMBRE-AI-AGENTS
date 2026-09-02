@@ -73,6 +73,7 @@ def _titular_llano(m: dict) -> dict:
                    f"{abs(m['var_pct'])}% {_cuando(m)}",
         "fuente": "movimiento de mercado", "simbolos": m["ticker"],
         "verificado": False, "razon": "",
+        "var_pct": m.get("var_pct"), "sesion": m.get("sesion"),
     }
 
 
@@ -96,18 +97,21 @@ def _investigar_uno(m: dict) -> dict:
         )
         datos = _extraer_json(texto_de(respuesta))
         titular = str((datos or {}).get("titular", "")).strip()
-        # el titular DEBE pasar el filtro CMF; si no, al respaldo llano
-        if not titular or not vocabulario.es_publicable(titular):
-            return llano
+        razon = str((datos or {}).get("razon", "") or "")[:300]
+        # el titular Y la razón DEBEN pasar el filtro CMF; si no, al respaldo llano
+        if not titular or not vocabulario.es_publicable(titular) or not vocabulario.es_publicable(razon):
+            return {**llano, "var_pct": m.get("var_pct"), "sesion": m.get("sesion")}
         return {
             "titular": titular[:200],
             "fuente": str(datos.get("fuente", "") or "investigación")[:120],
             "simbolos": m["ticker"],
             "verificado": bool(datos.get("verificado")),
-            "razon": str(datos.get("razon", "") or "")[:300],
+            "razon": razon,
+            "var_pct": m.get("var_pct"),
+            "sesion": m.get("sesion"),
         }
     except Exception:
-        return llano
+        return {**llano, "var_pct": m.get("var_pct"), "sesion": m.get("sesion")}
 
 
 def investigar_movers(movers: list[dict], maximo: int = MAX_MOVERS) -> list[dict]:

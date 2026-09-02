@@ -571,6 +571,53 @@ def asunto_resumen(hechos: dict | None = None) -> str:
     return "🐝 El Pulso — La semana en el mercado"
 
 
+def asunto_cierre() -> str:
+    """El asunto de la edición de la tarde (Premium)."""
+    return "🐝 El Pulso — El cierre del mercado"
+
+
+def _bloque_cierre(brief: dict | None) -> str:
+    """La EDICIÓN DE LA TARDE (Premium): 'el cierre del mercado'. Los mayores
+    movimientos REALES del día investigados por el reportero IA (titular + razón
+    + píldora del %). Todo escapado + filtrado CMF. '' si no hay movimientos."""
+    brief = brief or {}
+    cierre = brief.get("cierre") or {}
+    movers = cierre.get("movers") or []
+    if not movers:
+        return ""
+    titulo = _limpiar(str(cierre.get("titulo", "El cierre del mercado")))
+    filas = ""
+    for m in movers:
+        if not isinstance(m, dict):
+            continue
+        titular = _limpiar(str(m.get("titular", "") or ""))
+        if not titular or titular == "—":
+            continue
+        razon = _limpiar(str(m.get("razon", "") or ""))
+        pildora = _pildora(m.get("var_pct"))
+        razon_html = (f'<div style="color:{MUTE};font-size:13px;line-height:1.5;margin-top:4px;">{razon}</div>'
+                      if razon and razon != "—" else "")
+        filas += f"""
+      <tr><td style="padding:12px 0;border-top:1px solid {LINEA};">
+        <div style="line-height:1.45;">{pildora} <b style="color:{TEXTO};font-size:14.5px;">{titular}</b></div>
+        {razon_html}
+      </td></tr>"""
+    if not filas:
+        return ""
+    return f"""
+  <tr><td style="padding:22px 32px 4px;text-align:center;border-top:1px solid {LINEA};">
+    <div style="font-size:11px;letter-spacing:3px;color:{ORO};text-transform:uppercase;font-weight:700;">🌆 Edición de la tarde · Premium</div>
+    <div style="font-family:Georgia,serif;font-size:24px;color:{TEXTO};font-weight:bold;margin-top:6px;">{titulo}</div>
+    <div style="font-size:11px;letter-spacing:1px;color:{TEAL};text-transform:uppercase;font-weight:700;margin-top:4px;">Lo que de verdad se movió hoy, y por qué</div>
+  </td></tr>
+  <tr><td style="padding:6px 32px 2px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{filas}</table>
+  </td></tr>
+  <tr><td style="padding:10px 32px 8px;">
+    <div style="color:{MUTE};font-size:12px;font-style:italic;line-height:1.5;">Los movimientos y sus motivos, investigados y verificados por nuestro reportero IA. No es asesoría de inversión.</div>
+  </td></tr>"""
+
+
 def asunto_teaser_premium() -> str:
     """El asunto del correo del domingo para los suscriptores GRATUITOS: NO
     revela el nombre de la empresa (eso es el gancho Premium)."""
@@ -649,7 +696,10 @@ def construir_html(destacadas: list[dict], fecha: str, token_baja: str = "TOKEN"
             analisis_html = _bloque_analisis_teaser(brief)
         else:
             analisis_html = analisis_completo
-    finde_html = resumen_html or analisis_html
+    # EDICIÓN DE LA TARDE (Premium): 'el cierre del mercado'. Reemplaza el cuerpo
+    # como una edición especial (sin historias ni foto del día).
+    cierre_html = _bloque_cierre(brief)
+    finde_html = resumen_html or analisis_html or cierre_html
     es_finde = bool(finde_html)
 
     historias = [] if es_finde else [h for h in (red.get("historias") or []) if isinstance(h, dict)]
@@ -836,15 +886,21 @@ def enviar_revision(fecha_es: str, preview_html: str, token: str, suscriptores: 
 def enviar_a_suscriptores(conexion, preview_html: str, asunto: str,
                           fecha_edicion: str | None = None,
                           teaser_html: str | None = None,
-                          asunto_teaser: str | None = None) -> dict:
+                          asunto_teaser: str | None = None,
+                          solo_premium: bool = False) -> dict:
     """Envía la edición YA APROBADA a los suscriptores activos, reemplazando el
     marcador del token de baja por el de cada uno (WYSIWYG con lo revisado).
     Cada correo va etiquetado con `fecha_edicion` para medir su apertura.
 
     Si se pasa `teaser_html` (edición Premium del domingo), los suscriptores
     GRATUITOS reciben ese teaser y los Premium el `preview_html` completo. Sin
-    `teaser_html`, todos reciben lo mismo (comportamiento de siempre)."""
+    `teaser_html`, todos reciben lo mismo (comportamiento de siempre).
+
+    `solo_premium` (edición de la tarde): solo se envía a los suscriptores
+    Premium; los gratuitos no reciben nada (no es su edición)."""
     activos = persistencia.suscriptores_activos(conexion)
+    if solo_premium:
+        activos = [s for s in activos if s.get("premium")]
     enviados = 0
     premium_enviados = 0
     for s in activos:

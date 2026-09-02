@@ -1303,7 +1303,8 @@ class PeticionEditar(BaseModel):
 
 
 def _fecha_valida(fecha: str) -> bool:
-    return bool(_re.match(r"^\d{4}-\d{2}-\d{2}$", fecha))
+    # acepta la fecha del día y la clave de la edición de la tarde ('…-t')
+    return bool(_re.match(r"^\d{4}-\d{2}-\d{2}(-t)?$", fecha))
 
 
 @app.get("/panel")
@@ -1518,14 +1519,16 @@ def panel_generar(tareas: BackgroundTasks, x_pipeline_token: str = Header(defaul
 
 # ---------- disparador del ritual de la madrugada (protegido por token) ----------
 
-def _correr_ritual() -> None:
+def _correr_ritual(momento: str = "manana") -> None:
     """Corre el ritual completo en el MISMO proceso web → misma base que
     sirve el muro. Un fallo NO debe tumbar el servidor, pero SÍ debe dejar
     rastro: si no, un muro vacío y ningún correo son indistinguibles de un día
-    sin noticias, y en el log no hay pista de por qué (B6)."""
+    sin noticias, y en el log no hay pista de por qué (B6).
+
+    `momento="tarde"` arma la edición de la tarde (el cierre, Premium)."""
     try:
         from contenido import pipeline
-        pipeline.ritual_matutino(enviar=True)
+        pipeline.ritual_matutino(enviar=True, momento=momento)
     except Exception:
         import traceback
         traceback.print_exc()  # queda en el log de Render
@@ -1574,16 +1577,19 @@ def api_diagnostico(x_pipeline_token: str = Header(default="")) -> dict:
 
 
 @app.post("/api/pipeline")
-def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+def disparar_pipeline(tareas: BackgroundTasks, momento: str = "manana",
+                      x_pipeline_token: str = Header(default="")) -> dict:
     """Lo llama el cron de Render (o Giorgio a mano) para preparar el día.
 
     Protegido por token (ENJAMBRE_PIPELINE_TOKEN). Corre en segundo plano
-    y responde al instante: el ritual toma minutos.
+    y responde al instante: el ritual toma minutos. `?momento=tarde` arma la
+    edición de la tarde (el cierre del mercado, Premium).
     """
     if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
-    tareas.add_task(_correr_ritual)
-    return {"estado": "iniciado"}
+    momento = "tarde" if momento == "tarde" else "manana"
+    tareas.add_task(_correr_ritual, momento)
+    return {"estado": "iniciado", "momento": momento}
 
 
 @app.post("/api/corrector")

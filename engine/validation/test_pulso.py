@@ -258,7 +258,7 @@ def test_reenviar_manda_aunque_ya_este_enviada(monkeypatch):
     conexion.close()
 
     enviados = []
-    monkeypatch.setattr(boletin, "enviar", lambda *a, **k: enviados.append(a) or True)
+    monkeypatch.setattr(boletin, "_enviar_resend", lambda *a, **k: (enviados.append(a) or True, ""))
     res = pipeline.reenviar_a_suscriptores(fecha=hoy)
     assert res["ok"] and res.get("reenviada") and res["enviados"] == 1
     assert enviados and enviados[0][0] == "lector@medio.cl"  # reenvió pese a estar 'enviada'
@@ -356,7 +356,7 @@ def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
     conexion.close()
 
     enviados = []
-    monkeypatch.setattr(boletin, "enviar", lambda *a, **k: enviados.append(a) or True)
+    monkeypatch.setattr(boletin, "_enviar_resend", lambda *a, **k: (enviados.append(a) or True, ""))
     monkeypatch.setattr(boletin, "PULSO_ADMIN_EMAIL", "")  # sin correo de revisión en el test
     from contenido import notificar
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
@@ -512,8 +512,8 @@ def test_premium_envio_separa_gratis_y_pago(monkeypatch):
 
     # capturamos (destinatario, asunto, html) de cada envío
     enviados = []
-    monkeypatch.setattr(boletin, "enviar",
-                        lambda dest, asunto, html, **k: enviados.append((dest, asunto, html)) or True)
+    monkeypatch.setattr(boletin, "_enviar_resend",
+                        lambda dest, asunto, html, **k: (enviados.append((dest, asunto, html)) or True, ""))
 
     brief = _brief_domingo()
     hoy = persistencia.ahora_iso()[:10]

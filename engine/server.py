@@ -18,6 +18,7 @@ import base64
 import contextlib as _contextlib
 import hashlib
 import hmac
+from html import escape as html_escape
 import json
 import struct
 from collections import defaultdict
@@ -1166,10 +1167,28 @@ def pulso_aprobar(token: str) -> HTMLResponse:
         msg = f'Esta edición ya se había enviado ({res.get("enviados", 0)} correos).'
     elif res.get("ok"):
         msg = f'Enviada a {res.get("enviados", 0)} de {res.get("suscriptores", 0)} suscriptores. 🎉'
+        msg += _detalle_fallos(res.get("fallos"))
     else:
         msg = res.get("motivo", "No se pudo enviar.")
     return _pagina_pulso("Aprobada",
         f'<div class="aviso"><h1 style="color:#2f8f66;">✅ Listo</h1><p>{msg}</p></div>')
+
+
+def _detalle_fallos(fallos) -> str:
+    """Si algún envío falló, lo lista en la página de 'Listo' con su motivo (así
+    Giorgio ve QUÉ direcciones caen y por qué, en vez de un '3 de 6' a ciegas).
+    Esta página solo se alcanza con el token del correo de revisión (privada)."""
+    if not fallos:
+        return ""
+    filas = "".join(
+        f'<li><b>{html_escape(str(f.get("email", "")))}</b> — '
+        f'{html_escape(str(f.get("motivo", "")))}</li>'
+        for f in fallos if isinstance(f, dict))
+    if not filas:
+        return ""
+    return ('<p style="margin-top:14px;color:#c0504d;">No llegaron '
+            f'{len(fallos)}:</p><ul style="text-align:left;color:#6f6a5f;'
+            f'font-size:14px;line-height:1.6;">{filas}</ul>')
 
 
 @app.post("/pulso/reenviar/{token}")

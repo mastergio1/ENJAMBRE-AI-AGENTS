@@ -78,6 +78,26 @@ def test_validar_cierre_ata_pildora_por_ticker():
     assert salida["historias"][0]["sesion"] == "sesión"
 
 
+def test_envio_reporta_fallos_con_motivo(monkeypatch):
+    """Un envío que falla ya no es un '3 de 6' a ciegas: enviar_a_suscriptores
+    devuelve QUÉ direcciones cayeron y por qué."""
+    conexion = persistencia.conectar()
+    for correo in ("bueno@lector.cl", "malo@lector.cl"):
+        alta = persistencia.agregar_suscriptor(conexion, correo)
+        persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+
+    def fake_enviar(dest, asunto, html, **k):
+        if dest == "malo@lector.cl":
+            return False, "HTTP 422: dirección inválida"
+        return True, ""
+    monkeypatch.setattr(boletin, "_enviar_resend", fake_enviar)
+
+    conteo = boletin.enviar_a_suscriptores(conexion, "<html>x</html>", "Asunto")
+    conexion.close()
+    assert conteo["enviados"] == 1 and conteo["fallidos"] == 1
+    assert conteo["fallos"] == [{"email": "malo@lector.cl", "motivo": "HTTP 422: dirección inválida"}]
+
+
 def test_ritual_tarde_arma_pendiente(monkeypatch):
     from contenido import cierre, notificar
     monkeypatch.setattr(notificar, "avisar", lambda m: True)
@@ -111,8 +131,8 @@ def test_cierre_sale_solo_a_premium(monkeypatch):
     conexion.close()
 
     enviados = []
-    monkeypatch.setattr(boletin, "enviar",
-                        lambda dest, asunto, html, **k: enviados.append(dest) or True)
+    monkeypatch.setattr(boletin, "_enviar_resend",
+                        lambda dest, asunto, html, **k: (enviados.append(dest) or True, ""))
     r = pipeline.aprobar_y_enviar(fecha=clave)
     assert r["ok"] and r["enviados"] == 1
     assert enviados == ["pago@lector.cl"]         # el gratuito NO recibe la tarde

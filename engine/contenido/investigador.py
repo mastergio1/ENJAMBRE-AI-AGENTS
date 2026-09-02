@@ -15,19 +15,30 @@ Reglas:
 """
 
 import json
+import logging
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 
 from contenido import vocabulario
 
+log = logging.getLogger("enjambre.investigador")
+
 MODELO = "claude-sonnet-5"
 TIMEOUT = 40
 MAX_MOVERS = 6          # cuántos movimientos investiga (techo de costo/tiempo)
 HILOS = 6
-# búsqueda web del lado del servidor de Anthropic (Sonnet-5). Si el nombre de la
-# herramienta cambiara, la llamada falla y se cae al titular llano (sin romperse).
-HERRAMIENTAS_WEB = [{"type": "web_search_20260209", "name": "web_search", "max_uses": 3}]
+# Búsqueda web del lado del servidor de Anthropic (Sonnet-5). Usamos la versión
+# BÁSICA con llamada DIRECTA a propósito: la variante nueva (web_search_20260209)
+# enruta por defecto a través de "code execution" (filtrado dinámico) y, en una
+# llamada simple como la nuestra, devuelve HTTP 400 —lo que antes tumbaba en
+# silencio toda la investigación al respaldo llano. La básica corre directo, sin
+# esa maquinaria, y basta de sobra para averiguar "por qué se movió la acción".
+HERRAMIENTAS_WEB = [{
+    "type": "web_search_20250305",
+    "name": "web_search",
+    "max_uses": 3,
+}]
 
 PROMPT = (
     "Eres un reportero de mercado riguroso. Te doy una acción que se movió fuerte HOY. "
@@ -110,7 +121,12 @@ def _investigar_uno(m: dict) -> dict:
             "var_pct": m.get("var_pct"),
             "sesion": m.get("sesion"),
         }
-    except Exception:
+    except Exception as e:
+        # Degradamos SIEMPRE (la edición no se cae por la API), pero dejamos
+        # rastro del motivo real en el log: así un fallo de la búsqueda web deja
+        # de ser invisible como lo fue durante semanas.
+        log.warning("La investigación de %s falló (%s: %s); uso titular llano.",
+                    m.get("ticker"), type(e).__name__, e)
         return {**llano, "var_pct": m.get("var_pct"), "sesion": m.get("sesion")}
 
 

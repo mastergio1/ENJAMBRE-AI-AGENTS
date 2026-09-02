@@ -1,5 +1,5 @@
 {
- "generado": "2026-08-31T17:32:03+00:00",
+ "generado": "2026-09-02T12:47:48+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -13959,6 +13959,46 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una subida de +1.0%. En el mercado real, BUG cerró en 43.395 el 2026-08-31 (venía de 44.14 el 2026-08-27): -1.7% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "cfa28d6df5ffdf87",
+   "origen": "en_vivo",
+   "fecha": "2026-08-31T17:31:22+00:00",
+   "titular": "Crude Oil Gains Over 2%; US Dallas Fed Manufacturing Index Surges In August",
+   "simbolos": "ASND,BMRN,CLGN,EIX,FNGR,PCG,TITN",
+   "direccion_pct": 9.46,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "ASND",
+    "pct_real": 4.98,
+    "cierre_base": 248.06,
+    "cierre_final": 260.425,
+    "fecha_base": "2026-08-28",
+    "fecha_final": "2026-09-01",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +9.5%. En el mercado real, ASND cerró en 260.425 el 2026-09-01 (venía de 248.06 el 2026-08-28): +5.0% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "847a9b99e5779f0b",
+   "origen": "en_vivo",
+   "fecha": "2026-08-31T17:31:40+00:00",
+   "titular": "Oil Rises As US Strikes Iran; Warsh's Hawkishness Reverberates; Weak Stock Market Seasonality Ahead",
+   "simbolos": "AAPL,AMZN,BTCUSD,GLD,GOOG,META,MSFT,NVDA,QQQ,SPY,TSLA,USO",
+   "direccion_pct": -3.76,
+   "volatilidad_pct": 1.17,
+   "reaccion_real": {
+    "simbolo": "AAPL",
+    "pct_real": 1.77,
+    "cierre_base": 319.58,
+    "cierre_final": 325.25,
+    "fecha_base": "2026-08-28",
+    "fecha_final": "2026-09-01",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -3.8%. En el mercado real, AAPL cerró en 325.25 el 2026-09-01 (venía de 319.58 el 2026-08-28): +1.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

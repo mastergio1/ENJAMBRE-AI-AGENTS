@@ -22,14 +22,20 @@ on:
   # "el envío no revisa el visto bueno" quedó resuelta.
   schedule:
     # 10:00 UTC = 6:00 en Chile (invierno) — antes de la apertura de EE.UU.
+    # NOTA sobre el minuto :17 (no :00): GitHub congestiona y RETRASA las tareas
+    # agendadas en punto (todo el mundo usa :00), a veces por horas. Un minuto
+    # "raro" reduce mucho ese retraso. Aun así, en su plan gratis GitHub puede
+    # atrasar o saltar corridas bajo carga: para envío garantizado, disparar a
+    # mano desde Actions (o mover el disparador a un cron externo).
+    # 10:17 UTC ≈ 6:17 en Chile — antes de la apertura de EE.UU.
     # Lunes a viernes: la edición DIARIA (noticias + gráficos).
-    - cron: "0 10 * * 1-5"
+    - cron: "17 10 * * 1-5"
     # Sábado: el RESUMEN DE LA SEMANA (los grandes temas con punto de vista).
-    - cron: "0 10 * * 6"
+    - cron: "17 10 * * 6"
     # Domingo: el DEEP-DIVE de una empresa mediana/pequeña o un sector. En ambos
     # casos el motor detecta el día y arma la edición sola (un único llamado LLM,
     # sin simular el enjambre).
-    - cron: "0 10 * * 0"
+    - cron: "17 10 * * 0"
     # 20:30 UTC = 16:30 en Nueva York (tras el cierre) = ~16:30 en Chile.
     # Lunes a viernes: la EDICIÓN DE LA TARDE — 'el cierre del mercado' (Premium):
     # los movers reales del día investigados. Sale SOLO a los suscriptores Premium.

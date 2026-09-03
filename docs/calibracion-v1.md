@@ -25,20 +25,12 @@ Por defecto **no cambia nada**. El conjunto activo es `baseline`.
 
 ```bash
 cd engine
-# identidad (igual que antes)
-python -m contenido.experimento --set baseline --n 2
-
-# la hipótesis del plan: 2.0× + umbral 0.45
-python -m contenido.experimento --set hipotesis_v1b --n 2 --guardar
+python -m contenido.experimento --set baseline --vs hipotesis_v1a --n 3
 ```
 
-Para una simulación real (motor / backtest):
-
-```bash
-export ENJAMBRE_PERILLAS=hipotesis_v1b
-```
-
-Sin esa variable, el enjambre se comporta como hoy.
+**v1a se midió el 3-sep-2026 y NO pasó** (ver [experimento-v1a.md](experimento-v1a.md)):
+infla días normales ×2 y casi no mueve extremos. No activar `hipotesis_v1b`.
+Sin `ENJAMBRE_PERILLAS`, el enjambre se comporta como hoy.
 
 ## Criterio de “esta hipótesis sirve”
 

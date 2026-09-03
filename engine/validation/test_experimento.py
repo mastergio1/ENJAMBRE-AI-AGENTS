@@ -1,7 +1,7 @@
 """Tests de la Loss oficial y del resumen de experimentos (sin Mesa)."""
 
 from contenido.corrector import evaluar_casos, ratio_fuerza
-from contenido.experimento import resumir_corridas
+from contenido.experimento import contraste, resumir_corridas
 
 
 def test_evaluar_casos_perfecto():
@@ -47,3 +47,23 @@ def test_resumir_corridas_cuenta_direccion():
     assert r["n"] == 4
     assert r["acierto_direccion"] == 0.75
     assert r["magnitud_media_extremos"] == 3.5
+
+
+def test_contraste_extremos_crecen_mas():
+    def _inf(nombre, corridas):
+        return {"conjunto": nombre, "resumen": resumir_corridas(corridas),
+                "corridas": corridas, "segundos": 1.0}
+
+    base = _inf("baseline", [
+        {"seed": 1, "shock": -0.25, "pct": -0.8, "direccion_ok": True},
+        {"seed": 1, "shock": -0.90, "pct": -3.0, "direccion_ok": True},
+    ])
+    hypo = _inf("hipotesis_v1a", [
+        {"seed": 1, "shock": -0.25, "pct": -1.0, "direccion_ok": True},
+        {"seed": 1, "shock": -0.90, "pct": -6.0, "direccion_ok": True},
+    ])
+    c = contraste(base, hypo)
+    assert c["ratio_extremos"] == 2.0
+    assert c["ratio_normales"] == 1.25
+    assert c["direccion_se_mantiene"] is True
+    assert c["extremos_crecen_mas"] is True

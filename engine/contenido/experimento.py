@@ -8,7 +8,8 @@ este script alimenta la caja de experimentos con seed + perillas + métricas.
 Uso (desde engine/):
 
     python -m contenido.experimento --set baseline --n 6
-    python -m contenido.experimento --set hipotesis_v1b --n 6
+    python -m contenido.experimento --set hipotesis_v1a --n 6
+    python -m contenido.experimento --set baseline --vs hipotesis_v1a --n 2
 
 No toca producción: el conjunto se elige por bandera / env, no reescribe
 el JSON. Los resultados se imprimen y, si se pide --guardar, van a
@@ -123,12 +124,78 @@ def comparar_libreta(casos: list[tuple[float, float]]) -> dict:
     return evaluar_casos(casos)
 
 
+def contraste(base: dict, hypo: dict) -> dict:
+    """Compara dos informes del mismo banco de shocks (mismas semillas)."""
+    rb, rh = base["resumen"], hypo["resumen"]
+
+    def _ratio(antes, despues):
+        if antes is None or despues is None or abs(antes) < 1e-12:
+            return None
+        return round(despues / antes, 3)
+
+    por_base = {(c["seed"], c["shock"]): c for c in base["corridas"]}
+    pares = []
+    for c in hypo["corridas"]:
+        o = por_base.get((c["seed"], c["shock"]))
+        if o is None:
+            continue
+        pares.append({
+            "seed": c["seed"],
+            "shock": c["shock"],
+            "pct_base": o["pct"],
+            "pct_hypo": c["pct"],
+            "dir_base": o["direccion_ok"],
+            "dir_hypo": c["direccion_ok"],
+            "extremo": abs(c["shock"]) >= 0.8,
+        })
+    ratio_ext = _ratio(rb.get("magnitud_media_extremos"), rh.get("magnitud_media_extremos"))
+    ratio_nor = _ratio(rb.get("magnitud_media_normales"), rh.get("magnitud_media_normales"))
+    # v1a sirve si los extremos crecen más que los días normales y la dirección no cae
+    dir_ok = (
+        rb.get("acierto_direccion") is None
+        or rh.get("acierto_direccion") is None
+        or rh["acierto_direccion"] + 1e-9 >= rb["acierto_direccion"]
+    )
+    extrema_gana = ratio_ext is not None and ratio_ext >= 1.15
+    no_explota_normales = (ratio_nor is None or ratio_ext is None
+                           or ratio_nor <= ratio_ext)
+    return {
+        "base": base["conjunto"],
+        "hipotesis": hypo["conjunto"],
+        "acierto_direccion_base": rb.get("acierto_direccion"),
+        "acierto_direccion_hypo": rh.get("acierto_direccion"),
+        "magnitud_normales_base": rb.get("magnitud_media_normales"),
+        "magnitud_normales_hypo": rh.get("magnitud_media_normales"),
+        "magnitud_extremos_base": rb.get("magnitud_media_extremos"),
+        "magnitud_extremos_hypo": rh.get("magnitud_media_extremos"),
+        "ratio_normales": ratio_nor,
+        "ratio_extremos": ratio_ext,
+        "direccion_se_mantiene": dir_ok,
+        "extremos_crecen_mas": bool(extrema_gana and no_explota_normales),
+        "pares": pares,
+        "segundos": round((base.get("segundos") or 0) + (hypo.get("segundos") or 0), 1),
+        "aviso": (
+            "Respuesta a shock numérico, no acierto vs mercado real. "
+            "v1a sirve para el paso 2 (noticias reales) si extremos_crecen_mas "
+            "y direccion_se_mantiene."
+        ),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Experimento de calibración (sin API).")
     parser.add_argument("--set", dest="conjunto", default=os.environ.get("ENJAMBRE_PERILLAS", "baseline"))
+    parser.add_argument("--vs", dest="versus", default=None,
+                        help="Si se pasa, corre --set y --vs y imprime el contraste.")
     parser.add_argument("--n", dest="n_semillas", type=int, default=2)
     parser.add_argument("--guardar", action="store_true")
     args = parser.parse_args(argv)
+    if args.versus:
+        inf_a = correr(conjunto=args.conjunto, n_semillas=args.n_semillas, guardar=args.guardar)
+        inf_b = correr(conjunto=args.versus, n_semillas=args.n_semillas, guardar=args.guardar)
+        informe = contraste(inf_a, inf_b)
+        print(json.dumps(informe, ensure_ascii=False, indent=2))
+        return 0
     informe = correr(conjunto=args.conjunto, n_semillas=args.n_semillas, guardar=args.guardar)
     print(json.dumps({k: informe[k] for k in ("conjunto", "version", "perillas", "resumen", "segundos", "aviso")
                       if k in informe}, ensure_ascii=False, indent=2))

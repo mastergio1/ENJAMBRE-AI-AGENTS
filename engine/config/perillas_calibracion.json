@@ -1,6 +1,6 @@
 {
   "version": "perillas_v1",
-  "descripcion": "Perillas de calibración de magnitud (Fase 1). El conjunto 'baseline' reproduce el comportamiento actual: no cambia dirección ni hechos estilizados. 'hipotesis_v1b' es el experimento 2.0× + umbral 0.45 del plan. Activar con ENJAMBRE_PERILLAS=hipotesis_v1b.",
+  "descripcion": "Perillas de calibración de magnitud (Fase 1). El conjunto 'baseline' reproduce el comportamiento actual. 'hipotesis_v1a' es el experimento limpio (solo 2 perillas). 'hipotesis_v1b' es el paquete completo, no usarlo hasta medir v1a. Activar con ENJAMBRE_PERILLAS=<nombre>.",
   "conjunto_activo": "baseline",
   "globales": {
     "impacto_base": 1.0,
@@ -18,8 +18,15 @@
     "baseline": {
       "nota": "Identidad. Misma reacción que antes de esta rama."
     },
+    "hipotesis_v1a": {
+      "nota": "Solo 2 perillas: impacto_base 2.0 + umbral_panico 0.45. El resto idéntico al baseline. Una sesión, una hipótesis.",
+      "globales": {
+        "impacto_base": 2.0,
+        "umbral_panico": 0.45
+      }
+    },
     "hipotesis_v1b": {
-      "nota": "Quick win del plan: multiplicador 2.0× + umbral de pánico 0.45. No tocar más de estas perillas a la vez.",
+      "nota": "Paquete amplio (asimetría, ruido, más cerebros FOMO, perfiles por mercado). NO medir hasta tener v1a. Si v1a no gana, este tampoco se activa.",
       "globales": {
         "impacto_base": 2.0,
         "umbral_panico": 0.45,

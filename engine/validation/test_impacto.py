@@ -1,7 +1,7 @@
 """Tests de la función de impacto no lineal (Fase 1 de calibración).
 
 No levantan el mercado: son la garantía de que 'baseline' es identidad
-y de que 'hipotesis_v1b' sí amplifica los shocks grandes.
+y de que 'hipotesis_v1a' / 'v1b' sí amplifican los shocks grandes.
 """
 
 import pytest
@@ -26,6 +26,27 @@ def test_baseline_es_identidad():
         assert impacto.factor_shock(s) == pytest.approx(1.0)
     assert impacto.ganancia_contagio() == pytest.approx(0.7)
     assert impacto.ganancia_consenso() == pytest.approx(0.8)
+    assert impacto.ruido_lider_sigma() == 0.0
+
+
+def test_v1a_solo_dos_perillas(monkeypatch):
+    """v1a = 2.0× + umbral 0.45. Sin asimetría, sin ruido, sin más cerebros."""
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1a")
+    impacto.reiniciar_cache()
+    cfg = impacto.cargar_perillas()
+    assert cfg["nombre"] == "hipotesis_v1a"
+    g = cfg["globales"]
+    assert g["impacto_base"] == 2.0
+    assert g["umbral_panico"] == 0.45
+    assert g["asimetria_downside"] == 1.0
+    assert g["ruido_lider_sigma"] == 0.0
+    assert g["peso_cerebro_fomo_evangelista"] == 1.0
+    chico = impacto.calcular_impacto(0.20)
+    grande = impacto.calcular_impacto(0.80)
+    caida = impacto.calcular_impacto(-0.80)
+    assert chico == pytest.approx(0.40, abs=0.02)
+    assert abs(grande) > abs(chico) * 2
+    assert abs(caida) == pytest.approx(abs(grande))
     assert impacto.ruido_lider_sigma() == 0.0
 
 

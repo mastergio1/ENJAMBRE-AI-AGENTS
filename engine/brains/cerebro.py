@@ -13,9 +13,10 @@ import os
 import re
 from pathlib import Path
 
-from brains.arquetipos import INSTRUCCION_JSON, POR_ID
+from brains.arquetipos import INSTRUCCION_JSON, INSTRUCCION_MICROFONO, POR_ID
 from brains.fallback import respuesta_fallback
 from llm_texto import texto_de
+
 
 MODELO = "claude-sonnet-5"
 # Nota: claude-sonnet-5 ya no acepta `temperature` (devuelve 400 si se envía).
@@ -29,9 +30,24 @@ RUTA_CACHE = Path(__file__).parent / "cache" / "respuestas.json"
 
 # ---------- caché (repetir demos no cuesta nada) ----------
 
+def _version_cache() -> str:
+    """Si cambia el prompt, la caché vieja no puede responder."""
+    from brains.impacto import prompt_microfono
+    return "microfono_v1" if prompt_microfono() else "v0"
+
+
 def _clave_cache(titular: str, arquetipo_id: str, semilla: int) -> str:
-    crudo = f"{titular}|{arquetipo_id}|{semilla}"
+    crudo = f"{_version_cache()}|{titular}|{arquetipo_id}|{semilla}"
     return hashlib.sha256(crudo.encode()).hexdigest()[:16]
+
+
+def _system_lider(arquetipo_id: str) -> str:
+    texto = f"{POR_ID[arquetipo_id]['prompt']}\n\n{INSTRUCCION_JSON}"
+    from brains.impacto import prompt_microfono
+    if prompt_microfono():
+        texto += f"\n\n{INSTRUCCION_MICROFONO}"
+    return texto
+
 
 
 def _cargar_cache() -> dict:
@@ -90,14 +106,13 @@ def _reportar_primera_falla(error: Exception) -> None:
 
 async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, semilla: int) -> dict:
     """Una llamada por líder. Cualquier falla degrada al fallback léxico."""
-    prompt = POR_ID[arquetipo_id]["prompt"]
     async with semaforo:
         try:
             respuesta = await asyncio.wait_for(
                 cliente.messages.create(
                     model=MODELO,
                     max_tokens=200,
-                    system=f"{prompt}\n\n{INSTRUCCION_JSON}",
+                    system=_system_lider(arquetipo_id),
                     messages=[{"role": "user", "content": f"Titular de hoy: {titular}"}],
                 ),
                 timeout=TIMEOUT_SEGUNDOS,

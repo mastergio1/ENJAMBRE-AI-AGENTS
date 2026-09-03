@@ -5,11 +5,13 @@ import pytest
 from contenido.corrector import (
     clasificar_error,
     evaluar_casos,
+    mercado_de,
     ratio_fuerza,
     ratio_fuerza_bruto,
     wilson_intervalo,
 )
 from contenido.experimento import contraste, resumir_corridas
+
 
 
 def test_evaluar_casos_perfecto():
@@ -101,6 +103,13 @@ def test_taxonomia_parte_la_libreta():
     assert "geopolitica|sorpresa|acierto" in tax
     assert "macro_tasas|priced_in|signo" in tax
     assert "resultados|sorpresa|plano" in tax
+
+
+def test_mercado_de_parte_indice_y_cripto():
+    assert mercado_de("SPY", "") == "indice"
+    assert mercado_de("BTC-USD", "") == "cripto"
+    assert mercado_de("AAPL", "Apple earnings") == "accion"
+    assert mercado_de("", "Bitcoin tumbles below $23,000") == "cripto"
 
 
 def test_resumir_corridas_cuenta_direccion():

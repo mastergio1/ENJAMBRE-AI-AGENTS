@@ -184,6 +184,19 @@ def ruido_lider_sigma() -> float:
     return float(cargar_perillas()["globales"].get("ruido_lider_sigma", 0.0))
 
 
+def prompt_microfono() -> bool:
+    """¿Los cerebros llevan las reglas sorpresa / priced-in / earnings?
+
+    False en baseline (el prompt de producción no cambia).
+    True en hipotesis_v1d / v1e. Cambia la clave de caché para no
+    reciclar voces viejas.
+    """
+    v = cargar_perillas()["globales"].get("prompt_microfono", False)
+    if isinstance(v, str):
+        return v.strip().lower() in ("1", "true", "si", "sí", "on")
+    return bool(v)
+
+
 def pesos_cerebro() -> dict[str, float]:
     g = cargar_perillas()["globales"]
     return {

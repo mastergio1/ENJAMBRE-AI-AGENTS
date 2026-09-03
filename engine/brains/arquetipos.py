@@ -13,6 +13,20 @@ INSTRUCCION_JSON = (
     "confianza: cuánto arrastrarías a tus seguidores con esta opinión."
 )
 
+# Hipótesis v1d (apagada en baseline). Si choca con la personalidad, ESTA gana.
+INSTRUCCION_MICROFONO = (
+    "Reglas de calibración (mandan sobre tu personalidad si chocan): "
+    "1) Clasifica el titular: SORPRESA vs YA ESTABA EN EL PRECIO "
+    "(as expected, in line, priced in, holds rates, as planned, as widely expected, "
+    "sin sorpresa, en línea). Si ya estaba en el precio, senal entre -0.15 y +0.15 "
+    "aunque el titular suene grave o eufórico. "
+    "2) Si es RESULTADO de una empresa (earnings, EPS, guidance, beat, miss), "
+    "tu senal sigue el beat/miss/guía de ESA empresa. No uses el mood del mercado "
+    "ni palabras como AI o récord si la guía decepcionó. "
+    "3) Si hay una sopa de tickers, reacciona al HECHO, no al primer nombre de la lista."
+)
+
+
 ARQUETIPOS = [
     {
         "id": "institucional_frio",

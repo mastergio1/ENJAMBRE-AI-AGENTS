@@ -27,6 +27,27 @@ RUEDAS = 2         # ventana de medición: días de mercado tras la noticia
 UMBRAL_PLANO = 0.3  # bajo este |%|, la dirección se considera plana
 MIN_CASOS_PRODUCCION = 80  # menos que esto, listo_produccion es siempre False
 
+_SIMBOLOS_INDICE = {"SPY", "QQQ", "DIA", "IWM"}
+_SIMBOLOS_CRIPTO = {"BTC-USD", "GBTC", "BITO", "COIN", "MSTR", "MARA", "RIOT", "ETHE"}
+_SIMBOLOS_PETROLEO = {"USO", "XLE", "OXY", "SLB"}
+_SIMBOLOS_ORO = {"GLD", "IAU", "GDX", "NEM", "GOLD"}
+
+
+def mercado_de(simbolo: str = "", titular: str = "") -> str:
+    """Mercado grosero para partir la libreta (índice ≠ cripto)."""
+    s = (simbolo or "").upper().split(",")[0].strip()
+    t = (titular or "").lower()
+    if s in _SIMBOLOS_CRIPTO or any(k in t for k in ("bitcoin", "crypto", "ethereum", "dogecoin")):
+        return "cripto"
+    if s in _SIMBOLOS_INDICE:
+        return "indice"
+    if s in _SIMBOLOS_PETROLEO:
+        return "petroleo"
+    if s in _SIMBOLOS_ORO:
+        return "oro"
+    return "accion"
+
+
 
 def cerebros_ia(lideres: list[dict]) -> bool:
     """¿La mayoría de los líderes habló con IA real (no con el respaldo)?
@@ -308,6 +329,8 @@ def libreta(conexion=None) -> dict:
 
     vivo, historico, excluidos = [], [], 0
     vivo_tits, hist_tits = [], []
+    por_mercado: dict[str, list] = {}
+    por_mercado_tits: dict[str, list] = {}
     for fila in filas:
         reaccion = json.loads(fila["reaccion_real"])
         if reaccion.get("cerebros") == "respaldo":
@@ -316,6 +339,9 @@ def libreta(conexion=None) -> dict:
         sim = float(json.loads(fila["resumen_json"]).get("direccion_pct") or 0)
         real = float(reaccion.get("pct_real") or 0)
         tit = fila["titular"] or ""
+        mkt = mercado_de(reaccion.get("simbolo") or "", tit)
+        por_mercado.setdefault(mkt, []).append((sim, real))
+        por_mercado_tits.setdefault(mkt, []).append(tit)
         if fila["fuente"] == "backtest":
             historico.append((sim, real))
             hist_tits.append(tit)
@@ -324,15 +350,26 @@ def libreta(conexion=None) -> dict:
             vivo_tits.append(tit)
 
     n_eval = len(vivo) + len(historico)
+    foco_casos = (por_mercado.get("indice") or []) + (por_mercado.get("accion") or [])
+    foco_tits = (por_mercado_tits.get("indice") or []) + (por_mercado_tits.get("accion") or [])
+    total = _resumir(vivo + historico, titulares=vivo_tits + hist_tits)
+    foco = _resumir(foco_casos, titulares=foco_tits) if foco_casos else _vacio()
+    # el producto es índice + acción: cripto no puede declarar victoria
+    total["listo_produccion"] = bool(foco.get("listo_produccion"))
+    total["pasa_metricas"] = bool(foco.get("pasa_metricas"))
     return {
-        **_resumir(vivo + historico, titulares=vivo_tits + hist_tits),
+        **total,
         "en_vivo": _resumir(vivo, titulares=vivo_tits),
         "historico": _resumir(historico, titulares=hist_tits),
+        "foco_producto": foco,
+        "por_mercado": {k: _resumir(v, titulares=por_mercado_tits[k])
+                        for k, v in por_mercado.items()},
         "excluidos_respaldo": excluidos,
         "nota": (
-            f"con menos de {MIN_CASOS_PRODUCCION} casos hold-out la tasa es hipótesis, "
+            f"con menos de {MIN_CASOS_PRODUCCION} casos hold-out (índice+acción) la tasa es hipótesis, "
             "no calibración — el intervalo de Wilson muestra la incertidumbre"
-            if n_eval < MIN_CASOS_PRODUCCION
-            else "hold-out suficiente para hablar de calibración, no de marketing"
+            if len(foco_casos) < MIN_CASOS_PRODUCCION
+            else "hold-out de índice+acción suficiente para hablar de calibración, no de marketing"
         ),
     }
+

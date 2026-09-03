@@ -99,6 +99,12 @@ def test_clasificar_titular_casillas_conocidas():
     tar = clasificar_titular("Sweeping new US tariffs stun markets; stocks sink on trade war fears")
     assert tar["tipo"] == "geopolitica"
     assert tar["regimen"] == "sorpresa"
+    guia = clasificar_titular("Target Raises FY2026 GAAP EPS Guidance from $8.50 to $9.90")
+    assert guia["tipo"] == "resultados"
+    linea = clasificar_titular("Consumer prices come in line with expectations; Fed keeps rates unchanged")
+    assert linea["regimen"] == "priced_in"
+    assert linea["tipo"] == "macro_tasas"
+
 
 
 def test_v1c_zona_muerta_anti_v1a(monkeypatch):
@@ -110,6 +116,7 @@ def test_v1c_zona_muerta_anti_v1a(monkeypatch):
     g = cfg["globales"]
     assert g["umbral_consenso"] == 0.25
     assert g["impacto_base"] == 1.0  # no se toca el parlante
+    assert not g.get("prompt_microfono")
     assert impacto.calcular_impacto(0.20) == pytest.approx(0.20)
     assert impacto.zona_muerta(0.15) == 0.0
     assert impacto.zona_muerta(0.20) == 0.0
@@ -117,6 +124,38 @@ def test_v1c_zona_muerta_anti_v1a(monkeypatch):
     # soft-threshold: 0.80 - 0.25 = 0.55; el extremo sobrevive, achicado
     assert impacto.zona_muerta(0.80) == pytest.approx(0.55)
     assert impacto.zona_muerta(-0.90) == pytest.approx(-0.65)
+
+
+def test_v1d_enciende_el_microfono(monkeypatch):
+    """v1d = 1 perilla de prompt. No toca impacto_base ni umbral."""
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1d")
+    impacto.reiniciar_cache()
+    assert impacto.prompt_microfono() is True
+    g = impacto.cargar_perillas()["globales"]
+    assert g["impacto_base"] == 1.0
+    assert g["umbral_consenso"] == 0.0
+    from brains.cerebro import _system_lider, _version_cache
+    sysmsg = _system_lider("doomer")
+    assert "YA ESTABA EN EL PRECIO" in sysmsg
+    assert _version_cache() == "microfono_v1"
+
+
+def test_baseline_no_lleva_microfono():
+    assert impacto.prompt_microfono() is False
+    from brains.cerebro import _system_lider, _version_cache
+    assert "YA ESTABA EN EL PRECIO" not in _system_lider("doomer")
+    assert _version_cache() == "v0"
+
+
+def test_fallback_priced_in_se_suaviza_solo_en_v1d(monkeypatch):
+    from brains.fallback import respuesta_fallback
+    tit = "Fed holds rates and flags a March increase, as widely expected"
+    base = respuesta_fallback(tit, "fomo_evangelista", 1)
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1d")
+    impacto.reiniciar_cache()
+    hypo = respuesta_fallback(tit, "fomo_evangelista", 1)
+    assert abs(hypo["senal"]) <= 0.15
+    assert abs(hypo["senal"]) <= abs(base["senal"]) + 1e-9
 
 
 def test_overlay_perfil_no_pisa_volatilidad_en_baseline():

@@ -1,6 +1,6 @@
 {
   "version": "perillas_v1",
-  "descripcion": "Perillas de calibración. El conjunto 'baseline' reproduce el comportamiento actual (identidad). 'hipotesis_v1a' se midió y NO pasa (infla días chicos). 'hipotesis_v1b' es el paquete completo, no usarlo. 'hipotesis_v1c' es la zona muerta anti-v1a (1 perilla, apagada en baseline). Activar con ENJAMBRE_PERILLAS=<nombre>.",
+  "descripcion": "Perillas de calibración. baseline = identidad (producción). v1a NO pasa. v1b no usar. v1c = zona muerta. v1d = prompt micrófono (sorpresa/priced-in/earnings). v1e = v1c+v1d, medir DESPUÉS de v1d solo. Activar con ENJAMBRE_PERILLAS=<nombre>.",
   "conjunto_activo": "baseline",
   "globales": {
     "impacto_base": 1.0,
@@ -12,12 +12,13 @@
     "ganancia_consenso": 0.8,
     "factor_shock_max": 3.0,
     "umbral_consenso": 0.0,
+    "prompt_microfono": false,
     "peso_cerebro_fomo_evangelista": 1.0,
     "peso_cerebro_influencer_optimista": 1.0
   },
   "conjuntos": {
     "baseline": {
-      "nota": "Identidad. Misma reacción que antes de esta rama. umbral_consenso=0."
+      "nota": "Identidad. Misma reacción que producción. umbral_consenso=0, prompt_microfono=false."
     },
     "hipotesis_v1a": {
       "nota": "MEDIDA Y NO PASA (3-sep-2026): infla días normales ×2 y no mueve extremos. No activar.",
@@ -27,7 +28,7 @@
       }
     },
     "hipotesis_v1b": {
-      "nota": "Paquete amplio. NO medir: v1a (que es su núcleo) ya falló. Si se activa, no se aísla nada.",
+      "nota": "Paquete amplio. NO medir: v1a (que es su núcleo) ya falló.",
       "globales": {
         "impacto_base": 2.0,
         "umbral_panico": 0.45,
@@ -72,8 +73,21 @@
       }
     },
     "hipotesis_v1c": {
-      "nota": "Anti-v1a. UNA perilla: umbral_consenso 0.25 (zona muerta del tono ambiente). impacto_base sigue en 1. Los líderes siguen hablando. En baseline vale 0.",
+      "nota": "MEDIDA 3-sep: silencia días chicos, un +0.20 puede cambiar de signo. No producción. UNA perilla.",
       "globales": {
+        "umbral_consenso": 0.25
+      }
+    },
+    "hipotesis_v1d": {
+      "nota": "Micrófono. UNA perilla: prompt_microfono=true (sorpresa vs priced-in, earnings beat/miss, no sopa de tickers). Fallback léxico también se suaviza si priced-in. No toca el libro. Medir contra baseline con API.",
+      "globales": {
+        "prompt_microfono": true
+      }
+    },
+    "hipotesis_v1e": {
+      "nota": "Paquete micrófono: v1d + zona muerta v1c. NO medir hasta tener v1d solo. Si v1d no gana, este tampoco se activa.",
+      "globales": {
+        "prompt_microfono": true,
         "umbral_consenso": 0.25
       }
     }

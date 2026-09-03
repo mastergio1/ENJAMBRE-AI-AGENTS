@@ -6,6 +6,9 @@ NUNCA se cae por la API.
 """
 
 
+import re
+
+
 def _clip(x: float, lo: float = -1.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, x))
 
@@ -115,24 +118,47 @@ _TIPO_RESULTADOS = (
     "earnings", "eps", "guidance", "outlook", "quarterly", "results",
     "revenue", "resultados", "ganancias", "trimestre", "beneficio",
     "posts first", "weak forecast", "smashes estimates",
+    "gaap eps", "adj eps", "adj. eps", "adj.eps",
+    "raises fy", "cuts fy", "fy202", "fy20", "fy201", "fy2026",
+    "beats $", "misses $", "vs $", " estimate",
+    "comparable sales", "deliveries", "10-k", "10-q",
+    "vehicle deliveries", "same-store",
 )
 _TIPO_GEOPOL = (
     "tariff", "arancel", "trade war", "guerra comercial", "sanction",
     "sanciones", "election", "eleccion", "brexit", "yuan", "opec",
-    "opep", "war", "guerra", "invade", "geopolit",
+    "opep", "war", "guerra", "invade", "geopolit", "trump tariff",
 )
 _PRICED_IN = (
-    "as expected", "as widely expected", "as planned", "in line",
-    "priced in", "no surprise", "holds rates", "rate pause",
-    "como se esperaba", "en linea", "sin sorpresa", "ends qe3",
-    "ends qe", "keeps rates",
+    "as expected", "as widely expected", "widely expected",
+    "as planned", "in line", "in line with", "come in line",
+    "priced in", "no surprise", "holds rates", "holds rate",
+    "rate pause", "pauses rate", "pause rate", "keeps rates",
+    "keeps rates unchanged", "como se esperaba", "en linea",
+    "sin sorpresa", "ends qe3", "ends qe",
 )
 _SORPRESA = (
     "unexpected", "surprise", "shock", "stun", "stuns", "wipes out",
     "hotter-than-expected", "beats", "misses", "plunge", "plunges",
     "crater", "craters", "inesperado", "sorpresa", "desploma",
     "smash", "crushes estimates", "below zero", "first time",
+    "beats $", "misses $",
 )
+
+
+
+def _hay(texto: str, frases: tuple) -> bool:
+    """Frases largas: substring. Tokens cortos (eps, war): no dentro de otra palabra.
+
+    Sin esto, 'eps' pesca 'keeps' y 'war' pesca 'software'.
+    """
+    for p in frases:
+        if len(p) <= 3:
+            if re.search(r"(?<![a-z0-9])" + re.escape(p) + r"(?![a-z0-9])", texto):
+                return True
+        elif p in texto:
+            return True
+    return False
 
 
 def clasificar_titular(titular: str) -> dict:
@@ -146,17 +172,17 @@ def clasificar_titular(titular: str) -> dict:
     que ya estaban en el precio?).
     """
     texto = titular.lower()
-    if any(p in texto for p in _TIPO_RESULTADOS):
+    if _hay(texto, _TIPO_RESULTADOS):
         tipo = "resultados"
-    elif any(p in texto for p in _TIPO_GEOPOL):
+    elif _hay(texto, _TIPO_GEOPOL):
         tipo = "geopolitica"
     elif es_noticia_macro(titular):
         tipo = "macro_tasas"
     else:
         tipo = "otro"
 
-    priced = any(p in texto for p in _PRICED_IN)
-    sorpresa = any(p in texto for p in _SORPRESA)
+    priced = _hay(texto, _PRICED_IN)
+    sorpresa = _hay(texto, _SORPRESA)
     if priced and not sorpresa:
         regimen = "priced_in"
     elif sorpresa and not priced:
@@ -164,6 +190,23 @@ def clasificar_titular(titular: str) -> dict:
     else:
         regimen = "ambiguo"
     return {"tipo": tipo, "regimen": regimen}
+
+
+def _suavizar_priced_in(titular: str, senal: float) -> float:
+    """Si v1d está activa y el titular ya estaba en el precio, la señal se achica.
+
+    El respaldo léxico no entiende 'as expected'; sin esto, Fed-en-pausa
+    sigue gritando cuando no hay API. En baseline no hace nada.
+    """
+    try:
+        from brains.impacto import prompt_microfono
+        if not prompt_microfono():
+            return senal
+    except Exception:
+        return senal
+    if clasificar_titular(titular).get("regimen") != "priced_in":
+        return senal
+    return _clip(senal * 0.2, -0.15, 0.15)
 
 
 def _frase(opciones: tuple, sentimiento: float) -> tuple:
@@ -324,5 +367,7 @@ def respuesta_fallback(titular: str, arquetipo_id: str, semilla: int = 0) -> dic
     rng = random.Random(hash((titular, arquetipo_id, semilla)))
     frase = rng.choice(variantes)  # variante sorteada: el respaldo no suena a loro
     senal = _clip(senal + rng.gauss(0, 0.08))
+    senal = _suavizar_priced_in(titular, senal)
     confianza = _clip(confianza + rng.gauss(0, 0.05), 0.0, 1.0)
     return {"senal": senal, "confianza": confianza, "frase": frase, "fuente": "fallback"}
+

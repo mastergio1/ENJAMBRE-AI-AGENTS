@@ -126,15 +126,18 @@ Ver [libreta-honesta.md](libreta-honesta.md). n=632 con IA. Dirección
 sí se usaron. Una tanda nueva (paso 3) espera la clave en el entorno.
 
 
-### Paso 3 — una línea en el prompt (sí gasta API)
+### Paso 3 — una línea en el prompt (sí gasta API) — CÓDIGO LISTO 3-sep
 
-Cuando Giorgio autorice la tanda:
+Ver [mejoras-microfono.md](mejoras-microfono.md). `hipotesis_v1d` añade
+las reglas al prompt (apagadas en baseline). Tanda:
 
-> “Di si esta noticia era una **sorpresa** o **ya estaba en el precio**.
-> Si ya estaba en el precio, tu señal debe ser cercana a 0.”
+```text
+python -m contenido.tanda_microfono --dry
+ENJAMBRE_PERILLAS=hipotesis_v1d python -m contenido.tanda_microfono --n 4
+```
 
-Eso ataca Fed-en-pausa y “as expected” sin tocar el libro. Hipótesis
-aparte, una sesión, contra baseline. Presupuesto: ~US$0.12 × N titulares.
+Falta la clave de Claude en este entorno para rendir. ~US$0.12 × N.
+
 
 ### Paso 4 — hold-out de verdad (el 70 % honesto)
 

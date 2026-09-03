@@ -110,27 +110,21 @@ nunca romper los 5 hechos estilizados, fallback si la API falla.**
    (el enjambre de hoy no cambia). No se activa en producción.
 6. Producción = `conjunto_activo: baseline`. `main` intocado.
 
-### Paso 1 — medir v1c sin gastar API (barato)
+### Paso 1 — medir v1c sin gastar API (barato) — HECHO 3-sep
 
-Correr el banco numérico **solo como red de seguridad**:
+Ver [experimento-v1c.md](experimento-v1c.md). v1c **no infla** días chicos
+(4.1 % → 1.2 %). Extremos casi se mantienen (9.9 % → 8.5 %). Un shock
++0.20 puede cambiar de signo. **No va a producción.**
 
-```text
-python -m contenido.experimento --set baseline --vs hipotesis_v1c --n 1
-```
+### Paso 2 — taxonomía sobre lo ya simulado — HECHO 3-sep
 
-v1c **no debería inflar días chicos** (a diferencia de v1a), porque no
-toca `impacto_base`. Los líderes siguen oyendo el shock completo; solo
-el ambiente de fondo se silencia si es tibio.
+Ver [libreta-honesta.md](libreta-honesta.md). n=632 con IA. Dirección
+**60 % (Wilson 56–64 %)**. Fuerza 0.46. El enjambre se pasa **3×**.
+Índice 54 %. No es 70 %. No está listo.
 
-Si los extremos se caen o los hechos estilizados se rompen → se descarta
-v1c igual que v1a. Sin drama: la rama está aparte.
+**API:** esta máquina no tiene la clave de Claude. Los 632 ya pagados
+sí se usaron. Una tanda nueva (paso 3) espera la clave en el entorno.
 
-### Paso 2 — taxonomía sobre lo ya simulado
-
-Sin API. Agarrar la libreta / backtest que ya existe y partir los errores
-en casillas: *¿fallamos el signo en resultados? ¿exageramos macros
-priced-in?*. Eso dice **dónde** poner el siguiente golpe, no un promedio
-que esconde Nvidia y la Fed en el mismo número.
 
 ### Paso 3 — una línea en el prompt (sí gasta API)
 

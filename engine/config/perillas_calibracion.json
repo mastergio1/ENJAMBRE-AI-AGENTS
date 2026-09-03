@@ -1,6 +1,6 @@
 {
   "version": "perillas_v1",
-  "descripcion": "Perillas de calibración de magnitud (Fase 1). El conjunto 'baseline' reproduce el comportamiento actual. 'hipotesis_v1a' es el experimento limpio (solo 2 perillas). 'hipotesis_v1b' es el paquete completo, no usarlo hasta medir v1a. Activar con ENJAMBRE_PERILLAS=<nombre>.",
+  "descripcion": "Perillas de calibración. El conjunto 'baseline' reproduce el comportamiento actual (identidad). 'hipotesis_v1a' se midió y NO pasa (infla días chicos). 'hipotesis_v1b' es el paquete completo, no usarlo. 'hipotesis_v1c' es la zona muerta anti-v1a (1 perilla, apagada en baseline). Activar con ENJAMBRE_PERILLAS=<nombre>.",
   "conjunto_activo": "baseline",
   "globales": {
     "impacto_base": 1.0,
@@ -11,22 +11,23 @@
     "ruido_lider_sigma": 0.0,
     "ganancia_consenso": 0.8,
     "factor_shock_max": 3.0,
+    "umbral_consenso": 0.0,
     "peso_cerebro_fomo_evangelista": 1.0,
     "peso_cerebro_influencer_optimista": 1.0
   },
   "conjuntos": {
     "baseline": {
-      "nota": "Identidad. Misma reacción que antes de esta rama."
+      "nota": "Identidad. Misma reacción que antes de esta rama. umbral_consenso=0."
     },
     "hipotesis_v1a": {
-      "nota": "Solo 2 perillas: impacto_base 2.0 + umbral_panico 0.45. El resto idéntico al baseline. Una sesión, una hipótesis.",
+      "nota": "MEDIDA Y NO PASA (3-sep-2026): infla días normales ×2 y no mueve extremos. No activar.",
       "globales": {
         "impacto_base": 2.0,
         "umbral_panico": 0.45
       }
     },
     "hipotesis_v1b": {
-      "nota": "Paquete amplio (asimetría, ruido, más cerebros FOMO, perfiles por mercado). NO medir hasta tener v1a. Si v1a no gana, este tampoco se activa.",
+      "nota": "Paquete amplio. NO medir: v1a (que es su núcleo) ya falló. Si se activa, no se aísla nada.",
       "globales": {
         "impacto_base": 2.0,
         "umbral_panico": 0.45,
@@ -68,6 +69,12 @@
           "amplificacion_panico": 1.6,
           "asimetria_downside": 1.15
         }
+      }
+    },
+    "hipotesis_v1c": {
+      "nota": "Anti-v1a. UNA perilla: umbral_consenso 0.25 (zona muerta del tono ambiente). impacto_base sigue en 1. Los líderes siguen hablando. En baseline vale 0.",
+      "globales": {
+        "umbral_consenso": 0.25
       }
     }
   }

@@ -126,14 +126,20 @@ class MercadoEnjambre(mesa.Model):
 
     def aplicar_noticia(self, sentimiento: float) -> None:
         """Inyecta una noticia como número (para tests y calibración).
-        Cada líder forma su señal y la propaga por la red de influencia."""
-        from brains.impacto import factor_residual, transformar_senal
+        Cada líder forma su señal y la propaga por la red de influencia.
+
+        El tono AMBIENTE (lo que sienten todos) pasa por zona_muerta:
+        en baseline no hace nada; en v1c silencia titulares tibios.
+        Los líderes oyen el shock completo — no se les tapa la boca.
+        """
+        from brains.impacto import factor_residual, transformar_senal, zona_muerta
 
         self.intensidad_shock = factor_residual(sentimiento, self.perfil)
-        sentimiento = transformar_senal(sentimiento, self.perfil)
-        self.sentimiento = max(-1.0, min(1.0, self.sentimiento + sentimiento))
+        shock = transformar_senal(sentimiento, self.perfil)
+        ambiente = zona_muerta(shock, self.perfil)
+        self.sentimiento = max(-1.0, min(1.0, self.sentimiento + ambiente))
         for lider in self._lideres:
-            lider.recibir_noticia(sentimiento)
+            lider.recibir_noticia(shock)
         self._propagar_desde_lideres()
 
     def aplicar_titular(self, titular: str, respuestas: list[dict] | None = None,
@@ -186,15 +192,16 @@ class MercadoEnjambre(mesa.Model):
         se vuelve al diccionario — que es exactamente para lo que existe.
         """
         from brains.fallback import sentimiento_lexico
+        from brains.impacto import ganancia_consenso, zona_muerta
 
         ia = [r for r in respuestas if r.get("fuente") in ("api", "cache")]
         peso = sum(r["confianza"] for r in ia)
         if len(ia) < len(respuestas) * MINIMO_IA_CONSENSO or peso <= 0:
-            return sentimiento_lexico(titular)  # la IA no opinó lo suficiente
-        consenso = sum(r["senal"] * r["confianza"] for r in ia) / peso
-        from brains.impacto import ganancia_consenso
-        ganancia = ganancia_consenso()
-        return max(-1.0, min(1.0, consenso * ganancia))
+            crudo = sentimiento_lexico(titular)  # la IA no opinó lo suficiente
+        else:
+            consenso = sum(r["senal"] * r["confianza"] for r in ia) / peso
+            crudo = max(-1.0, min(1.0, consenso * ganancia_consenso()))
+        return zona_muerta(crudo, self.perfil)
 
     def _aplicar_perfil(self, tono: float) -> float:
         """La personalidad del mercado transforma el tono de la noticia.

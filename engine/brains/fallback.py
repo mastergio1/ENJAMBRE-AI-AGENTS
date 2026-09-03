@@ -109,6 +109,63 @@ def es_noticia_macro(titular: str) -> bool:
     return any(p in texto for p in PALABRAS_MACRO)
 
 
+# --- taxonomía léxica (calibración: casillas, no un promedio que esconde Nvidia) ---
+
+_TIPO_RESULTADOS = (
+    "earnings", "eps", "guidance", "outlook", "quarterly", "results",
+    "revenue", "resultados", "ganancias", "trimestre", "beneficio",
+    "posts first", "weak forecast", "smashes estimates",
+)
+_TIPO_GEOPOL = (
+    "tariff", "arancel", "trade war", "guerra comercial", "sanction",
+    "sanciones", "election", "eleccion", "brexit", "yuan", "opec",
+    "opep", "war", "guerra", "invade", "geopolit",
+)
+_PRICED_IN = (
+    "as expected", "as widely expected", "as planned", "in line",
+    "priced in", "no surprise", "holds rates", "rate pause",
+    "como se esperaba", "en linea", "sin sorpresa", "ends qe3",
+    "ends qe", "keeps rates",
+)
+_SORPRESA = (
+    "unexpected", "surprise", "shock", "stun", "stuns", "wipes out",
+    "hotter-than-expected", "beats", "misses", "plunge", "plunges",
+    "crater", "craters", "inesperado", "sorpresa", "desploma",
+    "smash", "crushes estimates", "below zero", "first time",
+)
+
+
+def clasificar_titular(titular: str) -> dict:
+    """Tipo + régimen del titular, sin gastar API.
+
+    tipo: resultados | geopolitica | macro_tasas | otro
+    regimen: priced_in | sorpresa | ambiguo
+
+    Es una red de pesca, no un oráculo: sirve para partir la libreta
+    en casillas (¿fallamos el signo en earnings? ¿exageramos macros
+    que ya estaban en el precio?).
+    """
+    texto = titular.lower()
+    if any(p in texto for p in _TIPO_RESULTADOS):
+        tipo = "resultados"
+    elif any(p in texto for p in _TIPO_GEOPOL):
+        tipo = "geopolitica"
+    elif es_noticia_macro(titular):
+        tipo = "macro_tasas"
+    else:
+        tipo = "otro"
+
+    priced = any(p in texto for p in _PRICED_IN)
+    sorpresa = any(p in texto for p in _SORPRESA)
+    if priced and not sorpresa:
+        regimen = "priced_in"
+    elif sorpresa and not priced:
+        regimen = "sorpresa"
+    else:
+        regimen = "ambiguo"
+    return {"tipo": tipo, "regimen": regimen}
+
+
 def _frase(opciones: tuple, sentimiento: float) -> tuple:
     """Elige el RAMO de frases según la dirección del sentimiento.
 

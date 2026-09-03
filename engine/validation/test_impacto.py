@@ -24,9 +24,11 @@ def test_baseline_es_identidad():
         assert impacto.transformar_senal(s) == pytest.approx(s)
         assert impacto.factor_residual(s) == pytest.approx(1.0)
         assert impacto.factor_shock(s) == pytest.approx(1.0)
+        assert impacto.zona_muerta(s) == pytest.approx(s)
     assert impacto.ganancia_contagio() == pytest.approx(0.7)
     assert impacto.ganancia_consenso() == pytest.approx(0.8)
     assert impacto.ruido_lider_sigma() == 0.0
+    assert impacto.cargar_perillas()["globales"]["umbral_consenso"] == 0.0
 
 
 def test_v1a_solo_dos_perillas(monkeypatch):
@@ -84,6 +86,37 @@ def test_fallback_entiende_aranceles_y_wipeout():
     from brains.fallback import sentimiento_lexico
     assert sentimiento_lexico("US slashes tariffs on Chinese goods") > 0
     assert sentimiento_lexico("Crash wipes out $2 trillion in value") < -0.5
+
+
+def test_clasificar_titular_casillas_conocidas():
+    from brains.fallback import clasificar_titular
+    fed = clasificar_titular("Fed raises rates a quarter point, as widely expected")
+    assert fed["tipo"] == "macro_tasas"
+    assert fed["regimen"] == "priced_in"
+    nvda = clasificar_titular("Nvidia earnings smash expectations; shares soar")
+    assert nvda["tipo"] == "resultados"
+    assert nvda["regimen"] == "sorpresa"
+    tar = clasificar_titular("Sweeping new US tariffs stun markets; stocks sink on trade war fears")
+    assert tar["tipo"] == "geopolitica"
+    assert tar["regimen"] == "sorpresa"
+
+
+def test_v1c_zona_muerta_anti_v1a(monkeypatch):
+    """v1c = 1 perilla. Silencia lo tibio, no multiplica todo (eso era v1a)."""
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1c")
+    impacto.reiniciar_cache()
+    cfg = impacto.cargar_perillas()
+    assert cfg["nombre"] == "hipotesis_v1c"
+    g = cfg["globales"]
+    assert g["umbral_consenso"] == 0.25
+    assert g["impacto_base"] == 1.0  # no se toca el parlante
+    assert impacto.calcular_impacto(0.20) == pytest.approx(0.20)
+    assert impacto.zona_muerta(0.15) == 0.0
+    assert impacto.zona_muerta(0.20) == 0.0
+    assert impacto.zona_muerta(-0.20) == 0.0
+    # soft-threshold: 0.80 - 0.25 = 0.55; el extremo sobrevive, achicado
+    assert impacto.zona_muerta(0.80) == pytest.approx(0.55)
+    assert impacto.zona_muerta(-0.90) == pytest.approx(-0.65)
 
 
 def test_overlay_perfil_no_pisa_volatilidad_en_baseline():

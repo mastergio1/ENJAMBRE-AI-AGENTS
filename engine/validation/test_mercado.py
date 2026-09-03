@@ -99,3 +99,18 @@ def test_aplicar_titular_acepta_y_guarda_el_perfil():
                   for _ in modelo._lideres]
     modelo.aplicar_titular("Oil jumps on supply fears", respuestas=respuestas, perfil=perfil)
     assert modelo.perfil["tipo"] == "petroleo"
+
+
+def test_v1c_silencia_ambiente_y_los_lideres_hablan(monkeypatch):
+    """Anti-v1a: el tono de fondo se apaga si es tibio; los líderes no."""
+    from brains import impacto
+
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1c")
+    impacto.reiniciar_cache()
+    modelo = MercadoEnjambre(seed=5, ticks_horizonte=10)
+    modelo.aplicar_noticia(0.20)  # por debajo del umbral 0.25
+    assert modelo.sentimiento == pytest.approx(0.0)
+    hablan = sum(1 for l in modelo._lideres if abs(l.senal) > 0.05)
+    assert hablan > 0
+    monkeypatch.delenv("ENJAMBRE_PERILLAS", raising=False)
+    impacto.reiniciar_cache()

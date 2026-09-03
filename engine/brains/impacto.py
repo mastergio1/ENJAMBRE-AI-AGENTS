@@ -2,11 +2,12 @@
 
 El precio SIGUE emergiendo del libro de órdenes. Esta función no lo
 fija. Solo transforma la señal (tono de la noticia / señal del líder)
-para que un shock grande mueva más que uno chico, con umbral de pánico
+para que un shock grande mueve más que uno chico, con umbral de pánico
 y asimetría a la baja.
 
-Conjunto 'baseline' (perillas identidad): calcular_impacto(s) == s.
-Así esta rama no cambia el enjambre hasta que se active una hipótesis.
+Conjunto 'baseline' (perillas identidad): calcular_impacto(s) == s y
+zona_muerta(s) == s. Así esta rama no cambia el enjambre hasta que se
+active una hipótesis.
 """
 
 from __future__ import annotations
@@ -27,6 +28,7 @@ _PERILLAS_IMPACTO = (
     "ganancia_contagio",
     "factor_shock_max",
     "volatilidad_base",
+    "umbral_consenso",
 )
 
 
@@ -148,6 +150,26 @@ def factor_residual(senal_agregada: float, perfil: dict | None = None) -> float:
     if abs(recortada) < 1e-9:
         return 1.0
     return max(1.0, min(tope, abs(cruda) / abs(recortada)))
+
+
+def zona_muerta(senal: float, perfil: dict | None = None) -> float:
+    """Soft-threshold del consenso ambiente. Identidad si umbral_consenso ≤ 0.
+
+    Si |señal| ≤ umbral → 0 (el mercado no siente un titular tibio).
+    Si |señal| > umbral → se le resta el umbral (lasso / James-Stein suave).
+
+    Solo debe aplicarse al TONO AMBIENTE (lo que sienten todos por leer el
+    mismo titular). Los líderes siguen hablando por la red: esa es la
+    hipótesis v1c, anti-v1a.
+    """
+    umbral = float(knobs_de(perfil).get("umbral_consenso", 0.0))
+    if umbral <= 0:
+        return senal
+    magnitud = abs(senal)
+    if magnitud <= umbral:
+        return 0.0
+    signo = 1.0 if senal >= 0 else -1.0
+    return signo * (magnitud - umbral)
 
 
 def ganancia_contagio(perfil: dict | None = None) -> float:

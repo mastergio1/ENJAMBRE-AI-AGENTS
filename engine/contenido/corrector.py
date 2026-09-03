@@ -15,6 +15,8 @@ y se reintenta en la próxima corrida — el corrector nunca lanza.
 """
 
 import json
+import math
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 from statistics import mean
 
@@ -23,6 +25,7 @@ from contenido import persistencia, vocabulario
 DIAS_ESPERA = 1    # edad mínima de una destacada antes de intentar corregirla
 RUEDAS = 2         # ventana de medición: días de mercado tras la noticia
 UMBRAL_PLANO = 0.3  # bajo este |%|, la dirección se considera plana
+MIN_CASOS_PRODUCCION = 80  # menos que esto, listo_produccion es siempre False
 
 
 def cerebros_ia(lideres: list[dict]) -> bool:
@@ -107,11 +110,59 @@ def _signo(x: float) -> int:
     return 0 if abs(x) < UMBRAL_PLANO else (1 if x > 0 else -1)
 
 
-def ratio_fuerza(sim_pct: float, real_pct: float, tope: float = 1.5) -> float | None:
-    """|retorno_sim| / |retorno_real|, capeado. None si el real no se movió."""
+def wilson_intervalo(aciertos: int, n: int, z: float = 1.96) -> tuple[float | None, float | None]:
+    """Intervalo de Wilson 95 % para una proporción. Honesto con n chico.
+
+    8/12 = 67 % se siente casi 70; Wilson da ~[39 %, 86 %]. Sin esto
+    la libreta miente.
+    """
+    if n <= 0:
+        return (None, None)
+    p = aciertos / n
+    z2 = z * z
+    denom = 1.0 + z2 / n
+    centro = (p + z2 / (2.0 * n)) / denom
+    margen = z * math.sqrt((p * (1.0 - p) + z2 / (4.0 * n)) / n) / denom
+    return (round(max(0.0, centro - margen), 3), round(min(1.0, centro + margen), 3))
+
+
+def ratio_fuerza_bruto(sim_pct: float, real_pct: float) -> float | None:
+    """|sim| / |real| sin capear. >1 = el enjambre exageró. None si el real no se movió."""
     if abs(real_pct) < UMBRAL_PLANO:
         return None
-    return min(tope, abs(sim_pct) / abs(real_pct))
+    return abs(sim_pct) / abs(real_pct)
+
+
+def ratio_fuerza(sim_pct: float, real_pct: float, tope: float | None = None) -> float | None:
+    """Fuerza simétrica ∈ (0, 1]: 1 si las magnitudes coinciden.
+
+    Equivale a exp(-|log(|sim|/|real|)|) = min(s/r, r/s).
+    Vale 0.5 si el enjambre hizo el doble O la mitad. El `tope` se ignora
+    (quedó de cuando se capeaba a 1.5 y el exceso se contaba perfecto).
+    """
+    bruto = ratio_fuerza_bruto(sim_pct, real_pct)
+    if bruto is None:
+        return None
+    if bruto <= 0.0:
+        return 0.0
+    return bruto if bruto <= 1.0 else 1.0 / bruto
+
+
+def clasificar_error(sim_pct: float, real_pct: float) -> str:
+    """Una etiqueta por caso: acierto / signo / exagera / se_queda_corto / plano."""
+    s, r = _signo(sim_pct), _signo(real_pct)
+    if s == 0 and r == 0:
+        return "ambos_planos"
+    if s == 0 or r == 0:
+        return "plano"
+    if s != r:
+        return "signo"
+    bruto = abs(sim_pct) / max(abs(real_pct), 1e-9)
+    if bruto > 1.5:
+        return "exagera"
+    if bruto < 0.5:
+        return "se_queda_corto"
+    return "acierto"
 
 
 def error_trayectoria(sim_pct: float, real_pct: float) -> float:
@@ -120,26 +171,40 @@ def error_trayectoria(sim_pct: float, real_pct: float) -> float:
     return min(1.0, abs(sim_pct - real_pct) / denom)
 
 
+def _vacio() -> dict:
+    return {
+        "casos": 0, "evaluables": 0, "aciertos_direccion": 0,
+        "tasa_acierto": None, "ratio_fuerza_medio": None,
+        "ratio_fuerza_bruto": None, "pct_dentro_30": None,
+        "error_trayectoria": None, "loss": None,
+        "listo_produccion": False, "pasa_metricas": False,
+        "n_minimo_produccion": MIN_CASOS_PRODUCCION,
+        "wilson_lo": None, "wilson_hi": None,
+        "desglose_errores": {},
+        "magnitud_media_sim": None, "magnitud_media_real": None,
+    }
+
+
 def evaluar_casos(casos: list[tuple[float, float]],
-                  error_estilizados: float | None = None) -> dict:
+                  error_estilizados: float | None = None,
+                  titulares: list[str] | None = None) -> dict:
     """Loss oficial de calibración sobre pares (sim_pct, real_pct).
 
-    Loss = 0.40·E_dir + 0.35·(1-R_fuerza) + 0.15·E_estilizados + 0.10·E_trayectoria
+    Loss = 0.40·E_dir + 0.35·(1-R_fuerza_simétrica) + 0.15·E_estilizados + 0.10·E_trayectoria
+    R_fuerza es simétrica: pasarse de largo cuesta igual que quedarse corto.
     Si no hay hechos estilizados, se reparte ese 0.15 entre dirección y fuerza.
+
+    listo_produccion exige además n ≥ 80. pasa_metricas ignora n (para tests).
     """
     if not casos:
-        return {
-            "casos": 0, "evaluables": 0, "aciertos_direccion": 0,
-            "tasa_acierto": None, "ratio_fuerza_medio": None,
-            "pct_dentro_30": None, "error_trayectoria": None,
-            "loss": None, "listo_produccion": False,
-            "magnitud_media_sim": None, "magnitud_media_real": None,
-        }
+        return _vacio()
     evaluables = [(s, r) for s, r in casos if _signo(s) or _signo(r)]
     aciertos = sum(1 for s, r in evaluables if _signo(s) == _signo(r))
     e_dir = 1.0 - (aciertos / len(evaluables)) if evaluables else 1.0
     ratios = [x for x in (ratio_fuerza(s, r) for s, r in casos) if x is not None]
+    brutos = [x for x in (ratio_fuerza_bruto(s, r) for s, r in casos) if x is not None]
     r_fuerza = mean(ratios) if ratios else 0.0
+    r_bruto = mean(brutos) if brutos else 0.0
     tray = [error_trayectoria(s, r) for s, r in casos]
     e_tray = mean(tray) if tray else 1.0
     denom_dentro = sum(1 for _, r in casos if abs(r) >= UMBRAL_PLANO)
@@ -153,46 +218,73 @@ def evaluar_casos(casos: list[tuple[float, float]],
     else:
         w_dir, w_fza, w_est, w_tray = 0.40, 0.35, 0.15, 0.10
         e_est = max(0.0, min(1.0, error_estilizados))
+    # r_fuerza ya ∈ (0, 1]; no hace falta min(1, ·) — eso es lo que
+    # antes convertía un exceso capeado a 1.5 en error 0.
     loss = (w_dir * e_dir
-            + w_fza * (1.0 - min(1.0, r_fuerza))
+            + w_fza * (1.0 - r_fuerza)
             + w_est * e_est
             + w_tray * e_tray)
     tasa = round(aciertos / len(evaluables), 2) if evaluables else None
-    return {
+    wilson_lo, wilson_hi = wilson_intervalo(aciertos, len(evaluables))
+    pasa = bool(
+        tasa is not None and tasa >= 0.70
+        and r_fuerza >= 0.70
+        and (pct_dentro or 0) >= 0.40
+    )
+    desglose = dict(Counter(clasificar_error(s, r) for s, r in casos))
+    out = {
         "casos": len(casos),
         "evaluables": len(evaluables),
         "aciertos_direccion": aciertos,
         "tasa_acierto": tasa,
+        "wilson_lo": wilson_lo,
+        "wilson_hi": wilson_hi,
         "ratio_fuerza_medio": round(r_fuerza, 3) if ratios else None,
+        "ratio_fuerza_bruto": round(r_bruto, 3) if brutos else None,
         "pct_dentro_30": round(pct_dentro, 3) if pct_dentro is not None else None,
         "error_trayectoria": round(e_tray, 3),
         "error_estilizados": error_estilizados,
         "loss": round(loss, 4),
-        "listo_produccion": bool(
-            tasa is not None and tasa >= 0.70
-            and r_fuerza >= 0.70
-            and (pct_dentro or 0) >= 0.40
-        ),
+        "pasa_metricas": pasa,
+        "listo_produccion": bool(pasa and len(evaluables) >= MIN_CASOS_PRODUCCION),
+        "n_minimo_produccion": MIN_CASOS_PRODUCCION,
+        "desglose_errores": desglose,
         "magnitud_media_sim": round(mean(abs(s) for s, _ in casos), 2),
         "magnitud_media_real": round(mean(abs(r) for _, r in casos), 2),
     }
+    if titulares and len(titulares) == len(casos):
+        from brains.fallback import clasificar_titular
+        cajas = Counter()
+        for (s, r), tit in zip(casos, titulares):
+            t = clasificar_titular(tit or "")
+            cajas[f"{t['tipo']}|{t['regimen']}|{clasificar_error(s, r)}"] += 1
+        out["desglose_taxonomia"] = dict(cajas)
+    return out
 
 
-def _resumir(casos: list[tuple[float, float]]) -> dict:
+def _resumir(casos: list[tuple[float, float]],
+             titulares: list[str] | None = None) -> dict:
     """Las métricas de un conjunto de casos (sim_pct, real_pct)."""
-    extra = evaluar_casos(casos)
+    extra = evaluar_casos(casos, titulares=titulares)
     return {
         "casos": extra["casos"],
         "evaluables": extra["evaluables"],
         "aciertos_direccion": extra["aciertos_direccion"],
         "tasa_acierto": extra["tasa_acierto"],
+        "wilson_lo": extra.get("wilson_lo"),
+        "wilson_hi": extra.get("wilson_hi"),
         "magnitud_media_sim": extra.get("magnitud_media_sim"),
         "magnitud_media_real": extra.get("magnitud_media_real"),
         "ratio_fuerza_medio": extra["ratio_fuerza_medio"],
+        "ratio_fuerza_bruto": extra.get("ratio_fuerza_bruto"),
         "pct_dentro_30": extra["pct_dentro_30"],
         "error_trayectoria": extra["error_trayectoria"],
         "loss": extra["loss"],
+        "pasa_metricas": extra.get("pasa_metricas"),
         "listo_produccion": extra["listo_produccion"],
+        "n_minimo_produccion": extra.get("n_minimo_produccion", MIN_CASOS_PRODUCCION),
+        "desglose_errores": extra.get("desglose_errores") or {},
+        "desglose_taxonomia": extra.get("desglose_taxonomia"),
     }
 
 
@@ -207,7 +299,7 @@ def libreta(conexion=None) -> dict:
     conexion = conexion or persistencia.conectar()
     try:
         filas = conexion.execute(
-            "SELECT resumen_json, reaccion_real, fuente FROM simulaciones "
+            "SELECT titular, resumen_json, reaccion_real, fuente FROM simulaciones "
             "WHERE reaccion_real IS NOT NULL AND (destacada = 1 OR fuente = 'backtest')"
         ).fetchall()
     finally:
@@ -215,6 +307,7 @@ def libreta(conexion=None) -> dict:
             conexion.close()
 
     vivo, historico, excluidos = [], [], 0
+    vivo_tits, hist_tits = [], []
     for fila in filas:
         reaccion = json.loads(fila["reaccion_real"])
         if reaccion.get("cerebros") == "respaldo":
@@ -222,12 +315,24 @@ def libreta(conexion=None) -> dict:
             continue
         sim = float(json.loads(fila["resumen_json"]).get("direccion_pct") or 0)
         real = float(reaccion.get("pct_real") or 0)
-        (historico if fila["fuente"] == "backtest" else vivo).append((sim, real))
+        tit = fila["titular"] or ""
+        if fila["fuente"] == "backtest":
+            historico.append((sim, real))
+            hist_tits.append(tit)
+        else:
+            vivo.append((sim, real))
+            vivo_tits.append(tit)
 
+    n_eval = len(vivo) + len(historico)
     return {
-        **_resumir(vivo + historico),
-        "en_vivo": _resumir(vivo),
-        "historico": _resumir(historico),
+        **_resumir(vivo + historico, titulares=vivo_tits + hist_tits),
+        "en_vivo": _resumir(vivo, titulares=vivo_tits),
+        "historico": _resumir(historico, titulares=hist_tits),
         "excluidos_respaldo": excluidos,
-        "nota": "con menos de 30 casos, la tasa es anecdótica — seguir acumulando",
+        "nota": (
+            f"con menos de {MIN_CASOS_PRODUCCION} casos hold-out la tasa es hipótesis, "
+            "no calibración — el intervalo de Wilson muestra la incertidumbre"
+            if n_eval < MIN_CASOS_PRODUCCION
+            else "hold-out suficiente para hablar de calibración, no de marketing"
+        ),
     }

@@ -176,8 +176,8 @@ def contraste(base: dict, hypo: dict) -> dict:
         "segundos": round((base.get("segundos") or 0) + (hypo.get("segundos") or 0), 1),
         "aviso": (
             "Respuesta a shock numérico, no acierto vs mercado real. "
-            "v1a sirve para el paso 2 (noticias reales) si extremos_crecen_mas "
-            "y direccion_se_mantiene."
+            "v1a (subir el volumen) ya no pasa. v1c (zona muerta) se juzga "
+            "al revés: no debe inflar días chicos ni tumbar los extremos."
         ),
     }
 

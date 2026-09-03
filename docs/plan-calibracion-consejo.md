@@ -3,7 +3,10 @@
 Fecha: 3 de septiembre de 2026  
 Rama: `calibracion/impacto-no-lineal` (no toca `main`)  
 Para: Giorgio, Rubicón Lab  
-Costo de lo implementado hoy: **US$0** (sin API)
+
+**Hoja de ruta operativa (qué falta y en qué orden):**
+[hoja-de-ruta.md](hoja-de-ruta.md). Este archivo es el diagnóstico del consejo.
+
 
 Cuatro roles miraron el mismo problema. Este archivo unifica lo que
 encontraron y el plan que se está ejecutando. Lenguaje llano a propósito.

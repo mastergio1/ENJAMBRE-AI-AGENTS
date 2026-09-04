@@ -33,8 +33,8 @@ El parlante (10.000 agentes) ya grita ~11 % en un crash. El cuello es el
 | v1a subir volumen | Medida. **No pasa.** |
 | v1b paquete de perillas | Código. **No usar.** |
 | v1c zona muerta (tapar susurros) | Medida. No va a producción sola. |
-| v1d prompt “¿sorpresa o ya estaba en el precio?” | **Código listo. No medido** (falta clave Claude). |
-| v1e = v1c + v1d | Código. **No medir** hasta tener v1d solo. |
+| v1d prompt “¿sorpresa o ya estaba en el precio?” | **Medida 4-sep. No pasa.** |
+| v1e = v1c + v1d | Código. **No medir:** v1d no pasó. |
 
 ---
 
@@ -51,40 +51,19 @@ El parlante (10.000 agentes) ya grita ~11 % en un crash. El cuello es el
 
 ## Lo que falta — fases
 
-### Fase A — Destrabar (vos, 10 minutos)
+### Fase A — Destrabar — HECHO 4-sep
 
-**Falta:** la clave de Claude en el entorno donde se rinden los exámenes.
-
-Sin eso, v1d está escrita y no se puede poner a prueba. El saldo puede
-estar recargado en Anthropic; esta máquina no la ve.
-
-**Hecho cuando:** un titular de prueba sale con `fuente: api` (no `fallback`).
+Clave de Claude recibida. Un titular de prueba salió `fuente: api`.
 
 ---
 
-### Fase B — Medir v1d (~US$1.50, una sesión)
+### Fase B — Medir v1d — MEDIDA 4-sep. **No pasa.**
 
-**Qué es:** los cerebros leen con 3 reglas nuevas:
-- si ya estaba en el precio → señal casi 0
-- si es earnings → beat/miss de *esa* empresa
-- si hay sopa de tickers → el hecho, no el primer nombre
+Ver [experimento-v1d.md](experimento-v1d.md). 12 vs 12, Claude real.
 
-**Cómo:** tanda de 12 titulares ya armada (4 Fed “as expected”, 3 crashes,
-3 resultados, 2 ruido), baseline vs v1d.
-
-```text
-python -m contenido.tanda_microfono --dry          # ver la lista, US$0
-ENJAMBRE_PERILLAS=baseline python -m contenido.tanda_microfono --n 12
-ENJAMBRE_PERILLAS=hipotesis_v1d python -m contenido.tanda_microfono --n 12
-```
-
-**Pasa si:**
-- Fed-en-pausa ya no se desploma (el grito baja, el signo no se inventa)
-- Lehman / aranceles **siguen** siendo fuertes
-- Target/Medline ya no salen +50 % contra +4 % real
-
-**Si no pasa:** se descarta v1d. No se enciende v1e. Se va a la Fase D
-(limpiar datos) y se piensa el siguiente golpe al prompt, no al volumen.
+Fed priced-in: 4.6 % → 4.9 % (no calló; inventó signos).
+Crashes: siguieron fuertes. Target +42 → +53. Lilly +42 → +12.
+**No se enciende v1e.** Siguiente palanca: campo `sorpresa` 0–1, no volumen.
 
 ---
 
@@ -101,12 +80,18 @@ Queda opcional: etiquetar a mano priced-in vs sorpresa. No bloquea el paso 3.
 
 ---
 
-### Fase D — Si v1d gana: v1e (barato)
+### Fase D — v1e — SALTADA
 
-Juntar zona muerta (v1c) + prompt (v1d). **Solo si B pasó.**
+B no pasó. No se junta zona muerta + prompt.
 
-Si se juntan antes, no se sabe qué curó. Una sesión, mismo banco de 12,
-después una tanda un poco más grande (20–30).
+---
+
+### Fase F (adelantada) — campo `sorpresa` 0–1
+
+v1d no disciplina magnitud. El siguiente golpe es un número en el JSON
+del cerebro que **multiplica** la señal si no hay sorpresa. Una palanca,
+apagada, medida como v1d. No es volumen (v1a).
+
 
 ---
 
@@ -139,7 +124,7 @@ Estas **no están implementadas**. No se tocan antes del hold-out.
 
 | Mejora | Qué haría | Cuándo |
 |---|---|---|
-| Campo `sorpresa` en el JSON del cerebro (número 0–1) | Medir priced-in de verdad, no solo con el prompt | Si v1d ayuda pero no basta |
+| Campo `sorpresa` en el JSON del cerebro (número 0–1) | Medir priced-in de verdad, no solo con el prompt | **Siguiente palanca** (v1d no pasó) |
 | GEPA / DSPy sobre los 8 prompts | Ajustar el oído de cada arquetipo | Caro; después de E |
 | Más peso a Quant en earnings, Doomer en crashes (MoE suave) | Menos cancelación FOMO vs Quant (caso Nvidia) | Cuando haya n≥30 por casilla |
 | Retorno anormal (CAR) en vez del close-to-close | Quitar el ruido del día | Cuando la libreta esté limpia |

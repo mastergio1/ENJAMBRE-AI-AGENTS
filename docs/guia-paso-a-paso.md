@@ -56,27 +56,22 @@ No cambies `main`. No subas volumen. No fusiones nada.
 
 ---
 
-## Paso 3 — Examen chico del oído (yo, ~US$3)
+## Paso 3 — Examen chico del oído ✅ HECHO 4-sep. **No pasa.**
 
-12 titulares ya armados, dos veces:
+Ver [experimento-v1d.md](experimento-v1d.md). 12 vs 12, cerebros Claude.
 
-- 12 con el enjambre de hoy (baseline)
-- 12 con el prompt nuevo (v1d: ¿sorpresa o ya estaba en el precio?)
-
-**Pasa si:**
-- “Fed, como se esperaba” ya no se desploma
-- “Lehman / aranceles” siguen siendo fuertes
-- Target / Lilly no salen +50 % contra +4 % real
-
-**Si no pasa:** se tira v1d. No se enciende el paquete.
-Siguiente golpe al oído, no al volumen.
+Fed-en-pausa no se calló (4.6 % → 4.9 %) e inventó signos.
+Lehman siguió gritando (bien). Target pasó de +42 % a +53 %.
+No se enciende v1e. No se fusiona. Siguiente: campo `sorpresa` (paso 3b),
+no el paquete del paso 4.
 
 ---
 
-## Paso 4 — Solo si el 3 pasó (yo, ~US$2–4)
+## Paso 4 — SALTADO (el 3 no pasó)
 
-Se junta v1d (oído) + v1c (tapar susurros del ambiente).
-Misma tanda, un poco más grande. Una palanca ya medida + otra.
+v1e (oído + zona muerta) no se mide. Si se juntan dos palancas
+después de que una perdió, no se sabe nada.
+
 
 ---
 

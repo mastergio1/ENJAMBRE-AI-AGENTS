@@ -21,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 from statistics import mean
 
 from contenido import persistencia, vocabulario
+from contenido.simbolo import apto_calibracion, es_ruido, simbolo_del_hecho
 
 DIAS_ESPERA = 1    # edad mínima de una destacada antes de intentar corregirla
 RUEDAS = 2         # ventana de medición: días de mercado tras la noticia
@@ -77,7 +78,13 @@ def corregir_pendientes(conexion=None, obtener_variacion=None, limite: int = 10,
         pendientes = persistencia.destacadas_sin_correccion(conexion, antes_de, limite)
         corregidas, esperando = [], 0
         for sim in pendientes:
-            simbolo = (sim["simbolos"] or "").split(",")[0].strip().upper()
+            simbolo = simbolo_del_hecho(sim.get("titular") or "", sim["simbolos"] or "")
+            if not simbolo:
+                esperando += 1  # sopa sin ancla: no puntuar el primer ticker al azar
+                continue
+            if es_ruido(sim.get("titular") or ""):
+                esperando += 1  # ruido Benzinga: no es un examen
+                continue
             variacion = obtener_variacion(simbolo, sim["fecha"], ruedas) if simbolo else None
             if variacion is None:
                 esperando += 1  # sin datos todavía: la próxima corrida reintenta
@@ -320,14 +327,16 @@ def libreta(conexion=None) -> dict:
     conexion = conexion or persistencia.conectar()
     try:
         filas = conexion.execute(
-            "SELECT titular, resumen_json, reaccion_real, fuente FROM simulaciones "
-            "WHERE reaccion_real IS NOT NULL AND (destacada = 1 OR fuente = 'backtest')"
+            "SELECT s.titular, s.resumen_json, s.reaccion_real, s.fuente, "
+            "COALESCE(t.simbolos, '') AS simbolos "
+            "FROM simulaciones s LEFT JOIN titulares t ON t.sim_id = s.id "
+            "WHERE s.reaccion_real IS NOT NULL AND (s.destacada = 1 OR s.fuente = 'backtest')"
         ).fetchall()
     finally:
         if propia:
             conexion.close()
 
-    vivo, historico, excluidos = [], [], 0
+    vivo, historico, excluidos, excluidos_ruido = [], [], 0, 0
     vivo_tits, hist_tits = [], []
     por_mercado: dict[str, list] = {}
     por_mercado_tits: dict[str, list] = {}
@@ -336,10 +345,15 @@ def libreta(conexion=None) -> dict:
         if reaccion.get("cerebros") == "respaldo":
             excluidos += 1  # simulado sin IA (sin saldo): no califica al titular
             continue
+        tit = fila["titular"] or ""
+        sims = fila["simbolos"] or ""
+        scored = reaccion.get("simbolo") or ""
+        if not apto_calibracion(tit, sims, scored):
+            excluidos_ruido += 1  # ruido / sopa mal puntuada
+            continue
         sim = float(json.loads(fila["resumen_json"]).get("direccion_pct") or 0)
         real = float(reaccion.get("pct_real") or 0)
-        tit = fila["titular"] or ""
-        mkt = mercado_de(reaccion.get("simbolo") or "", tit)
+        mkt = mercado_de(scored or "", tit)
         por_mercado.setdefault(mkt, []).append((sim, real))
         por_mercado_tits.setdefault(mkt, []).append(tit)
         if fila["fuente"] == "backtest":
@@ -365,6 +379,7 @@ def libreta(conexion=None) -> dict:
         "por_mercado": {k: _resumir(v, titulares=por_mercado_tits[k])
                         for k, v in por_mercado.items()},
         "excluidos_respaldo": excluidos,
+        "excluidos_ruido": excluidos_ruido,
         "nota": (
             f"con menos de {MIN_CASOS_PRODUCCION} casos hold-out (índice+acción) la tasa es hipótesis, "
             "no calibración — el intervalo de Wilson muestra la incertidumbre"

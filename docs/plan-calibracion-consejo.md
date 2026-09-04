@@ -4,8 +4,9 @@ Fecha: 3 de septiembre de 2026
 Rama: `calibracion/impacto-no-lineal` (no toca `main`)  
 Para: Giorgio, Rubicón Lab  
 
-**Hoja de ruta operativa (qué falta y en qué orden):**
-[hoja-de-ruta.md](hoja-de-ruta.md). Este archivo es el diagnóstico del consejo.
+**Hoja de ruta operativa:** [hoja-de-ruta.md](hoja-de-ruta.md).  
+**Guía paso a paso (qué hace Giorgio, qué hago yo):** [guia-paso-a-paso.md](guia-paso-a-paso.md).
+
 
 
 Cuatro roles miraron el mismo problema. Este archivo unifica lo que

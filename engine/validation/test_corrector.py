@@ -57,7 +57,8 @@ def test_corrige_y_redacta_epilogo_publicable():
     conexion.close()
 
     assert [c["sim_id"] for c in resultado["corregidas"]] == [sim_id]
-    assert resultado["corregidas"][0]["simbolo"] == "BX"  # el primer ticker
+    assert resultado["corregidas"][0]["simbolo"] == "BX"  # el símbolo del hecho
+
     assert datos["reaccion_real"]["pct_real"] == -1.8
     # el epílogo automático existe, menciona lo esencial y es CMF-limpio
     assert "BX" in datos["epilogo"]
@@ -150,4 +151,46 @@ def test_libreta_incluye_loss_y_ratio_fuerza():
     assert resumen["ratio_fuerza_medio"] is not None
     assert resumen["loss"] is not None
     assert "listo_produccion" in resumen
+
+
+def test_corrige_lilly_no_app():
+    conexion = persistencia.conectar()
+    sim_id = _destacada(
+        conexion,
+        "Eli Lilly Could Swing Over $76 Billion In Value After Earnings",
+        3.0,
+        "APP,GILD,HWM,LLY,NET,SHOP",
+    )
+    visto = []
+
+    def obtener(simbolo, desde_iso, ruedas=2):
+        visto.append(simbolo)
+        return _variacion(1.2)(simbolo, desde_iso, ruedas)
+
+    resultado = corrector.corregir_pendientes(conexion, obtener_variacion=obtener)
+    conexion.close()
+    assert visto == ["LLY"]
+    assert resultado["corregidas"][0]["simbolo"] == "LLY"
+
+
+def test_no_corrige_ruido_whale():
+    conexion = persistencia.conectar()
+    _destacada(conexion, "Check Out What Whales Are Doing With SLB", 4.0, "SLB")
+    resultado = corrector.corregir_pendientes(conexion, obtener_variacion=_variacion(1.0))
+    conexion.close()
+    assert resultado["corregidas"] == []
+    assert resultado["esperando"] == 1
+
+
+def test_libreta_excluye_ruido():
+    conexion = persistencia.conectar()
+    bueno = _destacada(conexion, "Apple reports record iPhone sales", 2.0, "AAPL")
+    ruido = _destacada(conexion, "Check Out What Whales Are Doing With SLB", 8.0, "SLB")
+    persistencia.guardar_reaccion_real(conexion, bueno, {"pct_real": 1.5, "simbolo": "AAPL"})
+    persistencia.guardar_reaccion_real(conexion, ruido, {"pct_real": 1.5, "simbolo": "SLB"})
+    resumen = corrector.libreta(conexion)
+    conexion.close()
+    assert resumen["casos"] == 1
+    assert resumen["excluidos_ruido"] == 1
+    assert resumen["excluidos_respaldo"] == 0
 

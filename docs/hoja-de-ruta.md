@@ -88,19 +88,16 @@ ENJAMBRE_PERILLAS=hipotesis_v1d python -m contenido.tanda_microfono --n 12
 
 ---
 
-### Fase C — Limpiar la libreta (US$0, se puede en paralelo a A)
+### Fase C — Limpiar la libreta (US$0) — HECHO 3-sep
 
-Esto **sí falta implementar**. No mueve el mercado; evita que la nota mienta.
+Ver [libreta-limpia.md](libreta-limpia.md) y [guia-paso-a-paso.md](guia-paso-a-paso.md).
 
-| Trabajo | Por qué |
-|---|---|
-| Puntuar el símbolo del **hecho**, no el primer ticker de la lista | Hoy “Eli Lilly…” se compara con APP |
-| Sacar de la nota “whale activity / most-searched / crypto update” | No son exámenes, son ruido |
-| Banco de hold-out **solo SPY/QQQ + acciones líquidas** | 233/632 son cripto; ensucian el 70 % |
-| Etiquetar a mano 30–40 titulares priced-in vs sorpresa | El léxico deja ~450 en “otro/ambiguo” |
+- Corrector: símbolo del hecho (Lilly → LLY, no APP).
+- Libreta: saca whales / most-searched / sopas mal puntuadas.
+- Banco congelado: 40 ajuste + **80 hold-out** en `banco_holdout.json`.
+- Índice+acción limpio: **275 casos, 57 %**, fuerza 0.46. Sigue sin 70 %.
 
-**Hecho cuando:** la libreta de índice+acción no mezcla sopas de tickers
-ni cables de Benzinga que no son un evento.
+Queda opcional: etiquetar a mano priced-in vs sorpresa. No bloquea el paso 3.
 
 ---
 

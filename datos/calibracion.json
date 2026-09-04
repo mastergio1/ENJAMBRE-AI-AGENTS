@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-02T15:45:57+00:00",
+ "generado": "2026-09-04T12:28:01+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14039,6 +14039,46 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una subida de +0.8%. En el mercado real, KYNB cerró en 8.105 el 2026-09-02 (venía de 7.91 el 2026-08-31): +2.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "3b6257590a945a73",
+   "origen": "en_vivo",
+   "fecha": "2026-09-02T12:47:21+00:00",
+   "titular": "New York Fed's Williams Says On CNBC That Tariffs And Middle East War Are Big Drivers Of Inflation Over Target, But Sees 'Trend Toward Lower Inflation'; Says Inflation Expectations Are Contained",
+   "simbolos": "SPY",
+   "direccion_pct": -10.47,
+   "volatilidad_pct": 1.24,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": 1.51,
+    "cierre_base": 761.63,
+    "cierre_final": 773.115,
+    "fecha_base": "2026-09-01",
+    "fecha_final": "2026-09-03",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -10.5%. En el mercado real, SPY cerró en 773.115 el 2026-09-03 (venía de 761.63 el 2026-09-01): +1.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "5fb61dc4447675c0",
+   "origen": "en_vivo",
+   "fecha": "2026-09-02T12:47:37+00:00",
+   "titular": "Guggenheim Reiterates Neutral on Palo Alto Networksto Neutral",
+   "simbolos": "PANW",
+   "direccion_pct": 8.32,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "PANW",
+    "pct_real": -8.32,
+    "cierre_base": 362.06,
+    "cierre_final": 331.94,
+    "fecha_base": "2026-09-01",
+    "fecha_final": "2026-09-03",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +8.3%. En el mercado real, PANW cerró en 331.94 el 2026-09-03 (venía de 362.06 el 2026-09-01): -8.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

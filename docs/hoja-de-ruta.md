@@ -35,6 +35,7 @@ El parlante (10.000 agentes) ya grita ~11 % en un crash. El cuello es el
 | v1c zona muerta (tapar susurros) | Medida. No va a producción sola. |
 | v1d prompt “¿sorpresa o ya estaba en el precio?” | **Medida 4-sep. No pasa.** |
 | v1e = v1c + v1d | Código. **No medir:** v1d no pasó. |
+| v1f senal × sorpresa | **Medida 4-sep. Oído sí, producto no.** |
 
 ---
 

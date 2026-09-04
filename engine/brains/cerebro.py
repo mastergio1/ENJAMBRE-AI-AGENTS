@@ -13,7 +13,7 @@ import os
 import re
 from pathlib import Path
 
-from brains.arquetipos import INSTRUCCION_JSON, INSTRUCCION_MICROFONO, POR_ID
+from brains.arquetipos import INSTRUCCION_JSON, INSTRUCCION_MICROFONO, INSTRUCCION_SORPRESA, POR_ID
 from brains.fallback import respuesta_fallback
 from llm_texto import texto_de
 
@@ -32,8 +32,12 @@ RUTA_CACHE = Path(__file__).parent / "cache" / "respuestas.json"
 
 def _version_cache() -> str:
     """Si cambia el prompt, la caché vieja no puede responder."""
-    from brains.impacto import prompt_microfono
-    return "microfono_v1" if prompt_microfono() else "v0"
+    from brains.impacto import escalar_sorpresa, prompt_microfono
+    if escalar_sorpresa():
+        return "sorpresa_v1"
+    if prompt_microfono():
+        return "microfono_v1"
+    return "v0"
 
 
 def _clave_cache(titular: str, arquetipo_id: str, semilla: int) -> str:
@@ -42,9 +46,10 @@ def _clave_cache(titular: str, arquetipo_id: str, semilla: int) -> str:
 
 
 def _system_lider(arquetipo_id: str) -> str:
-    texto = f"{POR_ID[arquetipo_id]['prompt']}\n\n{INSTRUCCION_JSON}"
-    from brains.impacto import prompt_microfono
-    if prompt_microfono():
+    from brains.impacto import escalar_sorpresa, prompt_microfono
+    json_inst = INSTRUCCION_SORPRESA if escalar_sorpresa() else INSTRUCCION_JSON
+    texto = f"{POR_ID[arquetipo_id]['prompt']}\n\n{json_inst}"
+    if prompt_microfono() and not escalar_sorpresa():
         texto += f"\n\n{INSTRUCCION_MICROFONO}"
     return texto
 
@@ -81,11 +86,16 @@ def _validar_respuesta(texto: str) -> dict | None:
         return None
     if not isinstance(datos.get("frase"), str) or not datos["frase"].strip():
         return None
-    return {
+    out = {
         "senal": max(-1.0, min(1.0, float(datos["senal"]))),
         "confianza": max(0.0, min(1.0, float(datos["confianza"]))),
         "frase": datos["frase"].strip()[:160],
     }
+    if isinstance(datos.get("sorpresa"), (int, float)):
+        out["sorpresa"] = max(0.0, min(1.0, float(datos["sorpresa"])))
+    from brains.impacto import aplicar_sorpresa
+    out["senal"] = aplicar_sorpresa(out["senal"], out.get("sorpresa"))
+    return out
 
 
 # ---------- llamadas a la API ----------

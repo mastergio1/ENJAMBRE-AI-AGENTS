@@ -67,10 +67,12 @@ no el paquete del paso 4.
 
 ---
 
-## Paso 4 — SALTADO (el 3 no pasó)
+## Paso 3b — Campo `sorpresa` ✅ HECHO 4-sep. Oído sí, producto no.
 
-v1e (oído + zona muerta) no se mide. Si se juntan dos palancas
-después de que una perdió, no se sabe nada.
+Ver [experimento-v1f.md](experimento-v1f.md). El cerebro declara 0–1 y
+el motor recorta. Fed-en-pausa oye ~0. El precio igual se mueve ±6 %
+(ruido del parlante). Target senal +0.27 → precio +36 %. No se fusiona.
+
 
 
 ---

@@ -68,7 +68,8 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
         # `fuente` viaja con cada líder: la calibración necesita saber si la
         # voz fue IA real o el respaldo léxico (sin saldo, el suplente juega)
         {"arquetipo": lider.arquetipo, "fuente": r.get("fuente", "fallback"),
-         **{k: r[k] for k in ("senal", "confianza", "frase")}}
+         **{k: r[k] for k in ("senal", "confianza", "frase") if k in r},
+         **({"sorpresa": r["sorpresa"]} if "sorpresa" in r else {})}
         for lider, r in zip(lideres, respuestas)
     ]
     serie = modelo.historial_precios[-(server.TICKS_PREVIOS + server.TICKS_POSTERIORES + 1):]

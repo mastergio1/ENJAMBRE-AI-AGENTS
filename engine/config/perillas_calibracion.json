@@ -1,6 +1,6 @@
 {
   "version": "perillas_v1",
-  "descripcion": "Perillas de calibración. baseline = identidad (producción). v1a NO pasa. v1b no usar. v1c = zona muerta. v1d = prompt micrófono (sorpresa/priced-in/earnings). v1e = v1c+v1d, medir DESPUÉS de v1d solo. Activar con ENJAMBRE_PERILLAS=<nombre>.",
+  "descripcion": "Perillas de calibración. baseline = identidad (producción). v1a/v1d NO pasan. v1b no usar. v1c = zona muerta. v1f = senal×sorpresa. Activar con ENJAMBRE_PERILLAS=<nombre>.",
   "conjunto_activo": "baseline",
   "globales": {
     "impacto_base": 1.0,
@@ -13,12 +13,13 @@
     "factor_shock_max": 3.0,
     "umbral_consenso": 0.0,
     "prompt_microfono": false,
+    "escalar_sorpresa": false,
     "peso_cerebro_fomo_evangelista": 1.0,
     "peso_cerebro_influencer_optimista": 1.0
   },
   "conjuntos": {
     "baseline": {
-      "nota": "Identidad. Misma reacción que producción. umbral_consenso=0, prompt_microfono=false."
+      "nota": "Identidad. Misma reacción que producción. umbral_consenso=0, prompt_microfono=false, escalar_sorpresa=false."
     },
     "hipotesis_v1a": {
       "nota": "MEDIDA Y NO PASA (3-sep-2026): infla días normales ×2 y no mueve extremos. No activar.",
@@ -79,16 +80,22 @@
       }
     },
     "hipotesis_v1d": {
-      "nota": "Micrófono. UNA perilla: prompt_microfono=true (sorpresa vs priced-in, earnings beat/miss, no sopa de tickers). Fallback léxico también se suaviza si priced-in. No toca el libro. Medir contra baseline con API.",
+      "nota": "MEDIDA 4-sep: no pasa. Fed priced-in no se calló e inventó signos. Target +42→+53. No activar.",
       "globales": {
         "prompt_microfono": true
       }
     },
     "hipotesis_v1e": {
-      "nota": "Paquete micrófono: v1d + zona muerta v1c. NO medir hasta tener v1d solo. Si v1d no gana, este tampoco se activa.",
+      "nota": "Paquete v1c+v1d. NO medir: v1d no pasó.",
       "globales": {
         "prompt_microfono": true,
         "umbral_consenso": 0.25
+      }
+    },
+    "hipotesis_v1f": {
+      "nota": "UNA perilla: escalar_sorpresa. El cerebro declara sorpresa 0–1; el motor hace senal×sorpresa. No es volumen (v1a). No es 'habla bajito' (v1d). Medir contra baseline con API.",
+      "globales": {
+        "escalar_sorpresa": true
       }
     }
   }

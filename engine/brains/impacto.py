@@ -191,10 +191,32 @@ def prompt_microfono() -> bool:
     True en hipotesis_v1d / v1e. Cambia la clave de caché para no
     reciclar voces viejas.
     """
-    v = cargar_perillas()["globales"].get("prompt_microfono", False)
+    return _flag("prompt_microfono")
+
+
+def escalar_sorpresa() -> bool:
+    """¿senal se multiplica por el campo `sorpresa` (0–1) del cerebro?
+
+    False en baseline. True en hipotesis_v1f. El modelo opina dirección;
+    el motor recorta magnitud si dice que no hay sorpresa.
+    """
+    return _flag("escalar_sorpresa")
+
+
+def aplicar_sorpresa(senal: float, sorpresa: float | None) -> float:
+    """senal × sorpresa, recortada a [-1, 1]. None o knob off = identidad."""
+    if not escalar_sorpresa() or sorpresa is None:
+        return senal
+    s = max(0.0, min(1.0, float(sorpresa)))
+    return _clip(float(senal) * s)
+
+
+def _flag(clave: str) -> bool:
+    v = cargar_perillas()["globales"].get(clave, False)
     if isinstance(v, str):
         return v.strip().lower() in ("1", "true", "si", "sí", "on")
     return bool(v)
+
 
 
 def pesos_cerebro() -> dict[str, float]:

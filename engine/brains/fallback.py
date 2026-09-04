@@ -192,6 +192,12 @@ def clasificar_titular(titular: str) -> dict:
     return {"tipo": tipo, "regimen": regimen}
 
 
+def _sorpresa_lexica(titular: str) -> float:
+    """0.1 si el léxico ve priced-in; 1.0 si no está seguro (no callar de más)."""
+    regimen = clasificar_titular(titular).get("regimen")
+    return 0.1 if regimen == "priced_in" else 1.0
+
+
 def _suavizar_priced_in(titular: str, senal: float) -> float:
     """Si v1d está activa y el titular ya estaba en el precio, la señal se achica.
 
@@ -369,5 +375,10 @@ def respuesta_fallback(titular: str, arquetipo_id: str, semilla: int = 0) -> dic
     senal = _clip(senal + rng.gauss(0, 0.08))
     senal = _suavizar_priced_in(titular, senal)
     confianza = _clip(confianza + rng.gauss(0, 0.05), 0.0, 1.0)
-    return {"senal": senal, "confianza": confianza, "frase": frase, "fuente": "fallback"}
+    sorpresa = _sorpresa_lexica(titular)
+    from brains.impacto import aplicar_sorpresa
+    senal = aplicar_sorpresa(senal, sorpresa)
+    return {"senal": senal, "confianza": confianza, "frase": frase,
+            "sorpresa": sorpresa, "fuente": "fallback"}
+
 

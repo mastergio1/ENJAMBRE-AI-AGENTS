@@ -147,6 +147,48 @@ def test_baseline_no_lleva_microfono():
     assert _version_cache() == "v0"
 
 
+def test_v1f_escala_senal_por_sorpresa(monkeypatch):
+    """v1f = 1 perilla. No toca impacto_base. senal × sorpresa."""
+    assert impacto.escalar_sorpresa() is False
+    assert impacto.aplicar_sorpresa(0.80, 0.10) == pytest.approx(0.80)
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1f")
+    impacto.reiniciar_cache()
+    assert impacto.escalar_sorpresa() is True
+    assert impacto.prompt_microfono() is False
+    g = impacto.cargar_perillas()["globales"]
+    assert g["impacto_base"] == 1.0
+    assert g["umbral_consenso"] == 0.0
+    assert impacto.aplicar_sorpresa(0.80, 0.10) == pytest.approx(0.08)
+    assert impacto.aplicar_sorpresa(-0.90, 1.0) == pytest.approx(-0.90)
+    assert impacto.aplicar_sorpresa(0.50, None) == pytest.approx(0.50)
+    from brains.cerebro import _system_lider, _validar_respuesta, _version_cache
+    sysmsg = _system_lider("fomo_evangelista")
+    assert '"sorpresa"' in sysmsg
+    assert "YA ESTABA EN EL PRECIO" not in sysmsg
+    assert _version_cache() == "sorpresa_v1"
+    parsed = _validar_respuesta(
+        '{"senal": 0.9, "confianza": 1, "sorpresa": 0.1, "frase": "ok"}'
+    )
+    assert parsed["sorpresa"] == pytest.approx(0.1)
+    assert parsed["senal"] == pytest.approx(0.09)
+
+
+def test_fallback_v1f_calla_priced_in(monkeypatch):
+    from brains.fallback import respuesta_fallback
+    tit = "Fed holds rates and flags a March increase, as widely expected"
+    base = respuesta_fallback(tit, "fomo_evangelista", 1)
+    monkeypatch.setenv("ENJAMBRE_PERILLAS", "hipotesis_v1f")
+    impacto.reiniciar_cache()
+    hypo = respuesta_fallback(tit, "fomo_evangelista", 1)
+    assert hypo["sorpresa"] == pytest.approx(0.1)
+    assert abs(hypo["senal"]) <= abs(base["senal"]) * 0.15 + 1e-9
+    crash = respuesta_fallback(
+        "Lehman Brothers files for bankruptcy; global financial system reels",
+        "doomer", 1)
+    assert crash["sorpresa"] == pytest.approx(1.0)
+
+
+
 def test_fallback_priced_in_se_suaviza_solo_en_v1d(monkeypatch):
     from brains.fallback import respuesta_fallback
     tit = "Fed holds rates and flags a March increase, as widely expected"

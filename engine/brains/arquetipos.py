@@ -13,7 +13,21 @@ INSTRUCCION_JSON = (
     "confianza: cuánto arrastrarías a tus seguidores con esta opinión."
 )
 
-# Hipótesis v1d (apagada en baseline). Si choca con la personalidad, ESTA gana.
+# Hipótesis v1f (apagada en baseline). El motor multiplica senal × sorpresa.
+# v1d pedía hablar bajito y no lo hizo; acá la magnitud la recorta el código.
+INSTRUCCION_SORPRESA = (
+    "Respondes SOLO con un JSON válido, sin texto adicional: "
+    '{"senal": <número entre -1 y 1>, "confianza": <número entre 0 y 1>, '
+    '"sorpresa": <número entre 0 y 1>, '
+    '"frase": "<una línea en tu voz, máximo 120 caracteres, en español>"}. '
+    "senal: tu dirección (personalidad). -1 venta, 0 neutral, +1 compra. "
+    "sorpresa: cuánto de NUEVO hay en el titular, NO tu drama. "
+    "0 = ya estaba en el precio (as expected, in line, priced in, as widely expected, "
+    "as planned, holds rates, sin sorpresa). "
+    "1 = sorpresa genuina (quiebra, stun, unexpected, beat/miss, crash, first time). "
+    "Si ya estaba en el precio, sorpresa ≤ 0.15 aunque tu personalidad esté exaltada."
+)
+
 INSTRUCCION_MICROFONO = (
     "Reglas de calibración (mandan sobre tu personalidad si chocan): "
     "1) Clasifica el titular: SORPRESA vs YA ESTABA EN EL PRECIO "

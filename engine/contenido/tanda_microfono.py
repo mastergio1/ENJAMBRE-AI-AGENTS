@@ -70,10 +70,12 @@ def main(argv: list[str] | None = None) -> int:
         reporte, lideres, *_ = simular_titular_completo(titular, seed=20260903 + i)
         fuentes = [l.get("fuente") for l in lideres]
         ia = sum(1 for f in fuentes if f in ("api", "cache"))
+        sops = [float(l["sorpresa"]) for l in lideres if isinstance(l.get("sorpresa"), (int, float))]
         filas.append({
             "id": eid, "simbolo": simbolo, "titular": titular,
             "pct": reporte.get("direccion_pct"),
             "ia": ia, "n_lideres": len(lideres),
+            "sorpresa": round(sum(sops) / len(sops), 3) if sops else None,
             "conjunto": os.environ.get("ENJAMBRE_PERILLAS", "baseline"),
         })
         print(json.dumps(filas[-1], ensure_ascii=False), flush=True)

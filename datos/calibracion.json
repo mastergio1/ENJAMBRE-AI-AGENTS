@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-04T12:28:01+00:00",
+ "generado": "2026-09-04T14:20:07+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14079,6 +14079,46 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una subida de +8.3%. En el mercado real, PANW cerró en 331.94 el 2026-09-03 (venía de 362.06 el 2026-09-01): -8.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "a3cab1a6ec1df57a",
+   "origen": "en_vivo",
+   "fecha": "2026-09-03T12:18:45+00:00",
+   "titular": "Nvidia Announces Deal To Acquire Hugging Face For $11.9B Plus Up To $1B Equity Retention Program; Expects Close In H1 2027, Commits To Keep Platform Open",
+   "simbolos": "NVDA",
+   "direccion_pct": 27.0,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "NVDA",
+    "pct_real": 4.36,
+    "cierre_base": 224.435,
+    "cierre_final": 234.225,
+    "fecha_base": "2026-09-02",
+    "fecha_final": "2026-09-04",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +27.0%. En el mercado real, NVDA cerró en 234.225 el 2026-09-04 (venía de 224.435 el 2026-09-02): +4.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "e4c2a50a471c4adc",
+   "origen": "en_vivo",
+   "fecha": "2026-09-03T12:19:09+00:00",
+   "titular": "Dell Technologies (DELL) sube 15.81% tras reportar resultados del Q2 fiscal 2027 que superaron ampliamente las expectativas y elevar su previsión anual de ingresos en 25,000 millones de dólares por la",
+   "simbolos": "DELL",
+   "direccion_pct": 55.84,
+   "volatilidad_pct": 0.99,
+   "reaccion_real": {
+    "simbolo": "DELL",
+    "pct_real": 5.92,
+    "cierre_base": 492.215,
+    "cierre_final": 521.375,
+    "fecha_base": "2026-09-02",
+    "fecha_final": "2026-09-04",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +55.8%. En el mercado real, DELL cerró en 521.375 el 2026-09-04 (venía de 492.215 el 2026-09-02): +5.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

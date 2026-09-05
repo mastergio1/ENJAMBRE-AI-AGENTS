@@ -72,8 +72,17 @@ Lo importante: ese blanco (−5.7) **no lo inventé** — es la reacción natura
 
 ## 6. Reja de seguridad: hechos estilizados con factor 0.5
 
-> ⏳ *Validación en ejecución (`validar_freno_hechos.py --factor 0.5`). Se
-> actualiza esta sección con los 5 criterios medidos en cuanto termine.*
+Corrí los 5 criterios de realismo (CLAUDE.md §7) con el freno en 0.5. **Todos pasan** — el freno no rompe el mercado:
+
+| Criterio | Umbral | Medido (seed 42 · seed 3) | ✔ |
+|---|---|---|:---:|
+| 1. Colas gordas (curtosis) | > 3 | 5.22 · 5.52 | ✅ |
+| 2. Clustering de volatilidad | ac1>0.1 y decae | ac1 0.32/0.31, ac10 ≈ 0 | ✅ |
+| 3. Sin autocorrelación de retornos | media≈0, max<0.2 | media +0.092, max 0.177 | ✅ |
+| 4. Asimetría de pánico | > 1 | 1.37 · 1.41 | ✅ |
+| 5. Respuesta a shock (−0.9) | cae >5%, rebota, parcial | cae a 86.7/85.6, rebota a 89, no total | ✅ |
+
+Esto era lo esperado: el freno **solo actúa en modo cautela** (3+ malas seguidas), condición que casi nunca ocurre en una sesión de noticias aleatorias y nunca en el test de shock único. Por eso no toca el realismo del día típico.
 
 ## 7. Recomendación
 

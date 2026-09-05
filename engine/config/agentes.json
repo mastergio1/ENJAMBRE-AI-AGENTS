@@ -103,7 +103,7 @@
           0.8
         ],
         "ventana_observacion_ticks": 3,
-        "factor_freno_cautela": 1.0
+        "factor_freno_cautela": 0.5
       }
     },
     {

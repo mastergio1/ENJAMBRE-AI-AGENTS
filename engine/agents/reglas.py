@@ -173,7 +173,8 @@ class NoiseTrader(AgenteBase):
             return
         prob_compra = 0.5
         if self.sensible:
-            prob_compra += 0.1 * (self.model.sentimiento + self.senal_social)
+            prob_compra += 0.1 * self.ajustar_por_contexto(
+                self.model.sentimiento + self.senal_social)
         cantidad = 0.04 * self.capital_inicial / self.precio
         if self.model.random.random() < prob_compra:
             self.comprar_mercado(cantidad)
@@ -274,7 +275,10 @@ class Miedoso(AgenteBase):
         panico_precio = retorno_5 is not None and retorno_5 < -0.03 / self.asimetria
         # su miedo se alimenta del tono general Y del rumor de su red
         # (los Doomers que sigue le susurran directo al oído)
-        sentimiento_percibido = self.model.sentimiento + self.senal_social
+        # Nivel 1: el contexto histórico modula la percepción (cautela tras
+        # rachas malas amortigua el pánico; buena racha amplifica el optimismo)
+        sentimiento_percibido = self.ajustar_por_contexto(
+            self.model.sentimiento + self.senal_social)
         panico_noticia = sentimiento_percibido < -self.umbral_miedo
         if self.acciones > 1e-9 and (panico_precio or panico_noticia):
             fraccion = self.model.random.uniform(*self.fraccion_venta_rango)

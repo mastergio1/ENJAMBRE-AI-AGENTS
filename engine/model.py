@@ -128,6 +128,9 @@ class MercadoEnjambre(mesa.Model):
         """Inyecta una noticia como número (para tests y calibración).
         Cada líder forma su señal y la propaga por la red de influencia."""
         self.sentimiento = max(-1.0, min(1.0, self.sentimiento + sentimiento))
+        # Nivel 1: cada agente recuerda la noticia (memoria de rachas → cautela)
+        for agente in self.agents:
+            agente.actualizar_memoria(sentimiento)
         for lider in self._lideres:
             lider.recibir_noticia(sentimiento)
         self._propagar_desde_lideres()

@@ -40,6 +40,33 @@ class AgenteBase(mesa.Agent):
         """Valor base ± ruido gaussiano (σ = 15% por defecto, CLAUDE.md sección 4)."""
         return valor * self.model.random.gauss(1.0, sigma_relativo)
 
+    # ---------- Nivel 1: memoria de noticias (contexto histórico) ----------
+
+    def actualizar_memoria(self, sentimiento: float, texto: str = None) -> None:
+        """Guarda la noticia en la memoria (últimas 5) y detecta rachas.
+        3+ malas en la ventana → modo cautela (desensibilización tras el pánico)."""
+        self.memoria_noticias.append({
+            "sentimiento": sentimiento,
+            "texto": (texto[:50] if texto else ""),
+            "tick": self.model.tick,   # tiempo de simulación (no reloj de pared)
+        })
+        if len(self.memoria_noticias) > 5:
+            self.memoria_noticias.pop(0)
+
+        self.contador_malas = sum(1 for n in self.memoria_noticias if n["sentimiento"] < -0.3)
+        self.contador_buenas = sum(1 for n in self.memoria_noticias if n["sentimiento"] > 0.3)
+        self.modo_cautela = self.contador_malas >= 3
+
+    def ajustar_por_contexto(self, sentimiento_raw: float) -> float:
+        """Ajusta la reacción al sentimiento según el contexto histórico:
+        - en cautela (racha mala), amortigua una nueva mala noticia (×0.7);
+        - tras una buena racha, amplifica una buena noticia (×1.2)."""
+        if self.modo_cautela and sentimiento_raw < 0:
+            return sentimiento_raw * 0.7
+        if self.contador_buenas >= 3 and sentimiento_raw > 0:
+            return sentimiento_raw * 1.2
+        return sentimiento_raw
+
     @property
     def precio(self) -> float:
         """Precio de referencia: el cierre VWAP del último tick.

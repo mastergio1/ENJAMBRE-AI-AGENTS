@@ -33,3 +33,4 @@ config_calibrada.json
 config_calibrada_real.json
 config_calibrada_extendida.json
 engine/config/_temp_freno.json
+engine/config/_temp_optuna_freno.json

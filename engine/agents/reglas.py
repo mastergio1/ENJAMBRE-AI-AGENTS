@@ -192,6 +192,9 @@ class Manada(AgenteBase):
         lo, hi = self.cfg.get("umbral_activacion_rango", [0.4, 0.8])
         self.umbral = self.model.random.uniform(lo, hi)
         self.espera_hasta = 0
+        # Nivel 1 (freno de cautela): en racha mala, la manada vende menos
+        # pesado (×factor). Default 1.0 = sin freno (comportamiento de siempre).
+        self.factor_freno_cautela = self.cfg.get("factor_freno_cautela", 1.0)
 
     def step(self):
         if self.model.tick < self.espera_hasta or not self.vecinos:
@@ -214,8 +217,10 @@ class Manada(AgenteBase):
         if compraron / total > umbral_compra:
             self.comprar_mercado(0.05 * self.efectivo / self.precio)
         elif vendieron / total > umbral_venta:
-            # vende más pesado de lo que compra: el miedo corre más que la codicia
-            self.vender_mercado(0.15 * self.acciones)
+            # vende más pesado de lo que compra: el miedo corre más que la codicia.
+            # en modo cautela (racha mala) el freno reduce ese peso.
+            freno = self.factor_freno_cautela if self.modo_cautela else 1.0
+            self.vender_mercado(0.15 * freno * self.acciones)
         else:
             return
         # espera corta y variada: la cascada es rápida pero no un solo bloque

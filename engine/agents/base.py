@@ -8,6 +8,11 @@ class AgenteBase(mesa.Agent):
 
     def __init__(self, model, capital: float):
         super().__init__(model)
+        # parámetros de comportamiento del tipo (config/agentes.json → "parametros").
+        # El modelo los expone por tipo justo antes de crear sus agentes; cada
+        # clase los lee con su valor actual como default (así, con la config
+        # original, el comportamiento NO cambia). Habilita la calibración.
+        self.cfg = getattr(model, "_cfg_agentes_actual", None) or {}
         self.capital_inicial = capital
         self.efectivo = capital * 0.5
         self.acciones = (capital * 0.5) / model.libro.ultimo_precio

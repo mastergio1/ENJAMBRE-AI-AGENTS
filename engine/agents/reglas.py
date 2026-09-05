@@ -93,7 +93,10 @@ class MarketMaker(AgenteBase):
     def __init__(self, model, capital):
         super().__init__(model, capital)
         self.spread_base = self.ruido(0.002)
-        self.umbral_panico = self.ruido(0.008)  # volatilidad por tick
+        # calibrable: volatilidad/tick que dispara el pánico de liquidez
+        self.umbral_panico = self.ruido(self.cfg.get("umbral_volatilidad_panico", 0.008))
+        # calibrable: cuánto ensancha el spread en pánico (×N = evaporación de liquidez)
+        self.mult_panico = self.cfg.get("multiplicador_spread_panico", 3)
         self.acciones_objetivo = self.acciones
 
     def step(self):
@@ -101,7 +104,7 @@ class MarketMaker(AgenteBase):
         vol = self.model.volatilidad_reciente(10)
         spread = max(self.spread_base, 3 * vol)
         if vol > self.umbral_panico:
-            spread *= 3  # evaporación de liquidez en crashes
+            spread *= self.mult_panico  # evaporación de liquidez en crashes
         spread = min(spread, 0.08)  # ni en pánico cotiza precios absurdos
         # sesgo por inventario FUERTE: si el flujo lo desequilibra, mueve el
         # precio de inmediato al nivel donde aparece la contraparte. Un ajuste
@@ -183,8 +186,10 @@ class Manada(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        # umbral variado (40%-80%): crucial para cascadas graduales
-        self.umbral = self.model.random.uniform(0.4, 0.8)
+        # umbral variado (40%-80% por defecto): crucial para cascadas graduales.
+        # calibrable: bajar el rango facilita las cascadas → colas más gordas
+        lo, hi = self.cfg.get("umbral_activacion_rango", [0.4, 0.8])
+        self.umbral = self.model.random.uniform(lo, hi)
         self.espera_hasta = 0
 
     def step(self):
@@ -221,13 +226,16 @@ class FomoRetail(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        self.umbral_subida = self.ruido(0.02)
+        # calibrables: gatillo de entrada, tope de compra y stop de pánico
+        self.umbral_subida = self.ruido(self.cfg.get("umbral_subida", 0.02))
+        self.fraccion_capital = self.cfg.get("fraccion_capital_maxima", 0.2)
+        self.stop_panico = abs(self.cfg.get("stop_panico", 0.04))
         self.precio_entrada = None
 
     def step(self):
         if self.precio_entrada is not None:
             # pánico: cae > 4% desde su entrada → vende TODO con máxima urgencia
-            if self.precio < self.precio_entrada * (1 - self.ruido(0.04, 0.1)):
+            if self.precio < self.precio_entrada * (1 - self.ruido(self.stop_panico, 0.1)):
                 self.vender_mercado(self.acciones, urgencia=0.05)
                 self.precio_entrada = None
             return
@@ -243,7 +251,7 @@ class FomoRetail(AgenteBase):
         )
         red_habla = vecinos_compraron >= 2 or self.senal_social > 0.25
         if retorno_5 > self.umbral_subida and red_habla:
-            self.comprar_mercado(0.2 * self.efectivo / self.precio)
+            self.comprar_mercado(self.fraccion_capital * self.efectivo / self.precio)
             self.precio_entrada = self.precio
 
 
@@ -253,18 +261,23 @@ class Miedoso(AgenteBase):
     def __init__(self, model, capital):
         super().__init__(model, capital)
         self.umbral_miedo = self.model.random.uniform(0.15, 0.45)
+        # calibrable: cuánto pesa el dolor de perder (2.5:1 base). Más alto =
+        # reacciona a caídas menores = más pánico = cola izquierda más gorda
+        self.asimetria = self.cfg.get("asimetria_kahneman", 2.5)
+        # calibrable: qué fracción de su posición liquida al entrar en pánico
+        self.fraccion_venta_rango = self.cfg.get("fraccion_venta_rango", [0.7, 1.0])
         self.tick_venta = None
 
     def step(self):
         retorno_5 = self.model.retorno_acumulado(5)
         # el dolor de perder pesa 2.5x: reacciona a caídas 2.5 veces menores
-        panico_precio = retorno_5 is not None and retorno_5 < -0.03 / 2.5
+        panico_precio = retorno_5 is not None and retorno_5 < -0.03 / self.asimetria
         # su miedo se alimenta del tono general Y del rumor de su red
         # (los Doomers que sigue le susurran directo al oído)
         sentimiento_percibido = self.model.sentimiento + self.senal_social
         panico_noticia = sentimiento_percibido < -self.umbral_miedo
         if self.acciones > 1e-9 and (panico_precio or panico_noticia):
-            fraccion = self.model.random.uniform(0.7, 1.0)
+            fraccion = self.model.random.uniform(*self.fraccion_venta_rango)
             # vende ya, al precio que sea: el dolor de perder manda
             self.vender_mercado(self.acciones * fraccion, urgencia=0.05)
             self.tick_venta = self.model.tick

@@ -10,7 +10,7 @@
 
 - Los **cuatro hechos estilizados** de un mercado real **pasan** con la config de esta rama. El motor sigue reproduciendo un mercado creíble.
 - La **curtosis sale 5.22** (Pearson, meta > 3): confirma en vivo que el enjambre **siempre tuvo colas gordas**; el "faltaba llegar a 3" fue un espejismo de definición (Fisher vs Pearson), no un defecto real.
-- El suite completo de `pytest engine/validation/` estaba corriendo al cerrar este informe, **sin fallos** hasta ese punto (ver §3; se actualiza el conteo al terminar).
+- El suite completo de `pytest engine/validation/` terminó: **251 passed, 2 skipped, 0 failed** (13 min 48 s). El motor pasa TODA la validación.
 
 ## 2. Resumen de hechos estilizados (`python simular.py 42`)
 
@@ -31,16 +31,19 @@ Una sesión de 599 ticks con 10.000 agentes, config de la rama:
 
 ## 3. Suite completa de pruebas (`pytest engine/validation/`)
 
-El suite completo es pesado (~15 min: construye modelos de 10.000 agentes muchas veces, y algunos tests tocan red). Estado al cerrar este informe: **en progreso, 0 fallos**.
+El suite completo es pesado (construye modelos de 10.000 agentes muchas veces).
+Resultado final:
 
-> Nota: algunos tests del suite dependen de red o de servicios externos
-> (Yahoo, servidor). Un eventual fallo en esos NO indica un problema de los
-> cambios de esta rama; los tests relevantes a los cambios son los de
-> `test_hechos_estilizados.py`, `test_mercado.py` y `test_red_influencia.py`,
-> que validan el comportamiento del motor. (El de no-autocorrelación ya se
-> corrió aparte y **pasó**.)
+```
+251 passed, 2 skipped, 1 warning in 828.78s (0:13:48)
+```
 
-*Se actualizará este apartado con el conteo final passed/failed cuando el suite termine.*
+**251 pasados · 2 omitidos · 0 fallos.** Toda la validación del proyecto —motor,
+hechos estilizados, red de influencia, mercado, backtest, El Pulso, servidor,
+seguridad— pasa con los cambios de esta rama. No se rompió nada.
+
+*(Los 2 "skipped" son tests que se omiten a propósito, no fallos; la advertencia
+es un deprecation de una librería de terceros, sin relación con el código.)*
 
 ## 4. Conclusión
 

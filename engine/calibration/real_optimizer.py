@@ -124,16 +124,55 @@ def calcular_hechos_estilizados(series: np.ndarray) -> Dict[str, float]:
 
 
 # ==============================================
+# 3.5 CONFIG TEMPORAL: inyecta los params de agentes en los TIPOS correctos
+# ==============================================
+# El modelo lee config/agentes.json → tipos[*].parametros (ahora que las clases
+# de agentes están cableadas a esos valores). Aquí escribimos un JSON temporal
+# con los overrides calibrados en el tipo correcto. Si un param es None, se deja
+# el valor de la config original (no se toca).
+def _crear_config_temporal(params: Dict[str, float]) -> str:
+    with open(RUTA_CONFIG, encoding="utf-8") as f:
+        config = json.load(f)
+
+    lo = params.get("manada_umbral_lo")
+    overrides = {
+        "market_maker": {
+            "multiplicador_spread_panico": params.get("mult_spread_panico"),
+            "umbral_volatilidad_panico": params.get("umbral_vol_panico"),
+        },
+        "miedoso": {"asimetria_kahneman": params.get("asimetria_kahneman")},
+        # bajar el rango de la manada facilita las cascadas (colas más gordas)
+        "manada": {"umbral_activacion_rango": [lo, lo + 0.35] if lo is not None else None},
+    }
+    for t in config["tipos"]:
+        ov = overrides.get(t["id"])
+        if not ov:
+            continue
+        for clave, valor in ov.items():
+            if valor is not None:
+                t.setdefault("parametros", {})[clave] = valor
+
+    tmp_dir = os.path.join(os.path.dirname(__file__), "temp_configs")
+    os.makedirs(tmp_dir, exist_ok=True)
+    tmp_path = os.path.join(tmp_dir, f"agentes_{int(params.get('seed', 42))}.json")
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(config, f, ensure_ascii=False, indent=2)
+    return tmp_path
+
+
+# ==============================================
 # 4. SIMULADOR HEADLESS DEL MOTOR REAL
 # ==============================================
 def run_headless_real_simulation(params: Dict[str, float], steps: int = 200) -> np.ndarray:
     """Ejecuta el modelo MercadoEnjambre real sin WebSockets."""
+    tmp_config = None
     try:
+        tmp_config = _crear_config_temporal(params)
         modelo = MercadoEnjambre(
             seed=int(params.get("seed", 42)),
             precio_inicial=100.0,
             ticks_horizonte=steps,
-            ruta_config=RUTA_CONFIG,
+            ruta_config=tmp_config,
         )
 
         np.random.seed(int(params.get("seed", 42)) + 1)
@@ -168,6 +207,13 @@ def run_headless_real_simulation(params: Dict[str, float], steps: int = 200) -> 
         traceback.print_exc()
         return np.random.randn(steps).cumsum() * 0.01
 
+    finally:
+        if tmp_config and os.path.exists(tmp_config):
+            try:
+                os.remove(tmp_config)
+            except OSError:
+                pass
+
 
 # ==============================================
 # 5. CACHE DEL BENCHMARK REAL
@@ -195,8 +241,14 @@ def load_real_benchmark():
 # ==============================================
 def objective(trial):
     params = {
-        "noticias_intensidad": trial.suggest_float("noticias_intensidad", 0.1, 2.0),
-        "ruido_base": trial.suggest_float("ruido_base", 0.001, 0.05),
+        # flujo de noticias
+        "noticias_intensidad": trial.suggest_float("noticias_intensidad", 1.0, 2.5),
+        "ruido_base": trial.suggest_float("ruido_base", 0.005, 0.03),
+        # PARÁMETROS DE AGENTES (los que gobiernan las cascadas → curtosis)
+        "mult_spread_panico": trial.suggest_float("mult_spread_panico", 3.0, 8.0),
+        "umbral_vol_panico": trial.suggest_float("umbral_vol_panico", 0.003, 0.012),
+        "asimetria_kahneman": trial.suggest_float("asimetria_kahneman", 2.5, 5.0),
+        "manada_umbral_lo": trial.suggest_float("manada_umbral_lo", 0.25, 0.45),
         "seed": trial.suggest_int("seed", 1, 1000),
     }
 
@@ -216,7 +268,8 @@ def objective(trial):
     score_clust = safe_score(real_stats["vol_clustering"], sim_stats["vol_clustering"])
     score_skew = safe_score(real_stats["skew"], sim_stats["skew"])
 
-    fitness = (0.4 * score_kurt) + (0.4 * score_clust) + (0.2 * score_skew)
+    # la curtosis es la prioridad ahora (es lo que faltaba en la V2)
+    fitness = (0.5 * score_kurt) + (0.3 * score_clust) + (0.2 * score_skew)
 
     trial.set_user_attr("sim_stats", sim_stats)
     trial.set_user_attr("real_stats", real_stats)

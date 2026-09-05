@@ -110,6 +110,9 @@ class MercadoEnjambre(mesa.Model):
             config = json.load(f)
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
+            # expone los "parametros" del tipo para que sus agentes los lean en
+            # __init__ (vía AgenteBase.cfg). Con la config original no cambia nada.
+            self._cfg_agentes_actual = tipo.get("parametros") or {}
             if tipo["id"] == "lider_opinion":
                 for arquetipo in tipo["arquetipos"]:
                     for _ in range(arquetipo["cantidad"]):

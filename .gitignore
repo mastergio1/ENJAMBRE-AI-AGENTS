@@ -31,3 +31,4 @@ engine/datos/
 .vault.db
 config_calibrada.json
 config_calibrada_real.json
+config_calibrada_extendida.json

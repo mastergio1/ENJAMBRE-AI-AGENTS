@@ -49,7 +49,8 @@ _DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 #   - curtosis > 3            → colas gordas (los extremos pasan más que en Gauss)
 #   - AC de |retornos| > 0    → clustering de volatilidad (la turbulencia viene en rachas)
 #   - asimetría negativa      → las caídas son más violentas que las subidas (pánico)
-TARGET_STATS = {"kurtosis": 5.0, "vol_clustering": 0.25, "skew": -0.30}
+# curtosis en PEARSON (normal=3); un mercado real ronda 6+ (exceso ~3+)
+TARGET_STATS = {"kurtosis": 6.0, "vol_clustering": 0.25, "skew": -0.30}
 
 
 # ==============================================
@@ -106,7 +107,12 @@ def calcular_hechos_estilizados(series: np.ndarray) -> Dict[str, float]:
     if len(retornos) < 2:
         return {"kurtosis": 0.0, "vol_clustering": 0.0, "skew": 0.0}
 
-    kurt = pd.Series(retornos).kurtosis()
+    # curtosis de PEARSON (fisher=False): una normal da 3, como en
+    # engine/validation/hechos_estilizados.py. OJO: pandas .kurtosis() devuelve
+    # la de Fisher ("en exceso", normal=0) → daba 3 menos de la cuenta y hacía
+    # parecer que las colas no llegaban a >3 cuando sí llegaban.
+    from scipy import stats
+    kurt = stats.kurtosis(retornos, fisher=False)
 
     abs_ret = np.abs(retornos)
     if len(abs_ret) > 1 and np.std(abs_ret) > 0:

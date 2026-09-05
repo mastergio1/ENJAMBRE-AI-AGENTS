@@ -142,7 +142,7 @@ def _crear_config_temporal(params: Dict[str, float]) -> str:
         },
         "miedoso": {"asimetria_kahneman": params.get("asimetria_kahneman")},
         # bajar el rango de la manada facilita las cascadas (colas más gordas)
-        "manada": {"umbral_activacion_rango": [lo, lo + 0.35] if lo is not None else None},
+        "manada": {"umbral_activacion_rango": [lo, min(lo + 0.35, 0.95)] if lo is not None else None},
     }
     for t in config["tipos"]:
         ov = overrides.get(t["id"])
@@ -163,7 +163,7 @@ def _crear_config_temporal(params: Dict[str, float]) -> str:
 # ==============================================
 # 4. SIMULADOR HEADLESS DEL MOTOR REAL
 # ==============================================
-def run_headless_real_simulation(params: Dict[str, float], steps: int = 200) -> np.ndarray:
+def run_headless_real_simulation(params: Dict[str, float], steps: int = 500) -> np.ndarray:
     """Ejecuta el modelo MercadoEnjambre real sin WebSockets."""
     tmp_config = None
     try:
@@ -245,14 +245,14 @@ def objective(trial):
         "noticias_intensidad": trial.suggest_float("noticias_intensidad", 1.0, 2.5),
         "ruido_base": trial.suggest_float("ruido_base", 0.005, 0.03),
         # PARÁMETROS DE AGENTES (los que gobiernan las cascadas → curtosis)
-        "mult_spread_panico": trial.suggest_float("mult_spread_panico", 3.0, 8.0),
-        "umbral_vol_panico": trial.suggest_float("umbral_vol_panico", 0.003, 0.012),
-        "asimetria_kahneman": trial.suggest_float("asimetria_kahneman", 2.5, 5.0),
-        "manada_umbral_lo": trial.suggest_float("manada_umbral_lo", 0.25, 0.45),
+        "mult_spread_panico": trial.suggest_float("mult_spread_panico", 3.0, 15.0),
+        "umbral_vol_panico": trial.suggest_float("umbral_vol_panico", 0.001, 0.05),
+        "asimetria_kahneman": trial.suggest_float("asimetria_kahneman", 2.0, 8.0),
+        "manada_umbral_lo": trial.suggest_float("manada_umbral_lo", 0.1, 0.8),
         "seed": trial.suggest_int("seed", 1, 1000),
     }
 
-    sim_series = run_headless_real_simulation(params, steps=150)
+    sim_series = run_headless_real_simulation(params, steps=500)
     sim_stats = calcular_hechos_estilizados(sim_series)
 
     # objetivo = valores canónicos de mercado (estables), no una descarga rota
@@ -281,7 +281,7 @@ def objective(trial):
 # ==============================================
 # 7. EJECUCIÓN PRINCIPAL
 # ==============================================
-def run_real_calibration(n_trials: int = 30):
+def run_real_calibration(n_trials: int = 50):
     print("\n" + "=" * 60)
     print("🧠 CALIBRACIÓN DEL MOTOR REAL (Hechos Estilizados)")
     print("   Modelo: MercadoEnjambre (engine/model.py)")

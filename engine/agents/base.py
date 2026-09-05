@@ -24,6 +24,16 @@ class AgenteBase(mesa.Agent):
         self.vecinos: list = []           # pares + líderes
         self.senal_social = 0.0           # el rumor acumulado que le llegó
 
+        # --- Nivel 1: memoria de noticias (contexto histórico) ---
+        # el agente recuerda las últimas noticias y, ante rachas malas, entra en
+        # "modo cautela". POR AHORA estos campos son INERTES: no cambian ninguna
+        # decisión hasta que la lógica los use (se validará contra los hechos
+        # estilizados antes de activarlos).
+        self.memoria_noticias: list = []  # últimos N sentimientos recibidos
+        self.modo_cautela = False
+        self.contador_malas = 0
+        self.contador_buenas = 0
+
     # ---------- utilidades ----------
 
     def ruido(self, valor: float, sigma_relativo: float = 0.15) -> float:

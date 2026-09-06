@@ -15,6 +15,8 @@ import os
 import sys
 from contextlib import contextmanager
 
+import pytest
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # engine/
 
 from agents.base import AgenteBase   # noqa: E402
@@ -60,8 +62,20 @@ def _drop_4a_mala(seed: int, memoria_on: bool) -> float:
         return _caidas_de_secuencia(seed)[3]
 
 
+@pytest.mark.xfail(
+    reason="Resultado NEGATIVO documentado: la memoria de PERCEPCIÓN "
+    "(ajustar_por_contexto sobre miedoso/noise) NO amortigua el pánico — el "
+    "A/B mostró que no reduce la 4ª caída. La palanca que SÍ funciona es el "
+    "freno de la manada (test_freno_manada.py). Se conserva como evidencia del "
+    "experimento; ver INFORME_NIVEL1_RESULTADO.md e INFORME_FRENO_MANADA.md.",
+    strict=False,
+)
 def test_memoria_amortigua_el_panico():
-    """A/B: sobre las mismas semillas, la 4ª mala cae MENOS con memoria ON."""
+    """A/B: sobre las mismas semillas, la 4ª mala cae MENOS con memoria ON.
+
+    Falla esperada (xfail): la memoria de percepción NO amortigua — el propósito
+    lo cumple el freno de la manada, no este mecanismo. Ver el docstring del
+    marcador xfail de arriba."""
     on = [_drop_4a_mala(s, memoria_on=True) for s in SEEDS]
     off = [_drop_4a_mala(s, memoria_on=False) for s in SEEDS]
     media_on = sum(on) / len(on)

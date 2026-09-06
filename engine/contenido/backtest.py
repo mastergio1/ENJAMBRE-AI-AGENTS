@@ -276,7 +276,7 @@ def _mercado_de_caso(caso: dict) -> str:
 
 def evaluar(tamano: int | None = None, mercado: str | None = None,
             peso: float | None = None, umbral: float | None = None,
-            reiniciar: bool = False,
+            doomer: float | None = None, reiniciar: bool = False,
             simular=None, guardar: bool = True) -> dict:
     """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
     mide el acierto de DIRECCIÓN por categoría, comparándolo con el resultado
@@ -293,7 +293,22 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     """
     import time
 
-    from model import _peso_invertidores_env, _umbral_correccion_env
+    from model import (_peso_invertidores_env, _umbral_correccion_env,
+                       _peso_doomer_env)
+
+    # Intervención 1: fija ENJAMBRE_PESO_DOOMER SOLO durante esta evaluación.
+    if doomer is not None:
+        previo = os.environ.get("ENJAMBRE_PESO_DOOMER")
+        os.environ["ENJAMBRE_PESO_DOOMER"] = str(doomer)
+        try:
+            return evaluar(tamano=tamano, mercado=mercado, peso=peso, umbral=umbral,
+                           doomer=None, reiniciar=reiniciar, simular=simular,
+                           guardar=guardar)
+        finally:
+            if previo is None:
+                os.environ.pop("ENJAMBRE_PESO_DOOMER", None)
+            else:
+                os.environ["ENJAMBRE_PESO_DOOMER"] = previo
 
     # Plan A: fija ENJAMBRE_UMBRAL_CORRECCION_SESGO SOLO durante esta evaluación
     # (para medir base vs corrección sin re-desplegar). Mismo patrón que `peso`.
@@ -355,9 +370,10 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     # repite lo ya hecho. `reiniciar` borra el progreso de esa (mercado, peso).
     peso_actual = _peso_invertidores_env(1.0)
     umbral_actual = _umbral_correccion_env(0.0)
-    # el progreso se acumula por (mercado, peso, umbral): así base y corrección
-    # no se mezclan. `umb0.0` = corrección desactivada (base).
-    clave = f"{mercado or 'todos'}|peso{peso_actual}|umb{umbral_actual}"
+    doomer_actual = _peso_doomer_env(0.0)
+    # el progreso se acumula por (mercado, peso, umbral, doomer): así cada
+    # combinación se mide aparte. `dm0.0` = voz doomer desactivada (base).
+    clave = f"{mercado or 'todos'}|peso{peso_actual}|umb{umbral_actual}|dm{doomer_actual}"
     progreso = _cargar_progreso()
     if reiniciar:
         progreso[clave] = {}
@@ -401,6 +417,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         "fecha": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "peso_tono_invertidores": peso_actual,
         "umbral_correccion_sesgo": umbral_actual,
+        "peso_doomer": doomer_actual,
         "evaluados": tot, "con_ia": con_ia, "sin_ia": sin_ia,
         "acierto_global": round(ok / tot, 4) if tot else None,
         "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),

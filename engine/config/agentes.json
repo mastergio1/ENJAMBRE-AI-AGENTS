@@ -3,6 +3,7 @@
   "total_agentes": 10000,
   "ruido_parametros_sigma": 0.15,
   "umbral_correccion_sesgo": 0.35,
+  "peso_doomer": 0.0,
   "tipos": [
     {
       "id": "fundamentalista",

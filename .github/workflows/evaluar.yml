@@ -21,6 +21,10 @@ on:
         description: "Umbral de corrección de sesgo — Plan A (0=off/base, 0.3=corrección activa, -1=el de Render)"
         required: false
         default: "-1"
+      doomer:
+        description: "Peso de la voz doomer pura — Intervención 1 (0=off/base, 0.2=activa, -1=el de Render)"
+        required: false
+        default: "-1"
       mercado:
         description: "Mercado a evaluar (cripto/indice/oro/petroleo/accion; vacío = todos)"
         required: false
@@ -76,12 +80,13 @@ jobs:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           PESO: ${{ github.event.inputs.peso || '-1' }}
           UMBRAL: ${{ github.event.inputs.umbral || '-1' }}
+          DOOMER: ${{ github.event.inputs.doomer || '-1' }}
           MERCADO: ${{ github.event.inputs.mercado }}
           TAMANO: ${{ github.event.inputs.tamano || '0' }}
           REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
         run: |
           respuesta=$(curl -s -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&umbral=$UMBRAL&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR" \
+            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&umbral=$UMBRAL&doomer=$DOOMER&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR" \
             -H "X-Pipeline-Token: $TOKEN" || true)
           echo "Motor: ${respuesta:-sin respuesta (reintentará en el sondeo)}"
 

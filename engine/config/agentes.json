@@ -2,7 +2,7 @@
   "descripcion": "La mezcla de 10.000 agentes de El Enjambre (1000 líderes + 9000 resto). Cantidad = personas; capital relativo = poder de mercado. Ver CLAUDE.md sección 4. Los 1000 líderes se reparten ~100 cerebros de IA (brains/reparto.py) para respetar el presupuesto de ~100-120 llamadas por simulación.",
   "total_agentes": 10000,
   "ruido_parametros_sigma": 0.15,
-  "umbral_correccion_sesgo": 0.0,
+  "umbral_correccion_sesgo": 0.35,
   "tipos": [
     {
       "id": "fundamentalista",

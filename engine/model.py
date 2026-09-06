@@ -49,6 +49,24 @@ CLASES_POR_TIPO = {
 
 CAPITAL_BASE = 10_000.0  # capital de un agente retail 1x
 
+# P3 — tope de MAGNITUD por mercado. En cripto (y acción) el enjambre a veces
+# emerge con movimientos irreales (±40-50% en una sesión) por su alta
+# volatilidad de masas. Acotamos la magnitud REPORTADA a un rango realista, SIN
+# tocar la dirección (el signo se conserva → el acierto de dirección no cambia).
+# En vivo se conoce el TIPO de mercado (no el símbolo puntual), así que el tope
+# es por tipo. Los mercados sin entrada quedan sin tope.
+FACTORES_LIQUIDEZ = {"cripto": 30.0, "accion": 40.0}  # |direccion_pct| máx en %
+
+
+def acotar_magnitud(mercado: str | None, pct: float | None) -> float | None:
+    """Recorta un porcentaje al tope de su mercado (P3). Conserva el signo;
+    devuelve el valor tal cual si el mercado no tiene tope o el valor es None."""
+    tope = FACTORES_LIQUIDEZ.get(mercado or "")
+    if tope is None or pct is None:
+        return pct
+    return round(max(-tope, min(tope, pct)), 2)
+
+
 # Escala del consenso de la IA cuando se usa como "tono de la prensa" (ver
 # _tono_de_titular). Es una perilla de MAGNITUD, no de dirección: subirla
 # agranda el golpe del ambiente sin cambiar si el mercado sube o baja. Se
@@ -158,6 +176,9 @@ class MercadoEnjambre(mesa.Model):
 
         self.tick = 0
         self.sentimiento = 0.0  # sentimiento global de la noticia, decae solo
+        # P4 — fuerza del consenso de la última noticia (para la "confianza"
+        # del reporte = abs(consenso)). 0 hasta que se aplique un titular.
+        self._ultimo_consenso = 0.0
         # perfil de personalidad del mercado (índice por defecto); una noticia
         # de petróleo/oro/cripto lo cambia y con él la reacción del enjambre
         from brains.mercado import perfil_de
@@ -274,7 +295,9 @@ class MercadoEnjambre(mesa.Model):
         ia = [(lider.arquetipo, r) for lider, r in zip(self._lideres, respuestas)
               if r.get("fuente") in ("api", "cache")]
         if len(ia) < len(respuestas) * MINIMO_IA_CONSENSO:
-            return sentimiento_lexico(titular)  # la IA no opinó lo suficiente
+            s = sentimiento_lexico(titular)  # la IA no opinó lo suficiente
+            self._ultimo_consenso = s        # P4: fuerza de la señal (confianza)
+            return s
         # P2: el TONO de mercado no se deja cancelar por las APUESTAS de los
         # arquetipos invertidores (contrarian/optimista/quant). Pesan
         # `peso_tono_invertidores` en el clima; su señal individual y su frase
@@ -288,8 +311,11 @@ class MercadoEnjambre(mesa.Model):
             num += r["senal"] * w
             den += w
         if den <= 0:
-            return sentimiento_lexico(titular)
+            s = sentimiento_lexico(titular)
+            self._ultimo_consenso = s        # P4: fuerza de la señal (confianza)
+            return s
         consenso = num / den
+        self._ultimo_consenso = consenso     # P4: fuerza de la señal (confianza)
         # Plan A — corrección del sesgo alcista: cuando los líderes ya leen la
         # noticia como CLARAMENTE bajista, no dejamos que el descuento de
         # magnitud (GANANCIA_CONSENSO) la suavice. Usamos la lectura a plena

@@ -7,6 +7,7 @@ consumen la validación y, más adelante, el WebSocket hacia el frontend.
 
 import json
 import logging
+import os
 from pathlib import Path
 
 import mesa
@@ -63,6 +64,31 @@ GANANCIA_CONSENSO = 0.8
 # confiar en su consenso como tono. Si la mayoría cayó al respaldo léxico
 # (sin saldo de API), se usa el diccionario directo, que es justo para eso.
 MINIMO_IA_CONSENSO = 0.5
+
+# P2 — separar "tono de mercado" de "apuesta del líder": estos arquetipos
+# INVIERTEN u optimizan la señal (el contrarian compra el pánico, el optimista
+# nunca ve lo malo, el quant apuesta a la reversión). Su APUESTA individual y su
+# frase siguen intactas, pero contaminan el "clima" que siente todo el mercado:
+# ante una mala noticia real cancelan a los que la leen bien, y el enjambre
+# predice "sube" cuando debía "baja". `peso_tono_invertidores` (config) modula
+# cuánto pesan en el TONO: 1.0 = comportamiento histórico · 0.0 = no fijan el
+# ánimo del mercado (siguen operando por su cuenta). Diagnóstico: INFORME_CAUSA_
+# RAIZ_NEGATIVAS.md.
+ARQUETIPOS_INVERSORES = frozenset({
+    "quant_esceptico", "contrarian_sabio", "influencer_optimista",
+})
+
+
+def _peso_invertidores_env(por_defecto: float) -> float:
+    """El peso de los invertidores en el tono, con override por entorno
+    (ENJAMBRE_PESO_TONO_INVERSORES). Recortado a [0, 1]. Permite medir P2 en el
+    backtest y hacer rollback sin re-desplegar."""
+    crudo = os.environ.get("ENJAMBRE_PESO_TONO_INVERSORES")
+    try:
+        valor = float(crudo) if crudo not in (None, "") else float(por_defecto)
+    except ValueError:
+        valor = float(por_defecto)
+    return max(0.0, min(1.0, valor))
 
 log = logging.getLogger("enjambre.lexico")
 
@@ -136,6 +162,12 @@ class MercadoEnjambre(mesa.Model):
     def _crear_agentes(self, ruta_config: Path) -> None:
         with open(ruta_config, encoding="utf-8") as f:
             config = json.load(f)
+        # P2: peso de los arquetipos invertidores en el TONO de mercado
+        # (1.0 = comportamiento histórico). La variable de entorno
+        # ENJAMBRE_PESO_TONO_INVERSORES manda sobre la config, para medir en el
+        # backtest (o hacer rollback) SIN re-desplegar.
+        self._peso_tono_invertidores = _peso_invertidores_env(
+            config.get("peso_tono_invertidores", 1.0))
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
             # expone los "parametros" del tipo para que sus agentes los lean en
@@ -210,11 +242,26 @@ class MercadoEnjambre(mesa.Model):
         """
         from brains.fallback import sentimiento_lexico
 
-        ia = [r for r in respuestas if r.get("fuente") in ("api", "cache")]
-        peso = sum(r["confianza"] for r in ia)
-        if len(ia) < len(respuestas) * MINIMO_IA_CONSENSO or peso <= 0:
+        # emparejar cada respuesta con el arquetipo de su líder (van en paralelo)
+        ia = [(lider.arquetipo, r) for lider, r in zip(self._lideres, respuestas)
+              if r.get("fuente") in ("api", "cache")]
+        if len(ia) < len(respuestas) * MINIMO_IA_CONSENSO:
             return sentimiento_lexico(titular)  # la IA no opinó lo suficiente
-        consenso = sum(r["senal"] * r["confianza"] for r in ia) / peso
+        # P2: el TONO de mercado no se deja cancelar por las APUESTAS de los
+        # arquetipos invertidores (contrarian/optimista/quant). Pesan
+        # `peso_tono_invertidores` en el clima; su señal individual y su frase
+        # NO se tocan (siguen operando y hablando por su cuenta).
+        peso_inv = getattr(self, "_peso_tono_invertidores", 1.0)
+        num = den = 0.0
+        for arquetipo, r in ia:
+            w = r["confianza"]
+            if arquetipo in ARQUETIPOS_INVERSORES:
+                w *= peso_inv
+            num += r["senal"] * w
+            den += w
+        if den <= 0:
+            return sentimiento_lexico(titular)
+        consenso = num / den
         return max(-1.0, min(1.0, consenso * GANANCIA_CONSENSO))
 
     def _aplicar_perfil(self, tono: float) -> float:

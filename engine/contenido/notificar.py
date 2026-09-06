@@ -8,9 +8,19 @@ Nota: este es el aviso SALIENTE. El oyente del canal de noticias de
 Giorgio (fuentes/telegram.py) es la fase 2.
 """
 
+import html
 import os
 
 import httpx
+
+
+def escapar(texto: str) -> str:
+    """Escapa el texto variable que se mete en un aviso.
+
+    Los avisos van con parse_mode=HTML, así que un titular o un formulario con
+    un `<` hace que Telegram rechace el mensaje entero (400) y el aviso se
+    pierda en silencio. Todo lo que venga de fuera pasa por aquí."""
+    return html.escape(str(texto or ""), quote=False)
 
 
 def avisar(mensaje: str) -> bool:
@@ -36,7 +46,7 @@ def resumen_ejecucion(origen: str, publicadas: list[dict], envio: dict | None) -
     if publicadas:
         lineas.append(f"Simuladas ({len(publicadas)}):")
         for p in publicadas:
-            lineas.append(f"  ★ [{p['impacto']}/10] {p['titular'][:60]}")
+            lineas.append(f"  ★ [{p['impacto']}/10] {escapar(p['titular'][:60])}")
     else:
         lineas.append("Sin simulaciones nuevas (el día ya estaba preparado).")
     if envio:

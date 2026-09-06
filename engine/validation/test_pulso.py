@@ -61,8 +61,8 @@ def test_html_del_pulso_lleva_disclaimer_y_vocabulario_limpio(dia):
     assert verificar_pieza(html) == []
     # el link de baja usa el token del suscriptor
     assert "/api/baja/ABC" in html
-    # referencia la imagen del momento dramático
-    assert "/imagen" in html
+    # el rediseño: cabecera de El Pulso y El Enjambre invitado al pie
+    assert "El Pulso" in html and "Probar El Enjambre" in html
 
 
 def test_correo_de_confirmacion_lleva_disclaimer():
@@ -85,30 +85,20 @@ def test_correo_de_confirmacion_lleva_disclaimer():
 
 # ---------- suscripción por la API (double opt-in) ----------
 
-def test_flujo_suscripcion_completo():
+def test_flujo_suscripcion_opt_in_simple():
     cliente = TestClient(server.app)
 
     # alta con correo inválido → 400
     assert cliente.post("/api/suscribir", json={"email": "no-es-correo"}).status_code == 400
 
-    # alta válida → pendiente
+    # alta válida → OPT-IN SIMPLE: queda suscrito de inmediato (sin confirmar)
     respuesta = cliente.post("/api/suscribir", json={"email": "giorgio@rubicon.cl"}).json()
-    assert respuesta["estado"] == "pendiente"
+    assert respuesta["estado"] == "suscrito"
 
-    # aún no está activo
     conexion = persistencia.conectar()
-    assert persistencia.suscriptores_activos(conexion) == []
-    token = conexion.execute("SELECT token_confirma FROM suscriptores").fetchone()[0]
+    activos = persistencia.suscriptores_activos(conexion)
+    assert len(activos) == 1          # activo de una vez, sin paso de confirmación
     baja = conexion.execute("SELECT token_baja FROM suscriptores").fetchone()[0]
-    conexion.close()
-
-    # confirmar por el link → página HTML de éxito
-    conf = cliente.get(f"/api/confirmar/{token}")
-    assert conf.status_code == 200
-    assert "confirmada" in conf.text.lower()
-
-    conexion = persistencia.conectar()
-    assert len(persistencia.suscriptores_activos(conexion)) == 1
     conexion.close()
 
     # baja de un clic
@@ -116,6 +106,25 @@ def test_flujo_suscripcion_completo():
     conexion = persistencia.conectar()
     assert persistencia.suscriptores_activos(conexion) == []
     conexion.close()
+
+
+def test_activar_pendientes_migra_a_los_del_viejo_opt_in():
+    """Los que quedaron pendientes del doble opt-in se activan de una vez."""
+    conexion = persistencia.conectar()
+    persistencia.agregar_suscriptor(conexion, "pendiente@lector.cl")  # activo=0 + token_confirma
+    persistencia.alta_directa(conexion, "yaactivo@lector.cl")         # activo=1
+    n = persistencia.activar_pendientes(conexion)
+    assert n == 1                                    # solo el pendiente
+    assert len(persistencia.suscriptores_activos(conexion)) == 2
+    conexion.close()
+
+
+def test_activar_pendientes_endpoint_exige_token(monkeypatch):
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto")
+    cliente = TestClient(server.app)
+    assert cliente.post("/api/pulso/activar-pendientes").status_code == 403
+    r = cliente.post("/api/pulso/activar-pendientes", headers={"X-Pipeline-Token": "secreto"})
+    assert r.status_code == 200 and r.json()["ok"] is True
 
 
 def test_suscribir_silencioso_captura_el_lead():
@@ -158,12 +167,101 @@ def test_ritual_matutino_arma_todo_sin_enviar(monkeypatch):
     from contenido import notificar
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: avisos.append(mensaje) or True)
 
-    resultado = pipeline.ritual_matutino(semilla_base=99, enviar=False)
+    # se fuerza un día de semana (el ritual del fin de semana es otra edición)
+    entre_semana = {"dia_semana": "lunes", "fecha": "4 de agosto de 2026",
+                    "momento": "mañana", "es_finde": False}
+    resultado = pipeline.ritual_matutino(semilla_base=99, enviar=False, cuando=entre_semana)
     assert len(resultado["publicadas"]) == 3
     assert resultado["destacadas"] == 3
-    assert resultado["envio"] is None          # enviar=False
+    assert resultado["estado"] == "pendiente"   # generada, esperando el visto bueno
+    assert resultado["token"]                   # token para los enlaces del correo de revisión
     assert DISCLAIMER in resultado["html_preview"]
     assert avisos and "El Pulso" in avisos[0]   # paso 8: avisó a Giorgio
+
+
+def test_ritual_de_domingo_arma_el_deep_dive(monkeypatch):
+    """El domingo el ritual NO simula noticias: arma el deep-dive de una
+    mid/small-cap o sector y lo deja pendiente de revisión."""
+    from contenido import analisis_semanal, notificar, redaccion_ia
+    monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
+
+    hechos = {
+        "modo": "accion", "titulo": "Acción seleccionada", "encuadre": "mediana capitalización",
+        "ticker": "ROKU", "nombre": "Roku", "sector": "Streaming", "contexto": "…",
+        "var_semana_pct": 8.4, "var_mes_pct": 12.0, "fecha_inicio": "1 ago", "fecha_fin": "31 ago",
+        "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"},
+    }
+    redactado = {
+        "titular": "Roku vuelve a la conversación", "dek": "Semana movida",
+        "contexto": "Roku hace el sistema de sus televisores.\n\nGana con publicidad.",
+        "lectura": "Avanzó tras un anuncio.",
+        "debate": [{"arquetipo": "doomer", "nombre": "El Doomer",
+                    "mirada": "La publicidad es lo primero que se recorta."}],
+        "que_observar": "Habrá que ver si sostiene el ritmo.",
+    }
+    monkeypatch.setattr(analisis_semanal, "preparar_analisis", lambda **k: hechos)
+    monkeypatch.setattr(redaccion_ia, "redactar_analisis", lambda *a, **k: redactado)
+
+    domingo = {"dia_semana": "domingo", "weekday": 6, "fecha": "16 de agosto de 2026",
+               "momento": "mañana", "es_finde": True}
+    resultado = pipeline.ritual_matutino(enviar=False, cuando=domingo)
+
+    assert resultado["edicion"] == "finde"
+    assert resultado["estado"] == "pendiente"
+    assert resultado["publicadas"] == []                 # el finde no simula el enjambre
+    html = resultado["html_preview"]
+    assert "Edición de fin de semana" in html
+    assert "Qué es" in html and "Lo que ven nuestros inversionistas IA" in html
+    assert DISCLAIMER in html
+
+
+def test_ritual_de_sabado_arma_el_resumen(monkeypatch):
+    """El sábado el ritual arma el RESUMEN DE LA SEMANA (no el deep-dive) y lo
+    deja pendiente de revisión."""
+    from contenido import notificar, redaccion_ia, resumen_semanal
+    monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
+
+    hechos = {"titulo": "El Pulso de la semana",
+              "titulares": [{"titular": "La Fed sube el tono", "fecha": "2026-08-14"}],
+              "foto": [{"simbolo": "^GSPC", "nombre": "S&P 500", "var_semana_pct": 1.8}]}
+    redactado = {"intro": "Semana de nervios.",
+                 "temas": [{"kicker": "Macro", "emoji": "🏦", "titular": "La Fed marcó el tono",
+                            "analisis": "Subió el tono.\n\nCautela.",
+                            "que_observar": "Habrá que ver la próxima acta.", "grafico": None}],
+                 "cierre": "Una semana para respirar."}
+    monkeypatch.setattr(resumen_semanal, "preparar_resumen", lambda *a, **k: hechos)
+    monkeypatch.setattr(redaccion_ia, "redactar_resumen", lambda *a, **k: redactado)
+
+    sabado = {"dia_semana": "sábado", "weekday": 5, "fecha": "15 de agosto de 2026",
+              "momento": "mañana", "es_finde": True}
+    resultado = pipeline.ritual_matutino(enviar=False, cuando=sabado)
+
+    assert resultado["edicion"] == "resumen"
+    assert resultado["estado"] == "pendiente"
+    assert resultado["publicadas"] == []
+    html = resultado["html_preview"]
+    assert "El Pulso de la semana" in html and "La semana en números" in html
+    assert "La Fed marcó el tono" in html
+    assert DISCLAIMER in html
+
+
+def test_reenviar_manda_aunque_ya_este_enviada(monkeypatch):
+    """El reenvío manual SÍ manda de nuevo a todos, aunque la edición ya se
+    hubiera enviado (a diferencia de aprobar_y_enviar, que es idempotente)."""
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "lector@medio.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    hoy = persistencia.ahora_iso()[:10]
+    persistencia.guardar_edicion(conexion, hoy, {"redactado": {}}, "<html>edición</html>",
+                                 "Asunto", "t" * 24, persistencia.ahora_iso())
+    persistencia.marcar_enviada(conexion, hoy, 1, 1, persistencia.ahora_iso())  # ya enviada
+    conexion.close()
+
+    enviados = []
+    monkeypatch.setattr(boletin, "_enviar_resend", lambda *a, **k: (enviados.append(a) or True, ""))
+    res = pipeline.reenviar_a_suscriptores(fecha=hoy)
+    assert res["ok"] and res.get("reenviada") and res["enviados"] == 1
+    assert enviados and enviados[0][0] == "lector@medio.cl"  # reenvió pese a estar 'enviada'
 
 
 def test_endpoint_pipeline_exige_token(monkeypatch):
@@ -187,19 +285,26 @@ def test_endpoint_pipeline_exige_token(monkeypatch):
 
 
 def test_html_usa_la_voz_de_ia_cuando_existe(dia):
-    """Si el brief trae 'redactado' (voz del redactor de IA), el correo lo usa;
-    y sigue pasando el filtro CMF con el disclaimer."""
+    """Con 'redactado' (voz del redactor de IA), el correo lo usa: historias con
+    análisis, gráfico real y 'en una línea'; sigue pasando el filtro CMF."""
     destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
     brief = {"mercado": [], "observa": [], "redactado": {
         "buenos_dias": "Wall Street amaneció en verde y el Nasdaq sacó pecho.",
-        "historia_estrella": {"emoji": "🩸", "titular": "Insulet cayó pese a vender más",
-                              "cuerpo": "Recortó su previsión.\n\nEl enjambre se hundió tick a tick."},
-        "historias": [{"emoji": "🟢", "titular": "Nvidia subió", "cuerpo": "Los chips mandan."}],
+        "historias": [
+            {"kicker": "Tecnología · catalizador", "emoji": "🍎",
+             "titular": "Apple busca acuerdo con Epic", "dek": "El que peleaba, negocia.",
+             "cuerpo": "Años de pelea.\n\nHoy ofrece café.\n\nEso dice mucho.",
+             "bottom_line": "Apple no cambia de libreto por gusto.",
+             "grafico": {"ticker": "AAPL", "nombre": "Apple Inc.", "periodo": "semana", "moneda": "$"}},
+            {"kicker": "Small-cap · movida", "emoji": "🟢", "titular": "Nvidia subió",
+             "dek": "", "cuerpo": "Los chips mandan.", "bottom_line": "", "grafico": None},
+        ],
     }}
     html = boletin.construir_html(destacadas, "miércoles 5 de agosto", brief=brief)
     assert "Buenos días" in html
-    assert "Insulet cayó pese a vender más" in html
-    assert "Nvidia subió" in html
+    assert "Apple busca acuerdo con Epic" in html and "Nvidia subió" in html
+    assert "/api/grafico/AAPL" in html          # el gráfico real de la historia
+    assert "En una línea:" in html               # el bottom line
     assert DISCLAIMER in html
     assert verificar_pieza(html) == []
 
@@ -220,11 +325,13 @@ def test_tabla_mercado_dia_mes_ano(dia):
     assert verificar_pieza(html) == []
 
 
-def test_html_cae_a_plantilla_sin_voz(dia):
-    """Sin 'redactado', el correo usa la plantilla de siempre (no se cae)."""
+def test_html_respaldo_sin_redactado(dia):
+    """Sin 'redactado' ni brief, el correo se arma igual (no se cae): cabecera de
+    El Pulso, El Enjambre al pie y el disclaimer."""
     destacadas = pipeline._destacadas_de_hoy(persistencia.conectar())
     html = boletin.construir_html(destacadas, "miércoles 5 de agosto")  # sin brief
-    assert "simulación educativa" in html
+    assert html.startswith("<!doctype")
+    assert "El Pulso" in html and "Probar El Enjambre" in html
     assert DISCLAIMER in html
 
 
@@ -239,7 +346,9 @@ def test_yahoo_calcula_dia_mes_ano():
     assert yahoo._variaciones([100.0]) is None     # serie muy corta → None
 
 
-def test_ritual_envia_a_suscriptores_confirmados(monkeypatch):
+def test_ritual_genera_pendiente_y_aprobar_envia(monkeypatch):
+    """El ritual GENERA la edición (pendiente); nada sale a los suscriptores
+    hasta que Giorgio la aprueba. Aprobar la envía a los confirmados."""
     # un suscriptor confirmado
     conexion = persistencia.conectar()
     alta = persistencia.agregar_suscriptor(conexion, "lector@medio.cl")
@@ -247,12 +356,205 @@ def test_ritual_envia_a_suscriptores_confirmados(monkeypatch):
     conexion.close()
 
     enviados = []
-    monkeypatch.setattr(boletin, "enviar", lambda *a: enviados.append(a) or True)
+    monkeypatch.setattr(boletin, "_enviar_resend", lambda *a, **k: (enviados.append(a) or True, ""))
+    monkeypatch.setattr(boletin, "PULSO_ADMIN_EMAIL", "")  # sin correo de revisión en el test
     from contenido import notificar
     monkeypatch.setattr(notificar, "avisar", lambda mensaje: True)
 
-    resultado = pipeline.ritual_matutino(semilla_base=7, enviar=True)
-    assert resultado["envio"]["suscriptores"] == 1
-    assert resultado["envio"]["enviados"] == 1
-    # el correo salió al suscriptor confirmado
-    assert enviados[0][0] == "lector@medio.cl"
+    # 1) el ritual arma la edición pero NO la envía a los suscriptores (queda pendiente)
+    entre_semana = {"dia_semana": "lunes", "fecha": "4 de agosto de 2026",
+                    "momento": "mañana", "es_finde": False}
+    resultado = pipeline.ritual_matutino(semilla_base=7, enviar=True, cuando=entre_semana)
+    assert resultado["estado"] == "pendiente"
+    assert enviados == []                       # nada salió a los suscriptores todavía
+
+    # 2) el visto bueno la envía a los suscriptores confirmados
+    envio = pipeline.aprobar_y_enviar()
+    assert envio["ok"] and envio["suscriptores"] == 1 and envio["enviados"] == 1
+    assert enviados[0][0] == "lector@medio.cl"  # el correo salió al confirmado
+
+
+# ---------- el correo no deja pasar marcado ajeno ----------
+
+def test_el_correo_escapa_texto_hostil_del_redactado():
+    """El texto del redactor de IA (titular, cuerpo, bottom_line) sale de un
+    titular que puede venir del público: no puede inyectar HTML en el correo
+    que reciben los suscriptores."""
+    brief = {"mercado": [], "redactado": {
+        "buenos_dias": "Un día normal.",
+        "historias": [{
+            "kicker": "Test", "emoji": "🧪",
+            "titular": '<img src=x onerror=alert(1)> Titular hostil',
+            "dek": "", "cuerpo": '</p><a href="http://sitio-falso.cl">entra aquí</a>\n\nOtro párrafo.',
+            "bottom_line": "<script>alert(1)</script> cierre",
+            "grafico": None,
+        }]}}
+    html = boletin.construir_html([], "lunes 4 de agosto", token_baja="ABC", brief=brief)
+    assert "<img src=x" not in html
+    assert "&lt;img src=x" in html                        # se ve como texto, no se ejecuta
+    assert '<a href="http://sitio-falso.cl"' not in html  # sin enlaces colados
+    assert "<script>alert(1)</script>" not in html and "&lt;script&gt;" in html
+
+
+def test_el_correo_solo_acepta_enlaces_http():
+    """La fuente de un dato de mercado es un enlace externo: solo http(s)."""
+    assert boletin._url_segura("https://ejemplo.cl/nota") == "https://ejemplo.cl/nota"
+    assert boletin._url_segura("javascript:alert(1)") == ""
+    assert boletin._url_segura("") == ""
+    fila = boletin._fila_mercado({"tipo": "evento", "titular": "Dato", "url": "javascript:alert(1)"})
+    assert "javascript:" not in fila
+
+
+# ---------- B5: el panel no miente cuando el preview no se regenera ----------
+
+def test_editar_avisa_si_el_preview_no_se_regenera(monkeypatch):
+    """Si al editar no hay destacadas para re-armar el correo, la respuesta debe
+    DECIRLO (preview_actualizado=False), no un ok:true a secas — si no, se
+    aprueba y sale el correo sin las ediciones."""
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto")
+    hoy = persistencia.ahora_iso()[:10]
+    conexion = persistencia.conectar()
+    # una edición guardada, pero SIN simulaciones destacadas para hoy
+    persistencia.guardar_edicion(conexion, hoy, {"redactado": {}}, "<html>viejo</html>",
+                                 "Asunto", "t" * 24, persistencia.ahora_iso())
+    conexion.close()
+    cliente = TestClient(server.app)
+    res = cliente.post(f"/api/panel/edicion/{hoy}/editar",
+                       headers={"X-Pipeline-Token": "secreto"},
+                       json={"redactado": {"buenos_dias": "Hola"}}).json()
+    assert res["ok"] is True
+    assert res["preview_actualizado"] is False        # no mintió
+    assert "vista previa" in res["motivo"].lower()
+
+
+def test_panel_edicion_finde_marca_deep_dive_y_regenera_preview(monkeypatch):
+    """La edición de FIN DE SEMANA se marca como 'finde' en el panel y su vista
+    previa SÍ se regenera sin destacadas (el deep-dive no las necesita)."""
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto")
+    hoy = persistencia.ahora_iso()[:10]
+    brief = {
+        "analisis": {"modo": "accion", "titulo": "Acción seleccionada",
+                     "encuadre": "mediana capitalización", "ticker": "ROKU", "nombre": "Roku",
+                     "sector": "Streaming", "var_semana_pct": 8.4,
+                     "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"}},
+        "analisis_redactado": {"titular": "Roku vuelve a la conversación", "dek": "",
+                               "contexto": "Roku hace el sistema de sus televisores.", "lectura": "",
+                               "debate": [{"arquetipo": "doomer", "nombre": "El Doomer",
+                                           "mirada": "La publicidad es lo primero que se recorta."}],
+                               "que_observar": "Habrá que ver si sostiene el ritmo."},
+    }
+    conexion = persistencia.conectar()
+    persistencia.guardar_edicion(conexion, hoy, brief, "<html>viejo</html>",
+                                 "Asunto", "t" * 24, persistencia.ahora_iso())
+    conexion.close()
+    cliente = TestClient(server.app)
+
+    ed = cliente.get(f"/api/panel/edicion/{hoy}", headers={"X-Pipeline-Token": "secreto"}).json()
+    assert ed["finde"] is True
+    assert ed["analisis"]["nombre"] == "Roku"
+
+    res = cliente.post(f"/api/panel/edicion/{hoy}/editar",
+                       headers={"X-Pipeline-Token": "secreto"},
+                       json={"redactado": {}}).json()
+    assert res["ok"] is True and res["preview_actualizado"] is True  # se regeneró el deep-dive
+
+
+# ---------- Premium: el deep-dive del domingo se parte en gratis (teaser) y de pago ----------
+
+def _brief_domingo() -> dict:
+    """Un brief de domingo (deep-dive) para probar el gating Premium."""
+    return {
+        "analisis": {"modo": "accion", "titulo": "Acción seleccionada",
+                     "encuadre": "mediana capitalización", "ticker": "ROKU", "nombre": "Roku",
+                     "sector": "Streaming", "var_semana_pct": 8.4,
+                     "grafico": {"ticker": "ROKU", "nombre": "Roku", "periodo": "mes", "moneda": "$"}},
+        "analisis_redactado": {
+            "titular": "Roku vuelve a la conversación", "dek": "Semana movida",
+            "contexto": "Roku hace el sistema de sus televisores.\n\nGana con publicidad.",
+            "lectura": "Avanzó tras un anuncio.",
+            "debate": [{"arquetipo": "doomer", "nombre": "El Doomer",
+                        "mirada": "La publicidad es lo primero que se recorta."}],
+            "que_observar": "Habrá que ver si sostiene el ritmo."},
+    }
+
+
+def test_premium_deep_dive_completo_vs_teaser():
+    """El correo completo (Premium) muestra el análisis; el teaser (gratis) lo
+    reemplaza por el gancho + botón de pago, SIN revelar nombre ni debate."""
+    brief = _brief_domingo()
+    completo = boletin.construir_html([], "domingo 17 de agosto", brief=brief, premium=True)
+    teaser = boletin.construir_html([], "domingo 17 de agosto", brief=brief, premium=False)
+
+    # el completo lleva el análisis de verdad
+    assert "Qué es" in completo and "Lo que ven nuestros inversionistas IA" in completo
+    assert "Roku" in completo
+
+    # el teaser NO revela lo pagado, sí el gancho + botón + sector
+    assert "Premium" in teaser and "continúa en Premium" in teaser
+    assert "Leer el análisis completo" in teaser
+    assert "Streaming" in teaser              # el sector sí se muestra (el gancho)
+    assert "Roku" not in teaser               # el nombre NO se revela
+    assert "El Doomer" not in teaser          # el debate es Premium
+    assert DISCLAIMER in teaser               # sigue llevando el pie legal
+
+
+def test_premium_envio_separa_gratis_y_pago(monkeypatch):
+    """Al enviar el domingo: el Premium recibe el completo; el gratuito, el teaser."""
+    conexion = persistencia.conectar()
+    for correo in ("gratis@lector.cl", "pago@lector.cl"):
+        alta = persistencia.agregar_suscriptor(conexion, correo)
+        persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    assert persistencia.set_premium(conexion, "pago@lector.cl", True)
+    assert persistencia.es_premium(conexion, "pago@lector.cl")
+    assert not persistencia.es_premium(conexion, "gratis@lector.cl")
+    assert persistencia.contar_premium(conexion) == 1
+    conexion.close()
+
+    # capturamos (destinatario, asunto, html) de cada envío
+    enviados = []
+    monkeypatch.setattr(boletin, "_enviar_resend",
+                        lambda dest, asunto, html, **k: (enviados.append((dest, asunto, html)) or True, ""))
+
+    brief = _brief_domingo()
+    hoy = persistencia.ahora_iso()[:10]
+    conexion = persistencia.conectar()
+    completo = boletin.construir_html([], "domingo 17 de agosto", token_baja=persistencia.TOKEN_BAJA_SENTINEL,
+                                      brief=brief, premium=True)
+    persistencia.guardar_edicion(conexion, hoy, brief, completo,
+                                 boletin.asunto_finde(brief["analisis"]), "t" * 24, persistencia.ahora_iso())
+    conexion.close()
+
+    res = pipeline.aprobar_y_enviar(fecha=hoy)
+    assert res["ok"] and res["enviados"] == 2 and res["premium"] == 1
+
+    por_correo = {dest: (asunto, html) for dest, asunto, html in enviados}
+    asunto_pago, html_pago = por_correo["pago@lector.cl"]
+    asunto_gratis, html_gratis = por_correo["gratis@lector.cl"]
+
+    assert "Roku" in html_pago and "El Doomer" in html_pago            # completo
+    assert "continúa en Premium" in html_gratis and "Roku" not in html_gratis  # teaser
+    assert "Premium" in asunto_gratis and "Roku" not in asunto_gratis  # asunto sin nombre
+
+
+def test_premium_vence_y_deja_de_contar():
+    """Un Premium con fecha vencida ya no cuenta como Premium activo."""
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, "vencido@lector.cl")
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    persistencia.set_premium(conexion, "vencido@lector.cl", True, hasta="2020-01-01")
+    assert not persistencia.es_premium(conexion, "vencido@lector.cl")
+    activos = {s["email"]: s["premium"] for s in persistencia.suscriptores_activos(conexion)}
+    assert activos["vencido@lector.cl"] == 0
+    conexion.close()
+
+
+def test_sabado_no_se_cobra():
+    """El resumen del sábado es igual para todos (no hay teaser Premium)."""
+    brief = {"resumen": {"titulo": "El Pulso de la semana", "foto": []},
+             "resumen_redactado": {"intro": "Semana de nervios.",
+                                   "temas": [{"kicker": "Macro", "emoji": "🏦",
+                                              "titular": "La Fed marcó el tono",
+                                              "analisis": "Subió el tono.", "que_observar": ""}],
+                                   "cierre": ""}}
+    teaser_html, asunto_teaser = boletin.teaser_para(brief, "2026-08-15")
+    assert teaser_html is None and asunto_teaser is None   # el sábado NO gatea

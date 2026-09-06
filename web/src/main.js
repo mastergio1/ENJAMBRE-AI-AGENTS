@@ -14,6 +14,7 @@ import { Enjambre } from './swarm/enjambre.js'
 import { MotorRemoto, guardarCorreo, urlApi } from './ui/conexion.js'
 import { pedirCorreo } from './ui/correo.js'
 import { montarGuia } from './ui/guia.js'
+import { montarPremium } from './ui/premium.js'
 import { montarNavegacion } from './ui/navegacion.js'
 import { iniciarTour, tourVisto } from './ui/tour.js'
 import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
@@ -236,6 +237,9 @@ const panel = crearPanel(soltarTitular, alternarObservatorio, {
 
 // la guía "¿Cómo funciona?": botón flotante + panel; se abre sola la 1ª visita
 montarGuia()
+
+// el chip de Premium: desbloquea 10 simulaciones/día para suscriptores del Pulso
+montarPremium()
 
 // ---------- el archivo + enlaces compartibles (?sim=<id>) ----------
 

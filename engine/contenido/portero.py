@@ -17,6 +17,7 @@ import os
 import re
 
 from contenido import persistencia
+from llm_texto import texto_de
 
 MODELO_PORTERO = "claude-haiku-4-5-20251001"
 LOTE_MAXIMO = 20
@@ -106,7 +107,7 @@ def _evaluar_lote_llm(titulares: list[str]) -> list[dict] | None:
             system=PROMPT_PORTERO,
             messages=[{"role": "user", "content": lista}],
         )
-        encontrado = re.search(r"\[.*\]", respuesta.content[0].text, re.DOTALL)
+        encontrado = re.search(r"\[.*\]", texto_de(respuesta), re.DOTALL)
         datos = json.loads(encontrado.group())
         if len(datos) != len(titulares):
             return None

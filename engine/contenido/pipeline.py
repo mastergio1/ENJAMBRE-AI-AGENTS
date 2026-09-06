@@ -37,7 +37,10 @@ def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
     lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
     # 1000 líderes comparten ~110 cerebros (presupuesto de la biblia)
     consultas, asignacion = reparto.planificar(lideres, lambda uid: uid)
-    respuestas = reparto.expandir(analizar_titular(titular, consultas), asignacion)
+    from contenido import vocabulario
+    # filtro CMF a las voces de los líderes antes de que se guarden y se sirvan
+    respuestas = reparto.expandir(
+        vocabulario.sanear_frases(analizar_titular(titular, consultas)), asignacion)
     # el enjambre razona el TIPO de mercado y aplica su personalidad
     perfil = perfil_de(clasificar(titular))
 
@@ -90,6 +93,20 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
 
         # 1. RECOLECTAR (con degradación elegante a demo)
         titulares, origen = alpaca.obtener_titulares(horas=18, limite=50)
+        # 1b. CAZAR LOS MOVIMIENTOS REALES DEL DÍA: no basta con lo que el feed
+        # tituló (se perdía la gran historia). El reportero IA busca los mayores
+        # movers, investiga y VERIFICA su porqué con búsqueda web, y los suma al
+        # pool como titulares con contexto. Nunca rompe el ritual: si falla, sigue
+        # solo con Alpaca. Van al frente (ganan los empates de impacto).
+        try:
+            from contenido import investigador
+            from contenido.fuentes import yahoo
+
+            investigados = investigador.investigar_movers(yahoo.movers_del_dia(n=8))
+            if investigados:
+                titulares = investigados + list(titulares)
+        except Exception:
+            pass
         # 2. FILTRAR
         resultado = portero.procesar_dia(conexion, titulares, maximo=maximo)
         # 3. SIMULAR con seeds fijas del día + 7. PUBLICAR como destacadas
@@ -123,22 +140,43 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
 
 
 def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int | None = None,
-                    enviar: bool = True) -> dict:
+                    enviar: bool = True, cuando: dict | None = None,
+                    momento: str = "manana") -> dict:
     """El ritual completo (CONTENIDO.md sección 6.1): prepara el día
     (pasos 1-3, 7) y luego redacta y envía El Pulso (pasos 5-6) y avisa a
     Giorgio (paso 8). El paso 4 (imagen) se sirve on-the-fly desde el
     endpoint /api/simulacion/{id}/imagen — no hace falta pre-renderizar.
 
     `enviar=False` arma todo pero no manda correos (para pruebas/preview).
+    `momento="tarde"` arma la EDICIÓN DE LA TARDE (el cierre del mercado, Premium)
+    en vez de la de la mañana.
     """
+    if momento == "tarde":
+        return _ritual_tarde(conexion, enviar=enviar, cuando=cuando)
+
     from datetime import datetime, timezone
 
-    from contenido import boletin, notificar, redaccion
+    from contenido import boletin, notificar, redaccion, redaccion_ia
 
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
     try:
-        preparado = preparar_dia(conexion, maximo=maximo, semilla_base=semilla_base)
+        # ¿qué día es? (hora local del lector). El fin de semana El Pulso cambia
+        # de marcha: SÁBADO = resumen de la semana; DOMINGO = deep-dive de una
+        # mid/small-cap o sector. `cuando` se puede inyectar (tests).
+        cuando = cuando or redaccion_ia.contexto_temporal()
+        dia = cuando.get("weekday")
+        es_finde = cuando.get("es_finde", dia in (5, 6) if dia is not None else False)
+        es_sabado = dia == 5
+        # sin weekday (cuando antiguo inyectado) pero es finde → se trata como domingo
+        es_domingo = dia == 6 or (es_finde and dia is None)
+
+        if es_finde:
+            # sin simulaciones nuevas ni gasto de enjambre: el fin de semana es
+            # lectura pausada. Un solo llamado LLM (el redactor del finde).
+            preparado = {"origen": "fin de semana", "publicadas": [], "log": []}
+        else:
+            preparado = preparar_dia(conexion, maximo=maximo, semilla_base=semilla_base)
 
         # el corrector automático: guarda cuánto se movió de verdad el
         # símbolo de las destacadas de días anteriores (calibración).
@@ -150,7 +188,7 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
             correccion = None
 
         # reúne las destacadas de hoy con sus voces (para el correo)
-        destacadas = _destacadas_de_hoy(conexion)
+        destacadas = [] if es_finde else _destacadas_de_hoy(conexion)
 
         # La Redacción: el análisis de mercado del día, DINÁMICO. El universo
         # sale de los titulares que el portero evaluó hoy (sus tickers), así
@@ -159,36 +197,223 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
         evaluadas = preparado.get("log", [])
         brief = redaccion.preparar_brief(evaluadas=evaluadas, radar=radar)
 
-        # el redactor de IA le pone VOZ al brief (prompt maestro aprobado).
-        # La historia estrella es la destacada principal. Si no hay clave/IA o
-        # algo falla, redactar() devuelve None y el correo usa su plantilla.
+        if es_sabado:
+            # ── SÁBADO: RESUMEN DE LA SEMANA. Los grandes temas con punto de vista
+            # (qué pasó, por qué, geopolítica/macro → mercado, qué observar). NUNCA
+            # predicción (marco CMF). Degrada a None sin romperse.
+            try:
+                from contenido import resumen_semanal
+                resumen = resumen_semanal.preparar_resumen(conexion, cuando=cuando)
+                brief["resumen"] = resumen
+                brief["resumen_redactado"] = (
+                    redaccion_ia.redactar_resumen(resumen, cuando=cuando) if resumen else None)
+            except Exception:
+                brief["resumen"] = None
+                brief["resumen_redactado"] = None
+        elif es_domingo:
+            # ── DOMINGO: DEEP-DIVE de una empresa mediana/pequeña o un sector en
+            # rotación. Contexto + números verificados + debate de arquetipos +
+            # gráfico real. NUNCA consejo de inversión (marco CMF).
+            try:
+                from contenido import analisis_semanal
+                analisis = analisis_semanal.preparar_analisis(cuando=cuando)
+                brief["analisis"] = analisis
+                brief["analisis_redactado"] = (
+                    redaccion_ia.redactar_analisis(analisis, cuando=cuando) if analisis else None)
+            except Exception:
+                brief["analisis"] = None
+                brief["analisis_redactado"] = None
+        else:
+            # el redactor de IA le pone VOZ al brief (prompt maestro aprobado).
+            # Si no hay clave/IA o algo falla, redactar() devuelve None y el correo
+            # usa su plantilla.
+            try:
+                enjambre = None
+                if destacadas:
+                    d0 = destacadas[0]
+                    enjambre = {"titular": d0["titular"],
+                                "direccion_pct": d0["resumen"].get("direccion_pct"),
+                                "volatilidad": d0["resumen"].get("agitacion")}
+                brief["redactado"] = redaccion_ia.redactar(brief, enjambre)
+            except Exception:
+                brief["redactado"] = None
+
+        # ── CENTRO DE MANDO: se GENERA y se GUARDA como 'pendiente'; NO se envía
+        # a los suscriptores hasta el visto bueno de Giorgio. Se le manda un
+        # correo de REVISIÓN (a su propio correo → funciona aun sin dominio).
+        import secrets
+
+        fecha_iso = persistencia.ahora_iso()[:10]
+        fecha_es = _fecha_es(datetime.now(timezone.utc))
+        # hay edición si hay destacadas (entre semana), resumen (sábado) o
+        # deep-dive (domingo)
+        sabado_listo = es_sabado and isinstance(brief.get("resumen_redactado"), dict)
+        domingo_listo = es_domingo and isinstance(brief.get("analisis_redactado"), dict)
+        finde_listo = sabado_listo or domingo_listo
+        html_preview = None
+        token = None
+        if destacadas or finde_listo:
+            html_preview = boletin.construir_html(
+                destacadas, fecha_es, token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
+            if sabado_listo:
+                asunto = boletin.asunto_resumen(brief.get("resumen"))
+            elif domingo_listo:
+                asunto = boletin.asunto_finde(brief["analisis"])
+            else:
+                asunto = boletin.asunto_del_dia(destacadas[0])
+            token = secrets.token_urlsafe(24)
+            persistencia.guardar_edicion(conexion, fecha_iso, brief, html_preview,
+                                         asunto, token, persistencia.ahora_iso())
+            n_susc = len(persistencia.suscriptores_activos(conexion))
+            if enviar:  # 'enviar' ahora = mandar el correo de REVISIÓN (no a suscriptores)
+                boletin.enviar_revision(fecha_es, html_preview, token, n_susc)
+        else:
+            persistencia.guardar_brief(conexion, fecha_iso, brief)  # sin edición: solo el brief
+
+        # paso 8: avisar a Giorgio que la edición espera su revisión
+        notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], None))
+
+        edicion = ("resumen" if sabado_listo else "finde" if domingo_listo
+                   else "diaria" if destacadas else "ninguna")
+        return {**preparado, "destacadas": len(destacadas),
+                "estado": "pendiente" if (destacadas or finde_listo) else "sin_edicion",
+                "edicion": edicion,
+                "brief": brief, "html_preview": html_preview, "token": token,
+                "correccion": correccion}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def aprobar_y_enviar(conexion=None, fecha: str | None = None) -> dict:
+    """El visto bueno: envía la edición del día a los suscriptores (idéntica a lo
+    revisado) y la marca 'enviada'. Idempotente: si ya se envió, no repite."""
+    from contenido import boletin
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        fecha = fecha or persistencia.ahora_iso()[:10]
+        ed = persistencia.obtener_edicion(conexion, fecha)
+        if ed is None or not ed.get("html_preview"):
+            return {"ok": False, "motivo": "no hay edición para ese día"}
+        if ed["estado"] == "enviada":
+            return {"ok": True, "ya_enviada": True,
+                    "enviados": ed["enviados"], "suscriptores": ed["suscriptores"]}
+        if ed["estado"] == "descartada":
+            return {"ok": False, "motivo": "la edición fue descartada"}
+        # el deep-dive del domingo es Premium: gratis → teaser; de pago → completo
+        teaser_html, asunto_teaser = boletin.teaser_para(ed.get("brief"), fecha)
+        # la edición de la TARDE (el cierre) sale SOLO a los Premium
+        solo_premium = bool(isinstance(ed.get("brief"), dict) and ed["brief"].get("cierre"))
+        conteo = boletin.enviar_a_suscriptores(
+            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha,
+            teaser_html=teaser_html, asunto_teaser=asunto_teaser, solo_premium=solo_premium)
+        persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
+                                    conteo["suscriptores"], persistencia.ahora_iso())
+        return {"ok": True, **conteo}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def _clave_tarde(fecha_iso: str) -> str:
+    """La clave de la edición de la tarde: la fecha con sufijo '-t' (así conviven
+    la edición de la mañana y la de la tarde del mismo día en la base)."""
+    return f"{fecha_iso[:10]}-t"
+
+
+def _ritual_tarde(conexion=None, enviar: bool = True, cuando=None) -> dict:
+    """La EDICIÓN DE LA TARDE (Premium): 'el cierre del mercado'. El reportero IA
+    caza los movers reales del día y explica por qué. Se guarda bajo 'AAAA-MM-DD-t'
+    y se manda a revisión; al aprobar, sale SOLO a los Premium. Sin simulaciones
+    del enjambre. Nunca rompe: si no hay movimientos, no hay edición de tarde."""
+    import secrets
+    from datetime import datetime, timezone
+
+    from contenido import boletin, cierre as mod_cierre, notificar, redaccion_ia
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
         try:
-            from contenido import redaccion_ia
-            enjambre = None
-            if destacadas:
-                d0 = destacadas[0]
-                enjambre = {"titular": d0["titular"],
-                            "direccion_pct": d0["resumen"].get("direccion_pct"),
-                            "volatilidad": d0["resumen"].get("agitacion")}
-            brief["redactado"] = redaccion_ia.redactar(brief, enjambre)
+            datos = mod_cierre.preparar_cierre()
         except Exception:
-            brief["redactado"] = None
+            datos = None
+        if not datos:
+            return {"estado": "sin_edicion", "edicion": "cierre",
+                    "motivo": "sin movimientos del día"}
 
-        persistencia.guardar_brief(conexion, persistencia.ahora_iso()[:10], brief)
+        # Voz Moby ENCIMA de los hechos verificados: los movimientos se vuelven
+        # mini-historias con tono, no una lista plana. Si la IA no está o falla,
+        # 'redactado' queda None y el boletín cae a la lista de siempre.
+        cuando = cuando or redaccion_ia.contexto_temporal()
+        try:
+            datos["redactado"] = redaccion_ia.redactar_cierre(datos, cuando=cuando)
+        except Exception:
+            datos["redactado"] = None
 
-        envio = None
-        html = None
-        if destacadas:
-            fecha = _fecha_es(datetime.now(timezone.utc))
-            html = boletin.construir_html(destacadas, fecha, brief=brief)  # preview
-            if enviar:
-                envio = _enviar_con_brief(conexion, destacadas, fecha, brief)
+        brief = {"cierre": datos}
+        clave = _clave_tarde(persistencia.ahora_iso())
+        fecha_es = _fecha_es(datetime.now(timezone.utc)) + " · cierre"
+        html_preview = boletin.construir_html(
+            [], fecha_es, token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
+        asunto = boletin.asunto_cierre()
+        token = secrets.token_urlsafe(24)
+        persistencia.guardar_edicion(conexion, clave, brief, html_preview, asunto, token,
+                                     persistencia.ahora_iso())
+        n_prem = persistencia.contar_premium(conexion)
+        if enviar:
+            boletin.enviar_revision(fecha_es, html_preview, token, n_prem)
+        try:
+            notificar.avisar("🌆 El cierre del mercado (Premium) espera tu revisión.")
+        except Exception:
+            pass
+        return {"estado": "pendiente", "edicion": "cierre", "clave": clave,
+                "html_preview": html_preview, "token": token, "premium": n_prem}
+    finally:
+        if propia:
+            conexion.close()
 
-        # paso 8: avisar a Giorgio
-        notificar.avisar(notificar.resumen_ejecucion(preparado["origen"], preparado["publicadas"], envio))
 
-        return {**preparado, "destacadas": len(destacadas), "envio": envio,
-                "brief": brief, "html_preview": html, "correccion": correccion}
+def reenviar_a_suscriptores(conexion=None, fecha: str | None = None) -> dict:
+    """Reenvía la edición del día a TODOS los suscriptores activos, aunque YA se
+    haya enviado (envío manual a pedido de Giorgio). A diferencia de
+    aprobar_y_enviar, NO es idempotente: reenvía a propósito. Requiere que exista
+    el preview y que la edición no esté descartada."""
+    from contenido import boletin
+
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        fecha = fecha or persistencia.ahora_iso()[:10]
+        ed = persistencia.obtener_edicion(conexion, fecha)
+        if ed is None or not ed.get("html_preview"):
+            return {"ok": False, "motivo": "no hay edición para ese día"}
+        if ed["estado"] == "descartada":
+            return {"ok": False, "motivo": "la edición fue descartada"}
+        # el deep-dive del domingo es Premium: gratis → teaser; de pago → completo
+        teaser_html, asunto_teaser = boletin.teaser_para(ed.get("brief"), fecha)
+        solo_premium = bool(isinstance(ed.get("brief"), dict) and ed["brief"].get("cierre"))
+        conteo = boletin.enviar_a_suscriptores(
+            conexion, ed["html_preview"], ed["asunto"] or "El Pulso", fecha_edicion=fecha,
+            teaser_html=teaser_html, asunto_teaser=asunto_teaser, solo_premium=solo_premium)
+        persistencia.marcar_enviada(conexion, fecha, conteo["enviados"],
+                                    conteo["suscriptores"], persistencia.ahora_iso())
+        return {"ok": True, "reenviada": True, **conteo}
+    finally:
+        if propia:
+            conexion.close()
+
+
+def descartar_edicion(conexion=None, fecha: str | None = None) -> dict:
+    """Descarta la edición del día (no se enviará)."""
+    propia = conexion is None
+    conexion = conexion or persistencia.conectar()
+    try:
+        fecha = fecha or persistencia.ahora_iso()[:10]
+        ok = persistencia.set_estado_edicion(conexion, fecha, "descartada")
+        return {"ok": ok}
     finally:
         if propia:
             conexion.close()

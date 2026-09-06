@@ -109,15 +109,69 @@ def test_api_simular_titular_pendiente(dia_preparado):
     assert cliente.post("/api/simular-titular", json={"id": "no-existe"}).status_code == 404
 
 
-def test_limite_por_ip():
-    for _ in range(limites.LIMITE_IP_HORA):
+def test_limite_gratis_por_dia():
+    # gratis: 1 simulación al día por IP; la siguiente se bloquea e invita a Premium
+    for _ in range(limites.tope_dia_gratis()):
         permitido, _ = limites.permitir("1.2.3.4")
         assert permitido
     permitido, motivo = limites.permitir("1.2.3.4")
     assert not permitido
-    assert motivo == limites.MENSAJE_IP
-    # otra IP sigue pudiendo
+    assert "Premium" in motivo
+    # otra IP sigue pudiendo (el cupo es por persona)
     assert limites.permitir("5.6.7.8")[0]
+
+
+def test_limite_gratis_por_dispositivo():
+    # dos dispositivos detrás de la MISMA IP (oficina/CGNAT): cada uno su cupo
+    assert limites.permitir("5.5.5.5", cliente_id="disp-A")[0]      # A: su 1/día
+    assert limites.permitir("5.5.5.5", cliente_id="disp-B")[0]      # B: su propio 1/día
+    assert not limites.permitir("5.5.5.5", cliente_id="disp-A")[0]  # A ya gastó el suyo
+
+
+def _premium_con_token(email):
+    """Da de alta un Premium y devuelve su token del enlace mágico."""
+    from contenido import persistencia
+    conexion = persistencia.conectar()
+    alta = persistencia.agregar_suscriptor(conexion, email)
+    persistencia.confirmar_suscriptor(conexion, alta["token_confirma"])
+    persistencia.set_premium(conexion, email, True)
+    token = persistencia.emitir_token_enjambre(conexion, email)
+    conexion.close()
+    return token
+
+
+def test_limite_premium_por_mes():
+    # un Premium tiene 40/MES canjeando su TOKEN; el correo desnudo ya no sirve
+    token = _premium_con_token("vip@lector.cl")
+
+    limites.permitir("9.9.9.9")  # gasta la gratis de la IP
+    # con su token Premium: llega a 40, sin que lo frene el límite gratis de la IP
+    for i in range(limites.tope_mes_premium()):
+        permitido, _ = limites.permitir("9.9.9.9", premium_token=token)
+        assert permitido, f"la simulación Premium #{i+1} debería permitirse"
+    permitido, motivo = limites.permitir("9.9.9.9", premium_token=token)
+    assert not permitido and "mes" in motivo
+
+
+def test_token_invalido_no_da_premium():
+    # un token que no existe cae al nivel gratis (no hay forma de fingir Premium)
+    assert limites.permitir("7.7.7.7", premium_token="token-que-no-existe-xxxx")[0]
+    permitido, motivo = limites.permitir("7.7.7.7", premium_token="token-que-no-existe-xxxx")
+    assert not permitido and "Premium" in motivo  # gastó su 1/día gratis
+
+
+def test_premium_cupo_mensual_persiste_en_disco():
+    # el cupo mensual vive en disco: una conexión nueva ve el mismo gasto
+    from datetime import date
+    from contenido import persistencia
+    token = _premium_con_token("vip2@lector.cl")
+
+    for _ in range(5):
+        limites.permitir("8.8.8.8", premium_token=token)
+    mes = date.today().isoformat()[:7]
+    conexion = persistencia.conectar()
+    assert persistencia.gasto_premium_mes(conexion, "vip2@lector.cl", mes) == 5
+    conexion.close()
 
 
 def test_tope_global_diario(monkeypatch):

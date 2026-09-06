@@ -11,7 +11,7 @@ import json
 import os
 import secrets
 import sqlite3
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 RUTA_DEFECTO = Path(__file__).parent.parent / "datos" / "enjambre.db"
@@ -51,7 +51,10 @@ CREATE TABLE IF NOT EXISTS suscriptores (
   origen         TEXT,
   activo         INTEGER DEFAULT 0,   -- 0 hasta confirmar (double opt-in)
   token_baja     TEXT NOT NULL,
-  token_confirma TEXT
+  token_confirma TEXT,
+  premium        INTEGER DEFAULT 0,   -- 1 = suscriptor de pago (recibe el deep-dive completo)
+  premium_hasta  TEXT,                -- vencimiento ISO (AAAA-MM-DD); NULL = sin vencimiento
+  token_enjambre TEXT                 -- secreto del enlace mágico que desbloquea 40/mes en El Enjambre
 );
 CREATE TABLE IF NOT EXISTS contactos (
   id           INTEGER PRIMARY KEY AUTOINCREMENT,  -- leads B2B (organizaciones)
@@ -60,6 +63,30 @@ CREATE TABLE IF NOT EXISTS contactos (
   organizacion TEXT,
   email        TEXT NOT NULL,
   mensaje      TEXT
+);
+CREATE TABLE IF NOT EXISTS gasto_diario (
+  -- el tope global de simulaciones públicas del día, en DISCO (no en memoria):
+  -- así NO se reinicia con cada despliegue de Render (la muralla de la billetera
+  -- debe ser un techo firme, no uno que se levanta solo en cada reinicio).
+  fecha       TEXT PRIMARY KEY,     -- AAAA-MM-DD (UTC)
+  consumidas  INTEGER DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS gasto_premium (
+  -- el cupo MENSUAL de simulaciones de cada suscriptor Premium, en DISCO: un
+  -- reinicio de Render no debe regalarle el mes de nuevo a mitad de camino.
+  email       TEXT NOT NULL,
+  mes         TEXT NOT NULL,        -- AAAA-MM (UTC)
+  consumidas  INTEGER DEFAULT 0,
+  PRIMARY KEY (email, mes)
+);
+CREATE TABLE IF NOT EXISTS eventos_correo (
+  -- eventos de Resend (webhook firmado): aperturas y clics por edición.
+  -- UNIQUE(fecha_ed,email,tipo) → un opened por persona = apertura ÚNICA.
+  fecha_ed   TEXT,                 -- la edición (AAAA-MM-DD), del tag del envío
+  email      TEXT,
+  tipo       TEXT NOT NULL,        -- delivered/opened/clicked/bounced/complained
+  ts         TEXT NOT NULL,
+  UNIQUE(fecha_ed, email, tipo)
 );
 """
 
@@ -93,8 +120,20 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("titulares", "impacto", "INTEGER DEFAULT 0"),
             ("suscriptores", "token_confirma", "TEXT"),
             ("suscriptores", "fecha_confirma", "TEXT"),  # anti-reenvío (auditoría C)
+            ("suscriptores", "premium", "INTEGER DEFAULT 0"),  # suscripción de pago (Premium)
+            ("suscriptores", "premium_hasta", "TEXT"),         # vencimiento del Premium (ISO)
+            ("suscriptores", "token_enjambre", "TEXT"),        # enlace mágico de desbloqueo del enjambre
             ("simulaciones", "epilogo", "TEXT"),  # "¿y qué pasó después?" (Etapa 9)
             ("simulaciones", "reaccion_real", "TEXT"),  # corrector automático (calibración)
+            # centro de mando de El Pulso: la edición como máquina de estados
+            ("briefs", "estado", "TEXT DEFAULT 'pendiente'"),  # pendiente/aprobada/enviada/descartada
+            ("briefs", "token", "TEXT"),           # secreto para los enlaces del correo de revisión
+            ("briefs", "html_preview", "TEXT"),    # el correo ya armado (WYSIWYG al aprobar)
+            ("briefs", "asunto", "TEXT"),          # asunto del correo del día
+            ("briefs", "enviados", "INTEGER DEFAULT 0"),
+            ("briefs", "suscriptores", "INTEGER DEFAULT 0"),
+            ("briefs", "generada_iso", "TEXT"),
+            ("briefs", "enviada_iso", "TEXT"),
         ]:
             try:
                 conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
@@ -197,6 +236,113 @@ def aprobar_brief(conexion, fecha: str) -> bool:
     cursor = conexion.execute("UPDATE briefs SET aprobado = 1 WHERE fecha = ?", (fecha,))
     conexion.commit()
     return cursor.rowcount > 0
+
+
+# ---------- El centro de mando: la edición como máquina de estados ----------
+# estado ∈ {pendiente, aprobada, enviada, descartada}. Nada sale a los
+# suscriptores hasta que Giorgio la aprueba (desde el correo o el dashboard).
+
+TOKEN_BAJA_SENTINEL = "__TOKEN_BAJA__"  # marcador en el preview; se reemplaza al enviar
+
+
+def _fila_edicion(fila) -> dict | None:
+    if fila is None:
+        return None
+    return {
+        "fecha": fila["fecha"],
+        "brief": json.loads(fila["brief_json"]),
+        "estado": fila["estado"] or "pendiente",
+        "token": fila["token"],
+        "html_preview": fila["html_preview"],
+        "asunto": fila["asunto"],
+        "enviados": fila["enviados"] or 0,
+        "suscriptores": fila["suscriptores"] or 0,
+        "generada_iso": fila["generada_iso"],
+        "enviada_iso": fila["enviada_iso"],
+        "aprobado": bool(fila["aprobado"]),
+    }
+
+
+_COLS_EDICION = ("fecha, brief_json, aprobado, estado, token, html_preview, asunto, "
+                 "enviados, suscriptores, generada_iso, enviada_iso")
+
+
+def guardar_edicion(conexion, fecha: str, brief: dict, html_preview: str,
+                    asunto: str, token: str, generada_iso: str) -> None:
+    """Guarda la edición del día lista para revisión (estado 'pendiente').
+    Regenerar el mismo día reinicia el estado y las estadísticas."""
+    conexion.execute(
+        """INSERT INTO briefs (fecha, brief_json, aprobado, estado, token,
+                               html_preview, asunto, generada_iso, enviados, suscriptores, enviada_iso)
+           VALUES (?, ?, 0, 'pendiente', ?, ?, ?, ?, 0, 0, NULL)
+           ON CONFLICT(fecha) DO UPDATE SET
+             brief_json=excluded.brief_json, aprobado=0, estado='pendiente',
+             token=excluded.token, html_preview=excluded.html_preview,
+             asunto=excluded.asunto, generada_iso=excluded.generada_iso,
+             enviados=0, suscriptores=0, enviada_iso=NULL""",
+        (fecha, json.dumps(brief, ensure_ascii=False), token, html_preview, asunto, generada_iso),
+    )
+    conexion.commit()
+
+
+def obtener_edicion(conexion, fecha: str) -> dict | None:
+    fila = conexion.execute(
+        f"SELECT {_COLS_EDICION} FROM briefs WHERE fecha = ?", (fecha,)).fetchone()
+    return _fila_edicion(fila)
+
+
+def edicion_por_token(conexion, token: str | None) -> dict | None:
+    """La edición apuntada por un token de correo (para los enlaces de revisión)."""
+    if not token or len(token) < 16:
+        return None
+    fila = conexion.execute(
+        f"SELECT {_COLS_EDICION} FROM briefs WHERE token = ?", (token,)).fetchone()
+    return _fila_edicion(fila)
+
+
+def set_estado_edicion(conexion, fecha: str, estado: str) -> bool:
+    aprobado = 1 if estado in ("aprobada", "enviada") else 0
+    cur = conexion.execute(
+        "UPDATE briefs SET estado = ?, aprobado = ? WHERE fecha = ?", (estado, aprobado, fecha))
+    conexion.commit()
+    return cur.rowcount > 0
+
+
+def marcar_enviada(conexion, fecha: str, enviados: int, suscriptores: int, enviada_iso: str) -> None:
+    conexion.execute(
+        """UPDATE briefs SET estado='enviada', aprobado=1,
+             enviados=?, suscriptores=?, enviada_iso=? WHERE fecha=?""",
+        (enviados, suscriptores, enviada_iso, fecha))
+    conexion.commit()
+
+
+def listar_ediciones(conexion, limite: int = 30) -> list[dict]:
+    """El historial de ediciones para el dashboard (sin el HTML, liviano)."""
+    filas = conexion.execute(
+        """SELECT fecha, estado, asunto, enviados, suscriptores, generada_iso, enviada_iso
+           FROM briefs ORDER BY fecha DESC LIMIT ?""", (max(1, int(limite)),)).fetchall()
+    return [{"fecha": f["fecha"], "estado": f["estado"] or "pendiente", "asunto": f["asunto"],
+             "enviados": f["enviados"] or 0, "suscriptores": f["suscriptores"] or 0,
+             "generada_iso": f["generada_iso"], "enviada_iso": f["enviada_iso"]} for f in filas]
+
+
+def actualizar_redactado(conexion, fecha: str, redactado: dict) -> bool:
+    """Guarda cambios de texto del editor (dashboard) dentro del brief del día."""
+    fila = conexion.execute("SELECT brief_json FROM briefs WHERE fecha = ?", (fecha,)).fetchone()
+    if fila is None:
+        return False
+    brief = json.loads(fila["brief_json"])
+    brief["redactado"] = redactado
+    conexion.execute("UPDATE briefs SET brief_json = ? WHERE fecha = ?",
+                     (json.dumps(brief, ensure_ascii=False), fecha))
+    conexion.commit()
+    return True
+
+
+def actualizar_preview(conexion, fecha: str, html_preview: str) -> None:
+    """Reemplaza el HTML del correo tras una edición manual (dashboard)."""
+    conexion.execute("UPDATE briefs SET html_preview = ? WHERE fecha = ?", (html_preview, fecha))
+    conexion.commit()
 
 
 # ---------- el archivo / hemeroteca (Etapa 9) ----------
@@ -438,6 +584,50 @@ def agregar_suscriptor(conexion, email: str, origen: str = "web") -> dict:
             "token_baja": token_baja, "ya_activo": False, "reenviar": True}
 
 
+def alta_directa(conexion, email: str, origen: str = "premium") -> str:
+    """Alta ACTIVA sin doble opt-in: para pagadores (Premium), que ya dieron
+    consentimiento explícito al pagar. Crea el suscriptor activo o reactiva uno
+    dado de baja, conservando su token. Devuelve el email normalizado."""
+    email = email.strip().lower()
+    fila = conexion.execute("SELECT token_baja FROM suscriptores WHERE email = ?", (email,)).fetchone()
+    if fila:
+        conexion.execute("UPDATE suscriptores SET activo = 1, token_confirma = NULL WHERE email = ?", (email,))
+    else:
+        conexion.execute(
+            "INSERT INTO suscriptores (email, fecha_alta, origen, activo, token_baja) "
+            "VALUES (?, ?, ?, 1, ?)",
+            (email, ahora_iso(), origen, secrets.token_urlsafe(24)),
+        )
+    conexion.commit()
+    return email
+
+
+def es_activo(conexion, email: str) -> bool:
+    """True si el correo ya es un suscriptor activo (confirmado)."""
+    fila = conexion.execute(
+        "SELECT 1 FROM suscriptores WHERE email = ? AND activo = 1", (email.strip().lower(),)).fetchone()
+    return fila is not None
+
+
+def token_baja_de(conexion, email: str) -> str | None:
+    """El token de baja de un correo (para el enlace de desuscripción). None si no existe."""
+    fila = conexion.execute(
+        "SELECT token_baja FROM suscriptores WHERE email = ?", (email.strip().lower(),)).fetchone()
+    return fila["token_baja"] if fila else None
+
+
+def activar_pendientes(conexion) -> int:
+    """Activa a TODOS los suscriptores pendientes de confirmar (dieron su correo
+    al suscribirse pero no confirmaron). Es el paso a opt-in simple: el clic en
+    'Suscribirme' ya es su consentimiento. NO toca a los que se dieron de baja
+    (esos no tienen token_confirma). Devuelve cuántos activó."""
+    cursor = conexion.execute(
+        "UPDATE suscriptores SET activo = 1, token_confirma = NULL "
+        "WHERE activo = 0 AND token_confirma IS NOT NULL")
+    conexion.commit()
+    return cursor.rowcount
+
+
 def confirmar_suscriptor(conexion, token: str) -> str | None:
     """Segundo paso del opt-in: activa al suscriptor. Devuelve su email o None."""
     fila = conexion.execute(
@@ -459,9 +649,238 @@ def dar_de_baja(conexion, token: str) -> bool:
     return cursor.rowcount > 0
 
 
+def desactivar_por_email(conexion, email: str) -> bool:
+    """Baja un suscriptor por su correo (no por token). Se usa para limpiar solo
+    las direcciones que el proveedor marca como PERMANENTEMENTE inválidas (p. ej.
+    @example.com o un correo mal escrito): así dejan de reintentarse en cada
+    edición y de inflar la cuenta de 'enviados'. True si el correo existía."""
+    cursor = conexion.execute(
+        "UPDATE suscriptores SET activo = 0 WHERE email = ?", (email.strip().lower(),))
+    conexion.commit()
+    return cursor.rowcount > 0
+
+
 def suscriptores_activos(conexion) -> list[dict]:
-    """Los que confirmaron: a quienes se envía el Pulso."""
+    """Los que confirmaron: a quienes se envía el Pulso. Cada uno trae su
+    estado `premium` (1/0) YA calculado (respetando el vencimiento), para que
+    el envío decida quién recibe el análisis completo y quién el teaser."""
     filas = conexion.execute(
-        "SELECT email, token_baja FROM suscriptores WHERE activo = 1"
+        "SELECT email, token_baja, "
+        "  CASE WHEN premium = 1 AND (premium_hasta IS NULL OR premium_hasta >= date('now')) "
+        "       THEN 1 ELSE 0 END AS premium "
+        "FROM suscriptores WHERE activo = 1"
     ).fetchall()
     return [dict(f) for f in filas]
+
+
+# ---------- Premium: la llave que decide quién recibe el deep-dive completo ----------
+
+def set_premium(conexion, email: str, activo: bool = True, hasta: str | None = None) -> bool:
+    """Prende o apaga el Premium de un suscriptor. `hasta` = vencimiento ISO
+    (AAAA-MM-DD) o None para sin vencimiento. True si el correo existe."""
+    cursor = conexion.execute(
+        "UPDATE suscriptores SET premium = ?, premium_hasta = ? WHERE email = ?",
+        (1 if activo else 0, (hasta or None), email.strip().lower()),
+    )
+    conexion.commit()
+    return cursor.rowcount > 0
+
+
+def es_premium(conexion, email: str) -> bool:
+    """True si el correo es un suscriptor Premium activo y no vencido."""
+    fila = conexion.execute(
+        "SELECT 1 FROM suscriptores WHERE email = ? AND activo = 1 AND premium = 1 "
+        "AND (premium_hasta IS NULL OR premium_hasta >= date('now'))",
+        (email.strip().lower(),),
+    ).fetchone()
+    return fila is not None
+
+
+def contar_premium(conexion) -> int:
+    """Cuántos suscriptores Premium activos (no vencidos) hay ahora mismo."""
+    return conexion.execute(
+        "SELECT COUNT(*) FROM suscriptores WHERE activo = 1 AND premium = 1 "
+        "AND (premium_hasta IS NULL OR premium_hasta >= date('now'))"
+    ).fetchone()[0]
+
+
+# ---------- enlace mágico del enjambre (token en vez del correo desnudo) ----------
+
+def emitir_token_enjambre(conexion, email: str) -> str | None:
+    """Devuelve el token de desbloqueo del enjambre de este correo (lo crea si no
+    existe). Solo tiene sentido para un Premium — el que llama decide a quién se
+    lo emite. None si el correo no existe."""
+    email = email.strip().lower()
+    fila = conexion.execute(
+        "SELECT token_enjambre FROM suscriptores WHERE email = ?", (email,)).fetchone()
+    if fila is None:
+        return None
+    token = fila["token_enjambre"]
+    if not token:
+        token = secrets.token_urlsafe(24)
+        conexion.execute(
+            "UPDATE suscriptores SET token_enjambre = ? WHERE email = ?", (token, email))
+        conexion.commit()
+    return token
+
+
+def email_por_token_enjambre(conexion, token: str | None) -> str | None:
+    """El correo dueño de un token de desbloqueo (o None). El token ES el secreto:
+    quien lo tiene, tiene acceso al buzón que lo recibió."""
+    if not token or len(token) < 16:
+        return None
+    fila = conexion.execute(
+        "SELECT email FROM suscriptores WHERE token_enjambre = ?", (token,)).fetchone()
+    return fila["email"] if fila else None
+
+
+# ---------- tope de gasto diario (en disco, sobrevive a los reinicios) ----------
+
+def gasto_dia(conexion, fecha: str) -> int:
+    """Cuántas simulaciones públicas se han consumido en `fecha` (0 si no hay fila)."""
+    fila = conexion.execute(
+        "SELECT consumidas FROM gasto_diario WHERE fecha = ?", (fecha,)).fetchone()
+    return fila[0] if fila else 0
+
+
+def sumar_gasto_dia(conexion, fecha: str, n: int = 1) -> int:
+    """Suma `n` al gasto de `fecha` (crea la fila si no existe). Devuelve el total."""
+    conexion.execute(
+        "INSERT INTO gasto_diario (fecha, consumidas) VALUES (?, ?) "
+        "ON CONFLICT(fecha) DO UPDATE SET consumidas = consumidas + excluded.consumidas",
+        (fecha, n))
+    conexion.commit()
+    return gasto_dia(conexion, fecha)
+
+
+def reiniciar_gasto(conexion) -> None:
+    """Borra todo el gasto registrado (solo para los tests)."""
+    conexion.execute("DELETE FROM gasto_diario")
+    conexion.execute("DELETE FROM gasto_premium")
+    conexion.commit()
+
+
+# ---------- cupo mensual de Premium (en disco, sobrevive a los reinicios) ----------
+
+def gasto_premium_mes(conexion, email: str, mes: str) -> int:
+    """Cuántas simulaciones lleva este Premium en `mes` (AAAA-MM). 0 si ninguna."""
+    fila = conexion.execute(
+        "SELECT consumidas FROM gasto_premium WHERE email = ? AND mes = ?",
+        (email.strip().lower(), mes)).fetchone()
+    return fila[0] if fila else 0
+
+
+def sumar_gasto_premium(conexion, email: str, mes: str, n: int = 1) -> int:
+    """Suma `n` al cupo mensual de este Premium (crea la fila si no existe).
+    Devuelve el total del mes."""
+    email = email.strip().lower()
+    conexion.execute(
+        "INSERT INTO gasto_premium (email, mes, consumidas) VALUES (?, ?, ?) "
+        "ON CONFLICT(email, mes) DO UPDATE SET consumidas = consumidas + excluded.consumidas",
+        (email, mes, n))
+    conexion.commit()
+    return gasto_premium_mes(conexion, email, mes)
+
+
+# ---------- eventos de correo (aperturas/clics de Resend) ----------
+
+# tipos que aceptamos del webhook (los demás se ignoran en silencio)
+_TIPOS_EVENTO = {"delivered", "opened", "clicked", "bounced", "complained"}
+
+
+def registrar_evento_correo(conexion, fecha_ed: str | None, email: str, tipo: str,
+                            ts: str | None = None) -> bool:
+    """Registra un evento de Resend. INSERT OR IGNORE sobre (edición,email,tipo):
+    contar filas = contar personas únicas (aperturas/clics únicos). Devuelve
+    True si era un evento nuevo (no un duplicado)."""
+    tipo = (tipo or "").strip().lower()
+    if tipo not in _TIPOS_EVENTO or not email:
+        return False
+    cur = conexion.execute(
+        "INSERT OR IGNORE INTO eventos_correo (fecha_ed, email, tipo, ts) VALUES (?, ?, ?, ?)",
+        ((fecha_ed or "").strip()[:10] or None, email.strip().lower()[:200], tipo, ts or ahora_iso()),
+    )
+    conexion.commit()
+    return cur.rowcount > 0
+
+
+def _unicos(conexion, fecha_ed: str, tipo: str) -> int:
+    return conexion.execute(
+        "SELECT COUNT(DISTINCT email) FROM eventos_correo WHERE fecha_ed = ? AND tipo = ?",
+        (fecha_ed, tipo),
+    ).fetchone()[0]
+
+
+def estadisticas(conexion, dias: int = 30, ediciones_correo: int = 14) -> dict:
+    """El panorama para la pestaña de estadísticas del centro de mando:
+    suscriptores (total/activos/pendientes, curva de crecimiento, orígenes),
+    ediciones (enviadas/descartadas) y correo (aperturas/clics por edición).
+
+    Todo sale de datos reales; si aún no hay eventos de Resend, las tasas van
+    en None y la UI lo muestra como 'aún sin datos' (degradación elegante)."""
+    dias = max(7, min(int(dias), 120))
+
+    total = conexion.execute("SELECT COUNT(*) FROM suscriptores").fetchone()[0]
+    activos = conexion.execute("SELECT COUNT(*) FROM suscriptores WHERE activo = 1").fetchone()[0]
+    pendientes = total - activos
+    tasa_confirma = round(activos / total, 3) if total else None
+
+    # curva de crecimiento: acumulado de activos por día en la ventana
+    altas = {f["d"]: f["n"] for f in conexion.execute(
+        "SELECT substr(fecha_alta,1,10) d, COUNT(*) n FROM suscriptores "
+        "WHERE activo = 1 GROUP BY d").fetchall()}
+    inicio = date.today() - timedelta(days=dias - 1)
+    base = conexion.execute(
+        "SELECT COUNT(*) FROM suscriptores WHERE activo = 1 AND substr(fecha_alta,1,10) < ?",
+        (inicio.isoformat(),)).fetchone()[0]
+    serie, acum = [], base
+    for i in range(dias):
+        d = (inicio + timedelta(days=i)).isoformat()
+        n = altas.get(d, 0)
+        acum += n
+        serie.append({"fecha": d, "altas": n, "acumulado": acum})
+
+    por_origen = [{"origen": f["o"], "n": f["n"]} for f in conexion.execute(
+        "SELECT COALESCE(NULLIF(origen,''),'—') o, COUNT(*) n FROM suscriptores "
+        "WHERE activo = 1 GROUP BY o ORDER BY n DESC").fetchall()]
+
+    # ediciones
+    def _cuenta(estado):
+        return conexion.execute("SELECT COUNT(*) FROM briefs WHERE estado = ?", (estado,)).fetchone()[0]
+    enviadas, descartadas = _cuenta("enviada"), _cuenta("descartada")
+    prom = conexion.execute(
+        "SELECT AVG(enviados) FROM briefs WHERE estado = 'enviada' AND enviados > 0").fetchone()[0]
+
+    # correo por edición (últimas enviadas)
+    filas = conexion.execute(
+        "SELECT fecha, asunto, enviados FROM briefs WHERE estado = 'enviada' "
+        "ORDER BY fecha DESC LIMIT ?", (max(1, int(ediciones_correo)),)).fetchall()
+    correo, sum_env, sum_ab, sum_cl = [], 0, 0, 0
+    for f in filas:
+        env = f["enviados"] or 0
+        ab, cl = _unicos(conexion, f["fecha"], "opened"), _unicos(conexion, f["fecha"], "clicked")
+        sum_env += env; sum_ab += ab; sum_cl += cl
+        correo.append({
+            "fecha": f["fecha"], "asunto": f["asunto"], "enviados": env,
+            "abiertos": ab, "clics": cl,
+            "tasa_apertura": round(ab / env, 3) if env else None,
+            "tasa_clic": round(cl / env, 3) if env else None,
+        })
+    hay_eventos = conexion.execute("SELECT COUNT(*) FROM eventos_correo").fetchone()[0] > 0
+
+    return {
+        "suscriptores": {
+            "total": total, "activos": activos, "pendientes": pendientes,
+            "tasa_confirmacion": tasa_confirma, "serie": serie, "por_origen": por_origen,
+        },
+        "ediciones": {
+            "enviadas": enviadas, "descartadas": descartadas,
+            "promedio_enviados": round(prom, 1) if prom else None,
+        },
+        "correo": {
+            "hay_datos": hay_eventos,
+            "tasa_apertura": round(sum_ab / sum_env, 3) if sum_env else None,
+            "tasa_clic": round(sum_cl / sum_env, 3) if sum_env else None,
+            "por_edicion": correo,
+        },
+    }

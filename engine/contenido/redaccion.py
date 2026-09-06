@@ -60,6 +60,7 @@ def reportear(cotizaciones: list[dict], noticias: list[dict]) -> list[dict]:
         cita = _buscar_cita(terminos, cot.get("simbolo", ""), noticias)
         hechos.append({
             "nombre": nombre,
+            "simbolo": cot.get("simbolo", ""),   # el ticker: para graficar su precio real
             "variacion_pct": cot["variacion_pct"],
             "cita": cita,
         })
@@ -122,18 +123,19 @@ def editar(hecho: dict) -> dict | None:
     base = f"{hecho['nombre']} {_verbo(pct)} {abs(pct)}%"
     cita = hecho.get("cita")
 
+    simbolo = hecho.get("simbolo", "")
     if cita and es_publicable(cita["titular"]):
         # "en la prensa" = contexto relacionado, NO una afirmación de causa
         frase = f'{base}. En la prensa: «{cita["titular"]}».'
         if es_publicable(frase):
-            return {"tipo": "mover", "nombre": hecho["nombre"], "variacion_pct": pct,
-                    "frase": frase, "cita_titular": cita["titular"],
+            return {"tipo": "mover", "nombre": hecho["nombre"], "simbolo": simbolo,
+                    "variacion_pct": pct, "frase": frase, "cita_titular": cita["titular"],
                     "fuente": cita.get("fuente", ""), "url": cita.get("url", "")}
 
     frase = f"{base}."  # sin causa: solo el hecho verificado
     if es_publicable(frase):
-        return {"tipo": "mover", "nombre": hecho["nombre"], "variacion_pct": pct,
-                "frase": frase, "fuente": "", "url": ""}
+        return {"tipo": "mover", "nombre": hecho["nombre"], "simbolo": simbolo,
+                "variacion_pct": pct, "frase": frase, "fuente": "", "url": ""}
     return None
 
 

@@ -110,6 +110,9 @@ class MercadoEnjambre(mesa.Model):
             config = json.load(f)
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
+            # expone los "parametros" del tipo para que sus agentes los lean en
+            # __init__ (vía AgenteBase.cfg). Con la config original no cambia nada.
+            self._cfg_agentes_actual = tipo.get("parametros") or {}
             if tipo["id"] == "lider_opinion":
                 for arquetipo in tipo["arquetipos"]:
                     for _ in range(arquetipo["cantidad"]):
@@ -125,6 +128,9 @@ class MercadoEnjambre(mesa.Model):
         """Inyecta una noticia como número (para tests y calibración).
         Cada líder forma su señal y la propaga por la red de influencia."""
         self.sentimiento = max(-1.0, min(1.0, self.sentimiento + sentimiento))
+        # Nivel 1: cada agente recuerda la noticia (memoria de rachas → cautela)
+        for agente in self.agents:
+            agente.actualizar_memoria(sentimiento)
         for lider in self._lideres:
             lider.recibir_noticia(sentimiento)
         self._propagar_desde_lideres()

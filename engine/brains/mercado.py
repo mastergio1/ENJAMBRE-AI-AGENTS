@@ -22,6 +22,7 @@ Regla CMF: la clasificación es interna (calibración), no una recomendación.
 
 import json
 import os
+from llm_texto import texto_de
 
 # ---------- perfiles de personalidad por tipo de mercado ----------
 # sensibilidad: cuánto mueve el sentimiento al mercado (1.0 = base índice)
@@ -142,7 +143,7 @@ async def clasificar_async(titular: str) -> str:
             messages=[{"role": "user", "content": f"Titular: {titular}"}],
         )
         import re
-        encontrado = re.search(r"\{.*\}", respuesta.content[0].text, re.DOTALL)
+        encontrado = re.search(r"\{.*\}", texto_de(respuesta), re.DOTALL)
         if encontrado:
             tipo = json.loads(encontrado.group()).get("mercado", "")
             if tipo in MERCADOS_ACTIVOS:   # oro/petróleo en pausa → cae al léxico → índice

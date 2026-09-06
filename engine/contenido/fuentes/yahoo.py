@@ -42,6 +42,200 @@ def _serie_anual(simbolo: str) -> list[float] | None:
     return limpios if len(limpios) >= 2 else None
 
 
+_MESES_ES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago",
+             "sep", "oct", "nov", "dic"]
+
+
+def etiqueta_fecha(dt: datetime) -> str:
+    """'7 ago' — etiqueta corta en español para los ejes del gráfico."""
+    return f"{dt.day} {_MESES_ES[dt.month - 1]}"
+
+
+def serie_reciente(simbolo: str, rango: str = "5d", intervalo: str = "1d"):
+    """(fechas, cierres) recientes de un símbolo, para dibujar su gráfico.
+    `rango` e `intervalo` en la jerga de Yahoo (5d/1mo/1y, 1d/15m…).
+    Devuelve (list[datetime], list[float]) o None ante cualquier problema."""
+    try:
+        respuesta = httpx.get(
+            URL.format(simbolo=simbolo),
+            params={"range": rango, "interval": intervalo},
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=15,
+        )
+        respuesta.raise_for_status()
+        r = respuesta.json()["chart"]["result"][0]
+        marcas = r["timestamp"]
+        cierres = r["indicators"]["quote"][0]["close"]
+    except Exception:
+        return None
+    pares = [(datetime.utcfromtimestamp(ts), float(c))
+             for ts, c in zip(marcas, cierres) if c is not None]
+    if len(pares) < 2:
+        return None
+    return [p[0] for p in pares], [p[1] for p in pares]
+
+
+# ---------- fundamentales (para el análisis de fin de semana) ----------
+# El endpoint quoteSummary pide un "crumb" (cookie + token). Lo pedimos una vez
+# por proceso y lo reusamos. Si el flujo falla, fundamentales() devuelve None y
+# el deep-dive sale SIN el bloque de números (nunca inventa cifras).
+
+_URL_CRUMB = "https://query1.finance.yahoo.com/v1/test/getcrumb"
+_URL_RESUMEN = "https://query1.finance.yahoo.com/v10/finance/quoteSummary/{simbolo}"
+_UA_NAV = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+           "(KHTML, like Gecko) Chrome/120 Safari/537.36")
+_MODULOS = "financialData,defaultKeyStatistics,summaryDetail,price"
+
+_crumb_cache: dict = {"cliente": None, "crumb": None}
+
+
+def _sesion_crumb():
+    """(cliente httpx con cookie, crumb) reutilizable. None si no se pudo obtener."""
+    if _crumb_cache["crumb"]:
+        return _crumb_cache["cliente"], _crumb_cache["crumb"]
+    try:
+        cliente = httpx.Client(headers={"User-Agent": _UA_NAV}, timeout=15, follow_redirects=True)
+        cliente.get("https://fc.yahoo.com")  # siembra la cookie (puede dar 404, da igual)
+        crumb = cliente.get(_URL_CRUMB).text.strip()
+        # un crumb válido es un token corto sin espacios ni HTML
+        if not crumb or len(crumb) > 40 or "<" in crumb or " " in crumb:
+            cliente.close()
+            return None, None
+        _crumb_cache["cliente"], _crumb_cache["crumb"] = cliente, crumb
+        return cliente, crumb
+    except Exception:
+        return None, None
+
+
+_URL_SCREENER = "https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved"
+
+
+def _valor(nodo):
+    """El número crudo de un campo de Yahoo, sea {raw,fmt} o un número pelado."""
+    if isinstance(nodo, dict):
+        return nodo.get("raw")
+    return nodo if isinstance(nodo, (int, float)) else None
+
+
+# qué % mirar según el momento del día (para que el enjambre vea lo que se
+# mueve AHORA: en la madrugada el pre-market; en la tarde la sesión).
+_SESIONES = [
+    ("preMarketChangePercent", "pre-market"),
+    ("regularMarketChangePercent", "sesión"),
+    ("postMarketChangePercent", "post-cierre"),
+]
+
+
+def _cambio_efectivo(q: dict) -> tuple[float | None, str]:
+    """El movimiento más relevante de una acción y en qué momento ocurrió: el de
+    mayor magnitud entre pre-market, sesión y post-cierre (el que esté disponible).
+    Así funciona igual a las 6 AM (pre-market) que a las 4 PM (sesión cerrada)."""
+    mejor_pct, mejor_sesion = None, "sesión"
+    for campo, etiqueta in _SESIONES:
+        v = _valor(q.get(campo))
+        if isinstance(v, (int, float)) and (mejor_pct is None or abs(v) > abs(mejor_pct)):
+            mejor_pct, mejor_sesion = float(v), etiqueta
+    return mejor_pct, mejor_sesion
+
+
+def movers_del_dia(n: int = 8, min_pct: float = 5.0) -> list[dict]:
+    """Los mayores movimientos del mercado de EE.UU. en este momento: lista de
+    {ticker, nombre, var_pct, sesion, precio}, los más movidos primero. Mira
+    pre-market + sesión + post-cierre, así sirve tanto en la madrugada (antes de
+    abrir) como en la tarde. Es lo que DE VERDAD se mueve, no solo lo titulado.
+    [] ante cualquier problema (degradación elegante). Nunca lanza."""
+    cliente, crumb = _sesion_crumb()
+    if not cliente or not crumb:
+        return []
+    vistos: set[str] = set()
+    movimientos: list[dict] = []
+    for tablero in ("day_gainers", "day_losers", "most_actives"):
+        try:
+            r = cliente.get(_URL_SCREENER,
+                            params={"count": 25, "scrIds": tablero, "crumb": crumb})
+            if r.status_code != 200:
+                continue
+            res = (r.json().get("finance", {}).get("result") or [None])[0]
+            quotes = (res or {}).get("quotes") or []
+        except Exception:
+            continue
+        for q in quotes:
+            tk = str(q.get("symbol", "")).strip().upper()
+            pct, sesion = _cambio_efectivo(q)
+            if not tk or tk in vistos or pct is None:
+                continue
+            if abs(pct) < min_pct:  # ignora ruido: solo movimientos con peso
+                continue
+            vistos.add(tk)
+            movimientos.append({
+                "ticker": tk,
+                "nombre": str(q.get("shortName") or q.get("longName") or tk)[:60],
+                "var_pct": round(pct, 2),
+                "sesion": sesion,
+                "precio": _valor(q.get("regularMarketPrice")),
+            })
+    movimientos.sort(key=lambda m: abs(m["var_pct"]), reverse=True)
+    return movimientos[:n]
+
+
+def _fmt(nodo) -> str | None:
+    """El texto formateado de un campo de Yahoo ({raw, fmt}); None si no hay dato."""
+    if isinstance(nodo, dict):
+        f = nodo.get("fmt")
+        return f if f else None
+    return None
+
+
+def _num(nodo) -> float | None:
+    return nodo.get("raw") if isinstance(nodo, dict) and isinstance(nodo.get("raw"), (int, float)) else None
+
+
+def fundamentales(simbolo: str) -> dict | None:
+    """Los fundamentales VERIFICADos de una empresa (para el análisis de fin de
+    semana): capitalización, ingresos y su crecimiento, márgenes, EBITDA, deuda y
+    caja. Los valores van formateados (para mostrar) tal como los da Yahoo. None
+    ante cualquier problema o si es un instrumento sin fundamentales (un ETF).
+    Nunca lanza."""
+    cliente, crumb = _sesion_crumb()
+    if not cliente or not crumb:
+        return None
+    try:
+        r = cliente.get(_URL_RESUMEN.format(simbolo=simbolo),
+                        params={"modules": _MODULOS, "crumb": crumb})
+        if r.status_code != 200:
+            return None
+        res = (r.json().get("quoteSummary", {}).get("result") or [None])[0]
+        if not res:
+            return None
+    except Exception:
+        return None
+    fd = res.get("financialData", {}) or {}
+    sd = res.get("summaryDetail", {}) or {}
+    price = res.get("price", {}) or {}
+
+    cap_num = _num(sd.get("marketCap")) or _num(price.get("marketCap"))
+    ingresos = _fmt(fd.get("totalRevenue"))
+    ebitda = _fmt(fd.get("ebitda"))
+    # sin ingresos ni EBITDA no hay ficha que valga (típico de ETFs/índices)
+    if ingresos is None and ebitda is None:
+        return None
+    datos = {
+        "market_cap": _fmt(sd.get("marketCap")) or _fmt(price.get("marketCap")),
+        "market_cap_num": cap_num,
+        "ingresos": ingresos,
+        "crecimiento_ingresos": _fmt(fd.get("revenueGrowth")),
+        "ebitda": ebitda,
+        "margen_bruto": _fmt(fd.get("grossMargins")),
+        "margen_operativo": _fmt(fd.get("operatingMargins")),
+        "margen_neto": _fmt(fd.get("profitMargins")),
+        "deuda": _fmt(fd.get("totalDebt")),
+        "caja": _fmt(fd.get("totalCash")),
+        "flujo_caja_libre": _fmt(fd.get("freeCashflow")),
+    }
+    # descarta claves sin dato para no arrastrar None hasta la plantilla
+    return {k: v for k, v in datos.items() if v is not None}
+
+
 def _pct(nuevo: float, viejo: float) -> float | None:
     return round((nuevo - viejo) / viejo * 100, 2) if viejo else None
 

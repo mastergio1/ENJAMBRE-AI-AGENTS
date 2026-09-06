@@ -14,8 +14,11 @@ solo necesita saber cuánto pánico o codicia siente cada partícula.
 """
 
 import asyncio
+import base64
 import contextlib as _contextlib
+import hashlib
 import hmac
+from html import escape as html_escape
 import json
 import struct
 from collections import defaultdict
@@ -30,9 +33,10 @@ from pydantic import BaseModel
 from agents.lider import LiderOpinion
 from brains.arquetipos import POR_ID
 from brains.cerebro import analizar_titular_async
-from contenido import limites, persistencia, portero, seguridad
+from contenido import limites, persistencia, portero, seguridad, vocabulario
 from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
+from llm_texto import texto_de
 
 TICKS_CALENTAMIENTO = 60  # el mercado encuentra su ritmo (no se transmite)
 TICKS_PREVIOS = 10        # calma visible antes de la noticia
@@ -41,7 +45,12 @@ RITMO_DEFECTO = 0.08      # segundos entre ticks transmitidos
 RITMO_MINIMO = 0.02       # piso: nadie pide ticks sin pausa (protege la CPU)
 MAX_TITULAR = 1200        # caracteres: cabe un tweet presidencial completo
 MAX_MENSAJE_WS = 4000     # bytes de texto por mensaje del cliente
-MAX_SIM_CONCURRENTES = 2  # simulaciones pesadas en vuelo a la vez
+MAX_SIM_CONCURRENTES = 1  # simulaciones pesadas en vuelo a la vez. En 0,5 CPU /
+                          # 512 MB, 2 estaba al borde (ya hubo reinicios por
+                          # memoria con UNA). Con 1, el que llega de más ve
+                          # "ocupado, intenta en unos segundos" (elegante) en vez
+                          # de que el motor reinicie a mitad de su simulación.
+                          # Si se sube el plan del servidor, se puede volver a 2.
 MENSAJE_PRIVADO = (
     "El Enjambre está en pruebas privadas. Puedes explorar el muro y el "
     "archivo; para soltar tus propios titulares, escríbenos desde "
@@ -55,9 +64,11 @@ MENSAJE_CORREO = (
 
 
 def _puerta_correo_activa() -> bool:
-    """El gancho de crecimiento: en público, pedir correo para soltar titulares.
-    Se enciende con ENJAMBRE_PUERTA_CORREO=1 (apagado por defecto)."""
-    return os.environ.get("ENJAMBRE_PUERTA_CORREO", "").strip() in ("1", "true", "si")
+    """Decisión de Giorgio: El Enjambre es una herramienta GRATIS y abierta, sin
+    suscripción obligatoria para usarla. La puerta de correo queda DESACTIVADA de
+    forma permanente — suscribirse a El Pulso es siempre opcional. (Si alguien
+    deja su correo al soltar un titular, se captura como lead sin bloquear nada.)"""
+    return False
 
 
 def _puerta_simulacion(mensaje: dict) -> tuple[bool, str | None]:
@@ -76,6 +87,20 @@ def _puerta_simulacion(mensaje: dict) -> tuple[bool, str | None]:
     if _puerta_correo_activa():
         return (True, correo) if correo else (False, None)
     return True, correo
+
+
+def _token_premium(mensaje: dict) -> str:
+    """El token del enlace mágico que el navegador manda para reclamar su nivel
+    Premium (40/mes). `limites` lo verifica contra la base: solo el que recibió
+    el enlace en su buzón lo tiene, así nadie usa el correo de otro."""
+    return str(mensaje.get("premium_token", "")).strip()[:80]
+
+
+def _cliente_id(mensaje: dict) -> str:
+    """Huella suave del navegador (id aleatorio guardado en el dispositivo): el
+    cupo gratis se cuenta por dispositivo, no por IP — una oficina o una red
+    móvil (CGNAT) no comparte una sola simulación al día."""
+    return str(mensaje.get("cid", "")).strip()[:64]
 
 
 def _suscribir_silencioso(email: str) -> None:
@@ -135,14 +160,37 @@ MAX_TICKS_OBS = 6000        # tope de latidos por sesión (~8 min); luego se cie
 _semaforo_obs = _asyncio.Semaphore(MAX_OBSERVATORIOS)
 
 
+_contador_peticiones = 0
+_CADA_LIMPIEZA = 500  # cada tantas requests se purga el estado vencido
+
+# Tope de cuerpo por petición. El más grande legítimo es el editor del panel
+# (el texto completo de una edición del Pulso: unos pocos KB), así que 256 KB
+# sobra. Sin este freno, un POST de cientos de MB se carga entero en memoria
+# antes de que pydantic lo valide → el motor (512 MB en Render) se queda sin
+# memoria y reinicia. Nota: cubre el caso con Content-Length (el normal); una
+# subida "chunked" sin ese encabezado sigue acotada por los frenos de más abajo.
+MAX_CUERPO = 256_000
+
+
 @app.middleware("http")
 async def blindaje(request: Request, call_next):
-    """Rate-limit por IP en /api/* y cabeceras de seguridad en todo."""
+    """Rate-limit por IP en /api/*, tope de cuerpo y cabeceras de seguridad."""
+    global _contador_peticiones
     ruta = request.url.path
+    if request.method in ("POST", "PUT", "PATCH"):
+        declarado = request.headers.get("content-length", "")
+        if declarado.isdigit() and int(declarado) > MAX_CUERPO:
+            return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
     if ruta.startswith("/api/"):
         ip = seguridad.ip_cliente(request.headers, request.client.host if request.client else None)
         if not seguridad.permitir_http(ip, ruta):
             return JSONResponse({"error": "Demasiadas solicitudes. Espera un momento."}, status_code=429)
+    # limpieza periódica: evita que el estado en memoria (ventanas de rate-limit
+    # e IPs de límites) crezca sin fin al acumular visitantes distintos.
+    _contador_peticiones += 1
+    if _contador_peticiones % _CADA_LIMPIEZA == 0:
+        seguridad.limpiar()
+        limites.limpiar()
     respuesta = await call_next(request)
     for clave, valor in seguridad.CABECERAS_SEGURIDAD.items():
         respuesta.headers.setdefault(clave, valor)
@@ -267,8 +315,9 @@ async def canal(ws: WebSocket) -> None:
                 continue
             try:
                 # toda simulación pública gasta ~100 llamadas LLM:
-                # frenos por IP y global (tope diario)
-                permitido, motivo = limites.permitir(ip)
+                # frenos por persona (1/día gratis, 40/mes Premium) y global
+                permitido, motivo = limites.permitir(
+                    ip, premium_token=_token_premium(mensaje), cliente_id=_cliente_id(mensaje))
                 if not permitido:
                     await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
                     continue
@@ -303,7 +352,7 @@ async def _leer_titular_en_vivo(modelo, lideres, titular, candado, semilla) -> l
         analizar_titular_async(titular, consultas),
         clasificar_async(titular),
     )
-    respuestas = reparto.expandir(respuestas_cerebros, asignacion)
+    respuestas = reparto.expandir(vocabulario.sanear_frases(respuestas_cerebros), asignacion)
     async with candado:
         await asyncio.to_thread(modelo.aplicar_titular, titular, respuestas, perfil_de(tipo))
     return respuestas
@@ -342,8 +391,9 @@ async def _correr_observatorio(ws: WebSocket, mensaje: dict, ip: str) -> None:
         detener.set()
 
     async def _inyectar(titular: str) -> None:
-        # cada noticia gasta ~100 llamadas LLM → bajo el tope diario
-        permitido, motivo = limites.permitir(ip)
+        # cada noticia gasta ~100 llamadas LLM → bajo el cupo de la persona
+        permitido, motivo = limites.permitir(
+            ip, premium_token=_token_premium(mensaje), cliente_id=_cliente_id(mensaje))
         if not permitido:
             await ws.send_text(_responder(ws, tipo="limite", mensaje=motivo))
             return
@@ -414,7 +464,9 @@ async def _correr_simulacion(ws: WebSocket, mensaje: dict) -> None:
         analizar_titular_async(titular, consultas),
         clasificar_async(titular),
     )
-    respuestas = reparto.expandir(respuestas_cerebros, asignacion)
+    # filtro CMF a las voces de los líderes: se neutraliza aquí, UNA vez, antes
+    # de repartirlas a la web, la base y el muro (borde de cumplimiento CMF).
+    respuestas = reparto.expandir(vocabulario.sanear_frases(respuestas_cerebros), asignacion)
     perfil = perfil_de(tipo_mercado)
 
     await ws.send_text(json.dumps({
@@ -722,6 +774,51 @@ def imagen(sim_id: str) -> Response:
     )
 
 
+# periodo → (rango Yahoo, intervalo Yahoo, etiqueta editorial)
+_PERIODOS = {
+    "semana": ("5d", "1d", "última semana"),
+    "mes": ("1mo", "1d", "en el mes"),
+    "ano": ("1y", "1d", "en el año"),
+    "dia": ("1d", "15m", "en el día"),
+}
+
+
+def _ticker_valido(t: str) -> bool:
+    """Tickers de Yahoo: letras/números y . = ^ - (SPY, ^GSPC, CL=F, BTC-USD).
+    Nada de barras ni espacios → sin inyección en la URL de Yahoo."""
+    return bool(t) and len(t) <= 15 and all(c.isalnum() or c in ".=^-" for c in t)
+
+
+@app.get("/api/grafico/{ticker}")
+def grafico(ticker: str, respuesta: Response, n: str = "", p: str = "semana", m: str = "$") -> Response:
+    """Gráfico de precio REAL de un activo (PNG estilo Moby) para el correo.
+
+    n = nombre a mostrar · p = periodo (semana/mes/ano/dia) · m = símbolo moneda.
+    Degrada elegante: si Yahoo no responde o el ticker no da datos, 404 (el
+    correo simplemente omite el gráfico, nunca se cae)."""
+    if not _ticker_valido(ticker):
+        return Response(status_code=404)
+    rango, intervalo, etiqueta = _PERIODOS.get(p, _PERIODOS["semana"])
+    from contenido import graficos
+    from contenido.fuentes import yahoo
+
+    datos = yahoo.serie_reciente(ticker, rango=rango, intervalo=intervalo)
+    if not datos:
+        return Response(status_code=404)
+    fechas, cierres = datos
+    nombre = (n.strip()[:40] or yahoo.NOMBRES.get(ticker, ticker))
+    png = graficos.generar_grafico(
+        nombre, ticker, cierres, etiqueta_periodo=etiqueta,
+        fecha_inicio=yahoo.etiqueta_fecha(fechas[0]), fecha_fin="hoy",
+        moneda=(m.strip()[:2] or "$"),
+    )
+    if png is None:
+        return Response(status_code=404)
+    # los precios cambian: caché de 1 h (no 'immutable' como el replay)
+    return Response(content=png, media_type="image/png",
+                    headers={"Cache-Control": "public, max-age=3600"})
+
+
 @app.get("/api/simulacion/{sim_id}/replay")
 def replay(sim_id: str) -> Response:
     """Los frames binarios del replay 3D (solo destacadas los conservan).
@@ -775,6 +872,7 @@ def simular_titular(peticion: PeticionSimular) -> dict:
 # ---------- El Pulso: suscripción con double opt-in (CONTENIDO.md sección 6) ----------
 
 import re as _re  # noqa: E402
+import time as _time  # noqa: E402
 
 from fastapi.responses import HTMLResponse  # noqa: E402
 
@@ -807,7 +905,9 @@ def boletin_base_web() -> str:
 
 @app.post("/api/suscribir")
 def suscribir(peticion: PeticionSuscribir) -> dict:
-    """Alta pendiente + correo de confirmación (double opt-in)."""
+    """Alta con OPT-IN SIMPLE: un clic y queda suscrito de inmediato (sin correo
+    de confirmación). El clic en 'Suscribirme' ya es el consentimiento. Se le
+    manda una bienvenida con el enlace de baja siempre visible."""
     email = peticion.email.strip().lower()
     if not _EMAIL.match(email) or len(email) > 200:
         return JSONResponse({"error": "correo inválido"}, status_code=400)
@@ -815,21 +915,34 @@ def suscribir(peticion: PeticionSuscribir) -> dict:
 
     conexion = persistencia.conectar()
     try:
-        alta = persistencia.agregar_suscriptor(conexion, email, origen=origen)
+        ya_activo = persistencia.es_activo(conexion, email)
+        persistencia.alta_directa(conexion, email, origen=origen)   # activo de inmediato
+        token_baja = persistencia.token_baja_de(conexion, email)
     finally:
         conexion.close()
 
-    if alta["ya_activo"]:
+    if ya_activo:
         return {"estado": "ya_suscrito", "mensaje": "Ya estabas suscrito al Pulso. ¡Gracias!"}
 
-    # solo se envía si no hubo una confirmación reciente (antibombardeo, auditoría C).
-    # La respuesta es idéntica en ambos casos: no revela si el correo ya existía.
-    if alta.get("reenviar", True):
-        from contenido import boletin
+    from contenido import boletin
+    boletin.enviar_bienvenida(email, token_baja or "")  # sin Resend, no envía (dev)
+    return {"estado": "suscrito",
+            "mensaje": "¡Listo! Ya estás suscrito a El Pulso. Te llega mañana temprano. 🐝"}
 
-        boletin.enviar_confirmacion(email, alta["token_confirma"])  # sin Resend, no envía (dev)
-    return {"estado": "pendiente",
-            "mensaje": "Te enviamos un correo para confirmar tu suscripción. Revisa tu bandeja."}
+
+@app.post("/api/pulso/activar-pendientes")
+def activar_pendientes(x_pipeline_token: str = Header(default="")) -> dict:
+    """Activa a los suscriptores que quedaron pendientes de confirmar (del viejo
+    doble opt-in): ahora que el alta es de un clic, ya dieron su consentimiento.
+    Protegido por el token de admin. Se corre UNA vez tras el cambio."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        n = persistencia.activar_pendientes(conexion)
+    finally:
+        conexion.close()
+    return {"ok": True, "activados": n}
 
 
 class PeticionContacto(BaseModel):
@@ -861,10 +974,14 @@ def api_contacto(peticion: PeticionContacto) -> dict:
         conexion.close()
     try:
         from contenido import notificar
+        # todo lo que escribió el visitante se escapa: el aviso va con
+        # parse_mode=HTML y un "<" suelto haría que Telegram lo rechace
+        # (Giorgio perdería el lead sin enterarse).
         notificar.avisar(
-            f"🤝 <b>Nuevo contacto B2B</b>\n{nombre}"
-            + (f" · {peticion.organizacion.strip()[:80]}" if peticion.organizacion.strip() else "")
-            + f"\n{email}\n{peticion.mensaje.strip()[:200]}"
+            f"🤝 <b>Nuevo contacto B2B</b>\n{notificar.escapar(nombre)}"
+            + (f" · {notificar.escapar(peticion.organizacion.strip()[:80])}"
+               if peticion.organizacion.strip() else "")
+            + f"\n{notificar.escapar(email)}\n{notificar.escapar(peticion.mensaje.strip()[:200])}"
         )
     except Exception:
         pass  # el lead ya quedó guardado; el aviso es cortesía
@@ -882,6 +999,58 @@ def api_contactos(x_pipeline_token: str = Header(default="")) -> dict:
         return {"contactos": persistencia.listar_contactos(conexion)}
     finally:
         conexion.close()
+
+
+class PeticionDesbloqueo(BaseModel):
+    email: str
+
+
+# antibombardeo del enlace mágico: no reenviar al mismo correo más seguido que esto
+_ultimo_desbloqueo: dict[str, float] = {}
+_VENTANA_DESBLOQUEO = 300  # segundos
+
+
+@app.post("/api/pulso/desbloqueo")
+def desbloqueo_enjambre(peticion: PeticionDesbloqueo) -> dict:
+    """El enlace mágico: si el correo es Premium activo, le enviamos un enlace que
+    desbloquea 40/mes en El Enjambre. La respuesta es SIEMPRE la misma —no revela
+    quién es suscriptor de pago (cierra el oráculo)— y no consume cupo."""
+    from contenido import boletin
+
+    correo = (peticion.email or "").strip().lower()
+    if seguridad.correo_valido(correo) and len(correo) <= 200:
+        ahora = _time.time()
+        reciente = ahora - _ultimo_desbloqueo.get(correo, 0) < _VENTANA_DESBLOQUEO
+        if not reciente:
+            conexion = persistencia.conectar()
+            try:
+                if persistencia.es_premium(conexion, correo):
+                    token = persistencia.emitir_token_enjambre(conexion, correo)
+                    if token:
+                        _ultimo_desbloqueo[correo] = ahora
+                        boletin.enviar_desbloqueo_enjambre(correo, token)
+            finally:
+                conexion.close()
+    return {"enviado": True,
+            "mensaje": "Si ese correo es Premium, te enviamos un enlace para desbloquear."}
+
+
+@app.get("/api/pulso/enjambre/verificar")
+def verificar_desbloqueo(token: str = "") -> dict:
+    """El navegador canjea el token del enlace mágico por su nivel. NO es un
+    oráculo de correos: solo responde a un token válido, que es un secreto en sí
+    mismo. Devuelve {premium, limite, periodo}. NO consume cupo."""
+    from contenido import limites
+
+    conexion = persistencia.conectar()
+    try:
+        correo = persistencia.email_por_token_enjambre(conexion, (token or "").strip())
+        es_prem = bool(correo) and persistencia.es_premium(conexion, correo)
+    finally:
+        conexion.close()
+    if es_prem:
+        return {"premium": True, "limite": limites.tope_mes_premium(), "periodo": "mes"}
+    return {"premium": False, "limite": limites.tope_dia_gratis(), "periodo": "día"}
 
 
 @app.get("/api/confirmar/{token}")
@@ -909,16 +1078,504 @@ def baja(token: str) -> HTMLResponse:
     return _pagina("Te desuscribiste", "Ya no recibirás El Pulso. Puedes volver cuando quieras.")
 
 
+# ---------- El Pulso: revisión y aprobación desde el correo (humano en el lazo) ----------
+# El token de la edición (en el correo de revisión) es la llave: quien lo tiene,
+# decide. Aprobar/Descartar son POST (un clic desde la página de revisión), así
+# ningún prefetch del cliente de correo dispara un envío por accidente.
+
+def _pagina_pulso(titulo: str, cuerpo: str, status: int = 200) -> HTMLResponse:
+    html = f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>{titulo}</title>
+<style>
+ body{{margin:0;background:#141019;color:#f3eee8;font-family:system-ui,-apple-system,sans-serif;}}
+ .barra{{position:sticky;top:0;z-index:2;background:#1b1522;border-bottom:1px solid #2e2636;padding:16px 18px;text-align:center;}}
+ .barra h1{{margin:0 0 4px;font-family:Georgia,serif;font-weight:600;font-size:1.15rem;color:#e3c565;}}
+ .barra p{{margin:0;color:#a8a291;font-size:.85rem;}}
+ .acc{{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px;}}
+ .btn{{border:0;cursor:pointer;font:700 13px/1 system-ui;letter-spacing:.04em;text-transform:uppercase;padding:14px 24px;border-radius:8px;}}
+ .ok{{background:#2f8f66;color:#fff;}} .no{{background:transparent;color:#c0847d;border:1px solid #7a4b47;}}
+ .marco{{width:100%;border:0;background:#faf8f4;display:block;min-height:74vh;}}
+ .aviso{{max-width:520px;margin:64px auto;padding:0 24px;text-align:center;line-height:1.6;}}
+ .aviso h1{{font-family:Georgia,serif;}}
+</style></head><body>{cuerpo}</body></html>"""
+    return HTMLResponse(content=html, status_code=status, headers={
+        "Content-Security-Policy": "default-src 'none'; frame-src 'self'; img-src 'self' data:; style-src 'unsafe-inline'; form-action 'self'",
+        "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff"})
+
+
+@app.get("/pulso/preview/{token}")
+def pulso_preview(token: str) -> Response:
+    """El HTML crudo de la edición (lo carga el iframe de la página de revisión)."""
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+    finally:
+        conexion.close()
+    if not ed or not ed.get("html_preview"):
+        return Response(status_code=404)
+    return HTMLResponse(content=ed["html_preview"], headers={
+        "Content-Security-Policy": "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'",
+        "X-Frame-Options": "SAMEORIGIN"})
+
+
+@app.get("/pulso/revisar/{token}")
+def pulso_revisar(token: str) -> HTMLResponse:
+    """La sala de revisión: el preview real + botones Aprobar / Descartar."""
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        n_susc = len(persistencia.suscriptores_activos(conexion)) if ed else 0
+    finally:
+        conexion.close()
+    if not ed:
+        return _pagina_pulso("Enlace no válido",
+            '<div class="aviso"><h1>Enlace no válido</h1><p>No encontramos esa edición.</p></div>', status=404)
+    estado = ed["estado"]
+    if estado == "enviada":
+        cabecera = f'<h1>Ya enviada ✓</h1><p>Salió a {ed["enviados"]} de {ed["suscriptores"]} suscriptores.</p>'
+        acciones = (f'<div class="acc">'
+                    f'<form method="post" action="/pulso/reenviar/{token}" style="margin:0;" '
+                    f"onsubmit=\"return confirm('¿Reenviar esta edición a TODOS los suscriptores? "
+                    f"Quienes ya la recibieron tendrán un correo duplicado.');\">"
+                    f'<button class="btn ok" type="submit">📤 Reenviar a todos</button></form></div>')
+    elif estado == "descartada":
+        cabecera = '<h1>Descartada</h1><p>Esta edición no se enviará.</p>'
+        acciones = ""
+    else:
+        cabecera = (f'<h1>El Pulso — pendiente de tu revisión</h1>'
+                    f'<p>Se enviaría a {n_susc} suscriptor(es). Revisa abajo y decide.</p>')
+        acciones = (f'<div class="acc">'
+                    f'<form method="post" action="/pulso/aprobar/{token}" style="margin:0;"><button class="btn ok" type="submit">✅ Aprobar y enviar</button></form>'
+                    f'<form method="post" action="/pulso/descartar/{token}" style="margin:0;"><button class="btn no" type="submit">🗑 Descartar</button></form></div>')
+    cuerpo = (f'<div class="barra">{cabecera}{acciones}</div>'
+              f'<iframe class="marco" src="/pulso/preview/{token}" title="Vista previa de la edición"></iframe>')
+    return _pagina_pulso("Revisar El Pulso", cuerpo)
+
+
+@app.post("/pulso/aprobar/{token}")
+def pulso_aprobar(token: str) -> HTMLResponse:
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        if not ed:
+            return _pagina_pulso("Enlace no válido", '<div class="aviso"><h1>Enlace no válido</h1></div>', status=404)
+        from contenido import pipeline
+        res = pipeline.aprobar_y_enviar(conexion, ed["fecha"])
+    finally:
+        conexion.close()
+    if res.get("ok") and res.get("ya_enviada"):
+        msg = f'Esta edición ya se había enviado ({res.get("enviados", 0)} correos).'
+    elif res.get("ok"):
+        msg = f'Enviada a {res.get("enviados", 0)} de {res.get("suscriptores", 0)} suscriptores. 🎉'
+        msg += _detalle_fallos(res.get("fallos"))
+    else:
+        msg = res.get("motivo", "No se pudo enviar.")
+    return _pagina_pulso("Aprobada",
+        f'<div class="aviso"><h1 style="color:#2f8f66;">✅ Listo</h1><p>{msg}</p></div>')
+
+
+def _detalle_fallos(fallos) -> str:
+    """Si algún envío falló, lo lista en la página de 'Listo' con su motivo (así
+    Giorgio ve QUÉ direcciones caen y por qué, en vez de un '3 de 6' a ciegas).
+    Esta página solo se alcanza con el token del correo de revisión (privada)."""
+    if not fallos:
+        return ""
+    filas = ""
+    for f in fallos:
+        if not isinstance(f, dict):
+            continue
+        baja = (' <span style="color:#2f8f66;">(dado de baja automáticamente)</span>'
+                if f.get("desactivado") else "")
+        filas += (f'<li><b>{html_escape(str(f.get("email", "")))}</b> — '
+                  f'{html_escape(str(f.get("motivo", "")))}{baja}</li>')
+    if not filas:
+        return ""
+    return ('<p style="margin-top:14px;color:#c0504d;">No llegaron '
+            f'{len(fallos)}:</p><ul style="text-align:left;color:#6f6a5f;'
+            f'font-size:14px;line-height:1.6;">{filas}</ul>')
+
+
+@app.post("/pulso/reenviar/{token}")
+def pulso_reenviar(token: str) -> HTMLResponse:
+    """Reenvía la edición a TODOS los suscriptores, a pedido (aunque ya se envió)."""
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        if not ed:
+            return _pagina_pulso("Enlace no válido", '<div class="aviso"><h1>Enlace no válido</h1></div>', status=404)
+        from contenido import pipeline
+        res = pipeline.reenviar_a_suscriptores(conexion, ed["fecha"])
+    finally:
+        conexion.close()
+    if res.get("ok"):
+        msg = f'Reenviada a {res.get("enviados", 0)} de {res.get("suscriptores", 0)} suscriptores. 🎉'
+    else:
+        msg = res.get("motivo", "No se pudo reenviar.")
+    return _pagina_pulso("Reenviada",
+        f'<div class="aviso"><h1 style="color:#2f8f66;">📤 Listo</h1><p>{msg}</p></div>')
+
+
+@app.post("/pulso/descartar/{token}")
+def pulso_descartar(token: str) -> HTMLResponse:
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.edicion_por_token(conexion, token)
+        if not ed:
+            return _pagina_pulso("Enlace no válido", '<div class="aviso"><h1>Enlace no válido</h1></div>', status=404)
+        from contenido import pipeline
+        pipeline.descartar_edicion(conexion, ed["fecha"])
+    finally:
+        conexion.close()
+    return _pagina_pulso("Descartada",
+        '<div class="aviso"><h1 style="color:#c0847d;">🗑 Descartada</h1>'
+        '<p>Esta edición no se enviará. Mañana habrá una nueva.</p></div>')
+
+
+# ---------- Webhook de Resend: aperturas y clics (firmado por Svix) ----------
+# Resend firma cada evento con Svix (HMAC-SHA256). Sin el secreto configurado,
+# el endpoint RECHAZA todo (falla cerrado): jamás ingerimos eventos sin firmar.
+
+def _verificar_svix(cuerpo: bytes, cabeceras) -> bool:
+    """Valida la firma Svix de un webhook de Resend. Constante en el tiempo."""
+    secreto = os.environ.get("RESEND_WEBHOOK_SECRET", "").strip()
+    if not secreto:
+        return False
+    svix_id = cabeceras.get("svix-id", "")
+    svix_ts = cabeceras.get("svix-timestamp", "")
+    firmas = cabeceras.get("svix-signature", "")
+    if not (svix_id and svix_ts and firmas):
+        return False
+    # antirreplay: rechaza timestamps muy viejos o del futuro (tolerancia amplia
+    # para el reloj de Render). El timestamp es parte de lo firmado igualmente.
+    try:
+        desfase = abs(int(_time.time()) - int(svix_ts))
+        if desfase > 3600:
+            return False
+    except (ValueError, TypeError):
+        return False
+    clave = secreto.split("_", 1)[1] if secreto.startswith("whsec_") else secreto
+    try:
+        clave_bytes = base64.b64decode(clave)
+    except Exception:
+        return False
+    firmado = f"{svix_id}.{svix_ts}.".encode() + cuerpo
+    esperada = base64.b64encode(hmac.new(clave_bytes, firmado, hashlib.sha256).digest()).decode()
+    # el header trae "v1,<firma> v1,<firma2>…"; comparación constante contra cada una
+    for parte in firmas.split():
+        _, _, valor = parte.partition(",")
+        if valor and hmac.compare_digest(valor, esperada):
+            return True
+    return False
+
+
+def _tag_edicion_evento(data: dict) -> str | None:
+    """Saca la fecha de edición del tag del evento (Resend la devuelve como
+    objeto {edicion: fecha} o como lista [{name,value}])."""
+    tags = data.get("tags")
+    if isinstance(tags, dict):
+        return tags.get("edicion")
+    if isinstance(tags, list):
+        for t in tags:
+            if isinstance(t, dict) and t.get("name") == "edicion":
+                return t.get("value")
+    return None
+
+
+@app.post("/pulso/webhook/resend")
+async def webhook_resend(request: Request) -> Response:
+    """Recibe eventos de Resend (apertura, clic…) y los registra por edición.
+    Firma Svix obligatoria: sin ella, 401."""
+    cuerpo = await request.body()
+    if len(cuerpo) > 64_000:  # un evento legítimo es pequeño; corta abusos
+        return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+    if not _verificar_svix(cuerpo, request.headers):
+        return JSONResponse({"error": "firma no válida"}, status_code=401)
+    try:
+        evento = json.loads(cuerpo)
+    except (ValueError, TypeError):
+        return JSONResponse({"error": "json no válido"}, status_code=400)
+    tipo = (evento.get("type") or "").removeprefix("email.")
+    data = evento.get("data") or {}
+    destinatarios = data.get("to") or []
+    email = destinatarios[0] if isinstance(destinatarios, list) and destinatarios else ""
+    fecha_ed = _tag_edicion_evento(data)
+    ts = evento.get("created_at")
+    if email and tipo:
+        conexion = persistencia.conectar()
+        try:
+            persistencia.registrar_evento_correo(conexion, fecha_ed, email, tipo, ts)
+        finally:
+            conexion.close()
+    return JSONResponse({"ok": True})  # 200 siempre que la firma sea válida
+
+
+@app.post("/pulso/webhook/polar")
+async def webhook_polar(request: Request) -> Response:
+    """Recibe los eventos de pago de Polar (El Pulso Premium) y prende/apaga la
+    llave `premium` del suscriptor. Firma Standard Webhooks obligatoria: sin ella,
+    401. Devuelve 200 en todo evento con firma válida (aunque no aplique), para
+    que Polar no lo reintente en vano."""
+    from contenido import pagos
+
+    cuerpo = await request.body()
+    if len(cuerpo) > 96_000:  # un evento legítimo es pequeño; corta abusos
+        return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+    if not pagos.verificar_firma(cuerpo, request.headers):
+        return JSONResponse({"error": "firma no válida"}, status_code=401)
+    try:
+        evento = json.loads(cuerpo)
+    except (ValueError, TypeError):
+        return JSONResponse({"error": "json no válido"}, status_code=400)
+    conexion = persistencia.conectar()
+    try:
+        resultado = pagos.procesar_evento(conexion, evento)
+    finally:
+        conexion.close()
+    return JSONResponse(resultado)
+
+
+# ---------- Centro de Mando de El Pulso (dashboard, protegido por token) ----------
+
+class PeticionEditar(BaseModel):
+    redactado: dict = {}
+
+
+def _fecha_valida(fecha: str) -> bool:
+    # acepta la fecha del día y la clave de la edición de la tarde ('…-t')
+    return bool(_re.match(r"^\d{4}-\d{2}-\d{2}(-t)?$", fecha))
+
+
+@app.get("/panel")
+def panel_html() -> Response:
+    """Sirve el Centro de Mando desde la propia API (mismo origen → sin CORS).
+    El acceso lo controla la clave que se pide dentro de la página."""
+    from pathlib import Path
+    ruta = Path(__file__).parent / "panel.html"
+    if not ruta.exists():
+        return Response(status_code=404)
+    return HTMLResponse(content=ruta.read_text(encoding="utf-8"), headers={
+        "Content-Security-Policy": ("default-src 'none'; script-src 'unsafe-inline'; "
+                                    "style-src 'unsafe-inline'; connect-src 'self'; "
+                                    "frame-src 'self'; img-src 'self' data:; font-src 'self'"),
+        "X-Content-Type-Options": "nosniff"})
+
+
+@app.get("/api/panel/estado")
+def panel_estado(x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        hoy = persistencia.ahora_iso()[:10]
+        ed = persistencia.obtener_edicion(conexion, hoy)
+        n_susc = len(persistencia.suscriptores_activos(conexion))
+    finally:
+        conexion.close()
+    return {
+        "hoy": hoy,
+        "suscriptores": n_susc,
+        "ia_configurada": bool(os.environ.get("ANTHROPIC_API_KEY")),
+        "resend_configurado": bool(os.environ.get("RESEND_API_KEY")),
+        "admin_email_configurado": bool(os.environ.get("PULSO_ADMIN_EMAIL")),
+        "edicion_hoy": None if ed is None else {
+            "estado": ed["estado"], "asunto": ed["asunto"],
+            "enviados": ed["enviados"], "suscriptores": ed["suscriptores"]},
+        "version": (os.environ.get("RENDER_GIT_COMMIT") or "local")[:12],
+    }
+
+
+@app.get("/api/panel/ediciones")
+def panel_ediciones(x_pipeline_token: str = Header(default=""), limite: int = 30) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        eds = persistencia.listar_ediciones(conexion, min(max(1, limite), 90))
+    finally:
+        conexion.close()
+    return {"ediciones": eds}
+
+
+@app.get("/api/panel/estadisticas")
+def panel_estadisticas(x_pipeline_token: str = Header(default=""), dias: int = 30) -> dict:
+    """Estadísticas del centro de mando: crecimiento de suscriptores, ediciones
+    y aperturas/clics (estas últimas si el webhook de Resend está configurado)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        datos = persistencia.estadisticas(conexion, dias=dias)
+    finally:
+        conexion.close()
+    datos["webhook_configurado"] = bool(os.environ.get("RESEND_WEBHOOK_SECRET"))
+    return datos
+
+
+@app.get("/api/panel/edicion/{fecha}")
+def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.obtener_edicion(conexion, fecha)
+    finally:
+        conexion.close()
+    if ed is None:
+        return Response(status_code=404)  # type: ignore[return-value]
+    brief = ed["brief"] or {}
+    # ¿es una edición de FIN DE SEMANA (sábado = resumen, domingo = deep-dive)?
+    # Entonces no hay editor de historias: se revisa en la vista previa y se
+    # aprueba/descarta.
+    analisis = brief.get("analisis") if isinstance(brief.get("analisis"), dict) else None
+    es_resumen = isinstance(brief.get("resumen_redactado"), dict)
+    es_finde = es_resumen or isinstance(brief.get("analisis_redactado"), dict)
+    if es_resumen:
+        resumen_hechos = {"titulo": (brief.get("resumen") or {}).get("titulo", "El Pulso de la semana"),
+                          "nombre": "Resumen de la semana"}
+    elif analisis:
+        resumen_hechos = {"titulo": analisis.get("titulo"), "nombre": analisis.get("nombre"),
+                          "ticker": analisis.get("ticker")}
+    else:
+        resumen_hechos = None
+    return {
+        "fecha": ed["fecha"], "estado": ed["estado"], "asunto": ed["asunto"],
+        "token": ed["token"], "enviados": ed["enviados"], "suscriptores": ed["suscriptores"],
+        "generada_iso": ed["generada_iso"], "enviada_iso": ed["enviada_iso"],
+        "redactado": brief.get("redactado") or {}, "foto": brief.get("foto") or [],
+        "finde": es_finde,
+        "analisis": resumen_hechos if es_finde else None,
+    }
+
+
+
+@app.get("/api/pulso/suscriptores")
+def pulso_suscriptores(clave: str = "", email: str = ""):
+    """Conteo de suscriptores (solo números, sin correos): registrados, activos
+    (confirmados), sin confirmar (double opt-in pendiente) y bajas. Con `email`,
+    reporta el estado de ESE correo. De solo lectura; protegido con clave."""
+    if clave != "revisar-pulso-2026":
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        q = lambda sql: conexion.execute(sql).fetchone()[0]
+        total = q("SELECT COUNT(*) FROM suscriptores")
+        activos = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 1")
+        sin_confirmar = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 0 AND token_confirma IS NOT NULL")
+        bajas = q("SELECT COUNT(*) FROM suscriptores WHERE activo = 0 AND token_confirma IS NULL")
+        estado_email = None
+        if email:
+            fila = conexion.execute(
+                "SELECT activo, token_confirma FROM suscriptores WHERE lower(email) = lower(?)",
+                (email.strip(),)).fetchone()
+            if fila is None:
+                estado_email = "no registrado"
+            elif fila["activo"] == 1:
+                estado_email = "activo (confirmado, recibe el newsletter)"
+            elif fila["token_confirma"]:
+                estado_email = "PENDIENTE de confirmar (no recibe el newsletter)"
+            else:
+                estado_email = "baja (se desuscribió)"
+    finally:
+        conexion.close()
+    return {"registrados": total, "activos": activos,
+            "sin_confirmar": sin_confirmar, "bajas": bajas,
+            "email_consultado": email or None, "estado_email": estado_email}
+
+
+@app.post("/api/panel/edicion/{fecha}/aprobar")
+def panel_aprobar(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    from contenido import pipeline
+    return pipeline.aprobar_y_enviar(fecha=fecha)
+
+
+@app.post("/api/panel/edicion/{fecha}/descartar")
+def panel_descartar(fecha: str, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    from contenido import pipeline
+    return pipeline.descartar_edicion(fecha=fecha)
+
+
+@app.post("/api/panel/edicion/{fecha}/editar")
+def panel_editar(fecha: str, peticion: PeticionEditar, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    if not _fecha_valida(fecha):
+        return Response(status_code=404)  # type: ignore[return-value]
+    conexion = persistencia.conectar()
+    try:
+        ed = persistencia.obtener_edicion(conexion, fecha)
+        if ed is None:
+            return {"ok": False, "motivo": "no existe la edición"}
+        if ed["estado"] == "enviada":
+            return {"ok": False, "motivo": "la edición ya se envió; no se puede editar"}
+        persistencia.actualizar_redactado(conexion, fecha, peticion.redactado)
+        # re-renderiza el preview con el texto editado (usa las destacadas de hoy).
+        # Si esto falla (p. ej. hoy no hay destacadas), el texto SÍ quedó guardado
+        # pero la vista previa quedó vieja: hay que DECIRLO, no mentir con ok:true
+        # a secas — si no, se aprueba y sale el correo sin las ediciones (B5).
+        preview_ok, motivo = False, ""
+        try:
+            from datetime import datetime as _dt, timezone as _tz
+            from contenido import pipeline, boletin
+            brief = persistencia.obtener_edicion(conexion, fecha)["brief"]
+            destacadas = pipeline._destacadas_de_hoy(conexion)
+            # el fin de semana el correo es el resumen (sábado) o el deep-dive
+            # (domingo): no necesita destacadas, construir_html lo arma del brief.
+            es_finde = (isinstance(brief.get("analisis_redactado"), dict)
+                        or isinstance(brief.get("resumen_redactado"), dict))
+            if destacadas or es_finde:
+                html = boletin.construir_html(
+                    destacadas, pipeline._fecha_es(_dt.now(_tz.utc)),
+                    token_baja=persistencia.TOKEN_BAJA_SENTINEL, brief=brief)
+                persistencia.actualizar_preview(conexion, fecha, html)
+                preview_ok = True
+            else:
+                motivo = "Hoy no hay destacadas: se guardó tu texto, pero la vista previa no se pudo regenerar."
+        except Exception as error:
+            motivo = f"Se guardó tu texto, pero la vista previa no se pudo regenerar ({type(error).__name__})."
+        return {"ok": True, "preview_actualizado": preview_ok, "motivo": motivo}
+    finally:
+        conexion.close()
+
+
+@app.post("/api/panel/generar")
+def panel_generar(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    tareas.add_task(_correr_ritual)
+    return {"ok": True, "mensaje": "Generando la edición de hoy… (~1-2 min). Recarga en un momento."}
+
+
 # ---------- disparador del ritual de la madrugada (protegido por token) ----------
 
-def _correr_ritual() -> None:
+def _correr_ritual(momento: str = "manana") -> None:
     """Corre el ritual completo en el MISMO proceso web → misma base que
-    sirve el muro. Cualquier fallo se traga (no debe tumbar el servidor)."""
+    sirve el muro. Un fallo NO debe tumbar el servidor, pero SÍ debe dejar
+    rastro: si no, un muro vacío y ningún correo son indistinguibles de un día
+    sin noticias, y en el log no hay pista de por qué (B6).
+
+    `momento="tarde"` arma la edición de la tarde (el cierre, Premium)."""
     try:
         from contenido import pipeline
-        pipeline.ritual_matutino(enviar=True)
+        pipeline.ritual_matutino(enviar=True, momento=momento)
     except Exception:
-        pass
+        import traceback
+        traceback.print_exc()  # queda en el log de Render
+        try:
+            from contenido import notificar
+            notificar.avisar("⚠️ <b>El ritual de El Pulso falló.</b> Revisa el log del motor; "
+                             "el muro puede haber quedado sin actualizar y no salió edición.")
+        except Exception:
+            pass  # el aviso es cortesía; el traceback ya quedó en el log
 
 
 @app.get("/api/diagnostico")
@@ -951,23 +1608,26 @@ def api_diagnostico(x_pipeline_token: str = Header(default="")) -> dict:
             messages=[{"role": "user", "content": "Di solo: hola"}],
         )
         resultado["veredicto"] = "OK: la IA respondió — los cerebros reales funcionan"
-        resultado["respuesta"] = r.content[0].text[:40]
+        resultado["respuesta"] = texto_de(r)[:40]
     except Exception as error:
         resultado["veredicto"] = f"FALLA {type(error).__name__}: {str(error)[:300]}"
     return resultado
 
 
 @app.post("/api/pipeline")
-def disparar_pipeline(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+def disparar_pipeline(tareas: BackgroundTasks, momento: str = "manana",
+                      x_pipeline_token: str = Header(default="")) -> dict:
     """Lo llama el cron de Render (o Giorgio a mano) para preparar el día.
 
     Protegido por token (ENJAMBRE_PIPELINE_TOKEN). Corre en segundo plano
-    y responde al instante: el ritual toma minutos.
+    y responde al instante: el ritual toma minutos. `?momento=tarde` arma la
+    edición de la tarde (el cierre del mercado, Premium).
     """
     if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
-    tareas.add_task(_correr_ritual)
-    return {"estado": "iniciado"}
+    momento = "tarde" if momento == "tarde" else "manana"
+    tareas.add_task(_correr_ritual, momento)
+    return {"estado": "iniciado", "momento": momento}
 
 
 @app.post("/api/corrector")

@@ -257,8 +257,16 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     from contenido import respaldo
     from contenido.corrector import cerebros_ia
 
-    reales = {c.get("sim_id"): c for c in respaldo.casos_remotos()}
-    eventos = cargar_eventos()
+    try:
+        casos = respaldo.casos_remotos()
+    except Exception:
+        casos = []
+    reales = {c.get("sim_id"): c for c in casos}
+    try:
+        eventos = cargar_eventos()
+    except Exception:
+        eventos = []
+    n_eventos_banco = len(eventos)
     if mercado:
         eventos = [e for e in eventos if _mercado_de(e) == mercado]
     evaluables = [e for e in eventos if _sim_id(e) in reales]
@@ -298,6 +306,10 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         "acierto_global": round(ok / tot, 4) if tot else None,
         "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),
         "neutra": _acc(cats["neutra"]),
+        # diagnóstico: para ver de dónde sale un 0 (respaldo vs banco vs cruce)
+        "diag": {"casos_respaldados": len(reales),
+                 "eventos_banco": n_eventos_banco,
+                 "evaluables_tras_cruce": len(evaluables)},
     }
     if guardar:
         _registrar_evaluacion(resultado)

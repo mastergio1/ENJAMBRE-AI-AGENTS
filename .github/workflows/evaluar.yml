@@ -22,9 +22,13 @@ on:
         required: false
         default: ""
       tamano:
-        description: "Cuántos exámenes (0 = todos; empieza con 20 si la caché está fría)"
+        description: "Nuevos por tanda (0 = tanda máxima segura ~40). RESUMIBLE: repite para avanzar"
         required: false
-        default: "20"
+        default: "0"
+      reiniciar:
+        description: "Borrar el progreso de ese (mercado, peso) y empezar de cero (true/false)"
+        required: false
+        default: "false"
 
 jobs:
   evaluar:
@@ -68,10 +72,11 @@ jobs:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           PESO: ${{ github.event.inputs.peso || '-1' }}
           MERCADO: ${{ github.event.inputs.mercado }}
-          TAMANO: ${{ github.event.inputs.tamano || '20' }}
+          TAMANO: ${{ github.event.inputs.tamano || '0' }}
+          REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
         run: |
           respuesta=$(curl -s -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&mercado=$MERCADO&tamano=$TAMANO" \
+            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR" \
             -H "X-Pipeline-Token: $TOKEN" || true)
           echo "Motor: ${respuesta:-sin respuesta (reintentará en el sondeo)}"
 

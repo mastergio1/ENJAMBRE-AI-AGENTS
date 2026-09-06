@@ -219,6 +219,30 @@ def _signo(x) -> int:
     return 1 if x > 0 else (-1 if x < 0 else 0)
 
 
+CATS_VALIDAS = ("negativa", "positiva", "neutra")
+
+
+def _simbolo_de_caso(caso: dict) -> str:
+    """El primer símbolo de un caso respaldado (guarda `simbolos`, lista o
+    cadena separada por comas)."""
+    s = caso.get("simbolos")
+    if isinstance(s, list):
+        s = s[0] if s else ""
+    return ((s or "").split(",")[0]).strip().upper()
+
+
+def _mercado_de_caso(caso: dict) -> str:
+    """El mercado de un caso respaldado: su campo `mercado`, o inferido del
+    símbolo (mismo criterio que `_mercado_de` para eventos)."""
+    if caso.get("mercado"):
+        return caso["mercado"]
+    simbolo = _simbolo_de_caso(caso)
+    for mercado, simbolos in _SIMBOLOS_MERCADO.items():
+        if simbolo in simbolos:
+            return mercado
+    return "accion"
+
+
 def evaluar(tamano: int | None = None, mercado: str | None = None,
             peso: float | None = None, simular=None, guardar: bool = True) -> dict:
     """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
@@ -261,28 +285,32 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         casos = respaldo.casos_remotos()
     except Exception:
         casos = []
-    reales = {c.get("sim_id"): c for c in casos}
-    try:
-        eventos = cargar_eventos()
-    except Exception:
-        eventos = []
-    n_eventos_banco = len(eventos)
-    if mercado:
-        eventos = [e for e in eventos if _mercado_de(e) == mercado]
-    evaluables = [e for e in eventos if _sim_id(e) in reales]
-    evaluables.sort(key=lambda e: e.get("fecha") or "", reverse=True)
+    # Evaluación DIRECTA sobre los casos ya respaldados (traen titular + el
+    # resultado real). NO se cruza con el banco de eventos: ese cruce por sim_id
+    # es frágil (el raw y la API de GitHub sirven versiones distintas del
+    # archivo) y daba 0 en Render. La semilla sale del propio sim_id, así que es
+    # determinística por caso: la 1ª pasada calienta la caché de cerebros y las
+    # siguientes (otros valores de peso) reusan esa caché — el barrido es barato.
+    evaluables = []
+    for c in casos:
+        rr = c.get("reaccion_real") or {}
+        if rr.get("pct_real") is None or rr.get("categoria") not in CATS_VALIDAS:
+            continue
+        if mercado and _mercado_de_caso(c) != mercado:
+            continue
+        evaluables.append(c)
+    evaluables.sort(key=lambda c: c.get("fecha") or "", reverse=True)
+    n_categorizados = len(evaluables)
     if tamano:
         evaluables = evaluables[:int(tamano)]
 
     cats = {"negativa": [0, 0], "positiva": [0, 0], "neutra": [0, 0]}
     con_ia = sin_ia = 0
-    for evento in evaluables:
-        caso = reales[_sim_id(evento)]
-        rr = caso.get("reaccion_real") or {}
-        real, cat = rr.get("pct_real"), rr.get("categoria")
-        if real is None or cat not in cats:
-            continue
-        reporte, lideres, serie, _ = simular(evento["titular"], _seed(evento))
+    for c in evaluables:
+        rr = c["reaccion_real"]
+        real, cat = rr["pct_real"], rr["categoria"]
+        seed = int(c["sim_id"][:8], 16)  # semilla determinística por caso
+        reporte, lideres, serie, _ = simular(c["titular"], seed)
         if cerebros_ia(lideres):
             con_ia += 1
         else:
@@ -306,10 +334,10 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         "acierto_global": round(ok / tot, 4) if tot else None,
         "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),
         "neutra": _acc(cats["neutra"]),
-        # diagnóstico: para ver de dónde sale un 0 (respaldo vs banco vs cruce)
-        "diag": {"casos_respaldados": len(reales),
-                 "eventos_banco": n_eventos_banco,
-                 "evaluables_tras_cruce": len(evaluables)},
+        # diagnóstico: para ver de dónde sale un 0
+        "diag": {"casos_respaldados": len(casos),
+                 "casos_categorizados": n_categorizados,
+                 "evaluados_en_tanda": len(evaluables)},
     }
     if guardar:
         _registrar_evaluacion(resultado)

@@ -1,7 +1,8 @@
 """
 El endpoint de evaluación (`backtest.evaluar`): mide el acierto de dirección
-sobre los exámenes ya respaldados, bajo el código/entorno actual, SIN re-
-respaldar. Se prueba con la simulación inyectada (sin LLM ni red).
+DIRECTAMENTE sobre los casos ya respaldados (titular + resultado real), bajo el
+código/entorno actual, SIN re-respaldar y SIN cruzar con el banco de eventos.
+Se prueba con la simulación inyectada (sin LLM ni red).
 """
 
 import os
@@ -9,58 +10,58 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # engine/
 
-from contenido import backtest, persistencia  # noqa: E402
+from contenido import backtest  # noqa: E402
 
 
-def _evento(id_, titular, fecha, categoria):
-    return {"id": id_, "titular": titular, "fecha": fecha,
-            "simbolo": "SPY", "categoria": categoria}
-
-
-def _caso(titular, fecha, pct_real, categoria):
-    seed = int(fecha.replace("-", ""))
-    return {"sim_id": persistencia.id_simulacion(titular, seed),
+def _caso(sim_id, titular, pct_real, categoria, mercado="cripto"):
+    return {"sim_id": sim_id, "titular": titular, "mercado": mercado,
             "reaccion_real": {"pct_real": pct_real, "categoria": categoria}}
 
 
 def test_evaluar_cuenta_acierto_por_categoria(monkeypatch):
-    eventos = [
-        _evento("e1", "Crash del mercado", "2020-03-12", "negativa"),
-        _evento("e2", "Rally histórico", "2021-11-08", "positiva"),
-        _evento("e3", "Otra caída fuerte", "2022-06-13", "negativa"),
-    ]
     casos = [
-        _caso("Crash del mercado", "2020-03-12", -8.0, "negativa"),
-        _caso("Rally histórico", "2021-11-08", +5.0, "positiva"),
-        _caso("Otra caída fuerte", "2022-06-13", -6.0, "negativa"),
+        _caso("aaaa1111bbbb2222", "Crash del mercado", -8.0, "negativa"),
+        _caso("cccc3333dddd4444", "Rally histórico", +5.0, "positiva"),
+        _caso("eeee5555ffff6666", "Otra caída fuerte", -6.0, "negativa"),
+        # un caso sin categoría (en vivo) — debe ignorarse
+        {"sim_id": "9999", "titular": "En vivo", "simbolos": "SPY,QQQ",
+         "reaccion_real": {"pct_real": 1.0, "categoria": None}},
     ]
-    monkeypatch.setattr(backtest, "cargar_eventos", lambda: eventos)
     from contenido import respaldo
     monkeypatch.setattr(respaldo, "casos_remotos", lambda: casos)
 
-    # simulación inyectada: acierta la 1ª negativa (baja) y la positiva (sube),
-    # pero FALLA la 2ª negativa (predice subir). Líderes con fuente 'api'.
+    # acierta la 1ª negativa (baja) y la positiva (sube), FALLA la 2ª negativa.
     predicho = {"Crash del mercado": -3.0, "Rally histórico": +2.0,
                 "Otra caída fuerte": +4.0}
     def simular(titular, seed):
+        assert isinstance(seed, int)  # semilla determinística por caso
         return ({"direccion_pct": predicho[titular]},
                 [{"fuente": "api"}], [], None)
 
     r = backtest.evaluar(simular=simular, guardar=False)
-    assert r["evaluados"] == 3
+    assert r["evaluados"] == 3           # el caso sin categoría se ignoró
     assert r["con_ia"] == 3 and r["sin_ia"] == 0
-    # negativas: 1 de 2 (acertó el crash, falló la otra) = 0.5
     assert r["negativa"] == {"aciertos": 1, "total": 2, "acierto": 0.5}
-    # positivas: 1 de 1 = 1.0
     assert r["positiva"]["acierto"] == 1.0
-    # global: 2 de 3
     assert r["acierto_global"] == round(2 / 3, 4)
-    # reporta la perilla P2 vigente
-    assert "peso_tono_invertidores" in r
+    assert r["diag"]["casos_respaldados"] == 4
+    assert r["diag"]["casos_categorizados"] == 3
+
+
+def test_evaluar_filtra_por_mercado(monkeypatch):
+    casos = [
+        _caso("aaaa1111bbbb2222", "Cripto malo", -8.0, "negativa", mercado="cripto"),
+        _caso("cccc3333dddd4444", "Indice bueno", +5.0, "positiva", mercado="indice"),
+    ]
+    from contenido import respaldo
+    monkeypatch.setattr(respaldo, "casos_remotos", lambda: casos)
+    r = backtest.evaluar(mercado="cripto", simular=lambda t, s: ({"direccion_pct": -1.0}, [], [], None),
+                         guardar=False)
+    assert r["evaluados"] == 1
+    assert r["negativa"]["total"] == 1 and r["positiva"]["total"] == 0
 
 
 def test_evaluar_respeta_env_de_p2(monkeypatch):
-    monkeypatch.setattr(backtest, "cargar_eventos", lambda: [])
     from contenido import respaldo
     monkeypatch.setattr(respaldo, "casos_remotos", lambda: [])
     monkeypatch.setenv("ENJAMBRE_PESO_TONO_INVERSORES", "0.3")

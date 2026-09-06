@@ -233,15 +233,37 @@ def salud() -> dict:
             "version": (os.environ.get("RENDER_GIT_COMMIT") or "local")[:12]}
 
 
+def _ram_contenedor_mb() -> int | None:
+    """RAM que Render (u otro contenedor) le asigna al motor, en MB. Lee el
+    límite del cgroup — así se puede confirmar desde afuera qué plan quedó
+    (512 MB = Starter · ~2048 MB = Standard). Nunca lanza."""
+    candidatos = [
+        "/sys/fs/cgroup/memory.max",                 # cgroup v2
+        "/sys/fs/cgroup/memory/memory.limit_in_bytes",  # cgroup v1
+    ]
+    for ruta in candidatos:
+        try:
+            crudo = open(ruta, encoding="utf-8").read().strip()
+            if crudo and crudo != "max":
+                bytes_ = int(crudo)
+                # algunos hosts ponen un número gigante = "sin límite"
+                if 0 < bytes_ < (1 << 50):
+                    return round(bytes_ / (1024 * 1024))
+        except (OSError, ValueError):
+            continue
+    return None
+
+
 @app.get("/api/estado")
 def api_estado(respuesta: Response) -> dict:
     """Estado operativo público (no revela secretos): si el enjambre está en
-    pruebas privadas y si hay clave de IA. Sirve para monitoreo y para
-    confirmar de un vistazo que el candado quedó activo."""
+    pruebas privadas, si hay clave de IA, y cuánta RAM tiene el motor (para
+    confirmar el plan de Render). Sirve para monitoreo."""
     respuesta.headers["Cache-Control"] = "no-store"
     return {
         "privado": seguridad.acceso_privado_activo(),
         "ia_configurada": bool(os.environ.get("ANTHROPIC_API_KEY")),
+        "ram_mb": _ram_contenedor_mb(),
     }
 
 

@@ -1696,6 +1696,49 @@ def api_backtest_estado(mercado: str = "", x_pipeline_token: str = Header(defaul
     return {k: v for k, v in avance.items() if not k.startswith("_")}
 
 
+def _correr_evaluacion(tamano: int | None, mercado: str | None,
+                       peso: float | None) -> None:
+    from contenido import backtest
+
+    r = backtest.evaluar(tamano=tamano, mercado=mercado, peso=peso)
+    neg = r.get("negativa", {})
+    print(f"evaluacion: peso_tono_invertidores={r.get('peso_tono_invertidores')} "
+          f"evaluados={r.get('evaluados')} con_ia={r.get('con_ia')} "
+          f"global={r.get('acierto_global')} negativas={neg.get('acierto')} "
+          f"positivas={r.get('positiva', {}).get('acierto')}", flush=True)
+
+
+@app.post("/api/evaluar")
+def api_evaluar(tareas: BackgroundTasks, tamano: int = 0, mercado: str = "",
+                peso: float = -1.0,
+                x_pipeline_token: str = Header(default="")) -> dict:
+    """Mide el acierto del enjambre sobre los exámenes YA respaldados, bajo el
+    código/entorno ACTUAL, SIN tocar el respaldo histórico. Corre en segundo
+    plano; el resultado se consulta con GET /api/evaluar. `tamano`=0 evalúa
+    todos; `mercado` filtra; `peso` (0..1) fija P2 solo para esta medición
+    (déjalo en -1 para usar el valor vigente del entorno)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    peso_val = peso if 0.0 <= peso <= 1.0 else None
+    tareas.add_task(_correr_evaluacion, int(tamano) or None,
+                    mercado.strip() or None, peso_val)
+    return {"estado": "iniciado", "mercado": mercado.strip() or "todos",
+            "tamano": int(tamano) or "todos",
+            "peso": peso_val if peso_val is not None else "entorno",
+            "nota": "el resultado se consulta con GET /api/evaluar"}
+
+
+@app.get("/api/evaluar")
+def api_evaluar_resultado(x_pipeline_token: str = Header(default="")) -> dict:
+    """El resultado de la última evaluación (y un pequeño historial para
+    comparar valores de la perilla P2)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import backtest
+
+    return backtest.ultima_evaluacion() or {"nota": "aún no hay evaluación"}
+
+
 @app.post("/api/backtest/reiniciar")
 def api_backtest_reiniciar(x_pipeline_token: str = Header(default="")) -> dict:
     """Borra los exámenes de calibración de la base LOCAL (fuente='backtest'),

@@ -18,6 +18,7 @@ Reglas de diseño:
 
 import gc
 import json
+import os
 from pathlib import Path
 
 from contenido import persistencia
@@ -200,3 +201,131 @@ def correr_tanda(conexion=None, tamano: int = TANDA_DEFECTO,
     finally:
         if propia:
             conexion.close()
+
+
+# ---------- evaluación (medir una config SIN re-respaldar) ----------
+
+def _ruta_evaluacion() -> Path:
+    """Dónde se guarda el resultado de la última evaluación. En Render, junto a
+    la base en el disco persistente; en local, junto al banco de exámenes."""
+    db = os.environ.get("ENJAMBRE_DB")
+    base = Path(db).parent if db else RUTA_EVENTOS.parent
+    return base / "evaluaciones.json"
+
+
+def _signo(x) -> int:
+    if x is None:
+        return 0
+    return 1 if x > 0 else (-1 if x < 0 else 0)
+
+
+def evaluar(tamano: int | None = None, mercado: str | None = None,
+            peso: float | None = None, simular=None, guardar: bool = True) -> dict:
+    """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
+    mide el acierto de DIRECCIÓN por categoría, comparándolo con el resultado
+    real ya conocido. Sirve para medir el impacto de un cambio (ej. P2) SIN
+    tocar el respaldo histórico.
+
+    - `peso`: si se pasa, fija ENJAMBRE_PESO_TONO_INVERSORES SOLO durante esta
+      evaluación (para barrer valores de P2 sin re-desplegar ni cambiarlo en
+      Render). Si es None, usa el valor vigente del entorno.
+    - NO persiste simulaciones ni re-respalda: es una medición pura.
+    - Usa la caché de cerebros: barato si está caliente, gasta si está fría.
+    - Solo cuenta los exámenes que de verdad usaron el LLM (con_ia); si el
+      motor cayó al respaldo léxico (sin saldo), lo reporta y no contamina.
+    """
+    import time
+
+    from model import _peso_invertidores_env
+
+    if peso is not None:
+        previo = os.environ.get("ENJAMBRE_PESO_TONO_INVERSORES")
+        os.environ["ENJAMBRE_PESO_TONO_INVERSORES"] = str(peso)
+        try:
+            return evaluar(tamano=tamano, mercado=mercado, peso=None,
+                           simular=simular, guardar=guardar)
+        finally:
+            if previo is None:
+                os.environ.pop("ENJAMBRE_PESO_TONO_INVERSORES", None)
+            else:
+                os.environ["ENJAMBRE_PESO_TONO_INVERSORES"] = previo
+
+    if simular is None:
+        from contenido import pipeline
+        simular = lambda t, s: pipeline.simular_titular_completo(  # noqa: E731
+            t, s, con_frames=False)
+    from contenido import respaldo
+    from contenido.corrector import cerebros_ia
+
+    reales = {c.get("sim_id"): c for c in respaldo.casos_remotos()}
+    eventos = cargar_eventos()
+    if mercado:
+        eventos = [e for e in eventos if _mercado_de(e) == mercado]
+    evaluables = [e for e in eventos if _sim_id(e) in reales]
+    evaluables.sort(key=lambda e: e.get("fecha") or "", reverse=True)
+    if tamano:
+        evaluables = evaluables[:int(tamano)]
+
+    cats = {"negativa": [0, 0], "positiva": [0, 0], "neutra": [0, 0]}
+    con_ia = sin_ia = 0
+    for evento in evaluables:
+        caso = reales[_sim_id(evento)]
+        rr = caso.get("reaccion_real") or {}
+        real, cat = rr.get("pct_real"), rr.get("categoria")
+        if real is None or cat not in cats:
+            continue
+        reporte, lideres, serie, _ = simular(evento["titular"], _seed(evento))
+        if cerebros_ia(lideres):
+            con_ia += 1
+        else:
+            sin_ia += 1
+        cats[cat][1] += 1
+        if _signo(reporte.get("direccion_pct")) == _signo(real):
+            cats[cat][0] += 1
+        del reporte, lideres, serie
+        gc.collect()
+
+    def _acc(par):
+        return {"aciertos": par[0], "total": par[1],
+                "acierto": round(par[0] / par[1], 4) if par[1] else None}
+
+    tot = sum(c[1] for c in cats.values())
+    ok = sum(c[0] for c in cats.values())
+    resultado = {
+        "fecha": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "peso_tono_invertidores": _peso_invertidores_env(1.0),
+        "evaluados": tot, "con_ia": con_ia, "sin_ia": sin_ia,
+        "acierto_global": round(ok / tot, 4) if tot else None,
+        "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),
+        "neutra": _acc(cats["neutra"]),
+    }
+    if guardar:
+        _registrar_evaluacion(resultado)
+    return resultado
+
+
+def _registrar_evaluacion(resultado: dict) -> None:
+    """Guarda el resultado (con un pequeño historial) para que el endpoint GET
+    lo devuelva. Nunca lanza."""
+    try:
+        ruta = _ruta_evaluacion()
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        historial = []
+        if ruta.exists():
+            historial = (json.loads(ruta.read_text(encoding="utf-8")) or {}).get("historial", [])
+        historial.append(resultado)
+        ruta.write_text(json.dumps({"ultima": resultado, "historial": historial[-20:]},
+                                   ensure_ascii=False, indent=1), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def ultima_evaluacion() -> dict | None:
+    """El último resultado de evaluación guardado (para el endpoint GET)."""
+    try:
+        ruta = _ruta_evaluacion()
+        if ruta.exists():
+            return json.loads(ruta.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return None

@@ -17,6 +17,10 @@ on:
         description: "Peso de los invertidores en el tono (0=P2 pleno, 1=actual, -1=el de Render)"
         required: false
         default: "-1"
+      umbral:
+        description: "Umbral de corrección de sesgo — Plan A (0=off/base, 0.3=corrección activa, -1=el de Render)"
+        required: false
+        default: "-1"
       mercado:
         description: "Mercado a evaluar (cripto/indice/oro/petroleo/accion; vacío = todos)"
         required: false
@@ -71,12 +75,13 @@ jobs:
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           PESO: ${{ github.event.inputs.peso || '-1' }}
+          UMBRAL: ${{ github.event.inputs.umbral || '-1' }}
           MERCADO: ${{ github.event.inputs.mercado }}
           TAMANO: ${{ github.event.inputs.tamano || '0' }}
           REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
         run: |
           respuesta=$(curl -s -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR" \
+            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&umbral=$UMBRAL&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR" \
             -H "X-Pipeline-Token: $TOKEN" || true)
           echo "Motor: ${respuesta:-sin respuesta (reintentará en el sondeo)}"
 

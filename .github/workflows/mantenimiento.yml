@@ -14,6 +14,7 @@ on:
         type: choice
         options:
           - activar-pendientes
+          - diagnostico
 
 jobs:
   mantenimiento:
@@ -40,6 +41,14 @@ jobs:
               https://enjambre-motor.onrender.com/api/pulso/activar-pendientes \
               -H "X-Pipeline-Token: $TOKEN")
             echo "Respuesta: $respuesta"
+          elif [ "$ACCION" = "diagnostico" ]; then
+            # Estado del motor: edición de hoy (estado/enviados), si Resend y el
+            # correo de admin están configurados, y la versión desplegada. Sin
+            # datos personales. Para ver por qué no llegó un correo.
+            respuesta=$(curl -sf -m 30 \
+              https://enjambre-motor.onrender.com/api/panel/estado \
+              -H "X-Pipeline-Token: $TOKEN")
+            echo "Estado del motor: $respuesta"
           else
             echo "::error::Acción desconocida: $ACCION"; exit 1
           fi

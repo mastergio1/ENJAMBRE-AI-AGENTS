@@ -131,6 +131,25 @@ def _umbral_correccion_env(por_defecto: float) -> float:
         valor = float(por_defecto)
     return max(0.0, min(1.0, valor))
 
+
+# Intervención 1 — voz "doomer pura" (fiel, que NO invierte) mezclada en el
+# consenso. El sesgo alcista viene de que los invertidores (quant/contrarian/
+# optimista) empujan positivo ante una mala noticia y cancelan a los fieles.
+# En vez de silenciarlos (P2, que falló), AÑADIMOS al consenso una voz que lee
+# la noticia sin invertir (el léxico, a 0.9 de magnitud — el "LiderDoomerPuro"
+# del plan) con peso `peso_doomer`. A diferencia del Plan A (que solo dispara si
+# el consenso ya está muy bajista), esta mezcla es INCONDICIONAL, así que
+# también alcanza cripto. 0.0 = desactivada. Se mide/rollbackea por entorno.
+def _peso_doomer_env(por_defecto: float) -> float:
+    """El peso de la voz doomer pura en el consenso (ENJAMBRE_PESO_DOOMER).
+    Recortado a [0, 1]; 0 = desactivada."""
+    crudo = os.environ.get("ENJAMBRE_PESO_DOOMER")
+    try:
+        valor = float(crudo) if crudo not in (None, "") else float(por_defecto)
+    except ValueError:
+        valor = float(por_defecto)
+    return max(0.0, min(1.0, valor))
+
 log = logging.getLogger("enjambre.lexico")
 
 
@@ -217,6 +236,9 @@ class MercadoEnjambre(mesa.Model):
         # medir en el backtest / rollback sin re-desplegar (patrón de P2).
         self._umbral_correccion = _umbral_correccion_env(
             config.get("umbral_correccion_sesgo", 0.0))
+        # Intervención 1: peso de la voz doomer pura en el consenso (0.0 = off).
+        # ENJAMBRE_PESO_DOOMER manda sobre la config (medir/rollback sin desplegar).
+        self._peso_doomer = _peso_doomer_env(config.get("peso_doomer", 0.0))
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
             # expone los "parametros" del tipo para que sus agentes los lean en
@@ -315,6 +337,14 @@ class MercadoEnjambre(mesa.Model):
             self._ultimo_consenso = s        # P4: fuerza de la señal (confianza)
             return s
         consenso = num / den
+        directo = None  # lectura léxica (fiel, no invierte); se calcula si hace falta
+        # Intervención 1 — voz "doomer pura": mezcla la lectura fiel (que no
+        # invierte) en el consenso con peso `peso_doomer`. INCONDICIONAL, así que
+        # también alcanza cripto (donde el Plan A no dispara). 0.0 = desactivada.
+        peso_doomer = getattr(self, "_peso_doomer", 0.0)
+        if peso_doomer > 0:
+            directo = sentimiento_lexico(titular)
+            consenso = (1 - peso_doomer) * consenso + peso_doomer * (0.9 * directo)
         self._ultimo_consenso = consenso     # P4: fuerza de la señal (confianza)
         # Plan A — corrección del sesgo alcista: cuando los líderes ya leen la
         # noticia como CLARAMENTE bajista, no dejamos que el descuento de
@@ -324,7 +354,8 @@ class MercadoEnjambre(mesa.Model):
         # solo evitamos diluir el bajón. Desactivada con umbral 0.0.
         umbral = getattr(self, "_umbral_correccion", 0.0)
         if umbral > 0 and consenso < -umbral:
-            directo = sentimiento_lexico(titular)
+            if directo is None:
+                directo = sentimiento_lexico(titular)
             return max(-1.0, min(1.0, min(consenso, directo)))
         return max(-1.0, min(1.0, consenso * GANANCIA_CONSENSO))
 

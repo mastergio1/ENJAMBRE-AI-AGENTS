@@ -24,7 +24,23 @@ MAX_CONCURRENTES = 45   # llamadas simultáneas (más paralelismo = menos espera
                         # al leer una noticia; los ~110 cerebros caben en ~2-3
                         # tandas en vez de ~5, sin recortar la riqueza de voces)
 TIMEOUT_SEGUNDOS = 12.0
-RUTA_CACHE = Path(__file__).parent / "cache" / "respuestas.json"
+
+
+def _ruta_cache_defecto() -> Path:
+    """Dónde vive la caché de respuestas del LLM.
+
+    En Render la base de datos vive en el disco PERSISTENTE (ENJAMBRE_DB, en
+    /app/datos); guardar la caché junto a ella la hace sobrevivir a los
+    redeploys. Sin esto, cada deploy borra la caché y re-rendir los mismos
+    titulares vuelve a gastar ~110 llamadas LLM por examen. En local (sin
+    ENJAMBRE_DB) queda junto al módulo, como siempre."""
+    db = os.environ.get("ENJAMBRE_DB")
+    if db:
+        return Path(db).parent / "cache_cerebros" / "respuestas.json"
+    return Path(__file__).parent / "cache" / "respuestas.json"
+
+
+RUTA_CACHE = _ruta_cache_defecto()
 
 
 # ---------- caché (repetir demos no cuesta nada) ----------

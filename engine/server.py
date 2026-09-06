@@ -233,15 +233,37 @@ def salud() -> dict:
             "version": (os.environ.get("RENDER_GIT_COMMIT") or "local")[:12]}
 
 
+def _ram_contenedor_mb() -> int | None:
+    """RAM que Render (u otro contenedor) le asigna al motor, en MB. Lee el
+    límite del cgroup — así se puede confirmar desde afuera qué plan quedó
+    (512 MB = Starter · ~2048 MB = Standard). Nunca lanza."""
+    candidatos = [
+        "/sys/fs/cgroup/memory.max",                 # cgroup v2
+        "/sys/fs/cgroup/memory/memory.limit_in_bytes",  # cgroup v1
+    ]
+    for ruta in candidatos:
+        try:
+            crudo = open(ruta, encoding="utf-8").read().strip()
+            if crudo and crudo != "max":
+                bytes_ = int(crudo)
+                # algunos hosts ponen un número gigante = "sin límite"
+                if 0 < bytes_ < (1 << 50):
+                    return round(bytes_ / (1024 * 1024))
+        except (OSError, ValueError):
+            continue
+    return None
+
+
 @app.get("/api/estado")
 def api_estado(respuesta: Response) -> dict:
     """Estado operativo público (no revela secretos): si el enjambre está en
-    pruebas privadas y si hay clave de IA. Sirve para monitoreo y para
-    confirmar de un vistazo que el candado quedó activo."""
+    pruebas privadas, si hay clave de IA, y cuánta RAM tiene el motor (para
+    confirmar el plan de Render). Sirve para monitoreo."""
     respuesta.headers["Cache-Control"] = "no-store"
     return {
         "privado": seguridad.acceso_privado_activo(),
         "ia_configurada": bool(os.environ.get("ANTHROPIC_API_KEY")),
+        "ram_mb": _ram_contenedor_mb(),
     }
 
 
@@ -1694,6 +1716,55 @@ def api_backtest_estado(mercado: str = "", x_pipeline_token: str = Header(defaul
 
     avance = backtest.estado(mercado=mercado.strip() or None)
     return {k: v for k, v in avance.items() if not k.startswith("_")}
+
+
+def _correr_evaluacion(tamano: int | None, mercado: str | None,
+                       peso: float | None, reiniciar: bool) -> None:
+    from contenido import backtest
+
+    r = backtest.evaluar(tamano=tamano, mercado=mercado, peso=peso,
+                         reiniciar=reiniciar)
+    neg = r.get("negativa", {})
+    pr = r.get("progreso", {})
+    print(f"evaluacion: peso={r.get('peso_tono_invertidores')} "
+          f"progreso={pr.get('hechos')}/{pr.get('total')} "
+          f"(+{pr.get('nuevos_esta_tanda')} nuevos) con_ia={r.get('con_ia')} "
+          f"global={r.get('acierto_global')} negativas={neg.get('acierto')} "
+          f"positivas={r.get('positiva', {}).get('acierto')}", flush=True)
+
+
+@app.post("/api/evaluar")
+def api_evaluar(tareas: BackgroundTasks, tamano: int = 0, mercado: str = "",
+                peso: float = -1.0, reiniciar: bool = False,
+                x_pipeline_token: str = Header(default="")) -> dict:
+    """Mide el acierto del enjambre sobre los exámenes YA respaldados, bajo el
+    código/entorno ACTUAL, SIN tocar el respaldo histórico. RESUMIBLE: cada
+    llamada procesa a lo sumo una tanda (memoria) y ACUMULA; repetir la llamada
+    avanza hasta cubrir el mercado. Corre en segundo plano; el resultado se
+    consulta con GET /api/evaluar. `tamano`=0 usa la tanda máxima segura;
+    `mercado` filtra; `peso` (0..1) fija P2 solo para esta medición (−1 = el del
+    entorno); `reiniciar`=true borra el progreso de ese (mercado, peso)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    peso_val = peso if 0.0 <= peso <= 1.0 else None
+    tareas.add_task(_correr_evaluacion, int(tamano) or None,
+                    mercado.strip() or None, peso_val, bool(reiniciar))
+    return {"estado": "iniciado", "mercado": mercado.strip() or "todos",
+            "tamano": int(tamano) or "tanda-max",
+            "peso": peso_val if peso_val is not None else "entorno",
+            "reiniciar": bool(reiniciar),
+            "nota": "resumible: repite la llamada para avanzar. Resultado en GET /api/evaluar"}
+
+
+@app.get("/api/evaluar")
+def api_evaluar_resultado(x_pipeline_token: str = Header(default="")) -> dict:
+    """El resultado de la última evaluación (y un pequeño historial para
+    comparar valores de la perilla P2)."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import backtest
+
+    return backtest.ultima_evaluacion() or {"nota": "aún no hay evaluación"}
 
 
 @app.post("/api/backtest/reiniciar")

@@ -8,6 +8,11 @@ class AgenteBase(mesa.Agent):
 
     def __init__(self, model, capital: float):
         super().__init__(model)
+        # parámetros de comportamiento del tipo (config/agentes.json → "parametros").
+        # El modelo los expone por tipo justo antes de crear sus agentes; cada
+        # clase los lee con su valor actual como default (así, con la config
+        # original, el comportamiento NO cambia). Habilita la calibración.
+        self.cfg = getattr(model, "_cfg_agentes_actual", None) or {}
         self.capital_inicial = capital
         self.efectivo = capital * 0.5
         self.acciones = (capital * 0.5) / model.libro.ultimo_precio
@@ -19,11 +24,35 @@ class AgenteBase(mesa.Agent):
         self.vecinos: list = []           # pares + líderes
         self.senal_social = 0.0           # el rumor acumulado que le llegó
 
+        # --- Nivel 1: memoria de noticias (contexto histórico) ---
+        # el agente recuerda las últimas noticias y, ante rachas malas, entra en
+        # "modo cautela". Lo usa el freno de la manada (reglas.py): en cautela la
+        # manada vende menos, para cortar la cascada de sobre-pánico.
+        self.memoria_noticias: list = []  # últimos N sentimientos recibidos
+        self.modo_cautela = False
+        self.contador_malas = 0
+
     # ---------- utilidades ----------
 
     def ruido(self, valor: float, sigma_relativo: float = 0.15) -> float:
         """Valor base ± ruido gaussiano (σ = 15% por defecto, CLAUDE.md sección 4)."""
         return valor * self.model.random.gauss(1.0, sigma_relativo)
+
+    # ---------- Nivel 1: memoria de noticias (contexto histórico) ----------
+
+    def actualizar_memoria(self, sentimiento: float, texto: str = None) -> None:
+        """Guarda la noticia en la memoria (últimas 5) y detecta rachas.
+        3+ malas en la ventana → modo cautela, que activa el freno de la manada."""
+        self.memoria_noticias.append({
+            "sentimiento": sentimiento,
+            "texto": (texto[:50] if texto else ""),
+            "tick": self.model.tick,   # tiempo de simulación (no reloj de pared)
+        })
+        if len(self.memoria_noticias) > 5:
+            self.memoria_noticias.pop(0)
+
+        self.contador_malas = sum(1 for n in self.memoria_noticias if n["sentimiento"] < -0.3)
+        self.modo_cautela = self.contador_malas >= 3
 
     @property
     def precio(self) -> float:

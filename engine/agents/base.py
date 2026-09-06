@@ -26,13 +26,11 @@ class AgenteBase(mesa.Agent):
 
         # --- Nivel 1: memoria de noticias (contexto histórico) ---
         # el agente recuerda las últimas noticias y, ante rachas malas, entra en
-        # "modo cautela". POR AHORA estos campos son INERTES: no cambian ninguna
-        # decisión hasta que la lógica los use (se validará contra los hechos
-        # estilizados antes de activarlos).
+        # "modo cautela". Lo usa el freno de la manada (reglas.py): en cautela la
+        # manada vende menos, para cortar la cascada de sobre-pánico.
         self.memoria_noticias: list = []  # últimos N sentimientos recibidos
         self.modo_cautela = False
         self.contador_malas = 0
-        self.contador_buenas = 0
 
     # ---------- utilidades ----------
 
@@ -44,7 +42,7 @@ class AgenteBase(mesa.Agent):
 
     def actualizar_memoria(self, sentimiento: float, texto: str = None) -> None:
         """Guarda la noticia en la memoria (últimas 5) y detecta rachas.
-        3+ malas en la ventana → modo cautela (desensibilización tras el pánico)."""
+        3+ malas en la ventana → modo cautela, que activa el freno de la manada."""
         self.memoria_noticias.append({
             "sentimiento": sentimiento,
             "texto": (texto[:50] if texto else ""),
@@ -54,18 +52,7 @@ class AgenteBase(mesa.Agent):
             self.memoria_noticias.pop(0)
 
         self.contador_malas = sum(1 for n in self.memoria_noticias if n["sentimiento"] < -0.3)
-        self.contador_buenas = sum(1 for n in self.memoria_noticias if n["sentimiento"] > 0.3)
         self.modo_cautela = self.contador_malas >= 3
-
-    def ajustar_por_contexto(self, sentimiento_raw: float) -> float:
-        """Ajusta la reacción al sentimiento según el contexto histórico:
-        - en cautela (racha mala), amortigua una nueva mala noticia (×0.7);
-        - tras una buena racha, amplifica una buena noticia (×1.2)."""
-        if self.modo_cautela and sentimiento_raw < 0:
-            return sentimiento_raw * 0.7
-        if self.contador_buenas >= 3 and sentimiento_raw > 0:
-            return sentimiento_raw * 1.2
-        return sentimiento_raw
 
     @property
     def precio(self) -> float:

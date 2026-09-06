@@ -199,6 +199,8 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
           <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
           <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>
           <div><span>${num(reporte.volatilidad_pct)}%</span><label>volatilidad/tick</label></div>
+          ${Number.isFinite(Number(reporte.confianza))
+            ? `<div><span>${Math.round(Number(reporte.confianza) * 100)}%</span><label>confianza</label></div>` : ''}
         </div>
         <table>${desglose.map(([tipo, d]) =>
           `<tr><td>${esc(tipo)}</td><td>${num(d.compras)} compras</td><td>${num(d.ventas)} ventas</td></tr>`).join('')}

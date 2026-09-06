@@ -621,11 +621,26 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
         for lider, r in (extremos[0], extremos[len(extremos) // 2], extremos[-1])
     ]
 
+    # P3 — acota la MAGNITUD del movimiento al tope realista de su mercado
+    # (cripto/acción se pasan de tamaño). Solo toca el tamaño, NO el signo → la
+    # dirección (y por tanto el acierto) no cambia. El tipo lo trae el perfil.
+    from model import acotar_magnitud
+    mercado = (getattr(modelo, "perfil", None) or {}).get("tipo")
+    direccion = acotar_magnitud(mercado, round((precios[-1] / precio_previo - 1) * 100, 2))
+    minimo = acotar_magnitud(mercado, round((min(precios) / precio_previo - 1) * 100, 2))
+    maximo = acotar_magnitud(mercado, round((max(precios) / precio_previo - 1) * 100, 2))
+
+    # P4 — confianza del enjambre en la LECTURA de la noticia: la fuerza del
+    # consenso de los líderes (abs), ∈ [0, 1]. Alta = leyeron la noticia con
+    # convicción; baja = ambigua. No cambia la simulación, es informativa.
+    confianza = round(abs(getattr(modelo, "_ultimo_consenso", 0.0)), 2)
+
     return {
-        "direccion_pct": round((precios[-1] / precio_previo - 1) * 100, 2),
-        "minimo_pct": round((min(precios) / precio_previo - 1) * 100, 2),
-        "maximo_pct": round((max(precios) / precio_previo - 1) * 100, 2),
+        "direccion_pct": direccion,
+        "minimo_pct": minimo,
+        "maximo_pct": maximo,
         "volatilidad_pct": round(volatilidad * 100, 2),
+        "confianza": confianza,
         "senal_media_lideres": round(sum(r["senal"] for r in respuestas) / len(respuestas), 2),
         "desglose": {
             NOMBRES_TIPO.get(clase, clase): {"compras": c, "ventas": v}

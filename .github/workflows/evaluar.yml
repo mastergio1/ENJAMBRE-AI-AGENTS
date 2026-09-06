@@ -4,7 +4,9 @@
 # acierto por categoría. Sirve para medir P2 (peso de los arquetipos
 # invertidores en el tono). La PRIMERA corrida con la caché fría gasta LLM
 # (~$0.12/examen) y la calienta; las siguientes con otro `peso` son casi
-# gratis. Se dispara SOLO a mano (Actions → Run workflow).
+# gratis. Tolerante: si el motor tarda (caché fría), no falla — el resultado se
+# guarda en Render y este workflow lo muestra (vuelve a correrlo si hizo falta).
+# Se dispara SOLO a mano (Actions → Run workflow).
 
 name: Evaluar acierto (P2)
 
@@ -20,14 +22,14 @@ on:
         required: false
         default: ""
       tamano:
-        description: "Cuántos exámenes (0 = todos)"
+        description: "Cuántos exámenes (0 = todos; empieza con 20 si la caché está fría)"
         required: false
-        default: "0"
+        default: "20"
 
 jobs:
   evaluar:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Verificar el secreto
         env:
@@ -56,40 +58,52 @@ jobs:
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
         run: |
-          antes=$(curl -sf -m 30 https://enjambre-motor.onrender.com/api/evaluar \
-            -H "X-Pipeline-Token: $TOKEN" | grep -o '"fecha":"[^"]*"' | head -1 || echo "sin")
+          antes=$(curl -s -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+            -H "X-Pipeline-Token: $TOKEN" | grep -o '"fecha":"[^"]*"' | head -1 || true)
           echo "antes=$antes" >> "$GITHUB_OUTPUT"
-          echo "Última evaluación previa: $antes"
+          echo "Última evaluación previa: ${antes:-ninguna}"
 
       - name: Disparar la evaluación
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           PESO: ${{ github.event.inputs.peso || '-1' }}
           MERCADO: ${{ github.event.inputs.mercado }}
-          TAMANO: ${{ github.event.inputs.tamano || '0' }}
+          TAMANO: ${{ github.event.inputs.tamano || '20' }}
         run: |
-          respuesta=$(curl -sf -m 60 -X POST \
+          respuesta=$(curl -s -m 60 -X POST \
             "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&mercado=$MERCADO&tamano=$TAMANO" \
-            -H "X-Pipeline-Token: $TOKEN")
-          echo "Motor: $respuesta"
+            -H "X-Pipeline-Token: $TOKEN" || true)
+          echo "Motor: ${respuesta:-sin respuesta (reintentará en el sondeo)}"
 
       - name: Esperar y mostrar el resultado
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
           ANTES: ${{ steps.previa.outputs.antes }}
         run: |
-          echo "Esperando el resultado (la primera corrida con caché fría tarda más)…"
-          for intento in $(seq 1 30); do
+          echo "Esperando el resultado (la 1ª pasada con caché fría tarda; luego es rápido)…"
+          resultado=""
+          for intento in $(seq 1 40); do
             sleep 30
-            actual=$(curl -sf -m 30 https://enjambre-motor.onrender.com/api/evaluar \
-              -H "X-Pipeline-Token: $TOKEN")
-            fecha=$(echo "$actual" | grep -o '"fecha":"[^"]*"' | head -1 || echo "sin")
-            if [ "$fecha" != "$ANTES" ] && [ "$fecha" != "sin" ]; then
-              echo "==================== RESULTADO ===================="
-              echo "$actual" | python3 -m json.tool || echo "$actual"
-              echo "=================================================="
-              exit 0
+            # -s (no -f): un hipo del motor NO aborta el workflow
+            actual=$(curl -s -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+              -H "X-Pipeline-Token: $TOKEN" || true)
+            fecha=$(echo "$actual" | grep -o '"fecha":"[^"]*"' | head -1 || true)
+            if [ -n "$fecha" ] && [ "$fecha" != "$ANTES" ]; then
+              resultado="$actual"
+              break
             fi
-            echo "  aún corriendo… (chequeo $intento/30)"
+            echo "  aún corriendo… (chequeo $intento/40)"
           done
-          echo "::warning::La evaluación no terminó en ~15 min (¿tanda grande con caché fría?). Vuelve a correr este workflow para ver el resultado ya cacheado, o reduce 'tamano'."
+          echo "==================== RESULTADO ===================="
+          if [ -n "$resultado" ]; then
+            echo "$resultado" | python3 -m json.tool 2>/dev/null || echo "$resultado"
+          else
+            echo "La evaluación aún no terminó dentro del tiempo del workflow (caché fría)."
+            echo "El motor SIGUE calculando y guardará el resultado. Vuelve a correr este"
+            echo "workflow en unos minutos (con la caché caliente termina en ~1 min)."
+            echo "--- último resultado guardado hasta ahora ---"
+            curl -s -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+              -H "X-Pipeline-Token: $TOKEN" | python3 -m json.tool 2>/dev/null || true
+          fi
+          echo "=================================================="
+          # nunca fallamos por un hipo de red / caché fría: el resultado vive en el motor

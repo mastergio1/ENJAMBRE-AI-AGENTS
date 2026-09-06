@@ -93,6 +93,34 @@ def test_cobertura_y_precision():
     assert m["fp_pos"] / max(1, m["op_pos"]) < 0.39, "demasiados falsos positivos"
 
 
+def test_umbral_prefiere_mudo():
+    """El flag de rollback: subir ENJAMBRE_LEXICO_UMBRAL fuerza 'mudo' en
+    señales por debajo del umbral, sin tocar código."""
+    titular = "Bitcoin tumbles as market crashes in a bloodbath sell-off"
+    base = sentimiento_lexico(titular)
+    assert base < 0, "el titular debería leerse bajista con umbral 0"
+    os.environ["ENJAMBRE_LEXICO_UMBRAL"] = "1.1"   # exige confianza imposible
+    try:
+        assert sentimiento_lexico(titular) == 0.0, "con umbral alto debe callar"
+    finally:
+        os.environ.pop("ENJAMBRE_LEXICO_UMBRAL", None)
+    # sin umbral, vuelve a opinar
+    assert sentimiento_lexico(titular) < 0
+
+
+def test_monitor_polaridad_no_crashea():
+    """El monitor es pasivo y tolerante: nunca debe tumbar una simulación."""
+    from model import monitorear_polaridad
+    respuestas = [
+        {"senal": -0.6, "fuente": "fallback"}, {"senal": 0.3, "fuente": "fallback"},
+        {"senal": 0.1, "fuente": "api"}, {"senal": -0.2, "fuente": "cache"},
+        {"senal": 0.0},  # sin fuente: no debe romper
+    ]
+    monitorear_polaridad(respuestas)          # con respaldo → loguea
+    monitorear_polaridad([{"senal": 0.5, "fuente": "api"}])  # sin respaldo → calla
+    monitorear_polaridad([])                  # vacío → no rompe
+
+
 if __name__ == "__main__":
     from contenido.respaldo import casos_remotos
     print("\n📚 Cobertura del respaldo léxico sobre los 645 casos")

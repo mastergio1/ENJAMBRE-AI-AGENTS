@@ -6,6 +6,7 @@ consumen la validación y, más adelante, el WebSocket hacia el frontend.
 """
 
 import json
+import logging
 from pathlib import Path
 
 import mesa
@@ -62,6 +63,33 @@ GANANCIA_CONSENSO = 0.8
 # confiar en su consenso como tono. Si la mayoría cayó al respaldo léxico
 # (sin saldo de API), se usa el diccionario directo, que es justo para eso.
 MINIMO_IA_CONSENSO = 0.5
+
+log = logging.getLogger("enjambre.lexico")
+
+
+def _distribucion_polaridad(senales) -> dict:
+    """Cuenta cuántas señales son alcistas / bajistas / neutrales."""
+    pos = sum(1 for s in senales if s > 0.05)
+    neg = sum(1 for s in senales if s < -0.05)
+    return {"n": len(senales), "alcista": pos, "bajista": neg,
+            "neutral": len(senales) - pos - neg,
+            "media": round(sum(senales) / len(senales), 3) if senales else 0.0}
+
+
+def monitorear_polaridad(respuestas: list[dict]) -> None:
+    """Registra la distribución de polaridad del RESPALDO léxico vs la API, para
+    detectar en vivo si el diccionario introduce un sesgo que la API no tiene.
+    Solo loguea cuando el respaldo se activó de verdad (fuente 'fallback');
+    es pasivo: no cambia ninguna decisión de la simulación."""
+    try:
+        respaldo = [r["senal"] for r in respuestas if r.get("fuente") == "fallback"]
+        if not respaldo:
+            return
+        api = [r["senal"] for r in respuestas if r.get("fuente") in ("api", "cache")]
+        log.info("polaridad respaldo=%s api=%s", _distribucion_polaridad(respaldo),
+                 _distribucion_polaridad(api))
+    except Exception:  # el monitoreo jamás debe tumbar una simulación
+        pass
 
 
 class MercadoEnjambre(mesa.Model):
@@ -155,6 +183,7 @@ class MercadoEnjambre(mesa.Model):
             lider.senal = respuesta["senal"]
             lider.confianza = respuesta["confianza"]
             lider.frase = respuesta["frase"]
+        monitorear_polaridad(respuestas)  # métrica pasiva: respaldo vs API
         # el "tono de la prensa": el ambiente de fondo que sienten todos los
         # agentes (todos leen la misma noticia). Antes lo ponía un diccionario
         # de palabras; ahora lo pone la LECTURA REAL de la IA (el consenso de

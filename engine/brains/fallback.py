@@ -6,7 +6,22 @@ NUNCA se cae por la API.
 """
 
 
+import os
 import re
+
+
+def _umbral_mudo() -> float:
+    """Umbral de confianza del respaldo, leído por llamada desde el entorno
+    (ENJAMBRE_LEXICO_UMBRAL). Es el FLAG DE ROLLBACK: si el léxico ampliado
+    diera problemas en vivo, subir esta variable en Render hace que el sistema
+    prefiera 'mudo' (señal 0) antes que arriesgar un falso positivo, SIN
+    re-desplegar. 0.0 = comportamiento normal · 1.1 = siempre mudo (apaga el
+    respaldo léxico)."""
+    try:
+        return float(os.environ.get("ENJAMBRE_LEXICO_UMBRAL", "0.0") or 0.0)
+    except ValueError:
+        return 0.0
+
 
 def _clip(x: float, lo: float = -1.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, x))
@@ -152,7 +167,10 @@ def sentimiento_lexico(titular: str) -> float:
     for palabra, peso in PALABRAS.items():
         if _tiene(texto, palabra):
             puntaje += peso
-    return _clip(puntaje / 1.5)
+    resultado = _clip(puntaje / 1.5)
+    # flag de rollback: bajo el umbral de confianza, preferir "mudo" (0) antes
+    # que arriesgar un falso positivo. Por defecto (umbral 0) no cambia nada.
+    return resultado if abs(resultado) >= _umbral_mudo() else 0.0
 
 
 def es_noticia_macro(titular: str) -> bool:

@@ -90,6 +90,29 @@ def _peso_invertidores_env(por_defecto: float) -> float:
         valor = float(por_defecto)
     return max(0.0, min(1.0, valor))
 
+
+# Plan A — corrección del sesgo alcista en el consenso. Diagnóstico
+# (INFORME_CAUSA_RAIZ_NEGATIVAS.md): el enjambre acierta ~80% en positivas pero
+# ~53% en negativas porque el TONO se suaviza hacia arriba — el descuento de
+# magnitud (GANANCIA_CONSENSO=0.8) encoge una mala noticia clara, y el enjambre
+# predice "sube" sobre una caída real. La corrección: cuando los líderes que
+# hablaron con la IA ya leen la noticia como CLARAMENTE bajista (consenso <
+# -umbral), NO la suavizamos; usamos la lectura directa a plena magnitud (nunca
+# para invertir el signo — solo para no diluir el bajón). `umbral_correccion_
+# sesgo` (config) fija qué tan bajista debe ser el consenso para disparar la
+# corrección: 0.0 = desactivada (comportamiento histórico). La variable de
+# entorno ENJAMBRE_UMBRAL_CORRECCION_SESGO manda sobre la config, para medir en
+# el backtest y hacer rollback SIN re-desplegar (mismo patrón que P2).
+def _umbral_correccion_env(por_defecto: float) -> float:
+    """El umbral de la corrección de sesgo, con override por entorno
+    (ENJAMBRE_UMBRAL_CORRECCION_SESGO). Recortado a [0, 1]; 0 = desactivada."""
+    crudo = os.environ.get("ENJAMBRE_UMBRAL_CORRECCION_SESGO")
+    try:
+        valor = float(crudo) if crudo not in (None, "") else float(por_defecto)
+    except ValueError:
+        valor = float(por_defecto)
+    return max(0.0, min(1.0, valor))
+
 log = logging.getLogger("enjambre.lexico")
 
 
@@ -168,6 +191,11 @@ class MercadoEnjambre(mesa.Model):
         # backtest (o hacer rollback) SIN re-desplegar.
         self._peso_tono_invertidores = _peso_invertidores_env(
             config.get("peso_tono_invertidores", 1.0))
+        # Plan A: umbral de la corrección del sesgo alcista (0.0 = desactivada).
+        # El entorno ENJAMBRE_UMBRAL_CORRECCION_SESGO manda sobre la config para
+        # medir en el backtest / rollback sin re-desplegar (patrón de P2).
+        self._umbral_correccion = _umbral_correccion_env(
+            config.get("umbral_correccion_sesgo", 0.0))
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
             # expone los "parametros" del tipo para que sus agentes los lean en
@@ -262,6 +290,16 @@ class MercadoEnjambre(mesa.Model):
         if den <= 0:
             return sentimiento_lexico(titular)
         consenso = num / den
+        # Plan A — corrección del sesgo alcista: cuando los líderes ya leen la
+        # noticia como CLARAMENTE bajista, no dejamos que el descuento de
+        # magnitud (GANANCIA_CONSENSO) la suavice. Usamos la lectura a plena
+        # magnitud, tomando la MÁS bajista entre el consenso y el léxico directo
+        # —nunca menos bajista que el consenso, así jamás invertimos el signo:
+        # solo evitamos diluir el bajón. Desactivada con umbral 0.0.
+        umbral = getattr(self, "_umbral_correccion", 0.0)
+        if umbral > 0 and consenso < -umbral:
+            directo = sentimiento_lexico(titular)
+            return max(-1.0, min(1.0, min(consenso, directo)))
         return max(-1.0, min(1.0, consenso * GANANCIA_CONSENSO))
 
     def _aplicar_perfil(self, tono: float) -> float:

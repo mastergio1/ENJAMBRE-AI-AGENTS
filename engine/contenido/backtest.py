@@ -275,7 +275,8 @@ def _mercado_de_caso(caso: dict) -> str:
 
 
 def evaluar(tamano: int | None = None, mercado: str | None = None,
-            peso: float | None = None, reiniciar: bool = False,
+            peso: float | None = None, umbral: float | None = None,
+            reiniciar: bool = False,
             simular=None, guardar: bool = True) -> dict:
     """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
     mide el acierto de DIRECCIÓN por categoría, comparándolo con el resultado
@@ -292,13 +293,27 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     """
     import time
 
-    from model import _peso_invertidores_env
+    from model import _peso_invertidores_env, _umbral_correccion_env
+
+    # Plan A: fija ENJAMBRE_UMBRAL_CORRECCION_SESGO SOLO durante esta evaluación
+    # (para medir base vs corrección sin re-desplegar). Mismo patrón que `peso`.
+    if umbral is not None:
+        previo = os.environ.get("ENJAMBRE_UMBRAL_CORRECCION_SESGO")
+        os.environ["ENJAMBRE_UMBRAL_CORRECCION_SESGO"] = str(umbral)
+        try:
+            return evaluar(tamano=tamano, mercado=mercado, peso=peso, umbral=None,
+                           reiniciar=reiniciar, simular=simular, guardar=guardar)
+        finally:
+            if previo is None:
+                os.environ.pop("ENJAMBRE_UMBRAL_CORRECCION_SESGO", None)
+            else:
+                os.environ["ENJAMBRE_UMBRAL_CORRECCION_SESGO"] = previo
 
     if peso is not None:
         previo = os.environ.get("ENJAMBRE_PESO_TONO_INVERSORES")
         os.environ["ENJAMBRE_PESO_TONO_INVERSORES"] = str(peso)
         try:
-            return evaluar(tamano=tamano, mercado=mercado, peso=None,
+            return evaluar(tamano=tamano, mercado=mercado, peso=None, umbral=None,
                            reiniciar=reiniciar, simular=simular, guardar=guardar)
         finally:
             if previo is None:
@@ -339,7 +354,10 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     # SUMA el resultado. Varias corridas cubren todo el mercado; re-correr no
     # repite lo ya hecho. `reiniciar` borra el progreso de esa (mercado, peso).
     peso_actual = _peso_invertidores_env(1.0)
-    clave = f"{mercado or 'todos'}|peso{peso_actual}"
+    umbral_actual = _umbral_correccion_env(0.0)
+    # el progreso se acumula por (mercado, peso, umbral): así base y corrección
+    # no se mezclan. `umb0.0` = corrección desactivada (base).
+    clave = f"{mercado or 'todos'}|peso{peso_actual}|umb{umbral_actual}"
     progreso = _cargar_progreso()
     if reiniciar:
         progreso[clave] = {}
@@ -382,6 +400,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     resultado = {
         "fecha": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "peso_tono_invertidores": peso_actual,
+        "umbral_correccion_sesgo": umbral_actual,
         "evaluados": tot, "con_ia": con_ia, "sin_ia": sin_ia,
         "acierto_global": round(ok / tot, 4) if tot else None,
         "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),

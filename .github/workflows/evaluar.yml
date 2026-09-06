@@ -1,0 +1,95 @@
+# Evaluación del enjambre — mide el acierto SIN re-respaldar.
+#
+# Re-simula los exámenes ya rendidos bajo el código/entorno actual y reporta el
+# acierto por categoría. Sirve para medir P2 (peso de los arquetipos
+# invertidores en el tono). La PRIMERA corrida con la caché fría gasta LLM
+# (~$0.12/examen) y la calienta; las siguientes con otro `peso` son casi
+# gratis. Se dispara SOLO a mano (Actions → Run workflow).
+
+name: Evaluar acierto (P2)
+
+on:
+  workflow_dispatch:
+    inputs:
+      peso:
+        description: "Peso de los invertidores en el tono (0=P2 pleno, 1=actual, -1=el de Render)"
+        required: false
+        default: "-1"
+      mercado:
+        description: "Mercado a evaluar (cripto/indice/oro/petroleo/accion; vacío = todos)"
+        required: false
+        default: ""
+      tamano:
+        description: "Cuántos exámenes (0 = todos)"
+        required: false
+        default: "0"
+
+jobs:
+  evaluar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Marca de tiempo previa
+        id: previa
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          antes=$(curl -sf -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+            -H "X-Pipeline-Token: $TOKEN" | grep -o '"fecha":"[^"]*"' | head -1 || echo "sin")
+          echo "antes=$antes" >> "$GITHUB_OUTPUT"
+          echo "Última evaluación previa: $antes"
+
+      - name: Disparar la evaluación
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          PESO: ${{ github.event.inputs.peso || '-1' }}
+          MERCADO: ${{ github.event.inputs.mercado }}
+          TAMANO: ${{ github.event.inputs.tamano || '0' }}
+        run: |
+          respuesta=$(curl -sf -m 60 -X POST \
+            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&mercado=$MERCADO&tamano=$TAMANO" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "Motor: $respuesta"
+
+      - name: Esperar y mostrar el resultado
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          ANTES: ${{ steps.previa.outputs.antes }}
+        run: |
+          echo "Esperando el resultado (la primera corrida con caché fría tarda más)…"
+          for intento in $(seq 1 30); do
+            sleep 30
+            actual=$(curl -sf -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+              -H "X-Pipeline-Token: $TOKEN")
+            fecha=$(echo "$actual" | grep -o '"fecha":"[^"]*"' | head -1 || echo "sin")
+            if [ "$fecha" != "$ANTES" ] && [ "$fecha" != "sin" ]; then
+              echo "==================== RESULTADO ===================="
+              echo "$actual" | python3 -m json.tool || echo "$actual"
+              echo "=================================================="
+              exit 0
+            fi
+            echo "  aún corriendo… (chequeo $intento/30)"
+          done
+          echo "::warning::La evaluación no terminó en ~15 min (¿tanda grande con caché fría?). Vuelve a correr este workflow para ver el resultado ya cacheado, o reduce 'tamano'."

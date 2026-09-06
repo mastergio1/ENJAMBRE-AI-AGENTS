@@ -219,6 +219,37 @@ def _signo(x) -> int:
     return 1 if x > 0 else (-1 if x < 0 else 0)
 
 
+# tanda máxima por corrida de evaluación: correr más de ~40 simulaciones de
+# 10.000 agentes seguidas desborda la RAM (el backtest histórico se limita
+# igual). La evaluación es RESUMIBLE, así que varias corridas cubren todo.
+TANDA_EVAL_MAX = 40
+
+
+def _ruta_progreso() -> Path:
+    db = os.environ.get("ENJAMBRE_DB")
+    base = Path(db).parent if db else RUTA_EVENTOS.parent
+    return base / "evaluaciones_progreso.json"
+
+
+def _cargar_progreso() -> dict:
+    try:
+        ruta = _ruta_progreso()
+        if ruta.exists():
+            return json.loads(ruta.read_text(encoding="utf-8")) or {}
+    except Exception:
+        pass
+    return {}
+
+
+def _guardar_progreso(progreso: dict) -> None:
+    try:
+        ruta = _ruta_progreso()
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        ruta.write_text(json.dumps(progreso, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        pass
+
+
 CATS_VALIDAS = ("negativa", "positiva", "neutra")
 
 
@@ -244,7 +275,8 @@ def _mercado_de_caso(caso: dict) -> str:
 
 
 def evaluar(tamano: int | None = None, mercado: str | None = None,
-            peso: float | None = None, simular=None, guardar: bool = True) -> dict:
+            peso: float | None = None, reiniciar: bool = False,
+            simular=None, guardar: bool = True) -> dict:
     """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
     mide el acierto de DIRECCIÓN por categoría, comparándolo con el resultado
     real ya conocido. Sirve para medir el impacto de un cambio (ej. P2) SIN
@@ -267,7 +299,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         os.environ["ENJAMBRE_PESO_TONO_INVERSORES"] = str(peso)
         try:
             return evaluar(tamano=tamano, mercado=mercado, peso=None,
-                           simular=simular, guardar=guardar)
+                           reiniciar=reiniciar, simular=simular, guardar=guardar)
         finally:
             if previo is None:
                 os.environ.pop("ENJAMBRE_PESO_TONO_INVERSORES", None)
@@ -301,12 +333,23 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         evaluables.append(c)
     evaluables.sort(key=lambda c: c.get("fecha") or "", reverse=True)
     n_categorizados = len(evaluables)
-    if tamano:
-        evaluables = evaluables[:int(tamano)]
 
-    cats = {"negativa": [0, 0], "positiva": [0, 0], "neutra": [0, 0]}
+    # progreso ACUMULADO por (mercado, peso), guardado en disco: cada corrida
+    # simula a lo sumo una tanda (para no desbordar la RAM) de casos NUEVOS y
+    # SUMA el resultado. Varias corridas cubren todo el mercado; re-correr no
+    # repite lo ya hecho. `reiniciar` borra el progreso de esa (mercado, peso).
+    peso_actual = _peso_invertidores_env(1.0)
+    clave = f"{mercado or 'todos'}|peso{peso_actual}"
+    progreso = _cargar_progreso()
+    if reiniciar:
+        progreso[clave] = {}
+    hechos = progreso.setdefault(clave, {})
+
+    pendientes = [c for c in evaluables if c["sim_id"] not in hechos]
+    por_tanda = min(int(tamano), TANDA_EVAL_MAX) if tamano else TANDA_EVAL_MAX
+
     con_ia = sin_ia = 0
-    for c in evaluables:
+    for c in pendientes[:por_tanda]:
         rr = c["reaccion_real"]
         real, cat = rr["pct_real"], rr["categoria"]
         seed = int(c["sim_id"][:8], 16)  # semilla determinística por caso
@@ -315,11 +358,20 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
             con_ia += 1
         else:
             sin_ia += 1
-        cats[cat][1] += 1
-        if _signo(reporte.get("direccion_pct")) == _signo(real):
-            cats[cat][0] += 1
+        ok = 1 if _signo(reporte.get("direccion_pct")) == _signo(real) else 0
+        hechos[c["sim_id"]] = {"cat": cat, "ok": ok}
         del reporte, lideres, serie
         gc.collect()
+    nuevos = min(len(pendientes), por_tanda)
+    if guardar:
+        _guardar_progreso(progreso)
+
+    # acierto ACUMULADO sobre todo lo hecho para (mercado, peso)
+    cats = {"negativa": [0, 0], "positiva": [0, 0], "neutra": [0, 0]}
+    for r in hechos.values():
+        if r.get("cat") in cats:
+            cats[r["cat"]][1] += 1
+            cats[r["cat"]][0] += r.get("ok", 0)
 
     def _acc(par):
         return {"aciertos": par[0], "total": par[1],
@@ -329,15 +381,19 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     ok = sum(c[0] for c in cats.values())
     resultado = {
         "fecha": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "peso_tono_invertidores": _peso_invertidores_env(1.0),
+        "peso_tono_invertidores": peso_actual,
         "evaluados": tot, "con_ia": con_ia, "sin_ia": sin_ia,
         "acierto_global": round(ok / tot, 4) if tot else None,
         "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),
         "neutra": _acc(cats["neutra"]),
+        # progreso ACUMULADO: cuántos exámenes llevamos de este (mercado, peso)
+        "progreso": {"hechos": tot, "total": n_categorizados,
+                     "faltan": n_categorizados - tot,
+                     "nuevos_esta_tanda": nuevos,
+                     "completo": tot >= n_categorizados},
         # diagnóstico: para ver de dónde sale un 0
         "diag": {"casos_respaldados": len(casos),
-                 "casos_categorizados": n_categorizados,
-                 "evaluados_en_tanda": len(evaluables)},
+                 "casos_categorizados": n_categorizados},
     }
     if guardar:
         _registrar_evaluacion(resultado)

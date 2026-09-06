@@ -1719,35 +1719,41 @@ def api_backtest_estado(mercado: str = "", x_pipeline_token: str = Header(defaul
 
 
 def _correr_evaluacion(tamano: int | None, mercado: str | None,
-                       peso: float | None) -> None:
+                       peso: float | None, reiniciar: bool) -> None:
     from contenido import backtest
 
-    r = backtest.evaluar(tamano=tamano, mercado=mercado, peso=peso)
+    r = backtest.evaluar(tamano=tamano, mercado=mercado, peso=peso,
+                         reiniciar=reiniciar)
     neg = r.get("negativa", {})
-    print(f"evaluacion: peso_tono_invertidores={r.get('peso_tono_invertidores')} "
-          f"evaluados={r.get('evaluados')} con_ia={r.get('con_ia')} "
+    pr = r.get("progreso", {})
+    print(f"evaluacion: peso={r.get('peso_tono_invertidores')} "
+          f"progreso={pr.get('hechos')}/{pr.get('total')} "
+          f"(+{pr.get('nuevos_esta_tanda')} nuevos) con_ia={r.get('con_ia')} "
           f"global={r.get('acierto_global')} negativas={neg.get('acierto')} "
           f"positivas={r.get('positiva', {}).get('acierto')}", flush=True)
 
 
 @app.post("/api/evaluar")
 def api_evaluar(tareas: BackgroundTasks, tamano: int = 0, mercado: str = "",
-                peso: float = -1.0,
+                peso: float = -1.0, reiniciar: bool = False,
                 x_pipeline_token: str = Header(default="")) -> dict:
     """Mide el acierto del enjambre sobre los exámenes YA respaldados, bajo el
-    código/entorno ACTUAL, SIN tocar el respaldo histórico. Corre en segundo
-    plano; el resultado se consulta con GET /api/evaluar. `tamano`=0 evalúa
-    todos; `mercado` filtra; `peso` (0..1) fija P2 solo para esta medición
-    (déjalo en -1 para usar el valor vigente del entorno)."""
+    código/entorno ACTUAL, SIN tocar el respaldo histórico. RESUMIBLE: cada
+    llamada procesa a lo sumo una tanda (memoria) y ACUMULA; repetir la llamada
+    avanza hasta cubrir el mercado. Corre en segundo plano; el resultado se
+    consulta con GET /api/evaluar. `tamano`=0 usa la tanda máxima segura;
+    `mercado` filtra; `peso` (0..1) fija P2 solo para esta medición (−1 = el del
+    entorno); `reiniciar`=true borra el progreso de ese (mercado, peso)."""
     if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
     peso_val = peso if 0.0 <= peso <= 1.0 else None
     tareas.add_task(_correr_evaluacion, int(tamano) or None,
-                    mercado.strip() or None, peso_val)
+                    mercado.strip() or None, peso_val, bool(reiniciar))
     return {"estado": "iniciado", "mercado": mercado.strip() or "todos",
-            "tamano": int(tamano) or "todos",
+            "tamano": int(tamano) or "tanda-max",
             "peso": peso_val if peso_val is not None else "entorno",
-            "nota": "el resultado se consulta con GET /api/evaluar"}
+            "reiniciar": bool(reiniciar),
+            "nota": "resumible: repite la llamada para avanzar. Resultado en GET /api/evaluar"}
 
 
 @app.get("/api/evaluar")

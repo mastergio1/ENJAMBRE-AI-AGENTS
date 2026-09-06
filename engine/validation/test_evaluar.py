@@ -18,6 +18,12 @@ def _caso(sim_id, titular, pct_real, categoria, mercado="cripto"):
             "reaccion_real": {"pct_real": pct_real, "categoria": categoria}}
 
 
+def _sin_progreso(monkeypatch):
+    """Aísla el progreso persistente para que los tests no lo lean/escriban."""
+    monkeypatch.setattr(backtest, "_cargar_progreso", lambda: {})
+    monkeypatch.setattr(backtest, "_guardar_progreso", lambda p: None)
+
+
 def test_evaluar_cuenta_acierto_por_categoria(monkeypatch):
     casos = [
         _caso("aaaa1111bbbb2222", "Crash del mercado", -8.0, "negativa"),
@@ -29,6 +35,7 @@ def test_evaluar_cuenta_acierto_por_categoria(monkeypatch):
     ]
     from contenido import respaldo
     monkeypatch.setattr(respaldo, "casos_remotos", lambda: casos)
+    _sin_progreso(monkeypatch)
 
     # acierta la 1ª negativa (baja) y la positiva (sube), FALLA la 2ª negativa.
     predicho = {"Crash del mercado": -3.0, "Rally histórico": +2.0,
@@ -55,15 +62,38 @@ def test_evaluar_filtra_por_mercado(monkeypatch):
     ]
     from contenido import respaldo
     monkeypatch.setattr(respaldo, "casos_remotos", lambda: casos)
+    _sin_progreso(monkeypatch)
     r = backtest.evaluar(mercado="cripto", simular=lambda t, s: ({"direccion_pct": -1.0}, [], [], None),
                          guardar=False)
     assert r["evaluados"] == 1
     assert r["negativa"]["total"] == 1 and r["positiva"]["total"] == 0
 
 
+def test_evaluar_resumible_acumula(monkeypatch):
+    """Cada corrida hace a lo sumo una tanda y ACUMULA; re-correr avanza."""
+    casos = [_caso(f"{i:016x}", f"titular {i}", -5.0, "negativa") for i in range(5)]
+    from contenido import respaldo
+    monkeypatch.setattr(respaldo, "casos_remotos", lambda: casos)
+    prog: dict = {}
+    monkeypatch.setattr(backtest, "_cargar_progreso", lambda: prog)
+    monkeypatch.setattr(backtest, "_guardar_progreso", lambda p: prog.update(p))
+    monkeypatch.setattr(backtest, "TANDA_EVAL_MAX", 2)  # tanda de 2 para el test
+    sim = lambda t, s: ({"direccion_pct": -1.0}, [{"fuente": "api"}], [], None)
+
+    r1 = backtest.evaluar(mercado="cripto", simular=sim)
+    assert r1["progreso"]["hechos"] == 2 and r1["progreso"]["faltan"] == 3
+    r2 = backtest.evaluar(mercado="cripto", simular=sim)
+    assert r2["progreso"]["hechos"] == 4
+    r3 = backtest.evaluar(mercado="cripto", simular=sim)
+    assert r3["progreso"]["hechos"] == 5 and r3["progreso"]["completo"] is True
+    # todas negativas y todas aciertan (sim baja, real baja)
+    assert r3["negativa"] == {"aciertos": 5, "total": 5, "acierto": 1.0}
+
+
 def test_evaluar_respeta_env_de_p2(monkeypatch):
     from contenido import respaldo
     monkeypatch.setattr(respaldo, "casos_remotos", lambda: [])
+    _sin_progreso(monkeypatch)
     monkeypatch.setenv("ENJAMBRE_PESO_TONO_INVERSORES", "0.3")
     r = backtest.evaluar(simular=lambda t, s: ({}, [], [], None), guardar=False)
     assert r["peso_tono_invertidores"] == 0.3

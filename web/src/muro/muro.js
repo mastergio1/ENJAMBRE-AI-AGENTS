@@ -5,13 +5,13 @@
 // marginal de cada visitante es cero.
 
 import { claveAcceso, urlApi } from '../ui/conexion.js'
+import { medidasReplay } from '../swarm/replay-frame.js'
 
 // Debe coincidir con el motor (engine/config/agentes.json): un sentimiento
-// i8 por agente. Los frames guardados son efímeros (el disco de Render se
-// borra en cada deploy y el despertador los regenera al tamaño actual), así
-// que aquí siempre es el tamaño vigente.
-const N_AGENTES = 10000
-const TAMANO_FRAME = 8 + N_AGENTES // [precio f32][tick u32][sentimiento i8 × N]
+// i8 por agente. Los frames viven en el disco PERSISTENTE de Render, así que
+// los replays históricos (10.000 agentes) conviven con los nuevos (10.150):
+// el tamaño de cada buffer se deduce por-frame (ver swarm/replay-frame.js), no
+// se hardcodea, para que ambos se lean bien.
 const TARJETAS_VISIBLES = 12
 
 // La firma de autoría "Creada por Rubicón Lab" (manual de marca §10).
@@ -45,7 +45,10 @@ export class ReproductorReplay {
     const respuesta = await fetch(url)
     if (!respuesta.ok) throw new Error('sin replay')
     this.buffer = await respuesta.arrayBuffer()
-    this.total = Math.floor(this.buffer.byteLength / TAMANO_FRAME)
+    const medidas = medidasReplay(this.buffer.byteLength)
+    this.nAgentes = medidas.nAgentes
+    this.tamanoFrame = medidas.tamanoFrame
+    this.total = medidas.total
   }
 
   reproducir({ bucle = false, alTerminar } = {}) {
@@ -64,9 +67,9 @@ export class ReproductorReplay {
           return
         }
       }
-      const base = cuadro * TAMANO_FRAME
+      const base = cuadro * this.tamanoFrame
       const vista = new DataView(this.buffer, base, 8)
-      const sentimientos = new Int8Array(this.buffer, base + 8, N_AGENTES)
+      const sentimientos = new Int8Array(this.buffer, base + 8, this.nAgentes)
       this.enjambre.aplicarEstadoRemoto(vista.getFloat32(0, true), sentimientos)
       cuadro++
     }, 80)

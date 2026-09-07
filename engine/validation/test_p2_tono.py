@@ -47,6 +47,7 @@ def test_peso_1_preserva_el_historico():
     """peso 1.0 = promedio ponderado por confianza de TODAS las señales."""
     m = MercadoEnjambre(seed=42, ticks_horizonte=5, ruta_config=RUTA_CONFIG)
     m._peso_tono_invertidores = 1.0
+    m._peso_doomer = 1.0  # incluir el doomer selectivo a peso pleno = promedio de TODAS
     resp = _respuestas(m, TITULAR_MALO)
     ia = [r for r in resp if r["fuente"] in ("api", "cache")]
     peso = sum(r["confianza"] for r in ia)

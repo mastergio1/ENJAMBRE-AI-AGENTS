@@ -62,6 +62,7 @@ def test_umbral_0_preserva_el_historico():
     """umbral 0.0 = corrección apagada = consenso * GANANCIA_CONSENSO."""
     m = MercadoEnjambre(seed=42, ticks_horizonte=5, ruta_config=RUTA_CONFIG)
     m._umbral_correccion = 0.0
+    m._peso_doomer = 1.0  # doomer selectivo a peso pleno = promedio de TODAS
     resp = _respuestas(m, TITULAR_MALO)
     esperado = max(-1.0, min(1.0, _consenso(m, resp) * GANANCIA_CONSENSO))
     assert abs(m._tono_de_titular(TITULAR_MALO, resp) - esperado) < 1e-9

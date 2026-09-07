@@ -96,6 +96,11 @@ ARQUETIPOS_INVERSORES = frozenset({
     "quant_esceptico", "contrarian_sabio", "influencer_optimista",
 })
 
+# Intervención 1: el arquetipo doomer SELECTIVO (voz LLM real, no la mezcla
+# léxica). Su peso en el TONO se modula con `peso_doomer` (0 = no participa del
+# clima; 1 = peso pleno). Su apuesta individual y su frase no se tocan.
+ARQUETIPOS_DOOMER = frozenset({"doomer_selectivo"})
+
 
 def _peso_invertidores_env(por_defecto: float) -> float:
     """El peso de los invertidores en el tono, con override por entorno
@@ -325,11 +330,19 @@ class MercadoEnjambre(mesa.Model):
         # `peso_tono_invertidores` en el clima; su señal individual y su frase
         # NO se tocan (siguen operando y hablando por su cuenta).
         peso_inv = getattr(self, "_peso_tono_invertidores", 1.0)
+        # Intervención 1 (arquetipo LLM real): el peso del "doomer selectivo" en
+        # el TONO. 0.0 = no participa del clima (base); 1.0 = peso pleno. Su
+        # apuesta y su frase NO se tocan. A diferencia de la mezcla léxica
+        # incondicional (que sobre-corregía), esta voz es SELECTIVA (solo bajista
+        # ante malas noticias claras), así que no dispara en las ambiguas.
+        peso_doomer = getattr(self, "_peso_doomer", 0.0)
         num = den = 0.0
         for arquetipo, r in ia:
             w = r["confianza"]
             if arquetipo in ARQUETIPOS_INVERSORES:
                 w *= peso_inv
+            if arquetipo in ARQUETIPOS_DOOMER:
+                w *= peso_doomer
             num += r["senal"] * w
             den += w
         if den <= 0:
@@ -338,13 +351,6 @@ class MercadoEnjambre(mesa.Model):
             return s
         consenso = num / den
         directo = None  # lectura léxica (fiel, no invierte); se calcula si hace falta
-        # Intervención 1 — voz "doomer pura": mezcla la lectura fiel (que no
-        # invierte) en el consenso con peso `peso_doomer`. INCONDICIONAL, así que
-        # también alcanza cripto (donde el Plan A no dispara). 0.0 = desactivada.
-        peso_doomer = getattr(self, "_peso_doomer", 0.0)
-        if peso_doomer > 0:
-            directo = sentimiento_lexico(titular)
-            consenso = (1 - peso_doomer) * consenso + peso_doomer * (0.9 * directo)
         self._ultimo_consenso = consenso     # P4: fuerza de la señal (confianza)
         # Plan A — corrección del sesgo alcista: cuando los líderes ya leen la
         # noticia como CLARAMENTE bajista, no dejamos que el descuento de

@@ -311,6 +311,28 @@ def _value_paciente(s, titular):
     ), s)
 
 
+def _doomer_selectivo(s, titular):
+    # SELECTIVO: fuerte y fiel solo ante deterioro CLARO; neutral en lo ambiguo
+    # o positivo (no grita lobo). Nunca invierte una señal negativa a positiva.
+    if s <= -0.35:                       # mala noticia clara: a plena magnitud
+        senal = _clip(s * 1.1, -1.0, -0.35)
+    elif s <= -0.1:                      # negativo leve: fiel pero acotado
+        senal = _clip(s, -0.4, 0.0)
+    else:                                # ambiguo o bueno: neutral
+        senal = 0.0
+    return senal, 0.8, _frase((
+        ("Esto no es ruido: el deterioro es real y no se diluye.",
+         "Riesgo genuino sobre la mesa; lo leo sin suavizar.",
+         "Mala noticia de verdad; no la maquillo."),
+        ("Nada claro aquí; me quedo neutral.",
+         "Sin señal de deterioro real; no grito lobo.",
+         "Ambiguo: prefiero no opinar de más."),
+        ("Buena noticia; no es mi terreno, me abstengo.",
+         "Sin riesgo a la vista; neutral.",
+         "No veo deterioro; me hago a un lado."),
+    ), s)
+
+
 TRANSFORMACIONES = {
     "institucional_frio": _institucional_frio,
     "quant_esceptico": _quant_esceptico,
@@ -320,6 +342,7 @@ TRANSFORMACIONES = {
     "macro_trader": _macro_trader,
     "influencer_optimista": _influencer_optimista,
     "value_paciente": _value_paciente,
+    "doomer_selectivo": _doomer_selectivo,
 }
 
 

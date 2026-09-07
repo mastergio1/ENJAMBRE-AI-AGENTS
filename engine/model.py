@@ -155,6 +155,21 @@ def _peso_doomer_env(por_defecto: float) -> float:
         valor = float(por_defecto)
     return max(0.0, min(1.0, valor))
 
+
+def _peso_doomer_env_forzado() -> float | None:
+    """El override GLOBAL de ENJAMBRE_PESO_DOOMER, o None si no está fijado.
+
+    Si está fijado (p. ej. una tanda de medición), manda sobre la segmentación
+    por-mercado y aplica ese peso en TODOS los mercados. Si NO está fijado
+    (producción), devolvemos None → el tono usa `peso_doomer_por_mercado`."""
+    crudo = os.environ.get("ENJAMBRE_PESO_DOOMER")
+    if crudo in (None, ""):
+        return None
+    try:
+        return max(0.0, min(1.0, float(crudo)))
+    except ValueError:
+        return None
+
 log = logging.getLogger("enjambre.lexico")
 
 
@@ -241,9 +256,17 @@ class MercadoEnjambre(mesa.Model):
         # medir en el backtest / rollback sin re-desplegar (patrón de P2).
         self._umbral_correccion = _umbral_correccion_env(
             config.get("umbral_correccion_sesgo", 0.0))
-        # Intervención 1: peso de la voz doomer pura en el consenso (0.0 = off).
-        # ENJAMBRE_PESO_DOOMER manda sobre la config (medir/rollback sin desplegar).
-        self._peso_doomer = _peso_doomer_env(config.get("peso_doomer", 0.0))
+        # Intervención 1: peso de la voz doomer SELECTIVO en el tono.
+        # SEGMENTADO POR MERCADO: la medición mostró que ayuda en índice (+7.6 pts
+        # en negativas) pero es inerte en cripto, así que el peso depende del
+        # mercado detectado (config `peso_doomer_por_mercado`). El override global
+        # ENJAMBRE_PESO_DOOMER, si está fijado (medición/rollback), manda sobre la
+        # segmentación y aplica ese peso en todos los mercados. Si es None
+        # (producción), el tono usa el peso por-mercado. `_peso_doomer` en None =
+        # "sin override global"; los tests pueden fijarlo para forzar un peso.
+        self._peso_doomer = _peso_doomer_env_forzado()
+        self._peso_doomer_por_mercado = config.get("peso_doomer_por_mercado", {})
+        self._peso_doomer_defecto = float(config.get("peso_doomer", 0.0))
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
             # expone los "parametros" del tipo para que sus agentes los lean en
@@ -331,11 +354,18 @@ class MercadoEnjambre(mesa.Model):
         # NO se tocan (siguen operando y hablando por su cuenta).
         peso_inv = getattr(self, "_peso_tono_invertidores", 1.0)
         # Intervención 1 (arquetipo LLM real): el peso del "doomer selectivo" en
-        # el TONO. 0.0 = no participa del clima (base); 1.0 = peso pleno. Su
-        # apuesta y su frase NO se tocan. A diferencia de la mezcla léxica
-        # incondicional (que sobre-corregía), esta voz es SELECTIVA (solo bajista
-        # ante malas noticias claras), así que no dispara en las ambiguas.
-        peso_doomer = getattr(self, "_peso_doomer", 0.0)
+        # el TONO. 0.0 = no participa del clima; 1.0 = peso pleno. Su apuesta y su
+        # frase NO se tocan. SEGMENTADO POR MERCADO: si hay override global
+        # (`_peso_doomer` fijado por el env de medición o por un test) manda ese;
+        # si no (producción), se toma el peso del MERCADO detectado
+        # (índice 1.0, cripto 0.0, …). La medición mostró que ayuda en índice
+        # pero es inerte en cripto, de ahí la segmentación.
+        peso_doomer = getattr(self, "_peso_doomer", None)
+        if peso_doomer is None:
+            mercado = (getattr(self, "perfil", None) or {}).get("tipo")
+            por_mercado = getattr(self, "_peso_doomer_por_mercado", {})
+            peso_doomer = por_mercado.get(
+                mercado, getattr(self, "_peso_doomer_defecto", 0.0))
         num = den = 0.0
         for arquetipo, r in ia:
             w = r["confianza"]

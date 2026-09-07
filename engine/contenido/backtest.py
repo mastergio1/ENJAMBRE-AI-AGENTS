@@ -294,7 +294,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     import time
 
     from model import (_peso_invertidores_env, _umbral_correccion_env,
-                       _peso_doomer_env)
+                       _peso_doomer_env, _peso_doomer_env_forzado)
 
     # Intervención 1: fija ENJAMBRE_PESO_DOOMER SOLO durante esta evaluación.
     if doomer is not None:
@@ -370,9 +370,15 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     # repite lo ya hecho. `reiniciar` borra el progreso de esa (mercado, peso).
     peso_actual = _peso_invertidores_env(1.0)
     umbral_actual = _umbral_correccion_env(0.0)
-    doomer_actual = _peso_doomer_env(0.0)
+    # Si el env fija un peso, ese override manda en TODOS los mercados (medición);
+    # si no, el tono usa la SEGMENTACIÓN por-mercado (índice 1.0, cripto 0.0, …).
+    # Se rotula "seg" para que la clave de progreso NO choque con dm0.0 (que es
+    # doomer forzado a 0 en todos lados) y para que el reporte no mienta.
+    doomer_forzado = _peso_doomer_env_forzado()
+    doomer_actual = doomer_forzado if doomer_forzado is not None else "seg"
     # el progreso se acumula por (mercado, peso, umbral, doomer): así cada
-    # combinación se mide aparte. `dm0.0` = voz doomer desactivada (base).
+    # combinación se mide aparte. `dm0.0` = doomer forzado a 0 (base); `dmseg` =
+    # segmentado por mercado (producción).
     clave = f"{mercado or 'todos'}|peso{peso_actual}|umb{umbral_actual}|dm{doomer_actual}"
     progreso = _cargar_progreso()
     if reiniciar:

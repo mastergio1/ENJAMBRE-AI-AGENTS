@@ -8,10 +8,8 @@
 import * as THREE from 'three'
 import { Enjambre } from '../swarm/enjambre.js'
 import { urlApi } from '../ui/conexion.js'
+import { medidasReplay } from '../swarm/replay-frame.js'
 
-// Debe coincidir con el motor (engine/config/agentes.json): un i8 por agente.
-const N_AGENTES = 10000
-const TAMANO_FRAME = 8 + N_AGENTES
 const DISCLAIMER =
   'Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.'
 const WEB = (urlApi() || '').replace(/\/$/, '') && (import.meta.env.VITE_WEB_URL || 'https://enjambre-ai-agents.vercel.app')
@@ -120,12 +118,12 @@ function render(sim, buffer) {
 
   // replay en bucle (si hay frames)
   if (buffer) {
-    const total = Math.floor(buffer.byteLength / TAMANO_FRAME)
+    const { nAgentes, tamanoFrame, total } = medidasReplay(buffer.byteLength)
     let c = 0
     setInterval(() => {
-      const base = Math.min(c, total - 1) * TAMANO_FRAME
+      const base = Math.min(c, total - 1) * tamanoFrame
       const precio = new DataView(buffer, base, 8).getFloat32(0, true)
-      enjambre.aplicarEstadoRemoto(precio, new Int8Array(buffer, base + 8, N_AGENTES))
+      enjambre.aplicarEstadoRemoto(precio, new Int8Array(buffer, base + 8, nAgentes))
       c = (c + 1) % total
     }, 80)
   }

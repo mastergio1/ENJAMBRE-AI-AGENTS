@@ -6,10 +6,8 @@
 import * as THREE from 'three'
 import { Enjambre } from '../swarm/enjambre.js'
 import { urlApi } from '../ui/conexion.js'
+import { medidasReplay } from '../swarm/replay-frame.js'
 
-// Debe coincidir con el motor (engine/config/agentes.json): un i8 por agente.
-const N_AGENTES = 10000
-const TAMANO_FRAME = 8 + N_AGENTES
 const COLOR_A = '#6fa89e' // teal — el río (primer enjambre)
 const COLOR_B = '#d99a9a' // rosa — para distinguir el segundo enjambre
 
@@ -17,14 +15,14 @@ const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'":
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
 
 function framesDe(buffer) {
-  const total = Math.floor(buffer.byteLength / TAMANO_FRAME)
+  const { nAgentes, tamanoFrame, total } = medidasReplay(buffer.byteLength)
   return {
     total,
     en(i) {
-      const base = Math.min(i, total - 1) * TAMANO_FRAME
+      const base = Math.min(i, total - 1) * tamanoFrame
       return {
         precio: new DataView(buffer, base, 8).getFloat32(0, true),
-        sent: new Int8Array(buffer, base + 8, N_AGENTES),
+        sent: new Int8Array(buffer, base + 8, nAgentes),
       }
     },
   }

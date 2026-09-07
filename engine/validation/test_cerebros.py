@@ -38,7 +38,7 @@ def _todos_los_lideres() -> list[tuple[int, str]]:
 
 def test_fallback_responde_por_todos_los_lideres():
     respuestas = analizar_titular(TITULAR_NEGATIVO, _todos_los_lideres())
-    assert len(respuestas) == 1000
+    assert len(respuestas) == 1150
     for r in respuestas:
         assert -1.0 <= r["senal"] <= 1.0
         assert 0.0 <= r["confianza"] <= 1.0

@@ -91,10 +91,10 @@ def test_observatorio_late_y_recibe_una_noticia_encima():
                     arranque_visto = True
                 elif dato["tipo"] == "inicio":
                     inicio_visto = True
-                    assert len(dato["lideres"]) == 1000
+                    assert len(dato["lideres"]) == 1150
             elif m.get("bytes"):
                 frames += 1
-                assert len(m["bytes"]) == 8 + 10000
+                assert len(m["bytes"]) == 8 + 10150
             if arranque_visto and inicio_visto and frames > 8:
                 break
 

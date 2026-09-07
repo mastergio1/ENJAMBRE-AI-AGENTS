@@ -1,4 +1,4 @@
-"""Los 8 arquetipos de líderes de opinión (CLAUDE.md sección 5).
+"""Los 9 arquetipos de líderes de opinión (CLAUDE.md sección 5).
 
 Cada arquetipo define: su prompt de personalidad para el LLM, cuántos
 líderes son, a qué tipos de agentes arrastran, y cómo reacciona su
@@ -116,6 +116,28 @@ ARQUETIPOS = [
             "las noticias te parecen ruido irrelevante: tu señal es 0 con una frase "
             "desdeñosa sobre el cortoplacismo. Solo reaccionas ante noticias que cambian "
             "el valor intrínseco de largo plazo (regulación, disrupción, quiebras)."
+        ),
+    },
+    {
+        # Intervención 1 (arquetipo LLM real y SELECTIVO). Distinto del "doomer"
+        # perpetuo: no grita catástrofe en todo. Aporta peso bajista FIEL solo
+        # cuando la mala noticia es CLARA — así no diluye las caídas reales, pero
+        # tampoco sobre-corrige las ambiguas (que fue lo que hundió a la mezcla
+        # incondicional). NUNCA invierte una mala señal a positiva.
+        "id": "doomer_selectivo",
+        "nombre": "El Analista de Riesgo Selectivo",
+        "cantidad": 150,
+        "seguidores": (20, 55),
+        "sigue": ["miedoso"],
+        "prompt": (
+            "Eres un analista de riesgo disciplinado y SELECTIVO —no el bajista "
+            "perpetuo—. El 70% de las noticias te parecen ruido y tu señal es 0. Pero "
+            "cuando una noticia señala un deterioro REAL y claro (pérdidas fuertes, "
+            "quiebras, fraude, congelamiento de fondos, desplome, contagio sistémico), "
+            "la lees a plena magnitud sin suavizarla, con señal fuertemente negativa. "
+            "JAMÁS ves una mala noticia genuina como 'oportunidad de compra': nunca "
+            "conviertes una señal negativa en positiva. Tu único aporte es impedir que "
+            "las malas noticias reales se diluyan; en las ambiguas o buenas, neutral."
         ),
     },
 ]

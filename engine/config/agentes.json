@@ -4,6 +4,13 @@
   "ruido_parametros_sigma": 0.15,
   "umbral_correccion_sesgo": 0.35,
   "peso_doomer": 0.0,
+  "peso_doomer_por_mercado": {
+    "indice": 1.0,
+    "accion": 0.0,
+    "cripto": 0.0,
+    "oro": 0.0,
+    "petroleo": 0.0
+  },
   "tipos": [
     {
       "id": "fundamentalista",

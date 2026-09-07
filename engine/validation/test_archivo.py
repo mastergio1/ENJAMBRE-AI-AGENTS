@@ -101,7 +101,7 @@ def test_simulacion_incluye_ocho_voces(dia):
     sim_id = dia["publicadas"][0]["sim_id"]
     datos = cliente.get(f"/api/simulacion/{sim_id}").json()
     voces = datos["voces"]
-    assert len(voces) == 8  # los 8 arquetipos
+    assert len(voces) == 9  # los 9 arquetipos (incluye el doomer selectivo)
     for voz in voces:
         assert -1.0 <= voz["senal_media"] <= 1.0
         assert voz["frase"]

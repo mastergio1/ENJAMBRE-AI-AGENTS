@@ -50,5 +50,5 @@ def test_duelo_reutiliza_el_payload_de_simulacion(dia):
     cliente = TestClient(server.app)
     a, b = dia["publicadas"][0]["sim_id"], dia["publicadas"][1]["sim_id"]
     datos = cliente.get(f"/api/duelo/{a}/{b}").json()
-    assert len(datos["a"]["voces"]) == 8
+    assert len(datos["a"]["voces"]) == 9
     assert datos["a"]["tiene_replay"] is True

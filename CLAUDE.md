@@ -160,6 +160,8 @@ Son los únicos agentes que leen la noticia real. Cada uno hace **una llamada** 
 *Reacción típica:* señal ≈ 0 en el 80% de las noticias (con frases desdeñosas sobre el cortoplacismo). Señal fuerte solo ante cambios estructurales (regulación, disrupción, quiebras).
 *Prompt base:* "Eres un gestor value de cartera concentrada. El 80% de las noticias te parecen ruido irrelevante y tu señal es 0 con una frase desdeñosa sobre el cortoplacismo. Solo reaccionas ante noticias que cambian el valor intrínseco de largo plazo de los negocios."
 
+> **⚗️ Arquetipo 9 EN MEDICIÓN (Intervención 1, no canónico todavía) — "El Analista de Riesgo Selectivo" (`doomer_selectivo`, 150 líderes).** Añadido durante la calibración del acierto en malas noticias. Es un doomer SELECTIVO: neutral en el 70% de las noticias (a diferencia del Doomer perpetuo), pero ante un deterioro CLARO lee la mala noticia a plena magnitud SIN invertirla — su único fin es que las caídas reales no se diluyan. Su peso en el tono se controla con `peso_doomer` (env `ENJAMBRE_PESO_DOOMER`; 0 = dormido). Con esto la mezcla sube a **1.150 líderes / 10.150 agentes / 9 arquetipos / 9 voces** y ~+14 cerebros. **Está a prueba:** si la medición no muestra mejora clara sin costo de realismo, se retira y estos números vuelven a 8/1.000/10.000. Hasta entonces, el resto de este archivo conserva la redacción canónica (8 arquetipos).
+
 ### Reglas de implementación de los cerebros
 
 - Llamadas en **paralelo** (asyncio) — las 100 deben resolverse en < 15 segundos.

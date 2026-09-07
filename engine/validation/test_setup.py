@@ -15,10 +15,10 @@ def cargar_config() -> dict:
         return json.load(f)
 
 
-def test_la_mezcla_suma_10000_agentes():
+def test_la_mezcla_suma_10150_agentes():
     config = cargar_config()
     total = sum(t["cantidad"] for t in config["tipos"])
-    assert total == config["total_agentes"] == 10000
+    assert total == config["total_agentes"] == 10150
 
 
 def test_hay_13_tipos_de_agentes():
@@ -26,12 +26,12 @@ def test_hay_13_tipos_de_agentes():
     assert len(config["tipos"]) == 13
 
 
-def test_los_arquetipos_de_lideres_suman_1000():
+def test_los_arquetipos_de_lideres_suman_1150():
     config = cargar_config()
     lideres = next(t for t in config["tipos"] if t["id"] == "lider_opinion")
     total_arquetipos = sum(a["cantidad"] for a in lideres["arquetipos"])
-    assert total_arquetipos == lideres["cantidad"] == 1000
-    assert len(lideres["arquetipos"]) == 8
+    assert total_arquetipos == lideres["cantidad"] == 1150
+    assert len(lideres["arquetipos"]) == 9  # +1: doomer selectivo (Intervención 1)
 
 
 def test_los_institucionales_no_estan_en_la_red_social():

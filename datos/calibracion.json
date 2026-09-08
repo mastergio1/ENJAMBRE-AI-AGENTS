@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-04T14:20:07+00:00",
+ "generado": "2026-09-08T14:31:48+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14119,6 +14119,66 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +55.8%. En el mercado real, DELL cerró en 521.375 el 2026-09-04 (venía de 492.215 el 2026-09-02): +5.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "2df5fc147b6f412d",
+   "origen": "en_vivo",
+   "fecha": "2026-09-04T12:27:00+00:00",
+   "titular": "Summit Therapeutics (SMMT) sube 17.33% tras datos positivos de supervivencia global de ivonescimab frente a Keytruda en cáncer de pulmón",
+   "simbolos": "SMMT",
+   "direccion_pct": 52.13,
+   "volatilidad_pct": 1.13,
+   "reaccion_real": {
+    "simbolo": "SMMT",
+    "pct_real": 1.87,
+    "cierre_base": 17.12,
+    "cierre_final": 17.44,
+    "fecha_base": "2026-09-03",
+    "fecha_final": "2026-09-08",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +52.1%. En el mercado real, SMMT cerró en 17.44 el 2026-09-08 (venía de 17.12 el 2026-09-03): +1.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "d404450937b371a2",
+   "origen": "en_vivo",
+   "fecha": "2026-09-04T12:27:25+00:00",
+   "titular": "Snowflake (SNOW) sube 16.55% tras reportar resultados del 2T FY2027 que superaron expectativas y elevar su guía de ingresos por IA",
+   "simbolos": "SNOW",
+   "direccion_pct": 41.15,
+   "volatilidad_pct": 1.02,
+   "reaccion_real": {
+    "simbolo": "SNOW",
+    "pct_real": -5.08,
+    "cierre_base": 356.3,
+    "cierre_final": 338.21,
+    "fecha_base": "2026-09-03",
+    "fecha_final": "2026-09-08",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +41.1%. En el mercado real, SNOW cerró en 338.21 el 2026-09-08 (venía de 356.3 el 2026-09-03): -5.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "1f5f4aa0415b6270",
+   "origen": "en_vivo",
+   "fecha": "2026-09-04T12:27:50+00:00",
+   "titular": "Strategy Inc (MSTR) sube 17.56% impulsada por el rally de Bitcoin y su reciente compra de 4,603 BTC",
+   "simbolos": "MSTR",
+   "direccion_pct": 28.19,
+   "volatilidad_pct": 0.94,
+   "reaccion_real": {
+    "simbolo": "MSTR",
+    "pct_real": -4.48,
+    "cierre_base": 144.85,
+    "cierre_final": 138.355,
+    "fecha_base": "2026-09-03",
+    "fecha_final": "2026-09-08",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +28.2%. En el mercado real, MSTR cerró en 138.355 el 2026-09-08 (venía de 144.85 el 2026-09-03): -4.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

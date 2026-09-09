@@ -1,0 +1,56 @@
+{
+  "congelado": "2026-09-09",
+  "nota": "Foto congelada del motor de El Enjambre. Cualquier cambio futuro debe superar estos numeros en el conjunto HELD-OUT sin degradar ningun regimen (ver calibration/verificador.py). No se pisa a la ligera.",
+  "dataset": {
+    "total_casos": 648,
+    "particion_holdout_pct": 30,
+    "visible": 446,
+    "held_out": 202,
+    "held_out_por_mercado": {
+      "indice": 50,
+      "cripto": 63,
+      "accion": 80,
+      "oro": 1,
+      "petroleo": 8
+    },
+    "advertencia": "oro (1) y petroleo (8) tienen held-out demasiado chico para un veredicto confiable. Crecer el banco de casos (cosechador) antes de intentar calibrar esos mercados."
+  },
+  "hechos_estilizados": {
+    "fuente": "engine/validation/test_hechos_estilizados.py — reproducible GRATIS (sin IA, agentes de reglas)",
+    "curtosis_colas_gordas": ">3 (medido ~5.0, 10/10 sesiones OK)",
+    "clustering_volatilidad_ac1": ">0.1 (medido ~0.31, 10/10 OK)",
+    "asimetria_panico": ">1.0 (medido media 1.28, 10/10 OK)",
+    "deriva_mecanica_noticias_neutras_pct": "media +1.9%, 5/10 arriba (mecanica ~equilibrada, ruido; el sesgo alcista NO vive aqui)"
+  },
+  "tono_lideres_malas_noticias": {
+    "fuente": "diagnostico lexico sobre 264 malas noticias — reproducible GRATIS",
+    "estado": "DESPUES del ajuste de realismo del influencer optimista",
+    "tono_agregado_sin_doomer_selectivo": -0.117,
+    "influencer_optimista": 0.038,
+    "referencia_antes_del_ajuste": {
+      "tono_agregado_sin_doomer_selectivo": -0.088,
+      "influencer_optimista": 0.265
+    }
+  },
+  "acierto": {
+    "fuente": "medicion con IA real (doomer, base) — REQUIERE SALDO para reproducir. Es la ULTIMA medicion con IA, ANTES del ajuste del optimista.",
+    "advertencia": "estos numeros NO incluyen el ajuste del optimista (pendiente de re-medir con IA en una re-medicion completa). Son el punto de partida congelado, sobre la muestra COMPLETA (no split visible/held-out, porque se midieron antes de crear la particion).",
+    "indice_negativa": 0.38,
+    "indice_positiva": 0.7647,
+    "indice_global": 0.55,
+    "cripto_negativa": 0.5169,
+    "cripto_positiva": 0.8626,
+    "cripto_global": 0.723,
+    "accion_negativa": 0.1974,
+    "accion_positiva": 0.8571,
+    "accion_global": 0.59
+  },
+  "correlacion_prediccion_vs_real": {
+    "fuente": "diagnostico sobre 648 predicciones guardadas — GRATIS",
+    "global": 0.236,
+    "indice": 0.014,
+    "cripto": 0.285,
+    "accion": 0.1,
+    "lectura": "la prediccion de magnitud casi no correlaciona con la realidad (en indice ~0). El enjambre es un SIMULADOR/focus-group, no un predictor: el foco es el realismo del comportamiento, no el acierto de magnitud."
+  }
+}

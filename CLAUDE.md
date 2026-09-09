@@ -98,6 +98,14 @@ Cada agente se instancia con estos parámetros base ± ruido gaussiano (σ = 15%
 
 **12. Buy & hold (200):** Solo opera si el precio cae > 15% (compra "la oportunidad de la década") o ante necesidad aleatoria de liquidez (p≈0.001/tick). El resto del tiempo: nada. *Representa el capital dormido.*
 
+> **✅ Nota de calibración (2026-09) — el config es la fuente de verdad y el arrastre está resuelto.**
+> Las cifras de arriba describen el *diseño*; estas son las divergencias reales, ya medidas (12 semillas, sin IA; hechos estilizados 9/9):
+> - **Perillas enchufadas:** hasta 2026-09 varios parámetros de `config/agentes.json` eran decorativos (el agente hardcodeaba el valor e ignoraba el config). Ahora **todos** los agentes de reglas leen sus parámetros del config con `.get(...)`; girar una perilla tiene efecto real. Único que sigue constante a propósito: `sensibilidad_noticias` del fondo pasivo (0 por diseño). El test `engine/validation/test_config_enchufado.py` **impide** que vuelva a colarse una "perilla muerta".
+> - **Ruido de fondo (tipo 7):** el spec dice `p≈0.05`; el valor **calibrado y validado** es **0.12** (más textura sostiene los hechos estilizados). El config ya dice 0.12.
+> - **Quant (tipo 2):** ventana corta **5 → 8** (no perseguir ruido de pocos latidos).
+> - **Arbitrajista (tipo 6):** reforzado (umbral 0.006→0.004, actúa 90%, corrige hasta 0.4). Es el agente anti-inercia; con esto el **arrastre** (autocorrelación de retornos, criterio §7.3) bajó de ~0.14 a **~0.02** sin tocar la ola visual ni romper ningún otro hecho estilizado.
+> - **FOMO (tipo 9):** gatillo de entrada 0.02→0.03 y tope de compra 0.2→0.15 (empuja menos la ola).
+
 ## 5. LOS 1.000 LÍDERES DE OPINIÓN (LLM) — ANÁLISIS DE PERSONALIDADES
 
 > **Presupuesto:** los 1.000 líderes se reparten ~110 cerebros LLM por arquetipo (`engine/brains/reparto.py`): cada cerebro es UNA llamada a la API, y los líderes de un mismo arquetipo la comparten en ronda. Así hay ~110 frases distintas (variedad de sobra para el hover) al costo de siempre (~$0.12/simulación). La diversidad vive en los 8 arquetipos + el muestreo del modelo, no en repetir 1.000 llamadas.

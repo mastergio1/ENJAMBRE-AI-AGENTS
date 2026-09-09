@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-08T14:31:48+00:00",
+ "generado": "2026-09-09T14:36:00+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14179,6 +14179,86 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +28.2%. En el mercado real, MSTR cerró en 138.355 el 2026-09-08 (venía de 144.85 el 2026-09-03): -4.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "ac8706c5ce805972",
+   "origen": "en_vivo",
+   "fecha": "2026-09-07T15:49:57+00:00",
+   "titular": "Jeff Currie Calls Scott Bessent’s Treasury Buybacks 'Financial Repression' — And the Ultimate Buy Signal for Gold",
+   "simbolos": "DIA,GLD,GLDM,QQQ,SPY",
+   "direccion_pct": 1.01,
+   "volatilidad_pct": 1.42,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -1.7,
+    "cierre_base": 534.04,
+    "cierre_final": 524.96,
+    "fecha_base": "2026-09-04",
+    "fecha_final": "2026-09-09",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +1.0%. En el mercado real, DIA cerró en 524.96 el 2026-09-09 (venía de 534.04 el 2026-09-04): -1.7% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "3d921f0b99f2c342",
+   "origen": "en_vivo",
+   "fecha": "2026-09-08T14:31:13+00:00",
+   "titular": "President Trump And Putin Both Rated U.S. Envoys' Visit; Kremlin Says Russia Has No Hostile Plans Towards Europe; Putin Supports Idea Of Restoring U.S.-Russia Ties; Putin And Trump Discussed Prisoners Swap; Putin Told Trump What U.S. Could Do To End The Fighting Sooner; Putin Gave Trump Russia's Assessment Of What Is Happening On The Battlefield",
+   "simbolos": "SPY,VGK",
+   "direccion_pct": 2.07,
+   "volatilidad_pct": 1.11,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -0.87,
+    "cierre_base": 770.18,
+    "cierre_final": 763.485,
+    "fecha_base": "2026-09-04",
+    "fecha_final": "2026-09-09",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +2.1%. En el mercado real, SPY cerró en 763.485 el 2026-09-09 (venía de 770.18 el 2026-09-04): -0.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "d5ed50cf6f9df871",
+   "origen": "en_vivo",
+   "fecha": "2026-09-08T14:31:25+00:00",
+   "titular": "Russia's Putin Spoke To President Trump By Phone; Kremlin Says Conversation Was Open And Constructive; President Trump And Putin Discussed Outcome Of U.S. Envoys' Visit To Moscow And Kyiv; Trump Focused On Trying To Get Swift End To War In Ukraine; End Of War Would Immediately Open Up Impressive Potential To Restore U.S.-Russia Ties; Kremlin Says Trump Would Like U.S.-Russia Ties To Be Restored During His Presidency",
+   "simbolos": "SPY,VGK",
+   "direccion_pct": -8.31,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -0.87,
+    "cierre_base": 770.18,
+    "cierre_final": 763.485,
+    "fecha_base": "2026-09-04",
+    "fecha_final": "2026-09-09",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -8.3%. En el mercado real, SPY cerró en 763.485 el 2026-09-09 (venía de 770.18 el 2026-09-04): -0.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "8cb693fe37e96feb",
+   "origen": "en_vivo",
+   "fecha": "2026-09-08T14:31:38+00:00",
+   "titular": "TD Cowen Reiterates Buy on TransMedics Group, Maintains $120 Price Target",
+   "simbolos": "TMDX",
+   "direccion_pct": -5.73,
+   "volatilidad_pct": 1.07,
+   "reaccion_real": {
+    "simbolo": "TMDX",
+    "pct_real": -5.13,
+    "cierre_base": 90.08,
+    "cierre_final": 85.46,
+    "fecha_base": "2026-09-04",
+    "fecha_final": "2026-09-09",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -5.7%. En el mercado real, TMDX cerró en 85.46 el 2026-09-09 (venía de 90.08 el 2026-09-04): -5.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

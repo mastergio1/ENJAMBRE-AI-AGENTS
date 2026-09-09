@@ -38,6 +38,7 @@ def _respuestas(modelo, titular):
 
 def _tono(peso: float) -> float:
     m = MercadoEnjambre(seed=42, ticks_horizonte=5, ruta_config=RUTA_CONFIG)
+    m._umbral_correccion = 0.0  # aísla P2: sin Plan A (corrección de sesgo)
     m._peso_tono_invertidores = peso
     resp = _respuestas(m, TITULAR_MALO)
     return m._tono_de_titular(TITULAR_MALO, resp)
@@ -46,6 +47,7 @@ def _tono(peso: float) -> float:
 def test_peso_1_preserva_el_historico():
     """peso 1.0 = promedio ponderado por confianza de TODAS las señales."""
     m = MercadoEnjambre(seed=42, ticks_horizonte=5, ruta_config=RUTA_CONFIG)
+    m._umbral_correccion = 0.0  # aísla P2: sin Plan A (corrección de sesgo)
     m._peso_tono_invertidores = 1.0
     m._peso_doomer = 1.0  # incluir el doomer selectivo a peso pleno = promedio de TODAS
     resp = _respuestas(m, TITULAR_MALO)

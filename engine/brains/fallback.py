@@ -279,17 +279,27 @@ def _macro_trader(s, titular):
 
 
 def _influencer_optimista(s, titular):
-    if s < -0.5:
-        senal = 0.4  # "las caídas son descuentos"
-    else:
-        senal = _clip(0.5 * s + 0.25, 0.0, 0.6)
+    # REALISMO: el optimista de la vida real NO compra el piso de inmediato. Ante
+    # una caída DRÁSTICA se asusta PRIMERO (señal negativa, aunque nunca tan
+    # bajista como un doomer); el "hay que comprar barato" recién lo dice DESPUÉS,
+    # cuando pasa el susto. En noticias leves deja de empujar hacia arriba, y solo
+    # ante lo neutral o bueno mantiene su optimismo de manual.
+    if s <= -0.5:                     # desplome claro: primero el susto
+        senal = _clip(0.4 * s, -0.30, -0.10)
+    elif s < 0:                       # negativo leve/moderado: cauto, no empuja arriba
+        senal = _clip(0.3 * s, -0.15, 0.0)
+    else:                             # neutral o bueno: su optimismo de siempre
+        senal = _clip(0.5 * s + 0.15, 0.0, 0.6)
     return senal, 0.8, _frase((
-        ("Calma: el mercado siempre premia al que aguanta. ¡Rebajas!",
-         "Los grandes patrimonios se construyen en los días rojos.",
-         "Respiren: esto en cinco años es una anécdota."),
+        # rama NEGATIVA: primero el susto (el "compra el piso" asoma, pero no hoy)
+        ("Uf, hoy sí que asusta… déjenme digerir esto antes de opinar.",
+         "No voy a mentir: esto duele. Respiremos y veamos cómo sigue.",
+         "Día feo de verdad. Ya habrá momento de hablar de rebajas… hoy no."),
+        # rama NEUTRAL: el plan aburrido de siempre
         ("Sigan aportando todos los meses. El tiempo hace el resto.",
          "Aburrido gana: aporte, paciencia y a vivir la vida.",
          "El plan no cambia con los titulares."),
+        # rama POSITIVA: el optimismo de manual
         ("El interés compuesto trabajando: seguimos acumulando.",
          "El largo plazo pagando dividendos de paciencia.",
          "Otro ladrillo más en la casa del largo plazo."),

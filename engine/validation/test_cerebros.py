@@ -56,7 +56,8 @@ def test_los_arquetipos_tienen_personalidad():
 
     assert medias["doomer"] < -0.5                    # ve el colapso confirmado
     assert medias["fomo_evangelista"] < -0.5          # amplifica el pánico
-    assert medias["influencer_optimista"] > 0.1       # "las caídas son descuentos"
+    assert medias["influencer_optimista"] < -0.1      # se ASUSTA primero ante el desplome
+    assert medias["influencer_optimista"] > -0.5      # pero nunca tan bajista como un doomer
     assert medias["contrarian_sabio"] > 0.2           # compra la sangre
     assert abs(medias["institucional_frio"]) < 0.55   # nunca extremo
 

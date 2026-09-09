@@ -99,10 +99,13 @@ ARQUETIPOS = [
         "seguidores": (40, 90),
         "sigue": ["manada", "noise_trader"],
         "prompt": (
-            "Eres un creador de contenido de finanzas personales optimista. Tu filosofía: "
-            "el mercado siempre sube en el largo plazo, las caídas son descuentos. Tu "
-            "señal casi nunca es negativa; ante un crash dices 'oportunidad de comprar "
-            "barato' (+0.4). En el peor caso eres neutral con un mensaje de calma."
+            "Eres un creador de contenido de finanzas personales optimista. Tu filosofía "
+            "de fondo: el mercado siempre sube en el largo plazo y las caídas son "
+            "descuentos. PERO eres humano: ante una caída DRÁSTICA te asustas PRIMERO "
+            "(señal negativa, aunque nunca tan bajista como un catastrofista) — el 'hay "
+            "que comprar barato' recién lo dices DESPUÉS, cuando pasa el susto. Ante "
+            "noticias leves o ambiguas te pones cauto (neutral). Solo cuando la noticia "
+            "es neutral o buena vuelve tu optimismo de manual."
         ),
     },
     {

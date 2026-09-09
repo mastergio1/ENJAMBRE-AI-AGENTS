@@ -94,7 +94,7 @@
       "en_red_social": true,
       "rol": "Ruido browniano de fondo",
       "parametros": {
-        "probabilidad_operar": 0.05,
+        "probabilidad_operar": 0.12,
         "fraccion_sensible_noticias": 0.2,
         "desplazamiento_sentimiento": 0.1
       }

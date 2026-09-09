@@ -14,7 +14,13 @@ class Fundamentalista(AgenteBase):
         super().__init__(model, capital)
         # valor fundamental con ruido idiosincrático
         self.valor = model.libro.ultimo_precio * self.model.random.gauss(1.0, 0.04)
-        self.periodo = self.model.random.randint(10, 20)
+        # perillas del config (config/agentes.json → fundamentalista):
+        lo, hi = self.cfg.get("ticks_entre_operaciones", [10, 20])
+        self.periodo = self.model.random.randint(int(lo), int(hi))
+        # banda de anclaje: umbral_compra 0.95 / umbral_venta 1.05 → ±5%
+        self.banda_compra = 1 - self.cfg.get("umbral_compra", 0.95)
+        self.banda_venta = self.cfg.get("umbral_venta", 1.05) - 1
+        self.ponderacion = self.cfg.get("ponderacion_noticia_en_valor", 0.3)
         self.proximo_tick = self.model.random.randint(0, self.periodo)
 
     def step(self):
@@ -27,16 +33,18 @@ class Fundamentalista(AgenteBase):
         # la noticia actualiza el valor fundamental (ponderación 0.3 × volatilidad):
         # una noticia grave no solo asusta — cambia cuánto valen los negocios
         if abs(self.model.sentimiento) > 0.01:
-            self.valor *= 1 + 0.3 * self.model.sentimiento * 0.02 * vol
+            self.valor *= 1 + self.ponderacion * self.model.sentimiento * 0.02 * vol
         if self.model.tick < self.proximo_tick:
             return
         self.proximo_tick = self.model.tick + self.periodo
-        # opera solo cuando el precio se aleja de su valor: es el freno del sistema
-        banda = 0.05 * vol   # ±5% en índice; mucho más ancha en cripto/acción
+        # opera solo cuando el precio se aleja de su valor: es el freno del sistema.
+        # la banda ±5% se ensancha con la volatilidad (difusa en cripto/acción)
+        banda_c = self.banda_compra * vol
+        banda_v = self.banda_venta * vol
         self.model.libro.cancelar_ordenes(self.unique_id)
-        if self.precio < self.valor * (1 - banda):
+        if self.precio < self.valor * (1 - banda_c):
             self.colocar_orden("compra", self.precio * 1.002, 0.25 * self.efectivo / self.precio)
-        elif self.precio > self.valor * (1 + banda):
+        elif self.precio > self.valor * (1 + banda_v):
             self.colocar_orden("venta", self.precio * 0.998, 0.25 * self.acciones)
 
 
@@ -83,7 +91,10 @@ class FondoPasivo(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        self.periodo = max(2, round(self.ruido(10)))
+        # config/agentes.json → fondo_pasivo. sensibilidad_noticias es 0 por
+        # diseño (el flujo 401k/AFP no reacciona a titulares): no hay código de
+        # noticia al que enchufarla, se deja como constante documentada.
+        self.periodo = max(2, round(self.ruido(self.cfg.get("ticks_entre_compras", 10))))
         self.desfase = self.model.random.randint(0, self.periodo - 1)
 
     def step(self):
@@ -171,16 +182,20 @@ class NoiseTrader(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        self.prob_operar = self.ruido(0.12)
-        # solo el 20% es sensible al sentimiento global
-        self.sensible = self.model.random.random() < 0.2
+        # config/agentes.json → noise_trader. El valor calibrado real es 0.12
+        # (más ruido del ~0.05 del spec: es la textura que sostiene los hechos
+        # estilizados). El config ya refleja esa verdad.
+        self.prob_operar = self.ruido(self.cfg.get("probabilidad_operar", 0.12))
+        self.desplazamiento = self.cfg.get("desplazamiento_sentimiento", 0.1)
+        # solo una fracción es sensible al sentimiento global
+        self.sensible = self.model.random.random() < self.cfg.get("fraccion_sensible_noticias", 0.2)
 
     def step(self):
         if self.model.random.random() > self.prob_operar:
             return
         prob_compra = 0.5
         if self.sensible:
-            prob_compra += 0.1 * (self.model.sentimiento + self.senal_social)
+            prob_compra += self.desplazamiento * (self.model.sentimiento + self.senal_social)
         cantidad = 0.04 * self.capital_inicial / self.precio
         if self.model.random.random() < prob_compra:
             self.comprar_mercado(cantidad)
@@ -197,6 +212,7 @@ class Manada(AgenteBase):
         # calibrable: bajar el rango facilita las cascadas → colas más gordas
         lo, hi = self.cfg.get("umbral_activacion_rango", [0.4, 0.8])
         self.umbral = self.model.random.uniform(lo, hi)
+        self.ventana_obs = int(self.cfg.get("ventana_observacion_ticks", 3))
         self.espera_hasta = 0
         # Nivel 1 (freno de cautela): en racha mala, la manada vende menos
         # pesado (×factor). Default 1.0 = sin freno (comportamiento de siempre).
@@ -206,8 +222,8 @@ class Manada(AgenteBase):
         if self.model.tick < self.espera_hasta or not self.vecinos:
             return
         # observa a SUS vecinos de red (pares + 1-2 líderes): si una mayoría
-        # operó hacia el mismo lado en los últimos 3 ticks, los copia
-        desde = self.model.tick - 3
+        # operó hacia el mismo lado en la ventana de observación, los copia
+        desde = self.model.tick - self.ventana_obs
         compraron = vendieron = 0
         for vecino in self.vecinos:
             if vecino.tick_ultima_accion >= desde:
@@ -242,6 +258,8 @@ class FomoRetail(AgenteBase):
         self.umbral_subida = self.ruido(self.cfg.get("umbral_subida", 0.02))
         self.fraccion_capital = self.cfg.get("fraccion_capital_maxima", 0.2)
         self.stop_panico = abs(self.cfg.get("stop_panico", 0.04))
+        self.ventana = int(self.cfg.get("ventana_ticks", 5))
+        self.vecinos_minimos = int(self.cfg.get("vecinos_minimos_activos", 2))
         self.precio_entrada = None
 
     def step(self):
@@ -251,17 +269,17 @@ class FomoRetail(AgenteBase):
                 self.vender_mercado(self.acciones, urgencia=0.05)
                 self.precio_entrada = None
             return
-        retorno_5 = self.model.retorno_acumulado(5)
+        retorno_5 = self.model.retorno_acumulado(self.ventana)
         if retorno_5 is None:
             return
-        # sube > 2% en 5 ticks Y su red habla de ello (≥ 2 vecinos compraron
-        # hace poco, o le llegó un rumor comprador fuerte de sus líderes)
+        # sube > umbral en la ventana Y su red habla de ello (≥ N vecinos
+        # compraron hace poco, o le llegó un rumor comprador fuerte de líderes)
         desde = self.model.tick - 3
         vecinos_compraron = sum(
             1 for v in self.vecinos
             if v.tick_ultima_accion >= desde and v.ultima_accion == "compra"
         )
-        red_habla = vecinos_compraron >= 2 or self.senal_social > 0.25
+        red_habla = vecinos_compraron >= self.vecinos_minimos or self.senal_social > 0.25
         if retorno_5 > self.umbral_subida and red_habla:
             self.comprar_mercado(self.fraccion_capital * self.efectivo / self.precio)
             self.precio_entrada = self.precio
@@ -278,6 +296,7 @@ class Miedoso(AgenteBase):
         self.asimetria = self.cfg.get("asimetria_kahneman", 2.5)
         # calibrable: qué fracción de su posición liquida al entrar en pánico
         self.fraccion_venta_rango = self.cfg.get("fraccion_venta_rango", [0.7, 1.0])
+        self.ticks_calma = int(self.cfg.get("ticks_calma_para_recomprar", 10))
         self.tick_venta = None
 
     def step(self):
@@ -294,8 +313,8 @@ class Miedoso(AgenteBase):
             self.vender_mercado(self.acciones * fraccion, urgencia=0.05)
             self.tick_venta = self.model.tick
             return
-        # recompra lenta y tarde: necesita 10+ ticks de calma
-        if self.tick_venta is not None and self.model.tick - self.tick_venta > 10:
+        # recompra lenta y tarde: necesita varios ticks de calma
+        if self.tick_venta is not None and self.model.tick - self.tick_venta > self.ticks_calma:
             calma = self.model.volatilidad_reciente(10) < 0.004
             if calma and self.model.sentimiento > -0.05:
                 self.comprar_mercado(0.05 * self.efectivo / self.precio)
@@ -308,14 +327,17 @@ class Contrarian(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        self.umbral = self.ruido(0.7, 0.1)
-        self.periodo = self.model.random.randint(5, 10)
+        # config/agentes.json → contrarian
+        self.umbral = self.ruido(self.cfg.get("umbral_consenso", 0.7), 0.1)
+        self.ventana_sent = int(self.cfg.get("ventana_sentimiento_ticks", 5))
+        lo, hi = self.cfg.get("ticks_entre_operaciones", [5, 10])
+        self.periodo = self.model.random.randint(int(lo), int(hi))
         self.desfase = self.model.random.randint(0, self.periodo - 1)
 
     def step(self):
         if (self.model.tick + self.desfase) % self.periodo != 0:
             return
-        frac_compras = self.model.fraccion_compras(5)
+        frac_compras = self.model.fraccion_compras(self.ventana_sent)
         if frac_compras is None:
             return
         if (1 - frac_compras) >= self.umbral:  # el mercado vendió masivamente
@@ -330,12 +352,15 @@ class BuyAndHold(AgenteBase):
     def __init__(self, model, capital):
         super().__init__(model, capital)
         self.precio_referencia = model.libro.ultimo_precio
-        self.prob_liquidez = 0.001
+        # config/agentes.json → buy_and_hold
+        self.prob_liquidez = self.cfg.get("probabilidad_liquidez", 0.001)
+        # umbral_caida_oportunidad -0.15 → compra si cae 15% desde el máximo
+        self.factor_oportunidad = 1 + self.cfg.get("umbral_caida_oportunidad", -0.15)
 
     def step(self):
         self.precio_referencia = max(self.precio_referencia, self.precio)
-        # "la oportunidad de la década": caída > 15% desde el máximo
-        if self.precio < self.precio_referencia * 0.85 and self.efectivo > 0.1 * self.capital_inicial:
+        # "la oportunidad de la década": caída fuerte desde el máximo
+        if self.precio < self.precio_referencia * self.factor_oportunidad and self.efectivo > 0.1 * self.capital_inicial:
             self.comprar_mercado(0.5 * self.efectivo / self.precio)
         elif self.model.random.random() < self.prob_liquidez:
             self.vender_mercado(0.2 * self.acciones)

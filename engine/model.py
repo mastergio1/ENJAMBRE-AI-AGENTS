@@ -267,6 +267,9 @@ class MercadoEnjambre(mesa.Model):
         self._peso_doomer = _peso_doomer_env_forzado()
         self._peso_doomer_por_mercado = config.get("peso_doomer_por_mercado", {})
         self._peso_doomer_defecto = float(config.get("peso_doomer", 0.0))
+        # sigma del ruido idiosincrático que hace único a cada agente (±15% por
+        # defecto). Lo usa AgenteBase.ruido como default. Config → top-level.
+        self._sigma_ruido = float(config.get("ruido_parametros_sigma", 0.15))
         for tipo in config["tipos"]:
             capital = tipo["capital_relativo"] * CAPITAL_BASE
             # expone los "parametros" del tipo para que sus agentes los lean en

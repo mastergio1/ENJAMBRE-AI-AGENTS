@@ -34,8 +34,12 @@ class AgenteBase(mesa.Agent):
 
     # ---------- utilidades ----------
 
-    def ruido(self, valor: float, sigma_relativo: float = 0.15) -> float:
-        """Valor base ± ruido gaussiano (σ = 15% por defecto, CLAUDE.md sección 4)."""
+    def ruido(self, valor: float, sigma_relativo: float = None) -> float:
+        """Valor base ± ruido gaussiano (σ = 15% por defecto, CLAUDE.md sección 4).
+
+        Si no se pasa sigma, usa el global del modelo (config → ruido_parametros_sigma)."""
+        if sigma_relativo is None:
+            sigma_relativo = getattr(self.model, "_sigma_ruido", 0.15)
         return valor * self.model.random.gauss(1.0, sigma_relativo)
 
     # ---------- Nivel 1: memoria de noticias (contexto histórico) ----------

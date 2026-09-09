@@ -82,9 +82,36 @@ tirada en perillas fantasma.
 
 ---
 
+## ¿Y las mediciones del doomer (peso 1.0, 0.5…) quedaron mal?
+
+**No. Esa perilla SÍ estaba viva.** Es de otra familia: la del doomer
+(`peso_doomer`, `peso_doomer_por_mercado`, `umbral_correccion_sesgo`) vive en
+`model.py` (el cerebro del tono), no en `reglas.py` (los agentes). Las 17
+muertas eran solo las de comportamiento de los agentes.
+
+**La prueba:** una perilla muerta da resultados **idénticos** cuando la cambias
+(lo vimos 3 veces con el arrastre: salida idéntica al byte). Las mediciones del
+doomer dieron resultados **distintos** entre peso 0 y 1.0 (índice se movió +7.6
+puntos; cripto quedó en 0.0). Si estuviera muerta, habrían sido idénticas. Se
+movieron → estaba viva.
+
+**Punto fino de método:** las 17 perillas muertas estaban fijas en el **mismo
+valor en ambos lados** de cada comparación del doomer. Un A/B donde una variable
+está trabada igual en los dos lados sigue siendo válido: aislabas el doomer, y
+todo lo demás era constante. **Las conclusiones del doomer se sostienen.**
+
+## Una perilla muerta más (a nivel global)
+
+`ruido_parametros_sigma` (0.15) — el "±15%" que hace único a cada agente —
+también estaba hardcodeada en `base.py`. Enchufada igual (default 0.15, sin
+cambio de comportamiento). Ahora la heterogeneidad del enjambre es calibrable
+desde el panel.
+
 ## Dónde quedamos
 
 - **Paso A — arrastre:** hecho. ✅
-- **Paso B — panel honesto (este):** hecho. ✅
+- **Paso B — panel honesto (este):** hecho. ✅ Auditoría cruzada completa: de
+  todo el config, la única clave sin leer es `sensibilidad_noticias` (constante
+  0 por diseño). Todo lo demás, vivo.
 - **Paso C — calibrar con IA:** ahora el panel está listo para eso. Requiere
   recarga (~$20-30). Te aviso cuando toque.

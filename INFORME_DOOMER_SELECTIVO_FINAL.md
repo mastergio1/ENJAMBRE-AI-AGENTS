@@ -1,12 +1,13 @@
 # Informe FINAL — Analista de Riesgo Selectivo: 0 vs 0.5 vs 1.0 (muestras completas)
 
-*Rubicón Lab · El Enjambre · 7 de septiembre de 2026*
+*Rubicón Lab · El Enjambre · 7 de septiembre de 2026 (acción añadida: 9 de septiembre)*
 
 > Para Giorgio, en simple: medimos al nuevo panelista (el **Analista de Riesgo
 > Selectivo**) en tres intensidades —apagado (0), medio (0.5) y pleno (1.0)—
 > sobre **todos** los exámenes históricos de cada mercado (índice completo,
-> cripto completo, 220 casos), con la IA real. Este informe reemplaza al parcial
-> anterior: con la muestra completa, la lectura de **cripto cambió**.
+> cripto completo 220, **acción completo 188**), con la IA real. Este informe
+> reemplaza al parcial anterior: con la muestra completa, la lectura de **cripto
+> cambió**, y **acción resultó inerte** (medida en septiembre, base 0 vs 1.0).
 
 ---
 
@@ -30,18 +31,35 @@
 | **1.0** | 51.69 % (46/89) | 85.50 % (112/131) | 71.8 % |
 | *Cambio 1.0 vs base* | **0.0 pts** ✗ | −0.8 pts | −0.5 |
 
+### Acción (188 casos COMPLETOS, mismos casos en los dos) — medido 8-9 sep 2026
+
+| Nivel | Negativas | Positivas | Global |
+|---|---|---|---|
+| **Base (0)** | 19.74 % (15/76) | 85.71 % (96/112) | 59.0 % |
+| **1.0** | 19.74 % (15/76) | 85.71 % (96/112) | 59.0 % |
+| *Cambio 1.0 vs base* | **0.0 pts** ✗ | 0.0 pts | 0.0 |
+
+*Acción resultó **inerte, idéntica a cripto**: el analista no cambia ni un solo
+acierto (negativas, positivas y global exactamente iguales). Nota: acción tiene
+el peor acierto en negativas de los tres mercados (19.7 %), pero el problema es
+estructural (algo que el doomer no toca), no algo que el analista pueda arreglar.
+Muestra 100 % con IA real, sin casos de respaldo léxico.*
+
 ---
 
 ## 2. El hallazgo clave (y por qué la muestra completa importó)
 
-**El Analista Selectivo ayuda en ÍNDICE, pero NO en cripto.** En cripto, con la
-muestra completa (220), el doomer a pleno da **exactamente el mismo acierto en
-negativas que la base** (46 de 89, idéntico) — cero mejora. El "+2.2" que
-habíamos visto antes con 100 casos era un **espejismo de muestra chica**: al
-completar los 220, el beneficio se evaporó. *(Coherente con el diseño: los
-titulares de cripto muchas veces no gatillan el criterio de "deterioro claro",
-así que el panelista se queda neutral y no cambia nada; y donde la noticia es
-claramente mala, el Plan A ya toma la lectura fiel por su cuenta.)*
+**El Analista Selectivo ayuda SOLO en ÍNDICE. En cripto y en acción es inerte.**
+En cripto, con la muestra completa (220), el doomer a pleno da **exactamente el
+mismo acierto en negativas que la base** (46 de 89, idéntico) — cero mejora. El
+"+2.2" que habíamos visto antes con 100 casos era un **espejismo de muestra
+chica**: al completar los 220, el beneficio se evaporó. En **acción** (188
+completos, medido en septiembre) el resultado es aún más rotundo: negativas,
+positivas y global **idénticas al 100 %** entre 0 y 1.0. *(Coherente con el
+diseño: los titulares de cripto y acción muchas veces no gatillan el criterio de
+"deterioro claro", así que el panelista se queda neutral y no cambia nada; y
+donde la noticia es claramente mala, el Plan A ya toma la lectura fiel por su
+cuenta.)*
 
 **En índice sí es un triunfo real:** +7.6 pts en negativas (de 38 % a 46 %), a
 cambio de −2.9 en positivas. Neto claramente positivo (+3.1 global).
@@ -56,13 +74,15 @@ punto dulce en 0.5**: si se activa, conviene 1.0.
 ## 3. Veredicto honesto
 
 El Analista Selectivo es una mejora **real pero ANGOSTA**: sirve para las malas
-noticias de **índices bursátiles**, y no aporta nada en **cripto**. No es un
-arreglo universal del sesgo alcista; es específico de índice.
+noticias de **índices bursátiles**, y no aporta nada en **cripto ni en acción**.
+No es un arreglo universal del sesgo alcista; es específico de índice.
 
 - **Índice:** activarlo a 1.0 mejora el acierto en negativas de forma sólida
   (+7.6), con un costo pequeño en positivas (−2.9). Vale la pena.
 - **Cripto:** activarlo no ayuda (0.0 en negativas) y roza las positivas hacia
   abajo. No vale la pena.
+- **Acción:** activarlo es totalmente inerte (0.0 en todo). No vale la pena.
+  Se queda apagado, como ya estaba.
 
 ---
 
@@ -74,9 +94,9 @@ cripto. Es exactamente lo que la data pide.
 
 Pasos:
 1. **Hacer `peso_doomer` por-mercado** (como ya existe `FACTORES_LIQUIDEZ` por
-   mercado): índice → 1.0, cripto → 0.0 (y evaluar los otros mercados —oro,
-   petróleo, acción— con la misma vara antes de encenderlos). Cambio de código
-   chico y limpio.
+   mercado): índice → 1.0, cripto → 0.0, **acción → 0.0 (medido: inerte)** (y
+   evaluar los que faltan —oro, petróleo— con la misma vara antes de encenderlos).
+   Cambio de código chico y limpio. **YA DESPLEGADO.**
 2. Dejar el flag global de rollback (`ENJAMBRE_PESO_DOOMER=0`) por si acaso.
 
 **Alternativa simple** (si se prefiere no segmentar ahora): activar 1.0 global.

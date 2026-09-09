@@ -37,7 +37,7 @@
       "en_red_social": false,
       "rol": "Sigue tendencias con disciplina",
       "parametros": {
-        "ventana_media_corta": 5,
+        "ventana_media_corta": 8,
         "ventana_media_larga": 20,
         "stop_loss": -0.03
       }
@@ -83,7 +83,7 @@
       "en_red_social": false,
       "rol": "Corrige ineficiencias rápido",
       "parametros": {
-        "umbral_desviacion": 0.02
+        "umbral_desviacion": 0.004
       }
     },
     {
@@ -123,10 +123,10 @@
       "en_red_social": true,
       "rol": "Persigue subidas, entra tarde",
       "parametros": {
-        "umbral_subida": 0.02,
+        "umbral_subida": 0.03,
         "ventana_ticks": 5,
         "vecinos_minimos_activos": 2,
-        "fraccion_capital_maxima": 0.2,
+        "fraccion_capital_maxima": 0.15,
         "stop_panico": -0.04
       }
     },

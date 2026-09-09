@@ -45,9 +45,13 @@ class QuantMomentum(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        self.ventana_corta = 5
-        self.ventana_larga = 20
-        self.stop_loss = self.ruido(0.03)
+        # ventanas de la media móvil (config/agentes.json → quant_momentum):
+        # una ventana corta más larga (8 vs 5) hace que el quant no persiga el
+        # ruido de pocos latidos — reduce la inercia (arrastre) del precio sin
+        # quitarle su papel de seguidor de tendencias reales.
+        self.ventana_corta = int(self.cfg.get("ventana_media_corta", 5))
+        self.ventana_larga = int(self.cfg.get("ventana_media_larga", 20))
+        self.stop_loss = self.ruido(abs(self.cfg.get("stop_loss", -0.03)))
         self.precio_entrada = None
         self.enfriamiento_hasta = 0
 
@@ -137,14 +141,17 @@ class Arbitrajista(AgenteBase):
 
     def __init__(self, model, capital):
         super().__init__(model, capital)
-        self.umbral = self.ruido(0.006)
+        # umbral de desviación que dispara la corrección (config/agentes.json →
+        # arbitrajista): más bajo = corrige antes = borra más "arrastre" (inercia
+        # de cortísimo plazo). Es el agente anti-inercia por excelencia.
+        self.umbral = self.ruido(self.cfg.get("umbral_desviacion", 0.006))
 
     def step(self):
         precios = self.model.historial_precios
         if len(precios) < 4:
             return
         # no todos los arbitrajistas ven la misma oportunidad al mismo tiempo
-        if self.model.random.random() > 0.8:
+        if self.model.random.random() > 0.9:
             return
         # referencia de MUY corto plazo: desvanece los empujones del flujo
         # que no tienen información detrás (borra la predictibilidad)
@@ -152,7 +159,7 @@ class Arbitrajista(AgenteBase):
         desviacion = (self.precio - referencia) / referencia
         if abs(desviacion) < self.umbral:
             return
-        cantidad = min(abs(desviacion) * 5, 0.25) * self.capital_inicial / self.precio
+        cantidad = min(abs(desviacion) * 5, 0.4) * self.capital_inicial / self.precio
         if desviacion > 0:
             self.vender_mercado(cantidad)
         else:

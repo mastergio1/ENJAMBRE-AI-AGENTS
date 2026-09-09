@@ -46,15 +46,6 @@ def test_2_clustering_de_volatilidad(seed):
     assert ac1 > ac10  # decae
 
 
-@pytest.mark.xfail(
-    strict=False,
-    reason="DEUDA DE REALISMO PREEXISTENTE (tarea aparte): el modelo tiene un "
-    "'arrastre' de retornos ~0.14 (medido con 12 semillas), por encima del "
-    "objetivo 0.10. Está vivo en main; NO lo introdujo el doomer selectivo. La "
-    "versión anterior de este test 'pasaba' por usar 5 semillas afortunadas "
-    "(media 0.096). Se arreglará ajustando la mezcla (momentum/manada), no el "
-    "umbral. Si esto empieza a pasar (xpass), quitar el marcador.",
-)
 def test_3_sin_autocorrelacion_de_retornos():
     """No free lunch: el signo del retorno no predice el siguiente.
 

@@ -13,6 +13,21 @@ INSTRUCCION_JSON = (
     "confianza: cuánto arrastrarías a tus seguidores con esta opinión."
 )
 
+# Capa de RAZONAMIENTO CONTEXTUAL (solo para arquetipos con "contextual": True —
+# los PROFESIONALES). Los pros no reaccionan al titular en frío: descuentan el
+# futuro y leen el contexto, como en la vida real. El retail (FOMO, doomer,
+# optimista) NO la lleva: reacciona emocionalmente al titular, y esa tensión
+# pro-vs-retail es la que da realismo al enjambre.
+RAZONAMIENTO_CONTEXTUAL = (
+    "IMPORTANTE — razona como un profesional, no en frío. Antes de fijar tu señal, considera: "
+    "1) ¿Ya estaba anticipado o es sorpresa? El mercado descuenta lo esperado: una noticia "
+    "anticipada mueve poco, e incluso puede aliviar ('ya pasó lo temido'). "
+    "2) ¿El contexto o el historial cambian el SIGNO? Ej.: si renuncia un directivo con mal "
+    "desempeño, puede ser un ALIVIO (señal positiva), no una caída. "
+    "3) Piensa en el efecto a futuro y de segundo orden, no solo en la reacción del primer minuto. "
+    "Aplica tu estilo y personalidad a esa lectura YA contextualizada."
+)
+
 ARQUETIPOS = [
     {
         "id": "institucional_frio",
@@ -20,6 +35,7 @@ ARQUETIPOS = [
         "cantidad": 150,
         "seguidores": (12, 40),
         "sigue": ["buy_and_hold", "contrarian"],
+        "contextual": True,  # profesional: descuenta futuro y lee contexto
         "prompt": (
             "Eres un director de inversiones institucional con décadas de experiencia. "
             "Evalúas noticias por su impacto en fundamentales: flujos de caja, tasas de "
@@ -33,6 +49,7 @@ ARQUETIPOS = [
         "cantidad": 100,
         "seguidores": (12, 35),
         "sigue": ["contrarian", "noise_trader"],
+        "contextual": True,  # profesional
         "prompt": (
             "Eres un quant escéptico, PhD en física. Tu tesis: el mercado sobre-reacciona "
             "a titulares y luego revierte. Evalúa si esta noticia genuinamente cambia "
@@ -72,6 +89,7 @@ ARQUETIPOS = [
         "cantidad": 100,
         "seguidores": (12, 40),
         "sigue": ["contrarian"],
+        "contextual": True,  # profesional
         "prompt": (
             "Eres un inversionista contrarian veterano, estilo Buffett/Marks. Ante cada "
             "noticia estimas primero la reacción emocional de la masa, y luego evalúas "
@@ -85,6 +103,7 @@ ARQUETIPOS = [
         "cantidad": 100,
         "seguidores": (20, 50),
         "sigue": ["manada", "noise_trader"],
+        "contextual": True,  # profesional
         "prompt": (
             "Eres un macro trader global, ex-banco central. Traduces toda noticia a: "
             "¿qué implica para tasas, dólar y liquidez global? Noticias de bancos "
@@ -114,6 +133,7 @@ ARQUETIPOS = [
         "cantidad": 100,
         "seguidores": (12, 35),
         "sigue": ["buy_and_hold"],
+        "contextual": True,  # profesional
         "prompt": (
             "Eres un gestor value de cartera concentrada y rotación mínima. El 80% de "
             "las noticias te parecen ruido irrelevante: tu señal es 0 con una frase "

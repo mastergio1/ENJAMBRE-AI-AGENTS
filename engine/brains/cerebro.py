@@ -13,7 +13,7 @@ import os
 import re
 from pathlib import Path
 
-from brains.arquetipos import INSTRUCCION_JSON, POR_ID
+from brains.arquetipos import INSTRUCCION_JSON, POR_ID, RAZONAMIENTO_CONTEXTUAL
 from brains.fallback import respuesta_fallback
 from llm_texto import texto_de
 
@@ -117,7 +117,12 @@ def _reportar_primera_falla(error: Exception) -> None:
 
 async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, semilla: int) -> dict:
     """Una llamada por líder. Cualquier falla degrada al fallback léxico."""
-    prompt = POR_ID[arquetipo_id]["prompt"]
+    arquetipo = POR_ID[arquetipo_id]
+    prompt = arquetipo["prompt"]
+    # los arquetipos PROFESIONALES razonan con contexto (descuentan el futuro);
+    # el retail emocional reacciona en frío al titular. Ver arquetipos.py.
+    if arquetipo.get("contextual"):
+        prompt = f"{prompt}\n\n{RAZONAMIENTO_CONTEXTUAL}"
     async with semaforo:
         try:
             respuesta = await asyncio.wait_for(

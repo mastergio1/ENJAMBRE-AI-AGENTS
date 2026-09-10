@@ -37,6 +37,10 @@ on:
         description: "Borrar el progreso de ese (mercado, peso) y empezar de cero (true/false)"
         required: false
         default: "false"
+      refrescar:
+        description: "Ignorar la caché de cerebros y llamar FRESCO a la IA (mide cambios de prompt; GASTA LLM) (true/false)"
+        required: false
+        default: "false"
 
 jobs:
   evaluar:
@@ -84,9 +88,10 @@ jobs:
           MERCADO: ${{ github.event.inputs.mercado }}
           TAMANO: ${{ github.event.inputs.tamano || '0' }}
           REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
+          REFRESCAR: ${{ github.event.inputs.refrescar || 'false' }}
         run: |
           respuesta=$(curl -s -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&umbral=$UMBRAL&doomer=$DOOMER&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR" \
+            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&umbral=$UMBRAL&doomer=$DOOMER&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR&refrescar=$REFRESCAR" \
             -H "X-Pipeline-Token: $TOKEN" || true)
           echo "Motor: ${respuesta:-sin respuesta (reintentará en el sondeo)}"
 

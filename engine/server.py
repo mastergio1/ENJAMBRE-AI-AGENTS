@@ -1735,11 +1735,13 @@ def api_backtest_estado(mercado: str = "", x_pipeline_token: str = Header(defaul
 
 def _correr_evaluacion(tamano: int | None, mercado: str | None,
                        peso: float | None, umbral: float | None,
-                       doomer: float | None, reiniciar: bool) -> None:
+                       doomer: float | None, reiniciar: bool,
+                       refrescar: bool = False) -> None:
     from contenido import backtest
 
     r = backtest.evaluar(tamano=tamano, mercado=mercado, peso=peso,
-                         umbral=umbral, doomer=doomer, reiniciar=reiniciar)
+                         umbral=umbral, doomer=doomer, reiniciar=reiniciar,
+                         refrescar=refrescar)
     neg = r.get("negativa", {})
     pr = r.get("progreso", {})
     print(f"evaluacion: peso={r.get('peso_tono_invertidores')} "
@@ -1754,7 +1756,7 @@ def _correr_evaluacion(tamano: int | None, mercado: str | None,
 @app.post("/api/evaluar")
 def api_evaluar(tareas: BackgroundTasks, tamano: int = 0, mercado: str = "",
                 peso: float = -1.0, umbral: float = -1.0, doomer: float = -1.0,
-                reiniciar: bool = False,
+                reiniciar: bool = False, refrescar: bool = False,
                 x_pipeline_token: str = Header(default="")) -> dict:
     """Mide el acierto del enjambre sobre los exámenes YA respaldados, bajo el
     código/entorno ACTUAL, SIN tocar el respaldo histórico. RESUMIBLE: cada
@@ -1772,13 +1774,13 @@ def api_evaluar(tareas: BackgroundTasks, tamano: int = 0, mercado: str = "",
     doomer_val = doomer if 0.0 <= doomer <= 1.0 else None
     tareas.add_task(_correr_evaluacion, int(tamano) or None,
                     mercado.strip() or None, peso_val, umbral_val, doomer_val,
-                    bool(reiniciar))
+                    bool(reiniciar), bool(refrescar))
     return {"estado": "iniciado", "mercado": mercado.strip() or "todos",
             "tamano": int(tamano) or "tanda-max",
             "peso": peso_val if peso_val is not None else "entorno",
             "umbral": umbral_val if umbral_val is not None else "entorno",
             "doomer": doomer_val if doomer_val is not None else "entorno",
-            "reiniciar": bool(reiniciar),
+            "reiniciar": bool(reiniciar), "refrescar": bool(refrescar),
             "nota": "resumible: repite la llamada para avanzar. Resultado en GET /api/evaluar"}
 
 

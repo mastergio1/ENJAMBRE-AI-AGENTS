@@ -64,6 +64,17 @@ def _guardar_cache(cache: dict) -> None:
     RUTA_CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
+def _ignorar_cache_activo() -> bool:
+    """Si ENJAMBRE_IGNORAR_CACHE está activo, los cerebros NO leen la caché:
+    llaman fresco a la API y SOBRESCRIBEN la caché con la respuesta nueva. Sirve
+    para medir un cambio de PROMPT (ej. el tono del optimista), que la caché
+    —indexada por titular+arquetipo+semilla, SIN el prompt— no reflejaría de otro
+    modo. Se activa solo durante una evaluación puntual; en producción va apagado
+    (si no, cada simulación pagaría las ~110 llamadas)."""
+    return os.environ.get("ENJAMBRE_IGNORAR_CACHE", "").strip().lower() in (
+        "1", "true", "si", "sí", "yes")
+
+
 # ---------- validación del JSON del LLM ----------
 
 def _validar_respuesta(texto: str) -> dict | None:
@@ -132,12 +143,13 @@ async def _consultar_lider(cliente, semaforo, titular: str, arquetipo_id: str, s
 async def analizar_titular_async(titular: str, lideres: list[tuple[int, str]]) -> list[dict]:
     """lideres: lista de (semilla, arquetipo_id). Devuelve una respuesta por líder."""
     cache = _cargar_cache()
+    ignorar = _ignorar_cache_activo()  # medición con respuestas frescas
     respuestas: dict[int, dict] = {}
     pendientes: list[tuple[int, int, str]] = []  # (posición, semilla, arquetipo)
 
     for posicion, (semilla, arquetipo_id) in enumerate(lideres):
         clave = _clave_cache(titular, arquetipo_id, semilla)
-        if clave in cache:
+        if clave in cache and not ignorar:
             respuestas[posicion] = {**cache[clave], "fuente": "cache"}
         else:
             pendientes.append((posicion, semilla, arquetipo_id))

@@ -277,7 +277,7 @@ def _mercado_de_caso(caso: dict) -> str:
 def evaluar(tamano: int | None = None, mercado: str | None = None,
             peso: float | None = None, umbral: float | None = None,
             doomer: float | None = None, reiniciar: bool = False,
-            simular=None, guardar: bool = True) -> dict:
+            simular=None, guardar: bool = True, refrescar: bool = False) -> dict:
     """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
     mide el acierto de DIRECCIÓN por categoría, comparándolo con el resultado
     real ya conocido. Sirve para medir el impacto de un cambio (ej. P2) SIN
@@ -295,6 +295,23 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
 
     from model import (_peso_invertidores_env, _umbral_correccion_env,
                        _peso_doomer_env, _peso_doomer_env_forzado)
+
+    # Refrescar caché: fija ENJAMBRE_IGNORAR_CACHE SOLO durante esta evaluación,
+    # para medir un cambio de PROMPT con respuestas frescas (la caché, indexada
+    # sin el prompt, si no devolvería lo viejo). GASTA LLM. Es el wrapper más
+    # externo: envuelve toda la medición (incluidos los barridos de doomer/peso).
+    if refrescar:
+        previo = os.environ.get("ENJAMBRE_IGNORAR_CACHE")
+        os.environ["ENJAMBRE_IGNORAR_CACHE"] = "1"
+        try:
+            return evaluar(tamano=tamano, mercado=mercado, peso=peso, umbral=umbral,
+                           doomer=doomer, reiniciar=reiniciar, simular=simular,
+                           guardar=guardar, refrescar=False)
+        finally:
+            if previo is None:
+                os.environ.pop("ENJAMBRE_IGNORAR_CACHE", None)
+            else:
+                os.environ["ENJAMBRE_IGNORAR_CACHE"] = previo
 
     # Intervención 1: fija ENJAMBRE_PESO_DOOMER SOLO durante esta evaluación.
     if doomer is not None:

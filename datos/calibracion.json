@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-09T14:36:00+00:00",
+ "generado": "2026-09-11T14:24:56+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14259,6 +14259,66 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una caída de -5.7%. En el mercado real, TMDX cerró en 85.46 el 2026-09-09 (venía de 90.08 el 2026-09-04): -5.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "76a35e7abd22289e",
+   "origen": "en_vivo",
+   "fecha": "2026-09-09T14:35:16+00:00",
+   "titular": "ServiceTitan (TTAN) cae 31.46% tras reportar resultados del Q2 FY27 con guía débil para el Q3, desaceleración en volumen de transacciones y cambio en su dirección comercial",
+   "simbolos": "TTAN",
+   "direccion_pct": -23.88,
+   "volatilidad_pct": 1.29,
+   "reaccion_real": {
+    "simbolo": "TTAN",
+    "pct_real": -31.23,
+    "cierre_base": 81.45,
+    "cierre_final": 56.01,
+    "fecha_base": "2026-09-08",
+    "fecha_final": "2026-09-10",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -23.9%. En el mercado real, TTAN cerró en 56.01 el 2026-09-10 (venía de 81.45 el 2026-09-08): -31.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "16e3d9a1565174c2",
+   "origen": "en_vivo",
+   "fecha": "2026-09-09T14:35:31+00:00",
+   "titular": "Oil Hits $100 a Barrel: Will Trump ‘TACO’ Again?",
+   "simbolos": "BNO",
+   "direccion_pct": -3.66,
+   "volatilidad_pct": 1.33,
+   "reaccion_real": {
+    "simbolo": "BNO",
+    "pct_real": 9.41,
+    "cierre_base": 57.71,
+    "cierre_final": 63.14,
+    "fecha_base": "2026-09-08",
+    "fecha_final": "2026-09-10",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -3.7%. En el mercado real, BNO cerró en 63.14 el 2026-09-10 (venía de 57.71 el 2026-09-08): +9.4% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "fd84abd4ee831d53",
+   "origen": "en_vivo",
+   "fecha": "2026-09-09T14:35:49+00:00",
+   "titular": "Apple's New CEO Faces His First Product Launch Today — Here's What's Expected",
+   "simbolos": "AAPL",
+   "direccion_pct": 30.96,
+   "volatilidad_pct": 1.21,
+   "reaccion_real": {
+    "simbolo": "AAPL",
+    "pct_real": 3.27,
+    "cierre_base": 316.26,
+    "cierre_final": 326.615,
+    "fecha_base": "2026-09-08",
+    "fecha_final": "2026-09-10",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una subida de +31.0%. En el mercado real, AAPL cerró en 326.615 el 2026-09-10 (venía de 316.26 el 2026-09-08): +3.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

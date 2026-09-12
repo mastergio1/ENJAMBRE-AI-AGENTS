@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-11T14:24:56+00:00",
+ "generado": "2026-09-12T13:37:39+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14319,6 +14319,66 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una subida de +31.0%. En el mercado real, AAPL cerró en 326.615 el 2026-09-10 (venía de 316.26 el 2026-09-08): +3.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "52eb13080c2315ea",
+   "origen": "en_vivo",
+   "fecha": "2026-09-10T14:25:34+00:00",
+   "titular": "Nasdaq Down Over 200 Points; US Producer Inflation Rises to 5.4% In August",
+   "simbolos": "AHMA,CDT,IPDN,MGN,NAVN,TNON",
+   "direccion_pct": -2.87,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "AHMA",
+    "pct_real": 20.49,
+    "cierre_base": 1.22,
+    "cierre_final": 1.47,
+    "fecha_base": "2026-09-09",
+    "fecha_final": "2026-09-11",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -2.9%. En el mercado real, AHMA cerró en 1.47 el 2026-09-11 (venía de 1.22 el 2026-09-09): +20.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "8dcf7cb3d80b7d55",
+   "origen": "en_vivo",
+   "fecha": "2026-09-10T14:25:50+00:00",
+   "titular": "Producer Inflation Jumps to 5.4%, Fuels Fed Hike Bets (UPDATED)",
+   "simbolos": "GLD",
+   "direccion_pct": -5.11,
+   "volatilidad_pct": 1.27,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -1.18,
+    "cierre_base": 403.38,
+    "cierre_final": 398.63,
+    "fecha_base": "2026-09-09",
+    "fecha_final": "2026-09-11",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -5.1%. En el mercado real, GLD cerró en 398.63 el 2026-09-11 (venía de 403.38 el 2026-09-09): -1.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "fdb6319f828f5a62",
+   "origen": "en_vivo",
+   "fecha": "2026-09-10T14:26:06+00:00",
+   "titular": "Intel Corporation (INTC) cae 5.66% en la sesión de hoy, 10 de septiembre de 2026",
+   "simbolos": "INTC",
+   "direccion_pct": -17.03,
+   "volatilidad_pct": 1.14,
+   "reaccion_real": {
+    "simbolo": "INTC",
+    "pct_real": -3.12,
+    "cierre_base": 106.24,
+    "cierre_final": 102.92,
+    "fecha_base": "2026-09-09",
+    "fecha_final": "2026-09-11",
+    "ruedas": 2,
+    "cerebros": "ia"
+   },
+   "epilogo": "El enjambre simuló una caída de -17.0%. En el mercado real, INTC cerró en 102.92 el 2026-09-11 (venía de 106.24 el 2026-09-09): -3.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

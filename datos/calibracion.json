@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-12T13:37:39+00:00",
+ "generado": "2026-09-16T14:58:26+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14379,6 +14379,66 @@
     "cerebros": "ia"
    },
    "epilogo": "El enjambre simuló una caída de -17.0%. En el mercado real, INTC cerró en 102.92 el 2026-09-11 (venía de 106.24 el 2026-09-09): -3.1% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "e54372663ec4ebdd",
+   "origen": "en_vivo",
+   "fecha": "2026-09-14T16:21:40+00:00",
+   "titular": "Crude Oil Jumps 3%; Corning Shares Move Lower",
+   "simbolos": "CLLS,ELMT,GLW,NVDA,QCLS,RUM,TYRA",
+   "direccion_pct": -1.55,
+   "volatilidad_pct": 1.35,
+   "reaccion_real": {
+    "simbolo": "CLLS",
+    "pct_real": -47.67,
+    "cierre_base": 3.115,
+    "cierre_final": 1.63,
+    "fecha_base": "2026-09-11",
+    "fecha_final": "2026-09-15",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -1.6%. En el mercado real, CLLS cerró en 1.63 el 2026-09-15 (venía de 3.115 el 2026-09-11): -47.7% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "107487f6a1c954df",
+   "origen": "en_vivo",
+   "fecha": "2026-09-14T16:21:50+00:00",
+   "titular": "Anthropic's AI Warning Is 'Noise' in a 'Secular Bull Market:' Bank of America Says",
+   "simbolos": "ADI,AMD,INTC,LRCX,MRVL,MU,NVDA,ON",
+   "direccion_pct": 2.3,
+   "volatilidad_pct": 1.15,
+   "reaccion_real": {
+    "simbolo": "ADI",
+    "pct_real": -4.59,
+    "cierre_base": 378.8,
+    "cierre_final": 361.43,
+    "fecha_base": "2026-09-11",
+    "fecha_final": "2026-09-15",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +2.3%. En el mercado real, ADI cerró en 361.43 el 2026-09-15 (venía de 378.8 el 2026-09-11): -4.6% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "84af0db260e769c6",
+   "origen": "en_vivo",
+   "fecha": "2026-09-14T16:22:01+00:00",
+   "titular": "QUICK SPARK: iShares 20+ Year Treasury Bond ETF Marks All-Time Low",
+   "simbolos": "TLT",
+   "direccion_pct": -4.3,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "TLT",
+    "pct_real": -0.18,
+    "cierre_base": 80.86,
+    "cierre_final": 80.715,
+    "fecha_base": "2026-09-11",
+    "fecha_final": "2026-09-15",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -4.3%. En el mercado real, TLT cerró en 80.715 el 2026-09-15 (venía de 80.86 el 2026-09-11): -0.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

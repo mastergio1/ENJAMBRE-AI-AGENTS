@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-16T14:58:26+00:00",
+ "generado": "2026-09-17T14:59:10+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14439,6 +14439,66 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una caída de -4.3%. En el mercado real, TLT cerró en 80.715 el 2026-09-15 (venía de 80.86 el 2026-09-11): -0.2% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "8d0c9f1bfb8fb447",
+   "origen": "en_vivo",
+   "fecha": "2026-09-15T14:59:32+00:00",
+   "titular": "Fed Hike Odds Hit 93%: 3 Things That Could Really Surprise Markets Wednesday",
+   "simbolos": "GLD,IBIT,QQQ,SPY,TLT",
+   "direccion_pct": -2.03,
+   "volatilidad_pct": 1.23,
+   "reaccion_real": {
+    "simbolo": "GLD",
+    "pct_real": -0.27,
+    "cierre_base": 392.74,
+    "cierre_final": 391.68,
+    "fecha_base": "2026-09-14",
+    "fecha_final": "2026-09-16",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -2.0%. En el mercado real, GLD cerró en 391.68 el 2026-09-16 (venía de 392.74 el 2026-09-14): -0.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "ae6f846672297f49",
+   "origen": "en_vivo",
+   "fecha": "2026-09-15T14:59:42+00:00",
+   "titular": "How Many Rate Hikes Will The Fed Deliver In This Cycle? Economists Answer",
+   "simbolos": "SPY",
+   "direccion_pct": 3.93,
+   "volatilidad_pct": 1.16,
+   "reaccion_real": {
+    "simbolo": "SPY",
+    "pct_real": -0.88,
+    "cierre_base": 760.755,
+    "cierre_final": 754.05,
+    "fecha_base": "2026-09-14",
+    "fecha_final": "2026-09-16",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +3.9%. En el mercado real, SPY cerró en 754.05 el 2026-09-16 (venía de 760.755 el 2026-09-14): -0.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "34c15a4015c69c96",
+   "origen": "en_vivo",
+   "fecha": "2026-09-16T14:57:58+00:00",
+   "titular": "'Stickier Inflation' Is Here, Market Strategist Warns After August CPI — 'One-Time Event' Narrative Takes a Hit",
+   "simbolos": "DIA,QQQ,SPY",
+   "direccion_pct": -2.19,
+   "volatilidad_pct": 1.19,
+   "reaccion_real": {
+    "simbolo": "DIA",
+    "pct_real": -0.84,
+    "cierre_base": 521.26,
+    "cierre_final": 516.88,
+    "fecha_base": "2026-09-15",
+    "fecha_final": "2026-09-17",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -2.2%. En el mercado real, DIA cerró en 516.88 el 2026-09-17 (venía de 521.26 el 2026-09-15): -0.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

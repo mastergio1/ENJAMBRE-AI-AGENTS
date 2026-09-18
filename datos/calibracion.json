@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-17T14:59:10+00:00",
+ "generado": "2026-09-18T14:31:03+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14499,6 +14499,26 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una caída de -2.2%. En el mercado real, DIA cerró en 516.88 el 2026-09-17 (venía de 521.26 el 2026-09-15): -0.8% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "f3f8e36008a54c13",
+   "origen": "en_vivo",
+   "fecha": "2026-09-16T14:58:08+00:00",
+   "titular": "Fed Meeting Interest Rate Decision Preview: How Will Stocks React?",
+   "simbolos": "JPM,SPY",
+   "direccion_pct": 1.16,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "JPM",
+    "pct_real": -0.99,
+    "cierre_base": 352.885,
+    "cierre_final": 349.39,
+    "fecha_base": "2026-09-15",
+    "fecha_final": "2026-09-17",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +1.2%. En el mercado real, JPM cerró en 349.39 el 2026-09-17 (venía de 352.885 el 2026-09-15): -1.0% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-18T14:31:03+00:00",
+ "generado": "2026-09-21T16:28:21+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14519,6 +14519,46 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una subida de +1.2%. En el mercado real, JPM cerró en 349.39 el 2026-09-17 (venía de 352.885 el 2026-09-15): -1.0% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "cf0df4a349d04217",
+   "origen": "en_vivo",
+   "fecha": "2026-09-18T14:30:49+00:00",
+   "titular": "AI Capex Boom Risks 'Massive Capital Destruction' in the US, Warns Veteran Market Strategist: 'You Could Get Some News Item That Suddenly…'",
+   "simbolos": "AMZN,GOOGL,META,ORCL,SPCX",
+   "direccion_pct": -4.3,
+   "volatilidad_pct": 1.2,
+   "reaccion_real": {
+    "simbolo": "AMZN",
+    "pct_real": 2.54,
+    "cierre_base": 251.12,
+    "cierre_final": 257.5,
+    "fecha_base": "2026-09-17",
+    "fecha_final": "2026-09-21",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -4.3%. En el mercado real, AMZN cerró en 257.5 el 2026-09-21 (venía de 251.12 el 2026-09-17): +2.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "acee6db4cab5a2c1",
+   "origen": "en_vivo",
+   "fecha": "2026-09-18T14:30:59+00:00",
+   "titular": "Yen Suffers Worst Day In 2026 Despite BoJ Hiking Rates To 31-Year High: Here's Why",
+   "simbolos": "FXY",
+   "direccion_pct": 0.6,
+   "volatilidad_pct": 1.28,
+   "reaccion_real": {
+    "simbolo": "FXY",
+    "pct_real": -0.91,
+    "cierre_base": 58.765,
+    "cierre_final": 58.23,
+    "fecha_base": "2026-09-17",
+    "fecha_final": "2026-09-21",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una subida de +0.6%. En el mercado real, FXY cerró en 58.23 el 2026-09-21 (venía de 58.765 el 2026-09-17): -0.9% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "generado": "2026-09-23T15:00:28+00:00",
+ "generado": "2026-09-24T15:03:51+00:00",
  "nota": "Casos de calibración de El Enjambre: reacción simulada vs movimiento real (corrector automático). Registro educativo.",
  "casos": [
   {
@@ -14599,6 +14599,26 @@
     "cerebros": "respaldo"
    },
    "epilogo": "El enjambre simuló una subida de +40.0%. En el mercado real, AMD cerró en 623.97 el 2026-09-22 (venía de 559.685 el 2026-09-18): +11.5% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
+  },
+  {
+   "sim_id": "edbc351cd6a2242e",
+   "origen": "en_vivo",
+   "fecha": "2026-09-22T14:51:04+00:00",
+   "titular": "Elizabeth Warren Slams Trump as $6.9 Billion in Russia-Linked Payments Reportedly Slipped Through Global Banks Despite Sanctions (UPDATED)",
+   "simbolos": "C,DB,DBSDY,JPM,SCBFY",
+   "direccion_pct": -28.46,
+   "volatilidad_pct": 1.31,
+   "reaccion_real": {
+    "simbolo": "C",
+    "pct_real": -2.28,
+    "cierre_base": 135.05,
+    "cierre_final": 131.97,
+    "fecha_base": "2026-09-21",
+    "fecha_final": "2026-09-23",
+    "ruedas": 2,
+    "cerebros": "respaldo"
+   },
+   "epilogo": "El enjambre simuló una caída de -28.5%. En el mercado real, C cerró en 131.97 el 2026-09-23 (venía de 135.05 el 2026-09-21): -2.3% en 2 días de mercado. Registro del corrector automático con fines educativos: la simulación modela comportamiento de masas, no el precio futuro."
   }
  ]
 }

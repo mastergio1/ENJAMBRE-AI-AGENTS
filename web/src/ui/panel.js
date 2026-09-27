@@ -202,8 +202,14 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
           ${Number.isFinite(Number(reporte.confianza))
             ? `<div><span>${Math.round(Number(reporte.confianza) * 100)}%</span><label>confianza</label></div>` : ''}
         </div>
-        <table>${desglose.map(([tipo, d]) =>
-          `<tr><td>${esc(tipo)}</td><td>${num(d.compras)} compras</td><td>${num(d.ventas)} ventas</td></tr>`).join('')}
+        <table>${desglose.map(([tipo, d]) => {
+          // cuando un tipo solo vendió (0 compras), el "0" pelado se lee como
+          // guionado. No es guion: es una venta en cascada, típica del pánico —
+          // lo explicamos en una micro-nota (sin tocar las cifras).
+          const nota = (num(d.compras) === 0 && num(d.ventas) > 0)
+            ? ` <span class="cascada">· venta en cascada, recompra casi nula</span>` : ''
+          return `<tr><td>${esc(tipo)}</td><td>${num(d.compras)} compras</td><td>${num(d.ventas)} ventas${nota}</td></tr>`
+        }).join('')}
         </table>
         <div class="voces">${vocesHtml}</div>
         ${epilogoHtml}

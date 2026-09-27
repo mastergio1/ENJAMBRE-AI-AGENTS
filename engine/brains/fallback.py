@@ -222,16 +222,19 @@ def _quant_esceptico(s, titular):
 
 
 def _fomo_evangelista(s, titular):
+    # Frases en la VOZ del personaje (su euforia/pánico), no órdenes al espectador
+    # ni afirmaciones del precio futuro como hecho (marco CMF: es un personaje
+    # ficticio opinando, no asesoría). Mismo tono viral y emojis.
     return _clip(1.6 * s), 0.95, _frase((
-        ("🚨 ESTO SE DERRUMBA. El que no salió ayer ya llegó tarde.",
-         "🔴 SE ACABÓ LA FIESTA. Corran la voz.",
-         "⚠️ ALERTA MÁXIMA: esto se pone feo YA."),
-        ("Atentos: algo grande se cocina. No se duerman.",
-         "Huele a movimiento gigante. Palomitas listas.",
-         "Silencio raro en el mercado… algo viene."),
-        ("🚀 EL MOMENTO DE LA DÉCADA. El que no está adentro, llora mañana.",
-         "🔥 DESPEGUE CONFIRMADO. Luego no digan que no avisé.",
-         "💎 Historia pura: esto no se repite dos veces."),
+        ("🚨 Para mí esto se derrumba. Yo ya habría corrido.",
+         "🔴 Se me acabó la fiesta con esto. Lo digo sin filtro.",
+         "⚠️ Mi alarma interna está a tope: esto huele feo."),
+        ("Atentos: siento que algo grande se cocina. Yo no me duermo.",
+         "Me huele a movimiento gigante. Palomitas listas.",
+         "Silencio raro en el mercado… a mí me da mala espina."),
+        ("🚀 Para MÍ esto es EL momento de la década. Así lo veo yo.",
+         "🔥 Esto para mí ya despegó. Ojo al dato.",
+         "💎 De las que se ven una vez por década, o eso me grita el instinto."),
     ), s)
 
 

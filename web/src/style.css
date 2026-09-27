@@ -1232,6 +1232,13 @@ body.archivo-abierto .muro { display: none; }
 .reporte .descargo {
   margin-top: 12px;
 }
+.reporte td .cascada {
+  font-size: 0.72rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--dorado, #c9a15c);
+  opacity: 0.85;
+}
 
 /* ---------- modo estático (prefers-reduced-motion) ---------- */
 

@@ -57,9 +57,9 @@ const PERSONALIDADES = {
   fomo_evangelista: {
     senal: (s) => clip(1.6 * s),
     frases: [
-      '🚨 ESTO SE DERRUMBA. El que no salió ayer ya llegó tarde.',
-      'Atentos: algo grande se cocina. No se duerman.',
-      '🚀 EL MOMENTO DE LA DÉCADA. El que no está adentro, llora mañana.',
+      '🚨 Para mí esto se derrumba. Yo ya habría corrido.',
+      'Atentos: siento que algo grande se cocina. Yo no me duermo.',
+      '🚀 Para MÍ esto es EL momento de la década. Así lo veo yo.',
     ],
   },
   doomer: {

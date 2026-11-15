@@ -51,16 +51,38 @@ or access Kalshi's API, you are agreeing to be bound to our Developer Agreement.
 | Geografía | 🟡 No resuelto | Páginas regulatorias no leídas. (Kalshi es un exchange regulado por la CFTC en EE.UU.) |
 
 **Kalshi es técnicamente más favorable** (API histórica limpia, candlesticks, sin
-depósito), pero **su documento legal clave quedó sin leer** (429). Hay que reintentar
-leer el Developer Agreement + terms + regulatory cuando se libere el límite.
+depósito), PERO legalmente es **🔴 ROJO para nuestro uso.**
+
+> **ACTUALIZACIÓN 2026-11-15** — Developer Agreement leído (texto aportado por
+> Giorgio). Cláusulas textuales:
+> - **§3:** "Use of Kalshi APIs is **expressly limited to facilitating a member's
+>   own trading** on the Exchange; **all other usages are disallowed** and may
+>   result in account suspension."
+> - **§3.1:** prohíbe "Collecting, caching, aggregating, or storing data ...
+>   **except for purposes of facilitating your own trading**", y "You may not
+>   **share such data ... with third parties** in any manner without **prior
+>   written authorization**."
+>
+> **Implicación:** usar la API de Kalshi para **validar** el enjambre, **guardar**
+> sus datos, o **mostrar** sus precios en El Pulso está **prohibido** sin
+> autorización escrita. Kalshi queda descartado como fuente salvo permiso expreso.
 
 ## 3. Veredicto de la puerta
 
-🟡 **ÁMBAR.** No se puede dar luz verde limpia:
-- **Validación interna:** técnicamente viable en ambos; pero Polymarket §4.2 es un
-  riesgo real para nosotros (fintech) y los términos de Kalshi están sin leer.
-- **Producto "Enjambre vs Mercado" (republicar precios):** **requiere revisión legal
-  y, en Polymarket, acuerdo escrito.** No avanzar a producto sin eso.
+🔴 **ROJO para ambos sin permiso escrito** (actualizado 2026-11-15):
+- **Kalshi:** 🔴 prohibido explícitamente (§3, §3.1) para uso distinto al trading
+  propio, guardado y redistribución. Descartado salvo autorización escrita.
+- **Polymarket:** 🔴/🟡 su §4.2 prohíbe a "financial technology companies" usar los
+  datos sin acuerdo escrito — y nuestro giro aplica. Prácticamente también rojo
+  para nosotros sin permiso.
+- **Conclusión:** **ninguna de las dos fuentes se puede usar tal cual** para
+  validar, guardar o mostrar precios. Las dos requieren **permiso escrito**.
+
+**→ Por eso el camino que seguimos es el alternativo (§4):** validar con
+**resoluciones públicas** (que no están sujetas a estas licencias) y dejar la
+comparación "vs el precio del mercado" como un paso aparte, solo si se consigue el
+permiso. Y el producto en El Pulso compara el enjambre **contra el resultado real**
+(hecho público), no contra el precio republicado de un exchange.
 
 ## 4. Camino alternativo honesto (reduce la dependencia de licencia)
 

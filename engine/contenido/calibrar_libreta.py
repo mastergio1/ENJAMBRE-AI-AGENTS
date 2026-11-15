@@ -106,9 +106,16 @@ def _imprimir(rep: dict) -> None:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("uso: python -m contenido.calibrar_libreta <libreta_export.json> [modo]")
+        print("     python -m contenido.calibrar_libreta --db   (lee la base directo)")
         sys.exit(2)
-    ruta = sys.argv[1]
+    arg = sys.argv[1]
     modo = sys.argv[2] if len(sys.argv) > 2 else "senal_media"
-    with open(ruta, encoding="utf-8") as f:
-        casos = json.load(f)
+    if arg == "--db":
+        # lee la libreta directamente de la base (corre en Render, todo en uno)
+        from contenido import exportar_libreta
+        casos = exportar_libreta.exportar()
+        print(f"(leídos {len(casos)} casos de la base)\n")
+    else:
+        with open(arg, encoding="utf-8") as f:
+            casos = json.load(f)
     _imprimir(calibrar(casos, modo=modo))

@@ -23,8 +23,9 @@ def exportar(conexion=None) -> list[dict]:
     conexion = conexion or persistencia.conectar()
     try:
         filas = conexion.execute(
-            "SELECT resumen_json, reaccion_real, fuente FROM simulaciones "
-            "WHERE reaccion_real IS NOT NULL AND (destacada = 1 OR fuente = 'backtest')"
+            "SELECT resumen_json, reaccion_real, fuente, fecha FROM simulaciones "
+            "WHERE reaccion_real IS NOT NULL AND (destacada = 1 OR fuente = 'backtest') "
+            "ORDER BY fecha"
         ).fetchall()
     finally:
         if propia:
@@ -37,6 +38,7 @@ def exportar(conexion=None) -> list[dict]:
             continue  # simulado sin IA real: no califica
         resumen = json.loads(fila["resumen_json"])
         casos.append({
+            "fecha": fila["fecha"],
             "direccion_pct": resumen.get("direccion_pct"),
             "senal_media_lideres": resumen.get("senal_media_lideres"),
             "senal_media_ponderada": resumen.get("senal_media_ponderada"),

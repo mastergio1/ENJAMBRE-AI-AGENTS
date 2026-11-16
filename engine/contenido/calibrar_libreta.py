@@ -15,7 +15,6 @@ No llama a la IA ni toca la red. Pura matemática sobre datos ya medidos.
 """
 
 import json
-import random
 import sys
 
 from contenido import calibracion as cal
@@ -51,21 +50,23 @@ def preparar(casos: list[dict], modo: str = "senal_media"):
 
 def calibrar(casos: list[dict], modo: str = "senal_media",
              frac_prueba: float = 0.3, seed: int = 42) -> dict:
+    # PARTICIÓN TEMPORAL (sin fuga): entrena con el pasado, mide con el futuro.
+    # Antes se barajaba al azar, lo que mezclaba futuro en el entrenamiento y
+    # sobreestimaba la calibración. Si los casos traen `fecha`, se ordenan por
+    # ella; si no, se respeta el orden de entrada (que exportar_libreta ya da por
+    # fecha). `seed` se conserva por compatibilidad de firma; ya no baraja.
+    if casos and all(c.get("fecha") for c in casos):
+        casos = sorted(casos, key=lambda c: c["fecha"])
     scores, ys = preparar(casos, modo=modo)
     n = len(ys)
     if n < 10:
         return {"error": f"muy pocos casos usables ({n}); se necesitan >= 10 para algo informativo"}
 
-    # barajado determinístico y split
-    idx = list(range(n))
-    random.Random(seed).shuffle(idx)
     corte = int(n * (1 - frac_prueba))
-    tr = idx[:corte]
-    te = idx[corte:]
-    s_tr = [scores[i] for i in tr]; y_tr = [ys[i] for i in tr]
-    s_te = [scores[i] for i in te]; y_te = [ys[i] for i in te]
+    s_tr, y_tr = scores[:corte], ys[:corte]
+    s_te, y_te = scores[corte:], ys[corte:]
 
-    salida = {"modo": modo, "n_total": n, "n_entrena": len(tr), "n_prueba": len(te),
+    salida = {"modo": modo, "n_total": n, "n_entrena": len(s_tr), "n_prueba": len(s_te),
               "tasa_subidas": round(cal.tasa_base(ys), 4)}
 
     for metodo in ("platt", "isotonic"):

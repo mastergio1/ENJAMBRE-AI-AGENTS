@@ -3,6 +3,7 @@
   "total_agentes": 10150,
   "ruido_parametros_sigma": 0.15,
   "umbral_correccion_sesgo": 0.35,
+  "umbral_guardia_polaridad": 0.0,
   "peso_doomer": 0.0,
   "peso_doomer_por_mercado": {
     "indice": 1.0,

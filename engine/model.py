@@ -173,6 +173,32 @@ def _peso_doomer_env(por_defecto: float) -> float:
     return max(0.0, min(1.0, valor))
 
 
+def _umbral_guardia_env(por_defecto: float) -> float:
+    """Umbral de la guardia de polaridad (ENJAMBRE_GUARDIA_POLARIDAD).
+    Recortado a [0, 1]; 0 = desactivada."""
+    crudo = os.environ.get("ENJAMBRE_GUARDIA_POLARIDAD")
+    try:
+        valor = float(crudo) if crudo not in (None, "") else float(por_defecto)
+    except ValueError:
+        valor = float(por_defecto)
+    return max(0.0, min(1.0, valor))
+
+
+def guardia_polaridad(consenso: float, directo: float, umbral: float,
+                      atenuacion: float = 0.5) -> float:
+    """Freno defensivo ante titulares ambiguos/compuestos. Si la lectura de la IA
+    (`consenso`) y la léxica (`directo`) DISCREPAN en signo y AMBAS son fuertes
+    (|·| ≥ umbral), atenúa el consenso hacia neutro (×`atenuacion`) en vez de
+    moverse con convicción hacia un lado dudoso. NUNCA invierte el signo del
+    consenso. umbral ≤ 0 = desactivada (no toca nada)."""
+    if umbral <= 0 or consenso == 0:
+        return consenso
+    discrepan = (consenso > 0) != (directo > 0) and directo != 0
+    if discrepan and abs(consenso) >= umbral and abs(directo) >= umbral:
+        return consenso * atenuacion
+    return consenso
+
+
 def _peso_doomer_env_forzado() -> float | None:
     """El override GLOBAL de ENJAMBRE_PESO_DOOMER, o None si no está fijado.
 
@@ -293,6 +319,13 @@ class MercadoEnjambre(mesa.Model):
         # medir en el backtest / rollback sin re-desplegar (patrón de P2).
         self._umbral_correccion = _umbral_correccion_env(
             config.get("umbral_correccion_sesgo", 0.0))
+        # Guardia de polaridad (defensiva, Propuesta gating punto 5): si la lectura
+        # IA y la léxica DISCREPAN en signo y ambas son fuertes, el titular es
+        # ambiguo/compuesto ("slash tariffs") → atenúa el consenso en vez de
+        # moverse con convicción hacia un lado dudoso. 0.0 = desactivada (defecto).
+        # Entorno ENJAMBRE_GUARDIA_POLARIDAD manda sobre la config.
+        self._umbral_guardia = _umbral_guardia_env(
+            config.get("umbral_guardia_polaridad", 0.0))
         # Intervención 1: peso de la voz doomer SELECTIVO en el tono.
         # SEGMENTADO POR MERCADO: la medición mostró que ayuda en índice (+7.6 pts
         # en negativas) pero es inerte en cripto, así que el peso depende del
@@ -429,6 +462,14 @@ class MercadoEnjambre(mesa.Model):
             return s
         consenso = num / den
         directo = None  # lectura léxica (fiel, no invierte); se calcula si hace falta
+        # Guardia de polaridad (defensiva, desactivada por defecto): ante un
+        # titular donde la IA y el léxico discrepan en signo con fuerza, atenúa el
+        # consenso hacia neutro en vez de moverse con convicción hacia un lado
+        # dudoso. No invierte el signo. Solo calcula el léxico si la guardia activa.
+        umbral_g = getattr(self, "_umbral_guardia", 0.0)
+        if umbral_g > 0:
+            directo = sentimiento_lexico(titular)
+            consenso = guardia_polaridad(consenso, directo, umbral_g)
         self._ultimo_consenso = consenso     # P4: fuerza de la señal (confianza)
         # Plan A — corrección del sesgo alcista: cuando los líderes ya leen la
         # noticia como CLARAMENTE bajista, no dejamos que el descuento de

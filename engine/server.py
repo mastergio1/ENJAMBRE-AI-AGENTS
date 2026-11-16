@@ -624,23 +624,34 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
     # P3 — acota la MAGNITUD del movimiento al tope realista de su mercado
     # (cripto/acción se pasan de tamaño). Solo toca el tamaño, NO el signo → la
     # dirección (y por tanto el acierto) no cambia. El tipo lo trae el perfil.
+    # Fase 0: se guarda también la MAGNITUD CRUDA (sin recortar) y si hubo recorte,
+    # para que la calibración vea el valor real y mida la frecuencia de saturación
+    # (dos sesiones distintas no deben verse iguales solo porque el tope las igualó).
     from model import acotar_magnitud
     mercado = (getattr(modelo, "perfil", None) or {}).get("tipo")
-    direccion = acotar_magnitud(mercado, round((precios[-1] / precio_previo - 1) * 100, 2))
+    direccion_cruda = round((precios[-1] / precio_previo - 1) * 100, 2)
+    direccion = acotar_magnitud(mercado, direccion_cruda)
     minimo = acotar_magnitud(mercado, round((min(precios) / precio_previo - 1) * 100, 2))
     maximo = acotar_magnitud(mercado, round((max(precios) / precio_previo - 1) * 100, 2))
+    recorte_aplicado = direccion != direccion_cruda
 
-    # P4 — confianza del enjambre en la LECTURA de la noticia: la fuerza del
-    # consenso de los líderes (abs), ∈ [0, 1]. Alta = leyeron la noticia con
-    # convicción; baja = ambigua. No cambia la simulación, es informativa.
-    confianza = round(abs(getattr(modelo, "_ultimo_consenso", 0.0)), 2)
+    # P4 — FUERZA DEL CONSENSO de los líderes (abs del consenso, ∈ [0, 1]): alta =
+    # leyeron la noticia con convicción; baja = ambigua. OJO: NO es una probabilidad
+    # de acertar (un consenso intenso puede estar equivocado). La probabilidad
+    # calibrada (`probabilidad_subida`) se publicará aparte cuando haya un
+    # calibrador validado fuera de muestra (ver contenido/calibracion.py, Fase 3).
+    # Se mantiene el campo `confianza` por compatibilidad con el frontend.
+    fuerza_consenso = round(abs(getattr(modelo, "_ultimo_consenso", 0.0)), 2)
 
     return {
         "direccion_pct": direccion,
+        "direccion_pct_cruda": direccion_cruda,
+        "recorte_aplicado": recorte_aplicado,
         "minimo_pct": minimo,
         "maximo_pct": maximo,
         "volatilidad_pct": round(volatilidad * 100, 2),
-        "confianza": confianza,
+        "confianza": fuerza_consenso,
+        "fuerza_consenso": fuerza_consenso,
         "senal_media_lideres": round(sum(r["senal"] for r in respuestas) / len(respuestas), 2),
         "desglose": {
             NOMBRES_TIPO.get(clase, clase): {"compras": c, "ventas": v}

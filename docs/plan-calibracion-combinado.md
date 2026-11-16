@@ -1,178 +1,151 @@
-# Plan combinado de calibración y señal — Propuestas 1 + 2
+# Plan combinado de calibración y señal — Propuestas 1 + 2 + 3 (v2, priorizado)
 
-*Rubicón Lab · El Enjambre · armado 2026-11-16. Síntesis de las dos propuestas
-nuevas, verificadas contra el código. No descarta nada valioso de ninguna.*
+*Rubicón Lab · El Enjambre · v2 2026-11-16. Síntesis de las TRES propuestas,
+verificada y en parte MEDIDA contra el código/datos. Re-priorizado por evidencia.*
 
-> **Para Giorgio, en simple.** Las dos propuestas encontraron fallos reales. Este
-> plan junta TODO lo valioso de ambas, en orden de "lo seguro y barato primero,
-> lo grande e incierto al final". Es trabajo de MODELO (no se ve en el demo), así
-> que la mayor parte es para DESPUÉS del evento del 21.
-
----
-
-## La regla de oro que manda sobre todo (aprendida esta semana)
-
-La etiqueta "negativa/positiva" de los datos **se calcula del precio que ya se
-movió** (`cosechador.py`), no del titular. Es **circular**. Por eso:
-
-> **Ninguna palanca que haga el tono "más bajista" se acepta por subir el
-> "acierto en negativas". Se acepta solo si mejora la predicción REAL fuera de
-> muestra** (Brier/dirección en walk-forward sobre la señal→probabilidad).
-
-Esto no es teórico: el A/B del doomer en "acción" mostró "+10 pts" que, con base
-limpia sobre los mismos casos, **se evaporaron** (42.9% base vs 39.3% con doomer).
-Toda la Fase 3 de abajo existe bajo esta ley.
+> **Para Giorgio, en simple.** Las tres encontraron fallos reales. La 3ª encontró
+> la palanca que las otras rozaron, y la **medí: es real y casi gratis**. Por eso
+> cambia el orden. Lo de arriba es lo que más sube el acierto con menos riesgo.
 
 ---
 
-## FASE 0 — Instrumentación honesta + contrato de métricas
-*(De P1§1 y P2 Fase 0. Riesgo nulo. Habilita todo lo demás. No se toca una sola
-palanca sin esto.)*
+## La verdad que gobierna todo (Propuesta 3, MEDIDA)
 
-1. **Reporte por segmento** (`engine/validation/evaluar_por_segmento.py`, nuevo):
-   - mercado × signo_real × |consenso| → hit rate
-   - arquetipo → hit rate individual
-   - arquetipo → correlación(confianza_reportada, acierto)
-   - fallback vs api → hit rate y distribución de señal
-2. **Rastro por predicción** (persistir en JSON/SQLite por caso):
-   `{titular, consenso_crudo, ajustes_en_orden, directo_lexico, tono_final,
-   prob_calibrada, fuente, signo_real, hit, motivo_lateral}`.
-3. **Dataset congelado y versionado** + semilla reproducible (`ENJAMBRE_EXAMEN_SEED`).
-4. **Alinear `calibrar_libreta` a partición temporal** (hoy usa shuffle aleatorio
-   → fuga temporal; `walk_forward.py` y `ablacion_arquetipos.py` ya son temporales).
-5. **El juez oficial:** para cualquier palanca de tono/señal, la métrica que
-   decide es el Brier/dirección **out-of-sample en walk-forward**, no el hit-rate
-   de la categoría circular.
+**El acierto NO lo mueve la calibración (Platt/isotónica). Lo mueve el signo de
+`direccion_pct`, que sale del PRECIO simulado de UNA corrida ruidosa — no de la
+señal de los líderes.** Por eso toda la calibración mejora el Brier (honestidad)
+pero no el % de aciertos.
 
-*Parte ya existe:* `ablacion_arquetipos.py` (por arquetipo), `walk_forward.py`
-(ventana expansiva), `calibrar_respaldo.py` (temporal).
+Y lo medí sobre los 678 casos — **el signo de la SEÑAL acierta más que el del
+precio:**
 
----
+| Mercado | Precio simulado (hoy) | Señal de líderes | Δ |
+|---|--:|--:|--:|
+| TODOS (678) | 60.3% | **64.6%** | +4.3 |
+| índice (170) | 54.7% | **64.7%** | +10.0 |
+| cripto (221) | 67.9% | **70.6%** | +2.7 |
+| petróleo (26) | 46.2% | **57.7%** | +11.5 |
+| acción (239) | 60.3% | 61.5% | +1.2 |
+| oro (22) | 45.5% | 45.5% | = |
 
-## FASE 1 — Correctitud y trazabilidad (bajo riesgo, no cambia el comportamiento)
-*(De P1. Son arreglos de definición/claridad, no de acierto. Van primero.)*
+→ **Publicar la dirección desde la señal es la intervención #1: medida, gratis,
+sin dañar ningún mercado.**
 
-1. **Arreglar la definición de "confianza"** (P1a, confirmado): hoy
-   `_ultimo_consenso` se guarda **antes** de `GANANCIA_CONSENSO`, Plan A y
-   `_aplicar_perfil`; la "confianza" del reporte = magnitud de la lectura CRUDA,
-   no del tono aplicado. Persistir el estado final (`_tono_final`,
-   `_confianza_final`, `_fuente_tono`) y dejar de reportar un valor intermedio
-   como si fuera el final (o renombrarlo a "fuerza de lectura cruda").
-2. **Dos salidas explícitas y trazables:** `prob_calibrada` (para predicción) vs
-   `tono`/`confianza_final` (para el enjambre). Hoy están entrelazadas en el
-   nombre; separarlas limpio.
+## La otra ley (del artefacto, ya vivida)
+
+La etiqueta "negativa/positiva" y los días del examen **salen del movimiento real
+ya ocurrido** (`cosechador.py`, umbrales índice 2.5% / acción·cripto 6.0%). El
+examen es **más fácil que el uso en vivo** (el titular ya describe la caída).
+Por eso: **ninguna palanca de tono se acepta por subir el "acierto en negativas";
+solo si mejora la predicción limpia out-of-sample.** (El falso "+10pts" del doomer
+se evaporó así.)
 
 ---
 
-## FASE 2 — Palancas de bajo riesgo, robustas al artefacto (gratis o casi)
-*(De P2 H3/H4/H5 + infra. Todo detrás de flag `ENJAMBRE_*`, default = hoy.)*
-
-1. **H5 — Calibrar la confianza del LLM por arquetipo.** Aprender
-   `confianza_cruda → peso_calibrado` por arquetipo (isotónica/escalado) con
-   train, medir con test (walk-forward). Gratis, determinista. Robusta al
-   artefacto (no empuja el signo, re-pesa por fiabilidad).
-2. **H4 — Consenso robusto** (media recortada al 10% / mediana ponderada),
-   `ENJAMBRE_CONSENSO_ROBUSTO ∈ {media, recortada10, mediana}`. Neutraliza a un
-   arquetipo sistemáticamente contrario sin apagarlo.
-3. **3.1.bis — Hash del prompt en la clave de caché** (`_clave_cache(... hash_prompt)`).
-   Infra clara: desbloquea iterar prompts sin `ENJAMBRE_IGNORAR_CACHE` global.
-4. **H3 — Plan A suave + léxico como feature.** Reemplazar el corte duro en
-   `-umbral` por mezcla continua `tono = α·(consenso·gain) + (1-α)·directo` (α por
-   mercado, default 1.0 = hoy). El léxico (`directo`) pasa de rescate a feature.
-   *Riesgo medio:* el léxico puede sesgar → validar con el juez limpio.
-5. **MINIMO_IA_CONSENSO gradual** (P1c): medir degradación suave vs el corte duro
-   0.5 (cobertura, Brier, distribución de laterales) + política explícita de
-   fallback/abstención.
+## YA HECHO HOY (no repetir)
+- **Fase 0 instrumentación:** `calibration/evaluar_por_segmento.py` (reporte por
+  mercado×signo×|consenso|, por arquetipo, por fuente) + `docs/baseline-calibracion-fase0.md`.
+- **Fuga temporal de `calibrar_libreta` eliminada** (ahora parte por fecha;
+  `exportar_libreta` incluye `fecha`).
+- **Medido y DESCARTADO** (no ayuda out-of-sample): consenso robusto mediana/
+  recortada (P2 H4) y re-pesar por fiabilidad (P2 H5). La señal ponderada 0.3 que
+  ya está en producción sigue siendo el mejor estimador.
+- Hallazgo: **la confianza auto-reportada del LLM NO correlaciona con el acierto**
+  (justifica no confiar en ella cruda).
 
 ---
 
-## FASE 3 — Palancas sospechosas de "ganarle a la métrica" (base limpia OBLIGATORIA)
-*(De P2 H1/H2/H7. Van APARTE porque pueden inflar la métrica circular — como el
-doomer. Solo se aceptan si mejoran la predicción limpia out-of-sample.)*
+## PRIORIDAD 1 — Dirección desde la señal, no desde el precio *(P3, MEDIDA, gratis)*
+1. **Métrica (seguro, offline):** que `backtest.evaluar` mida el acierto sobre el
+   signo de `senal_media_ponderada` (y, como control, la mediana de varias
+   semillas del precio), no sobre una sola corrida del libro.
+2. **Producto (toca el demo):** el reporte publica la **dirección** desde la señal;
+   el **precio simulado se queda para el demo y la magnitud**. Decisión respecto al
+   evento (reinicia Render).
+- *Esperado:* +4.3 global, +10 índice, +11.5 petróleo (medido). Sin tocar pesos ni
+  prompts. Es la mejor relación mejora/riesgo.
 
-1. **H1 — `GANANCIA_CONSENSO` por signo y por mercado** (`gain_pos`/`gain_neg`).
-   Grid sobre `neg`, dejando `pos` fijo. **Aceptar solo con base limpia.**
-2. **H2 — `peso_tono_invertidores` por mercado** (mismo patrón que `peso_doomer`).
-   **Aceptar solo con base limpia.**
-3. **H7 — Gating por ambigüedad:** si `|tono| < θ(mercado)` → 0 y no propagar.
-   θ sale del histograma hit-rate vs |consenso| (donde cae a ~50%). Depende de si
-   el examen acepta "neutro" → flag `ENJAMBRE_GATING_AMBIGUO`.
+## PRIORIDAD 2 — Arreglar el examen *(P3 #1 + #5 + #promover)*
+*(Sin esto, los números absolutos engañan.)*
+1. **Contrato de acierto único:** misma zona muerta (0.3%, la de `corrector.libreta`)
+   en `evaluar`, libreta y muro; "lateral" no es error → se reporta **cobertura**
+   aparte (hoy: evaluar sin zona muerta, libreta 0.3%, muro otro umbral).
+2. **Arreglar la etiqueta del cosechador:** la ventana de `pct_real` debe empezar
+   en el cierre **posterior** al timestamp del titular; añadir días **no elegidos**
+   por "ya se movió fuerte". Si no, se optimiza un examen más fácil que el vivo.
+3. **Holdout honesto:** walk-forward siempre; un holdout que **no participe** en
+   elegir el mejor de los 6 calibradores (hoy `promover` elige sobre el mismo OOS).
+
+## PRIORIDAD 3 — Correctitud y trazabilidad *(P1 + P3)*
+1. **Confianza bien definida:** `_ultimo_consenso` se guarda **antes** de
+   `GANANCIA_CONSENSO`/Plan A/perfil; la "confianza" del reporte = lectura cruda,
+   no el tono aplicado. Persistir `_tono_final`/`_confianza_final`/`_fuente_tono`
+   y rastro por predicción (crudo → ajustes → final → fuente → motivo lateral).
+2. **Dos salidas explícitas:** `prob_calibrada` (predicción) vs `tono/confianza_final`
+   (enjambre). Hoy están entrelazadas en el nombre.
+
+## PRIORIDAD 4 — Palancas de tono *(P2, SOSPECHOSAS — base limpia OBLIGATORIA)*
+*(Bajan de prioridad: si la dirección ya sale de la señal (Prioridad 1), el tono
+del precio pesa menos para el acierto y más para el demo/magnitud. Además pueden
+engañar a la métrica circular.)*
+1. **Separar magnitud y dirección** (P3 #4): la perilla de tamaño
+   (`GANANCIA_CONSENSO`, topes P3, volatilidad) **no** vuelve a entrar en la
+   función que decide el signo.
+2. **`GANANCIA_CONSENSO` por signo/mercado** y **`peso_tono_invertidores` por
+   mercado** (P2 H1/H2) — solo si mejoran la predicción limpia.
+3. **Plan A suave** (mezcla continua en vez de corte duro) + **léxico como feature**
+   (α·consenso + (1−α)·directo) (P2 H3).
+4. **`MINIMO_IA_CONSENSO` gradual** vs el corte seco 0.5 (P1/P2).
+5. **Gating por ambigüedad** (P2 H7): si |señal/tono| < θ → lateral; publicar
+   cobertura aparte.
+
+## PRIORIDAD 5 — Subir el techo *(P2, más caro, al final)*
+1. **Hash del prompt en la clave de caché** (P2 3.1.bis) — infra; desbloquea iterar prompts.
+2. **Few-shot en los prompts de los arquetipos fieles** (P2 H6/3.1) con casos
+   negativos reales (el `doomer_selectivo` ya validó que el prompt es palanca).
+3. **Relevancia arquetipo × mercado** (P2 3.2): bajar el peso de las voces inertes
+   en el mercado donde aciertan ~50%.
+4. **Meta-modelo ligero de dirección** (P2 H8): logística `[consenso, directo,
+   std, confianza_media, n_disonantes, one_hot(mercado), …] → P(up)`. *NO existe
+   hoy (corrección a P2: `real_optimizer` optimiza hechos estilizados, no dirección).*
+5. **Self-consistency** opt-in (3 muestras por arquetipo fiel) — rompe el
+   presupuesto ×3; último.
 
 ---
 
-## FASE 4 — Calidad de señal (sube el techo, más costoso, al final)
-*(De P2 H6/H8/3.2/3.3/3.4. Lo grande e incierto.)*
+## Descartado por medición (no se implementa)
+- **Consenso robusto** (mediana/recortada, P2 H4): empeora el Brier OOS.
+- **Re-pesar por fiabilidad histórica** (P2 H5): empata, no supera a la señal
+  ponderada actual.
 
-1. **H6/3.1 — Few-shot en los prompts de los arquetipos fieles** (institucional,
-   macro, value, doomer_selectivo) con casos negativos reales. Requiere 3.1.bis
-   primero. El `doomer_selectivo` ya validó que el prompt es palanca (+7.6 pts
-   índice). No tocar los prompts de los invertidores (su trabajo es invertir).
-2. **3.2 — Relevancia arquetipo × mercado:** bajar el peso de un arquetipo en el
-   mercado donde su hit-rate ≈ 50% (p. ej. voces inertes en cripto). No apagarlos.
-3. **H8/2.2 — Meta-modelo ligero de dirección** (logística; GBM solo si mejora en
-   test): features `[consenso_crudo, directo, std_señales, confianza_media,
-   n_disonantes, one_hot(mercado), log(1+n_api)]` → P(up). *Corrección a P2: NO
-   existe hoy (`real_optimizer.py` optimiza hechos estilizados, no dirección);
-   sería nuevo.* Umbral para producción: AUC > 0.65 en test; si no, queda como
-   capa de ranking.
-4. **3.3 — `prior_direccional` por mercado** en `perfil_de` como feature/offset
-   del meta-modelo.
-5. **3.4 — Self-consistency** (3 muestras por arquetipo fiel, voto mayoritario),
-   `ENJAMBRE_SELF_CONSISTENCY=1`. Rompe el presupuesto ×3 → solo para el top-N
-   arquetipos por contribución al error. Último, opcional.
-
----
-
-## Reglas transversales (de ambas propuestas + lo aprendido)
-
-- **Flag para todo lo nuevo**, default = comportamiento actual; rollback sin redeploy.
-- **Una palanca por PR** (si se apilan y no sube, no se sabe cuál falló).
-- **Walk-forward siempre**; dataset congelado; nunca calibrar y medir con el mismo set.
-- **Métrica compuesta** (hit_neg, hit_pos, por mercado) PARA MIRAR, pero **el juez
-  que decide es el Brier/dirección limpio out-of-sample** (la ley de arriba).
-- **CMF intacto:** nada cambia el marco "educativo, no asesoría".
-
-## Lo que NO hacer (de P2 + lo medido)
-
-- No añadir más arquetipos "correctores" incondicionales (ya falló; el selectivo
-  funcionó por ser selectivo).
-- No subir `GANANCIA_CONSENSO` global a 1.0 (sobre-reacciona; el problema es
-  asimétrico, no de escala).
-- No tocar los prompts de los invertidores.
+## Lo que NO hacer *(de las tres + lo medido)*
+- No añadir más arquetipos "correctores" incondicionales.
+- No subir `GANANCIA_CONSENSO` global a 1.0 (sobre-reacciona en magnitud).
+- No tocar los prompts de los invertidores (su trabajo es invertir).
 - No usar `simular.py` como métrica de dirección (mide hechos estilizados).
-- **No aceptar NINGUNA mejora de "negativas" sin base limpia** (el artefacto del doomer).
+- No tocar pesos de arquetipos ni prompts **hasta** medir la Prioridad 1 (P3).
+- No aceptar ninguna mejora de "negativas" sin base limpia out-of-sample.
 
-## Correcciones a las propuestas (para que el plan no herede errores)
+## Reglas transversales
+- Flag `ENJAMBRE_*` para todo lo nuevo, default = hoy; rollback sin redeploy.
+- Una palanca por PR; walk-forward siempre; dataset congelado.
+- Métrica compuesta para mirar (hit_neg/hit_pos/por mercado + cobertura); **el juez
+  que decide es el acierto/Brier limpio out-of-sample.**
+- CMF intacto (educativo, no asesoría).
 
-- **P2 dice que el meta-modelo de dirección "ya existe en `real_optimizer.py`":**
-  falso. Ese optimiza hechos estilizados, no P(up). El meta-modelo es nuevo.
-- **P2 usa "~163 casos" y "negativas ~53%":** desactualizado. Hoy hay **678 casos**
-  (índice 163 · cripto 220 · acción 189 · oro 20 · petróleo 25); los números por
-  mercado son otros.
-- **P1 pide walk-forward como si faltara:** ya existe (`walk_forward.py`); lo que
-  falta es que el reporte de Fase 0 lo use y alinear `calibrar_libreta`.
-
----
-
-## Orden recomendado y expectativa honesta
-
-| Fase | Qué | Riesgo | Expectativa |
+## Orden, riesgo y expectativa
+| # | Qué | Riesgo | Expectativa |
 |---|---|---|---|
-| 0 | Instrumentación + juez limpio | Nulo | Habilita todo; sin esto es a ciegas |
-| 1 | Confianza bien definida + trazabilidad | Bajo | Correctitud, no acierto |
-| 2 | Confianza calibrada, consenso robusto, caché por prompt, Plan A suave | Bajo | Mejora real y segura, modesta |
-| 3 | gain_neg / peso_inv / gating **con base limpia** | Medio | Puede ser real o espejismo — la base limpia lo dirá |
-| 4 | Few-shot, relevancia×mercado, meta-modelo, self-consistency | Medio-alto | Sube el techo; lo más incierto |
+| 1 | Dirección desde la señal | Bajo (métrica) / Medio (producto) | **+4.3 global, +10 índice (medido)** |
+| 2 | Arreglar el examen (zona muerta, cosechador, holdout) | Bajo | Números creíbles; sin esto todo engaña |
+| 3 | Confianza bien definida + trazabilidad | Bajo | Correctitud |
+| 4 | Palancas de tono (con base limpia) | Medio | Incierto; puede ser espejismo |
+| 5 | Techo (prompts, meta-modelo, …) | Medio-alto | Sube el techo; lo más caro |
 
-**Expectativa realista:** las Fases 0–2 dan mejoras modestas pero reales y sin
-riesgo. La Fase 3 es donde P2 espera el grueso, pero es justo donde el artefacto
-engaña — puede que rinda poco una vez medido limpio (como el doomer). La Fase 4
-es la que de verdad podría subir el techo, y es la más cara e incierta. El tope
-estructural sigue: para cripto/acción la dirección muchas veces **no está en el
-texto**.
-
-**Momento:** es trabajo de modelo, invisible en el demo. Recomiendo arrancar
-**después del evento del 21**; antes, foco en demo + pitch.
+**Momento:** La Prioridad 1 (métrica) y la 2 son casi todo offline y se pueden
+hacer ya. El cambio de la dirección PUBLICADA y las palancas de tono tocan el demo
+(reinician Render) → recomendación: **después del evento del 21**. El techo
+estructural sigue: para cripto/acción la dirección muchas veces no está en el texto.
 
 ---
-*Fin del plan. Es una hoja de ruta; cada fase se mide y se decide con evidencia.*
+*Fin del plan v2. Cada fase se mide y se decide con evidencia.*

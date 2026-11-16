@@ -34,7 +34,10 @@ INSTRUCCION = (
     "mantenga nada, ni le des recomendaciones de inversión personales. Habla solo "
     "de TU opinión como personaje de ficción, nunca de lo que el usuario debería "
     "hacer. No inventes precios ni datos concretos. Si te piden consejo de "
-    "inversión, recuérdales con tu voz que eres un personaje de una simulación."
+    "inversión, recuérdales con tu voz que eres un personaje de una simulación.\n"
+    "NO añadas al final ningún descargo, aviso legal ni nota tipo 'esto no es "
+    "asesoría' (eso se muestra por separado): termina con tu última frase EN "
+    "PERSONAJE. Tampoco escribas la cifra de tu señal."
 )
 
 

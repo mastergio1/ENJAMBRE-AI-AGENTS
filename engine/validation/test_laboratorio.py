@@ -57,3 +57,24 @@ def test_instrumentacion_es_opt_in():
     # sin activar, no hay callback ni contadores (producción intacta)
     m = MercadoEnjambre(seed=1, ticks_horizonte=50)
     assert m.libro.registrar_ejecucion_instr is None
+
+
+def test_escenarios_de_estres_corren_y_devuelven_metricas():
+    from calibration.escenarios import correr_escenario, variabilidad
+    r = correr_escenario("negativa_fuerte", seed=42, post=60)
+    for k in ("direccion_pct", "minimo_pct", "maximo_pct", "volatilidad_pct"):
+        assert k in r
+    # una noticia fuertemente negativa debe empujar la dirección hacia abajo
+    assert r["direccion_pct"] < 0
+    # la variabilidad entre semillas se reporta
+    v = variabilidad("negativa_fuerte", seeds=(1, 42))
+    assert "desv" in v and len(v["direcciones"]) == 2
+
+
+def test_escenario_desconocido_lanza():
+    from calibration.escenarios import correr_escenario
+    try:
+        correr_escenario("no_existe")
+        assert False, "debió lanzar ValueError"
+    except ValueError:
+        pass

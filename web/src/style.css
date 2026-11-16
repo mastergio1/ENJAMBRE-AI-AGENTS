@@ -1564,18 +1564,18 @@ body.archivo-abierto .muro { display: none; }
 /* ---- Entrevistar a un líder (chat en personaje) ---- */
 .entrevista {
   position: fixed;
-  top: 50%;
+  top: 76px;                 /* bajo el encabezado/nav */
   left: 28px;
-  transform: translateY(-50%);
+  /* alto acotado: deja libre el fondo (barra de titular, ~150px) para no solaparse */
+  max-height: calc(100vh - 230px);
   width: min(360px, calc(100vw - 40px));
-  max-height: 80vh;
   display: flex;
   flex-direction: column;
   background: rgba(27, 25, 22, 0.96);
   border: 1px solid rgba(227, 197, 101, 0.5);  /* borde dorado: es el "faro" */
   padding: 20px 22px;
   backdrop-filter: blur(10px);
-  z-index: 21;
+  z-index: 22;               /* por encima del reporte (20) y del tooltip */
 }
 .entrevista h3 {
   font-family: 'Cormorant Garamond', serif;
@@ -1665,8 +1665,11 @@ body.archivo-abierto .muro { display: none; }
 }
 @media (max-width: 760px) {
   .entrevista {
+    top: 64px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     width: calc(100vw - 32px);
+    /* en móvil la barra de titular + chips ocupan más: más aire abajo */
+    max-height: calc(100vh - 270px);
   }
 }

@@ -53,6 +53,17 @@ def mapeo_senal_media(reporte: dict) -> float:
     return (s + 1.0) / 2.0
 
 
+def mapeo_senal_ponderada(reporte: dict) -> float:
+    """Igual que `mapeo_senal_media` pero usando la señal de predicción PONDERADA
+    (`senal_media_ponderada`), que baja el peso de las voces contrarian —medidas
+    como anti-señal en docs/calibracion-por-arquetipo.md—. Si el caso no la trae
+    (histórico), cae al promedio simple `senal_media_lideres`."""
+    v = reporte.get("senal_media_ponderada")
+    if v is None:
+        v = reporte.get("senal_media_lideres", 0.0)
+    return (_clip(float(v), -1.0, 1.0) + 1.0) / 2.0
+
+
 def mapeo_direccion(reporte: dict, escala: float = 2.0) -> float:
     """Desde la dirección simulada (en %) → P(sube), aplastando con una logística.
     `escala` controla cuán rápido satura (2% ≈ bastante confianza)."""
@@ -63,6 +74,7 @@ def mapeo_direccion(reporte: dict, escala: float = 2.0) -> float:
 # registro de mapeos reemplazables: se elige por nombre
 MAPEOS = {
     "senal_media": mapeo_senal_media,
+    "senal_ponderada": mapeo_senal_ponderada,
     "direccion": mapeo_direccion,
 }
 

@@ -131,3 +131,31 @@ cuando corresponde**. Este dato le pone número al porqué.
 3. **No borrar voces del enjambre**: los contrarians y el doomer aportan a la
    dinámica visual (olas, pánico, reversión). La intervención es de *peso en la
    calibración*, no de *existencia en la simulación*.
+
+## ✅ Implementado (Intervención A — señal de predicción ponderada)
+
+La recomendación 1 ya está en el código, de la forma **más segura posible**:
+
+- Nuevo campo del reporte `senal_media_ponderada` (`engine/contenido/senal_prediccion.py`):
+  promedio de las señales de los líderes **bajando a 0.3 el peso de las 2 voces
+  contrarian** (quant escéptico, contrarian sabio). El optimista NO se baja.
+- **No toca nada del enjambre**: ni la simulación, ni el tono de mercado, ni las
+  frases mostradas, ni la `senal_media_lideres` histórica (promedio simple, que
+  queda intacta para comparar). Solo agrega el número que alimentará la
+  probabilidad calibrada cuando se publique.
+- Mapeo de calibración `senal_ponderada` (`contenido/calibracion.py`): usa el
+  campo nuevo y cae al viejo si un caso histórico no lo trae.
+- Reversible al instante con el env `ENJAMBRE_PESO_CONTRARIANS` (1.0 = vuelve al
+  promedio simple; vacío = 0.3).
+
+**Medición definitiva (678 casos reales, partición temporal, promedio como el del
+motor):**
+
+| Señal de predicción | Brier calibrado |
+|---|---:|
+| Actual (promedio simple) | 0.2212 |
+| **Ponderada, contrarians 0.3 (producción)** | **0.2185** (Δ −0.0027) |
+| Ponderada, contrarians 0.0 | 0.2179 (Δ −0.0033) |
+
+Se eligió 0.3 (no 0.0) para capturar la mayor parte de la mejora dejando un
+colchón contra el sobreajuste a 678 casos. Tests: `test_senal_ponderada.py`.

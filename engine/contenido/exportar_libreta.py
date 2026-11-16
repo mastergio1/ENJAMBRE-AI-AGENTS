@@ -39,6 +39,7 @@ def exportar(conexion=None) -> list[dict]:
         casos.append({
             "direccion_pct": resumen.get("direccion_pct"),
             "senal_media_lideres": resumen.get("senal_media_lideres"),
+            "senal_media_ponderada": resumen.get("senal_media_ponderada"),
             "confianza": resumen.get("confianza"),
             "pct_real": reaccion.get("pct_real"),
             "categoria": reaccion.get("categoria"),

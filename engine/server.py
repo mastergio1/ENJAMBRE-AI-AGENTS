@@ -33,7 +33,7 @@ from pydantic import BaseModel
 from agents.lider import LiderOpinion
 from brains.arquetipos import POR_ID
 from brains.cerebro import analizar_titular_async
-from contenido import limites, persistencia, portero, seguridad, vocabulario
+from contenido import limites, persistencia, portero, seguridad, senal_prediccion, vocabulario
 from contenido.vocabulario import DISCLAIMER
 from model import MercadoEnjambre
 from llm_texto import texto_de
@@ -653,6 +653,7 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
         "confianza": fuerza_consenso,
         "fuerza_consenso": fuerza_consenso,
         "senal_media_lideres": round(sum(r["senal"] for r in respuestas) / len(respuestas), 2),
+        "senal_media_ponderada": senal_prediccion.senal_media_ponderada(lideres, respuestas),
         "desglose": {
             NOMBRES_TIPO.get(clase, clase): {"compras": c, "ventas": v}
             for clase, (c, v) in sorted(contador.items(), key=lambda kv: -sum(kv[1]))

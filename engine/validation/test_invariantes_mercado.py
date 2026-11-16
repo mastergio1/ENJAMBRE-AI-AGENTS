@@ -50,3 +50,19 @@ def test_conservacion_de_efectivo_y_acciones():
     # tolerancia relativa al tamaño del total (sumas de millones)
     assert abs(ef1 - ef0) <= max(1e-3, 1e-6 * abs(ef0)), f"drift efectivo {ef1 - ef0}"
     assert abs(ac1 - ac0) <= max(1e-3, 1e-6 * abs(ac0)), f"drift acciones {ac1 - ac0}"
+
+
+def _serie(seed):
+    m = MercadoEnjambre(seed=seed, ticks_horizonte=120)
+    for _ in range(100):
+        if m.random.random() < 0.03:
+            m.aplicar_noticia(m.random.gauss(0, 0.5))
+        m.step()
+    return m.historial_precios
+
+
+def test_reproducibilidad_por_semilla():
+    # toda la aleatoriedad viene de la semilla: misma semilla → serie idéntica;
+    # semilla distinta → serie distinta. Es la base para comparar calibraciones.
+    assert _serie(42) == _serie(42)
+    assert _serie(42) != _serie(7)

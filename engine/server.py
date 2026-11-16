@@ -1702,6 +1702,25 @@ def api_libreta(x_pipeline_token: str = Header(default="")) -> dict:
     return corrector.libreta()
 
 
+@app.get("/api/calibracion/export")
+def api_calibracion_export(x_pipeline_token: str = Header(default="")) -> dict:
+    """Canal propio de datos de calibración (protegido). Devuelve TODOS los casos
+    con el resumen de señales por arquetipo (`senales_arquetipo`), que solo viven
+    en la base local de Render. Sirve para extraer la libreta a GitHub Actions por
+    un camino independiente del respaldo (cuyo token puede expirar) y analizar la
+    calibración POR ARQUETIPO sin esperar a la madrugada."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    from contenido import persistencia, respaldo
+
+    conexion = persistencia.conectar()
+    try:
+        casos = respaldo.exportar_casos(conexion)
+    finally:
+        conexion.close()
+    return {"n": len(casos), "casos": casos}
+
+
 def _correr_backtest(tanda: int, mercado: str | None = None) -> None:
     from contenido import backtest
 

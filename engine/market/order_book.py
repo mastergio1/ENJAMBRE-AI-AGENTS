@@ -32,12 +32,55 @@ class LibroOrdenes:
         self.tick_actual = 0
         # callback: se llama cuando la orden en reposo de un agente se ejecuta
         self.notificar_ejecucion = None
+        # Reservas por agente para las órdenes EN REPOSO (no ejecutadas aún):
+        # inventario comprometido en ventas y efectivo comprometido en compras.
+        # Así un agente nunca vende más acciones de las que tiene ni compromete
+        # más efectivo del que posee, aunque tenga varias órdenes reposando.
+        self._reserva_venta: dict[int, float] = {}   # acciones comprometidas
+        self._reserva_compra: dict[int, float] = {}  # efectivo comprometido
         self.reiniciar_tick(0)
+
+    # ---------- reservas (lo comprometido por órdenes en reposo) ----------
+
+    def reserva_venta(self, agente_id: int) -> float:
+        """Acciones del agente ya comprometidas en órdenes de venta en reposo."""
+        return self._reserva_venta.get(agente_id, 0.0)
+
+    def reserva_compra(self, agente_id: int) -> float:
+        """Efectivo del agente ya comprometido en órdenes de compra en reposo."""
+        return self._reserva_compra.get(agente_id, 0.0)
+
+    def _reservar(self, orden: OrdenLimite) -> None:
+        if orden.lado == "venta":
+            self._reserva_venta[orden.agente_id] = (
+                self._reserva_venta.get(orden.agente_id, 0.0) + orden.cantidad)
+        else:
+            self._reserva_compra[orden.agente_id] = (
+                self._reserva_compra.get(orden.agente_id, 0.0)
+                + orden.cantidad * orden.precio)
+
+    def _liberar(self, orden: OrdenLimite, cantidad: float) -> None:
+        """Libera la reserva de `cantidad` de una orden (al ejecutarse,
+        cancelarse o expirar). Se recorta a 0 para no arrastrar ruido numérico."""
+        if orden.lado == "venta":
+            nuevo = self._reserva_venta.get(orden.agente_id, 0.0) - cantidad
+            self._reserva_venta[orden.agente_id] = nuevo if nuevo > EPSILON else 0.0
+        else:
+            nuevo = (self._reserva_compra.get(orden.agente_id, 0.0)
+                     - cantidad * orden.precio)
+            self._reserva_compra[orden.agente_id] = nuevo if nuevo > EPSILON else 0.0
 
     def reiniciar_tick(self, tick: int) -> None:
         """Nuevo tick: expira órdenes viejas y reinicia contadores de flujo."""
         self.tick_actual = tick
         limite = tick - self.VIDA_ORDEN
+        # al expirar una orden se libera su reserva (ya no compromete nada)
+        for o in self.compras:
+            if o.tick <= limite:
+                self._liberar(o, o.cantidad)
+        for o in self.ventas:
+            if o.tick <= limite:
+                self._liberar(o, o.cantidad)
         self.compras = [o for o in self.compras if o.tick > limite]
         self.ventas = [o for o in self.ventas if o.tick > limite]
         self.volumen_tick = 0.0
@@ -60,7 +103,13 @@ class LibroOrdenes:
         return self.valor_tick / self.volumen_tick
 
     def cancelar_ordenes(self, agente_id: int) -> None:
-        """Retira todas las órdenes reposando de un agente."""
+        """Retira todas las órdenes reposando de un agente y libera sus reservas."""
+        for o in self.compras:
+            if o.agente_id == agente_id:
+                self._liberar(o, o.cantidad)
+        for o in self.ventas:
+            if o.agente_id == agente_id:
+                self._liberar(o, o.cantidad)
         self.compras = [o for o in self.compras if o.agente_id != agente_id]
         self.ventas = [o for o in self.ventas if o.agente_id != agente_id]
 
@@ -92,6 +141,7 @@ class LibroOrdenes:
                 contra.pop(0)
         if restante > EPSILON:
             orden = OrdenLimite(agente_id, lado, precio, restante, self.tick_actual)
+            self._reservar(orden)  # el remanente reposa → compromete inventario/efectivo
             if lado == "compra":
                 self.compras.append(orden)
                 self.compras.sort(key=lambda o: -o.precio)
@@ -105,6 +155,7 @@ class LibroOrdenes:
     def _ejecutar(self, lado_agresor: str, orden_reposo: OrdenLimite, cantidad: float) -> None:
         """Cruza una cantidad contra una orden que reposaba en el libro."""
         orden_reposo.cantidad -= cantidad
+        self._liberar(orden_reposo, cantidad)  # lo ejecutado deja de estar reservado
         self._registrar(lado_agresor, cantidad, orden_reposo.precio)
         if self.notificar_ejecucion is not None:
             # el dueño de la orden en reposo operó en el lado contrario al agresor

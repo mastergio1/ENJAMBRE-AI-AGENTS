@@ -72,12 +72,17 @@ class AgenteBase(mesa.Agent):
     def colocar_orden(self, lado: str, precio_limite: float, cantidad: float) -> None:
         """Coloca una orden límite y contabiliza lo que se ejecute al instante."""
         if lado == "compra":
-            # limitada por el efectivo disponible y por un tope de cordura
-            maximo = self.efectivo / max(precio_limite, 0.01)
+            # limitada por el efectivo DISPONIBLE (descontando lo ya comprometido
+            # en órdenes de compra en reposo) y por un tope de cordura
+            disponible = self.efectivo - self.model.libro.reserva_compra(self.unique_id)
+            maximo = max(0.0, disponible) / max(precio_limite, 0.01)
             tope_sano = 2 * self.capital_inicial / max(self.precio, 0.01)
             cantidad = min(cantidad, maximo, tope_sano)
         else:
-            cantidad = min(cantidad, self.acciones)  # sin ventas cortas
+            # sin ventas cortas: limitada por las acciones DISPONIBLES (descontando
+            # las ya comprometidas en órdenes de venta en reposo)
+            disponible = self.acciones - self.model.libro.reserva_venta(self.unique_id)
+            cantidad = min(cantidad, max(0.0, disponible))
         if cantidad <= 1e-9:
             return
         ejecutado, dinero = self.model.libro.orden_limite(

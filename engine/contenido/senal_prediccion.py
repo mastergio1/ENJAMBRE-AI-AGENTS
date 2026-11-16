@@ -34,3 +34,62 @@ def senal_media_ponderada(lideres, respuestas) -> float:
         num += r["senal"] * w
         den += w
     return round(num / den, 2) if den else 0.0
+
+
+# ---------- GATING por fuerza de señal (Propuesta "gating", punto 1) ----------
+# La re-medición SIN FUGA (remedir_sin_fuga.py, 616 casos) mostró que la DIRECCIÓN
+# solo es fiable cuando se cumplen DOS condiciones a la vez:
+#   1. el mercado tiene señal real en el texto → solo ÍNDICE (cripto/acción/oro/
+#      petróleo quedan en ~azar: su dirección NO está en la noticia), y
+#   2. el enjambre está muy convencido → |senal_media_ponderada| ≥ 0.3.
+# En esa banda el acierto histórico (sin fuga) fue ~80% en índice. Fuera de ella
+# NO afirmamos dirección: la mostramos como "lectura ambigua / visualización".
+# Esto SUBE el acierto condicional a cambio de cobertura (trade-off correcto) y es
+# MÁS honesto ante la CMF (no sobre-afirma). Umbrales y mercados fiables son
+# overridables por entorno para medir/rollback sin re-desplegar.
+UMBRAL_FUERTE = 0.30
+UMBRAL_MODERADA = 0.20
+MERCADOS_FIABLES_DEFECTO = frozenset({"indice"})
+
+
+def _umbral(nombre: str, por_defecto: float) -> float:
+    try:
+        v = os.environ.get(nombre, "")
+        return float(v) if v != "" else por_defecto
+    except ValueError:
+        return por_defecto
+
+
+def mercados_fiables() -> frozenset:
+    """Mercados donde la dirección se considera fiable (env
+    ENJAMBRE_MERCADOS_FIABLES = lista separada por comas; vacío = solo índice)."""
+    crudo = os.environ.get("ENJAMBRE_MERCADOS_FIABLES", "").strip()
+    if not crudo:
+        return MERCADOS_FIABLES_DEFECTO
+    return frozenset(m.strip() for m in crudo.split(",") if m.strip())
+
+
+def clasificar_conviccion(senal_ponderada: float, mercado: str | None) -> dict:
+    """Clasifica la convicción del enjambre y si la DIRECCIÓN es fiable.
+
+    Devuelve: nivel ('fuerte'|'moderada'|'debil'), fiable_direccion (bool) y una
+    nota honesta para la UI. NO cambia el motor ni el precio: solo etiqueta el
+    reporte para que el producto afirme dirección solo cuando el historial
+    (sin fuga) la respalda."""
+    a = abs(senal_ponderada or 0.0)
+    fuerte = _umbral("ENJAMBRE_UMBRAL_FUERTE", UMBRAL_FUERTE)
+    moderada = _umbral("ENJAMBRE_UMBRAL_MODERADA", UMBRAL_MODERADA)
+    if a >= fuerte:
+        nivel = "fuerte"
+    elif a >= moderada:
+        nivel = "moderada"
+    else:
+        nivel = "debil"
+    fiable = nivel == "fuerte" and (mercado in mercados_fiables())
+    if fiable:
+        nota = "El enjambre está muy convencido y en este tipo de mercado su lectura ha sido confiable."
+    elif nivel == "debil":
+        nota = "Lectura ambigua: el enjambre no se decide. Tómalo como visualización, no como dirección."
+    else:
+        nota = "Convicción parcial, o un mercado donde la dirección no suele leerse en la noticia. Visualización."
+    return {"nivel": nivel, "fiable_direccion": fiable, "nota": nota}

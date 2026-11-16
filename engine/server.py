@@ -645,6 +645,13 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
     # Se mantiene el campo `confianza` por compatibilidad con el frontend.
     fuerza_consenso = round(abs(getattr(modelo, "_ultimo_consenso", 0.0)), 2)
 
+    # GATING por fuerza de señal (Propuesta "gating", punto 1): clasificamos la
+    # convicción y marcamos si la DIRECCIÓN es fiable (solo índice + señal fuerte,
+    # la banda donde el historial sin fuga da ~80%). No cambia el motor: etiqueta
+    # el reporte para no sobre-afirmar. Umbrales/mercados overridables por entorno.
+    senal_pond = senal_prediccion.senal_media_ponderada(lideres, respuestas)
+    conviccion = senal_prediccion.clasificar_conviccion(senal_pond, mercado)
+
     return {
         "direccion_pct": direccion,
         "direccion_pct_cruda": direccion_cruda,
@@ -654,8 +661,9 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
         "volatilidad_pct": round(volatilidad * 100, 2),
         "confianza": fuerza_consenso,
         "fuerza_consenso": fuerza_consenso,
+        "conviccion": conviccion,
         "senal_media_lideres": round(sum(r["senal"] for r in respuestas) / len(respuestas), 2),
-        "senal_media_ponderada": senal_prediccion.senal_media_ponderada(lideres, respuestas),
+        "senal_media_ponderada": senal_pond,
         "desglose": {
             NOMBRES_TIPO.get(clase, clase): {"compras": c, "ventas": v}
             for clase, (c, v) in sorted(contador.items(), key=lambda kv: -sum(kv[1]))

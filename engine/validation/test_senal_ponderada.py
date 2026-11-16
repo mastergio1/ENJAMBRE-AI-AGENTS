@@ -55,3 +55,32 @@ def test_mapeo_usa_campo_nuevo_y_cae_al_viejo():
     # sin el campo nuevo, cae al viejo
     p2 = cal.senal_a_prob_cruda({"senal_media_lideres": -1.0}, modo="senal_ponderada")
     assert p2 == 0.0
+
+
+# ---------- GATING por fuerza de señal ----------
+
+def test_gating_fiable_solo_indice_con_senal_fuerte(monkeypatch):
+    monkeypatch.delenv("ENJAMBRE_MERCADOS_FIABLES", raising=False)
+    monkeypatch.delenv("ENJAMBRE_UMBRAL_FUERTE", raising=False)
+    # índice + señal fuerte (|0.5| ≥ 0.3) → fiable
+    c = sp.clasificar_conviccion(0.5, "indice")
+    assert c["nivel"] == "fuerte" and c["fiable_direccion"] is True
+    # cripto + señal fuerte → NO fiable (su dirección no está en el texto)
+    c2 = sp.clasificar_conviccion(0.5, "cripto")
+    assert c2["nivel"] == "fuerte" and c2["fiable_direccion"] is False
+
+
+def test_gating_niveles_por_umbral(monkeypatch):
+    monkeypatch.delenv("ENJAMBRE_UMBRAL_FUERTE", raising=False)
+    monkeypatch.delenv("ENJAMBRE_UMBRAL_MODERADA", raising=False)
+    assert sp.clasificar_conviccion(0.35, "indice")["nivel"] == "fuerte"
+    assert sp.clasificar_conviccion(0.25, "indice")["nivel"] == "moderada"
+    assert sp.clasificar_conviccion(0.1, "indice")["nivel"] == "debil"
+    # señal moderada en índice NO basta para fiable (solo la banda fuerte)
+    assert sp.clasificar_conviccion(0.25, "indice")["fiable_direccion"] is False
+
+
+def test_gating_env_override_mercados(monkeypatch):
+    monkeypatch.setenv("ENJAMBRE_MERCADOS_FIABLES", "indice,accion")
+    assert sp.clasificar_conviccion(0.5, "accion")["fiable_direccion"] is True
+    assert sp.clasificar_conviccion(0.5, "cripto")["fiable_direccion"] is False

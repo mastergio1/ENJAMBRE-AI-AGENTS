@@ -114,11 +114,25 @@ def _peso_invertidores_env(por_defecto: float) -> float:
     return max(0.0, min(1.0, valor))
 
 
-# Plan A — corrección del sesgo alcista en el consenso. Diagnóstico
-# (INFORME_CAUSA_RAIZ_NEGATIVAS.md): el enjambre acierta ~80% en positivas pero
-# ~53% en negativas porque el TONO se suaviza hacia arriba — el descuento de
+# Plan A — corrección del sesgo alcista en el consenso.
+#
+# ⚠️ OBSOLETO (2026-11-16) el diagnóstico original. El informe que motivó este
+# Plan A (INFORME_CAUSA_RAIZ_NEGATIVAS.md) decía "~80% en positivas / ~53% en
+# negativas", pero esas cifras venían de la métrica CON FUGA y CIRCULAR: la
+# `categoria` ("negativa"/"positiva") se calcula DEL RESULTADO del precio, no del
+# titular (cosechador._categoria), y la ventana de resultado incluía el mismo
+# salto que seleccionó el día. Re-medido SIN FUGA
+# (engine/calibration/remedir_sin_fuga.py, 616 casos, Yahoo): el acierto agregado
+# es ~50% (azar) y solo ÍNDICE conserva señal real (~63%); el "sesgo en negativas"
+# casi desaparece. Para cripto/acción la dirección NO está en el texto (techo
+# estructural). Ver docs/baseline-calibracion-fase0.md y
+# docs/analisis-propuesta-gating-tono.md. El MECANISMO de abajo sigue siendo
+# válido como perilla (está desactivado por defecto), pero NO lo justifiques con
+# el 80/53: el ángulo honesto es índice + gating por fuerza de señal.
+#
+# Mecanismo (histórico): el TONO se suaviza hacia arriba — el descuento de
 # magnitud (GANANCIA_CONSENSO=0.8) encoge una mala noticia clara, y el enjambre
-# predice "sube" sobre una caída real. La corrección: cuando los líderes que
+# podía predecir "sube" sobre una caída real. La corrección: cuando los líderes que
 # hablaron con la IA ya leen la noticia como CLARAMENTE bajista (consenso <
 # -umbral), NO la suavizamos; usamos la lectura directa a plena magnitud (nunca
 # para invertir el signo — solo para no diluir el bajón). `umbral_correccion_
@@ -138,7 +152,10 @@ def _umbral_correccion_env(por_defecto: float) -> float:
 
 
 # Intervención 1 — voz "doomer pura" (fiel, que NO invierte) mezclada en el
-# consenso. El sesgo alcista viene de que los invertidores (quant/contrarian/
+# consenso. (Mismo aviso que Plan A: el "sesgo alcista en negativas" que motivó
+# esto venía de la métrica con fuga/circular; sin fuga casi no existe. Es una
+# perilla desactivada por defecto, no una mejora comprobada contra el acierto
+# honesto.) El sesgo alcista viene de que los invertidores (quant/contrarian/
 # optimista) empujan positivo ante una mala noticia y cancelan a los fieles.
 # En vez de silenciarlos (P2, que falló), AÑADIMOS al consenso una voz que lee
 # la noticia sin invertir (el léxico, a 0.9 de magnitud — el "LiderDoomerPuro"

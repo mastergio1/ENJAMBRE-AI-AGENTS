@@ -1565,9 +1565,8 @@ body.archivo-abierto .muro { display: none; }
 .entrevista {
   position: fixed;
   top: 76px;                 /* bajo el encabezado/nav */
+  bottom: 180px;             /* ancla también abajo: deja libre la barra de titular */
   left: 28px;
-  /* alto acotado: deja libre el fondo (barra de titular, ~150px) para no solaparse */
-  max-height: calc(100vh - 230px);
   width: min(360px, calc(100vw - 40px));
   display: flex;
   flex-direction: column;
@@ -1666,10 +1665,9 @@ body.archivo-abierto .muro { display: none; }
 @media (max-width: 760px) {
   .entrevista {
     top: 64px;
+    bottom: 220px;   /* en móvil la barra de titular + chips ocupan más */
     left: 50%;
     transform: translateX(-50%);
     width: calc(100vw - 32px);
-    /* en móvil la barra de titular + chips ocupan más: más aire abajo */
-    max-height: calc(100vh - 270px);
   }
 }

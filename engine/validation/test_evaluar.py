@@ -48,7 +48,7 @@ def test_evaluar_cuenta_acierto_por_categoria(monkeypatch):
     r = backtest.evaluar(simular=simular, guardar=False)
     assert r["evaluados"] == 3           # el caso sin categoría se ignoró
     assert r["con_ia"] == 3 and r["sin_ia"] == 0
-    assert r["negativa"] == {"aciertos": 1, "total": 2, "acierto": 0.5}
+    assert r["negativa"] == {"aciertos": 1, "total": 2, "acierto": 0.5, "acierto_senal": 0.0}
     assert r["positiva"]["acierto"] == 1.0
     assert r["acierto_global"] == round(2 / 3, 4)
     assert r["diag"]["casos_respaldados"] == 4
@@ -87,7 +87,27 @@ def test_evaluar_resumible_acumula(monkeypatch):
     r3 = backtest.evaluar(mercado="cripto", simular=sim)
     assert r3["progreso"]["hechos"] == 5 and r3["progreso"]["completo"] is True
     # todas negativas y todas aciertan (sim baja, real baja)
-    assert r3["negativa"] == {"aciertos": 5, "total": 5, "acierto": 1.0}
+    assert r3["negativa"] == {"aciertos": 5, "total": 5, "acierto": 1.0, "acierto_senal": 0.0}
+
+
+def test_evaluar_acierto_por_senal_vs_precio(monkeypatch):
+    """Prioridad 1: el acierto por el signo de la SEÑAL se mide aparte del precio.
+    Aquí el precio simulado se equivoca y la señal acierta."""
+    casos = [
+        _caso("aaaa1111bbbb2222", "Mala noticia A", -5.0, "negativa"),
+        _caso("cccc3333dddd4444", "Mala noticia B", -4.0, "negativa"),
+    ]
+    from contenido import respaldo
+    monkeypatch.setattr(respaldo, "casos_remotos", lambda: casos)
+    _sin_progreso(monkeypatch)
+    # el PRECIO dice "sube" (falla); la SEÑAL dice "baja" (acierta)
+    def simular(titular, seed):
+        return ({"direccion_pct": +1.0, "senal_media_ponderada": -0.4},
+                [{"fuente": "api"}], [], None)
+    r = backtest.evaluar(simular=simular, guardar=False)
+    assert r["acierto_global"] == 0.0            # el precio falla en ambas
+    assert r["acierto_senal_global"] == 1.0      # la señal acierta en ambas
+    assert r["negativa"]["acierto"] == 0.0 and r["negativa"]["acierto_senal"] == 1.0
 
 
 def test_evaluar_respeta_env_de_p2(monkeypatch):

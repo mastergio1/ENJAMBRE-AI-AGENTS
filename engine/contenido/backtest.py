@@ -439,7 +439,11 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         else:
             sin_ia += 1
         ok = 1 if _signo(reporte.get("direccion_pct")) == _signo(real) else 0
-        hechos[c["sim_id"]] = {"cat": cat, "ok": ok}
+        # Prioridad 1 (plan combinado v2): acierto por el signo de la SEÑAL de los
+        # líderes (senal_media_ponderada), no del precio simulado de 1 corrida.
+        # Medido: +4.3 pts global, +10 índice. Se guarda APARTE; no cambia `ok`.
+        ok_senal = 1 if _signo(reporte.get("senal_media_ponderada")) == _signo(real) else 0
+        hechos[c["sim_id"]] = {"cat": cat, "ok": ok, "ok_senal": ok_senal}
         del reporte, lideres, serie
         gc.collect()
     nuevos = min(len(pendientes), por_tanda)
@@ -447,18 +451,22 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         _guardar_progreso(progreso)
 
     # acierto ACUMULADO sobre todo lo hecho para (mercado, peso)
-    cats = {"negativa": [0, 0], "positiva": [0, 0], "neutra": [0, 0]}
+    # cats guarda [aciertos_precio, total, aciertos_senal] por categoría
+    cats = {"negativa": [0, 0, 0], "positiva": [0, 0, 0], "neutra": [0, 0, 0]}
     for r in hechos.values():
         if r.get("cat") in cats:
             cats[r["cat"]][1] += 1
             cats[r["cat"]][0] += r.get("ok", 0)
+            cats[r["cat"]][2] += r.get("ok_senal", 0)
 
     def _acc(par):
         return {"aciertos": par[0], "total": par[1],
-                "acierto": round(par[0] / par[1], 4) if par[1] else None}
+                "acierto": round(par[0] / par[1], 4) if par[1] else None,
+                "acierto_senal": round(par[2] / par[1], 4) if par[1] else None}
 
     tot = sum(c[1] for c in cats.values())
     ok = sum(c[0] for c in cats.values())
+    ok_senal_tot = sum(c[2] for c in cats.values())
     resultado = {
         "fecha": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "peso_tono_invertidores": peso_actual,
@@ -466,6 +474,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         "peso_doomer": doomer_actual,
         "evaluados": tot, "con_ia": con_ia, "sin_ia": sin_ia,
         "acierto_global": round(ok / tot, 4) if tot else None,
+        "acierto_senal_global": round(ok_senal_tot / tot, 4) if tot else None,
         "negativa": _acc(cats["negativa"]), "positiva": _acc(cats["positiva"]),
         "neutra": _acc(cats["neutra"]),
         # progreso ACUMULADO: cuántos exámenes llevamos de este (mercado, peso)

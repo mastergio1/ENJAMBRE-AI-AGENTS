@@ -25,6 +25,18 @@ from contenido.backtest import _mercado_de_caso
 
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
+
+
+def _senal_ponderada(sa, peso_contr=0.3) -> float:
+    """senal_media_ponderada reconstruida desde senales_arquetipo (contrarians×0.3)."""
+    num = den = 0.0
+    for a in BASE:
+        if a in sa:
+            w = sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
+            num += sa[a]["senal_media"] * w
+            den += w
+    return num / den if den else 0.0
 
 
 def cargar(ruta: str) -> list[dict]:
@@ -134,11 +146,39 @@ def _corr(xs, ys):
     return round(num / (dx * dy), 3)
 
 
+def direccion_senal_vs_precio(casos):
+    """Prioridad 1 (plan v2): compara el acierto direccional tomando la dirección
+    del PRECIO simulado vs. de la SEÑAL de los líderes (senal_media_ponderada),
+    global y por mercado."""
+    out = {}
+    def acc(sub, por_senal):
+        if not sub:
+            return (None, 0)
+        ok = 0
+        for c in sub:
+            pred = _senal_ponderada(c.get("senales_arquetipo") or {}) if por_senal else c["direccion_pct"]
+            if _signo(pred) == _signo(c["reaccion_real"]["pct_real"]):
+                ok += 1
+        return (round(100 * ok / len(sub), 1), len(sub))
+    for m in ("TODOS", "indice", "accion", "cripto", "oro", "petroleo"):
+        sub = casos if m == "TODOS" else [
+            c for c in casos
+            if _mercado_de_caso({"simbolos": c.get("simbolos"), "mercado": c.get("mercado")}) == m]
+        if not sub:
+            continue
+        pre, n = acc(sub, False)
+        sen, _ = acc(sub, True)
+        out[m] = {"n": n, "precio": pre, "senal": sen,
+                  "delta": round(sen - pre, 1) if (sen is not None and pre is not None) else None}
+    return out
+
+
 def reporte(ruta: str) -> dict:
     casos = cargar(ruta)
     return {
         "n": len(casos),
         "hit_global": _tasa(casos, lambda x: True)[0],
+        "direccion_senal_vs_precio": direccion_senal_vs_precio(casos),
         "por_mercado": por_mercado_signo_consenso(casos),
         "por_arquetipo": por_arquetipo(casos),
         "por_fuente": por_fuente(casos),
@@ -147,6 +187,11 @@ def reporte(ruta: str) -> dict:
 
 def imprimir(rep: dict) -> None:
     print(f"casos usables: {rep['n']}   hit global: {rep['hit_global']}%\n")
+    print("=== PRIORIDAD 1 · dirección: PRECIO simulado vs SEÑAL de líderes ===")
+    print(f"{'mercado':10}{'n':>5}{'precio%':>9}{'senal%':>9}{'Δ':>7}")
+    for m, d in rep["direccion_senal_vs_precio"].items():
+        print(f"{m:10}{d['n']:>5}{str(d['precio']):>9}{str(d['senal']):>9}{str(d['delta']):>7}")
+    print()
     print("=== MERCADO × SIGNO REAL × |consenso| → hit% (n) ===")
     for m, f in rep["por_mercado"].items():
         print(f"  {m} (n={f['n']})")

@@ -74,3 +74,30 @@ Medir antes de implementar evitó dos cambios inútiles.
 Lo que queda de Fase 2 (Plan A suave, MINIMO_IA gradual, hash de prompt en caché)
 toca el motor en vivo → requiere despliegue (reinicia Render) → se decide con
 Giorgio respecto al evento del 21.
+
+---
+
+## Prioridad 1+2 (plan v2) — dirección desde la señal + zona muerta (MEDIDO)
+
+`evaluar_por_segmento` ahora compara la dirección por PRECIO simulado vs por SEÑAL
+de líderes, con zona muerta 0.3% y cobertura:
+
+| Mercado | n | cobertura | precio% | señal% | Δ |
+|---|--:|--:|--:|--:|--:|
+| TODOS | 678 | 98.8% | 60.4 | **64.8** | +4.4 |
+| índice | 170 | 100% | 54.7 | **64.7** | +10.0 |
+| acción | 239 | 98.3% | 60.0 | 61.3 | +1.3 |
+| cripto | 221 | 99.1% | 68.5 | **71.2** | +2.7 |
+| petróleo | 26 | 100% | 46.2 | **57.7** | +11.5 |
+| oro | 22 | 90.9% | 45.0 | 45.0 | 0.0 |
+
+**Hallazgos:**
+- **Prioridad 1 confirmada:** la dirección por señal supera a la del precio
+  (+4.4 global, +10 índice), robusto a la zona muerta. Implementado aditivamente
+  en `backtest.evaluar` (campo `acierto_senal`).
+- **Prioridad 2 (zona muerta):** la cobertura es ~99% → el examen es casi todo
+  movimientos grandes (el cosechador los cherry-pickea). Por eso la zona muerta
+  casi no cambia los números AQUÍ; su valor es en vivo. **Confirma el sesgo del
+  cosechador de la Propuesta 3** → para un examen realista falta: ventana de
+  pct_real que empiece tras el titular + días NO elegidos por "ya se movió".
+  Eso requiere re-cosechar (IA/Render), no es offline.

@@ -146,29 +146,34 @@ def _corr(xs, ys):
     return round(num / (dx * dy), 3)
 
 
-def direccion_senal_vs_precio(casos):
-    """Prioridad 1 (plan v2): compara el acierto direccional tomando la dirección
+def direccion_senal_vs_precio(casos, zona_muerta=0.3):
+    """Prioridad 1+2 (plan v2): compara el acierto direccional tomando la dirección
     del PRECIO simulado vs. de la SEÑAL de los líderes (senal_media_ponderada),
-    global y por mercado."""
+    global y por mercado. Con ZONA MUERTA (Prioridad 2): los resultados planos
+    (|pct_real| < zona_muerta %) NO cuentan como error — salen del denominador y
+    se reporta la COBERTURA (fracción de casos direccionables)."""
     out = {}
+
     def acc(sub, por_senal):
-        if not sub:
+        dire = [c for c in sub if abs(c["reaccion_real"]["pct_real"]) >= zona_muerta]
+        if not dire:
             return (None, 0)
-        ok = 0
-        for c in sub:
-            pred = _senal_ponderada(c.get("senales_arquetipo") or {}) if por_senal else c["direccion_pct"]
-            if _signo(pred) == _signo(c["reaccion_real"]["pct_real"]):
-                ok += 1
-        return (round(100 * ok / len(sub), 1), len(sub))
+        ok = sum(1 for c in dire
+                 if _signo(_senal_ponderada(c.get("senales_arquetipo") or {}) if por_senal else c["direccion_pct"])
+                 == _signo(c["reaccion_real"]["pct_real"]))
+        return (round(100 * ok / len(dire), 1), len(dire))
+
     for m in ("TODOS", "indice", "accion", "cripto", "oro", "petroleo"):
         sub = casos if m == "TODOS" else [
             c for c in casos
             if _mercado_de_caso({"simbolos": c.get("simbolos"), "mercado": c.get("mercado")}) == m]
         if not sub:
             continue
-        pre, n = acc(sub, False)
+        pre, n_dir = acc(sub, False)
         sen, _ = acc(sub, True)
-        out[m] = {"n": n, "precio": pre, "senal": sen,
+        out[m] = {"n": len(sub), "n_direccionable": n_dir,
+                  "cobertura": round(100 * n_dir / len(sub), 1) if sub else None,
+                  "precio": pre, "senal": sen,
                   "delta": round(sen - pre, 1) if (sen is not None and pre is not None) else None}
     return out
 
@@ -187,10 +192,10 @@ def reporte(ruta: str) -> dict:
 
 def imprimir(rep: dict) -> None:
     print(f"casos usables: {rep['n']}   hit global: {rep['hit_global']}%\n")
-    print("=== PRIORIDAD 1 · dirección: PRECIO simulado vs SEÑAL de líderes ===")
-    print(f"{'mercado':10}{'n':>5}{'precio%':>9}{'senal%':>9}{'Δ':>7}")
+    print("=== PRIORIDAD 1+2 · dirección PRECIO vs SEÑAL (zona muerta 0.3%) ===")
+    print(f"{'mercado':10}{'n':>5}{'cobert%':>9}{'precio%':>9}{'senal%':>9}{'Δ':>7}")
     for m, d in rep["direccion_senal_vs_precio"].items():
-        print(f"{m:10}{d['n']:>5}{str(d['precio']):>9}{str(d['senal']):>9}{str(d['delta']):>7}")
+        print(f"{m:10}{d['n']:>5}{str(d['cobertura']):>9}{str(d['precio']):>9}{str(d['senal']):>9}{str(d['delta']):>7}")
     print()
     print("=== MERCADO × SIGNO REAL × |consenso| → hit% (n) ===")
     for m, f in rep["por_mercado"].items():

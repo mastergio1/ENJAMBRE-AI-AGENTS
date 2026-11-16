@@ -2,6 +2,97 @@
 // Estética editorial Rubicón Lab: tinta cálida, el teal como acento — "el río".
 
 import { ESCENARIOS } from '../swarm/escenario.js'
+import { urlApi } from './conexion.js'
+
+const DESCARGO_ENTREVISTA =
+  'Es un personaje de una simulación educativa. No es asesoría ni recomendación de inversión.'
+
+/** Controlador del chat "entrevistar a un líder": clic en una voz → conversas
+ * con ese personaje. Usa /api/entrevista (modelo barato) y NUNCA rompe la UI:
+ * si el motor no responde, muestra un aviso en vez de caerse. */
+function crearEntrevista(raiz) {
+  const panel = raiz.querySelector('#entrevista')
+  let voz = null
+  let titular = ''
+  let historial = []
+  let ocupado = false
+
+  function burbuja(rol, texto) {
+    const hilo = panel.querySelector('.ent-hilo')
+    if (!hilo) return null
+    const div = document.createElement('div')
+    div.className = `ent-msg ent-${rol === 'user' ? 'yo' : 'lider'}`
+    div.innerHTML = `<span>${esc(texto)}</span>`
+    hilo.appendChild(div)
+    hilo.scrollTop = hilo.scrollHeight
+    return div
+  }
+
+  async function enviar(pregunta) {
+    if (ocupado || !pregunta.trim()) return
+    ocupado = true
+    burbuja('user', pregunta)
+    historial.push({ rol: 'user', texto: pregunta })
+    const pensando = burbuja('lider', '…')
+    const base = urlApi()
+    let datos
+    try {
+      if (!base) throw new Error('sin-motor')
+      const r = await fetch(`${base}/api/entrevista`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          arquetipo: voz.arquetipo, titular, pregunta,
+          senal: voz.senal, frase: voz.frase, historial: historial.slice(0, -1),
+        }),
+      })
+      if (!r.ok) throw new Error(String(r.status))
+      datos = await r.json()
+    } catch (_e) {
+      datos = { respuesta: '(No pude conectar con el líder ahora. Intenta de nuevo en un momento.)' }
+    }
+    if (pensando) pensando.querySelector('span').textContent = datos.respuesta || '(sin respuesta)'
+    historial.push({ rol: 'assistant', texto: datos.respuesta || '' })
+    ocupado = false
+  }
+
+  function render() {
+    panel.innerHTML = `
+      <button class="cerrar" aria-label="cerrar">×</button>
+      <h3>Conversa con ${esc(voz.nombre)}</h3>
+      <p class="ent-frase">«${esc(voz.frase)}»</p>
+      <div class="ent-hilo" aria-live="polite"></div>
+      <form class="ent-form">
+        <input class="ent-input" type="text" maxlength="300" autocomplete="off"
+          placeholder="¿Por qué reaccionaste así?" aria-label="tu pregunta" />
+        <button type="submit">Enviar</button>
+      </form>
+      <p class="descargo">${esc(DESCARGO_ENTREVISTA)}</p>`
+    panel.querySelector('.cerrar').addEventListener('click', () => { panel.hidden = true })
+    const form = panel.querySelector('.ent-form')
+    const input = panel.querySelector('.ent-input')
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const q = input.value.trim()
+      if (!q) return
+      input.value = ''
+      enviar(q)
+    })
+    input.focus()
+  }
+
+  return {
+    abrir(v, t) {
+      if (!v || !v.arquetipo) return
+      voz = v
+      titular = t || ''
+      historial = []
+      ocupado = false
+      render()
+      panel.hidden = false
+    },
+  }
+}
 
 // escape para todo texto de datos (LLM/Alpaca) que va a innerHTML
 const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
@@ -67,8 +158,11 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
 
     <div id="tooltip" class="tooltip" hidden></div>
     <aside id="reporte" class="reporte" hidden></aside>
+    <aside id="entrevista" class="entrevista" hidden></aside>
     <div id="aviso" class="aviso" hidden></div>
   `
+
+  const entrevista = crearEntrevista(raiz)
 
   const campo = raiz.querySelector('#campo-titular')
   raiz.querySelector('#form-noticia').addEventListener('submit', (evento) => {
@@ -154,11 +248,16 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
       const desglose = Object.entries(reporte.desglose || {}).slice(0, 6)
       const num = (v) => Number(v) || 0
 
-      // las 8 voces (archivo) o las 3 frases del reporte en vivo
-      const vocesHtml = extras.voces
-        ? extras.voces.map((v) =>
-            `<p class="voz-arq">«${esc(v.frase)}» <span>— ${esc(v.nombre)} (${v.senal_media > 0 ? '+' : ''}${num(v.senal_media)})</span></p>`).join('')
-        : (reporte.frases || []).map((f) => `<p>«${esc(f.frase)}»</p>`).join('')
+      // las 8 voces (archivo) o las 3 frases del reporte en vivo, NORMALIZADAS
+      // a {arquetipo, nombre, frase, senal} para poder conversar con cada líder
+      const voces = extras.voces
+        ? extras.voces.map((v) => ({ arquetipo: v.arquetipo, nombre: v.nombre, frase: v.frase, senal: num(v.senal_media) }))
+        : (reporte.frases || []).map((f) => ({ arquetipo: f.arquetipo, nombre: f.nombre || 'un líder', frase: f.frase, senal: num(f.senal) }))
+      const titularReporte = extras.titular || reporte.titular || ''
+      const vocesHtml = voces.map((v, i) =>
+        `<p class="voz-arq">«${esc(v.frase)}» <span>— ${esc(v.nombre)} (${v.senal > 0 ? '+' : ''}${v.senal})</span>${
+          v.arquetipo ? ` <button class="voz-chat" data-voz="${i}" title="Conversar con ${esc(v.nombre)}">💬 Conversar</button>` : ''
+        }</p>`).join('')
 
       const epilogoHtml = extras.epilogo
         ? `<div class="epilogo"><div class="epi-rotulo">Comparación educativa · ¿y qué pasó después?</div>
@@ -221,6 +320,12 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
       panelReporte.hidden = false
       panelReporte.querySelector('.cerrar').addEventListener('click', () => {
         panelReporte.hidden = true
+      })
+      panelReporte.querySelectorAll('.voz-chat').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const v = voces[Number(btn.dataset.voz)]
+          if (v) entrevista.abrir(v, titularReporte)
+        })
       })
       panelReporte.querySelector('.rep-otra')?.addEventListener('click', () => {
         panelReporte.hidden = true

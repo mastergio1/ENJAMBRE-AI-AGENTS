@@ -1560,3 +1560,113 @@ body.archivo-abierto .muro { display: none; }
   border: 1px solid rgba(111, 168, 158, 0.4);
   border-radius: 999px;
 }
+
+/* ---- Entrevistar a un líder (chat en personaje) ---- */
+.entrevista {
+  position: fixed;
+  top: 50%;
+  left: 28px;
+  transform: translateY(-50%);
+  width: min(360px, calc(100vw - 40px));
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(27, 25, 22, 0.96);
+  border: 1px solid rgba(227, 197, 101, 0.5);  /* borde dorado: es el "faro" */
+  padding: 20px 22px;
+  backdrop-filter: blur(10px);
+  z-index: 21;
+}
+.entrevista h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #e3c565;
+  margin: 0 0 6px;
+}
+.entrevista .cerrar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+.entrevista .ent-frase {
+  font-style: italic;
+  color: var(--crema-suave);
+  margin: 0 0 12px;
+  font-size: 0.92rem;
+}
+.entrevista .ent-hilo {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 80px;
+  max-height: 46vh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.entrevista .ent-msg {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.entrevista .ent-yo {
+  align-self: flex-end;
+  background: var(--teal-hondo);
+  color: var(--crema);
+}
+.entrevista .ent-lider {
+  align-self: flex-start;
+  background: rgba(227, 197, 101, 0.14);
+  border: 1px solid rgba(227, 197, 101, 0.3);
+  color: var(--crema);
+}
+.entrevista .ent-form {
+  display: flex;
+  gap: 8px;
+}
+.entrevista .ent-input {
+  flex: 1;
+  background: rgba(243, 238, 232, 0.06);
+  border: 1px solid rgba(243, 238, 232, 0.2);
+  color: var(--crema);
+  padding: 9px 11px;
+  font-size: 0.92rem;
+}
+.entrevista .ent-form button {
+  background: #e3c565;
+  color: var(--tinta);
+  border: 0;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.voz-chat {
+  background: none;
+  border: 1px solid rgba(227, 197, 101, 0.45);
+  color: #e3c565;
+  font-size: 0.74rem;
+  padding: 2px 8px;
+  margin-left: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.voz-chat:hover {
+  background: rgba(227, 197, 101, 0.15);
+}
+@media (max-width: 760px) {
+  .entrevista {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100vw - 32px);
+  }
+}

@@ -617,7 +617,9 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
 
     extremos = sorted(zip(lideres, respuestas), key=lambda par: par[1]["senal"])
     frases = [
-        {"arquetipo": lider.arquetipo, "frase": r["frase"], "senal": r["senal"]}
+        {"arquetipo": lider.arquetipo,
+         "nombre": POR_ID.get(lider.arquetipo, {}).get("nombre", lider.arquetipo),
+         "frase": r["frase"], "senal": r["senal"]}
         for lider, r in (extremos[0], extremos[len(extremos) // 2], extremos[-1])
     ]
 
@@ -916,6 +918,37 @@ def simular_titular(peticion: PeticionSimular) -> dict:
     if not permitido and motivo == limites.MENSAJE_GLOBAL:
         return {"estado": "limite", "mensaje": motivo}
     return {"estado": "adelante", "titular": titular["titular"], "titular_id": titular["id"]}
+
+
+class TurnoEntrevista(BaseModel):
+    rol: str = ""
+    texto: str = ""
+
+
+class PeticionEntrevista(BaseModel):
+    arquetipo: str
+    titular: str = ""
+    pregunta: str
+    senal: float | None = None
+    frase: str = ""                       # la frase inicial del líder (contexto)
+    historial: list[TurnoEntrevista] = []  # turnos previos de esta charla
+
+
+@app.post("/api/entrevista")
+def api_entrevista(peticion: PeticionEntrevista) -> dict:
+    """Entrevistar a un líder: responde EN PERSONAJE a '¿por qué reaccionaste así?'
+    (Fase 2, efecto-wow del demo). El rate-limit por IP lo aplica el middleware
+    `blindaje`; el cerebro usa un modelo barato (haiku) y NUNCA se cae (fallback
+    en personaje). CMF: es un personaje de una simulación, no asesoría financiera.
+    """
+    from brains import entrevista
+
+    historial = [{"rol": t.rol, "texto": t.texto}
+                 for t in peticion.historial[-entrevista.MAX_TURNOS:]]
+    r = entrevista.entrevistar(
+        peticion.arquetipo, peticion.titular, peticion.pregunta,
+        senal=peticion.senal, frase_original=peticion.frase, historial=historial)
+    return {**r, "descargo": DISCLAIMER}
 
 
 # ---------- El Pulso: suscripción con double opt-in (CONTENIDO.md sección 6) ----------

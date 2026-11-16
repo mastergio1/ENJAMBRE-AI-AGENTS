@@ -1,0 +1,65 @@
+# Export de la libreta de calibración — canal propio, independiente del respaldo.
+#
+# Descarga del motor TODOS los casos de calibración (destacadas + backtest) con
+# el resumen de señales por arquetipo (`senales_arquetipo`) y lo sube como
+# ARTEFACTO descargable de la corrida. Sirve para analizar la calibración POR
+# ARQUETIPO sin depender del respaldo a la rama respaldo-datos (cuyo token puede
+# expirar). Se dispara SOLO a mano (Actions → Run workflow). No gasta LLM: solo
+# lee la base ya calculada.
+
+name: Export calibración (artefacto)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  exportar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Descargar la libreta
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          mkdir -p export
+          codigo=$(curl -s -m 120 -o export/calibracion.json -w "%{http_code}" \
+            "https://enjambre-motor.onrender.com/api/calibracion/export" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "HTTP $codigo"
+          if [ "$codigo" != "200" ]; then
+            echo "::error::El motor respondió $codigo. Contenido:"
+            cat export/calibracion.json || true
+            exit 1
+          fi
+          n=$(python3 -c "import json,sys; d=json.load(open('export/calibracion.json')); print(d.get('n', len(d.get('casos', []))))")
+          echo "Casos exportados: $n"
+          echo "resumen=$n" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Subir el artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: calibracion-casos
+          path: export/calibracion.json
+          retention-days: 7

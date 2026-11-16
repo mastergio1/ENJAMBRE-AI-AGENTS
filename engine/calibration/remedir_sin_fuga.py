@@ -124,6 +124,25 @@ def resumen(filas):
     return out
 
 
+def gating_por_senal(filas, cortes=(0.0, 0.1, 0.2, 0.3, 0.5), zona=0.3):
+    """¿Acierta más la SEÑAL cuando es más fuerte? (gating/confianza). Para cada
+    corte |señal| ≥ c mide, SIN fuga, el acierto de la señal y la COBERTURA
+    (fracción de casos direccionables que superan el corte). Si el acierto sube
+    con el corte, |señal| informa confianza; si es plano, es adorno."""
+    dire = [f for f in filas if f["pct_corr"] is not None and abs(f["pct_corr"]) >= zona]
+    base = len(dire)
+    out = []
+    for c in cortes:
+        sub = [f for f in dire if abs(f["senal"]) >= c]
+        if not sub:
+            out.append({"corte": c, "acierto": None, "n": 0, "cobertura": 0.0})
+            continue
+        ok = sum(1 for f in sub if _sg(f["senal"]) == _sg(f["pct_corr"]))
+        out.append({"corte": c, "acierto": round(100 * ok / len(sub), 1),
+                    "n": len(sub), "cobertura": round(100 * len(sub) / base, 1) if base else 0.0})
+    return out
+
+
 def imprimir(res):
     print(f"{'mercado':10}{'n':>5} | CON fuga precio/señal | SIN fuga precio/señal")
     for m, d in res.items():
@@ -131,7 +150,23 @@ def imprimir(res):
         print(f"{m:10}{d['n']:>5} |   {cf['precio']} / {cf['senal']}   |   {sf['precio']} / {sf['senal']}")
 
 
+def imprimir_gating(g):
+    print(f"\n{'|señal|≥':10}{'acierto%':>10}{'n':>7}{'cobertura%':>12}")
+    for r in g:
+        print(f"{r['corte']:<10}{str(r['acierto']):>10}{r['n']:>7}{str(r['cobertura']):>12}")
+
+
 if __name__ == "__main__":
+    import json as _json
     ruta = sys.argv[1] if len(sys.argv) > 1 else "calibracion.json"
     print("re-midiendo históricos con Yahoo (sin fuga)…", flush=True)
-    imprimir(resumen(recolectar(ruta)))
+    filas = recolectar(ruta)
+    try:  # cachear las filas re-medidas para no re-consultar Yahoo
+        _json.dump(filas, open(ruta + ".sinfuga.json", "w"))
+    except Exception:
+        pass
+    imprimir(resumen(filas))
+    print("\n=== GATING: ¿acierta más la señal cuando es más fuerte? (TODOS, sin fuga) ===")
+    imprimir_gating(gating_por_senal(filas))
+    print("\n=== GATING solo ÍNDICE (donde hay señal real) ===")
+    imprimir_gating(gating_por_senal([f for f in filas if f["mercado"] == "indice"]))

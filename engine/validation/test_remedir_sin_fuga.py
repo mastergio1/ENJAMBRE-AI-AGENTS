@@ -71,3 +71,18 @@ def test_recolectar_desde_archivo(tmp_path):
     # resumen: la señal (-0.8) acierta contra el real sin fuga (-5%)
     res = R.resumen(filas)
     assert res["cripto"]["sin_fuga"]["senal"] == 100.0
+
+
+def test_gating_por_senal_cobertura_y_acierto():
+    # 4 casos direccionables: señales fuertes aciertan, señales débiles fallan
+    filas = [
+        {"senal": 0.8, "pct_corr": 5.0},    # fuerte, acierta
+        {"senal": 0.6, "pct_corr": 4.0},    # fuerte, acierta
+        {"senal": 0.05, "pct_corr": -3.0},  # débil, falla (señal+ real-)
+        {"senal": -0.05, "pct_corr": 2.0},  # débil, falla (señal- real+)
+    ]
+    g = R.gating_por_senal(filas, cortes=(0.0, 0.5))
+    base = g[0]       # |señal|>=0: los 4
+    fuerte = g[1]     # |señal|>=0.5: los 2 fuertes
+    assert base["n"] == 4 and base["acierto"] == 50.0 and base["cobertura"] == 100.0
+    assert fuerte["n"] == 2 and fuerte["acierto"] == 100.0 and fuerte["cobertura"] == 50.0

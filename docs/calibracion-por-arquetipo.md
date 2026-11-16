@@ -159,3 +159,33 @@ motor):**
 
 Se eligió 0.3 (no 0.0) para capturar la mayor parte de la mejora dejando un
 colchón contra el sobreajuste a 678 casos. Tests: `test_senal_ponderada.py`.
+
+## ✅ Fase 5 — validación walk-forward + promoción del calibrador
+
+El split 2/3 es un solo corte. La prueba honesta es **ventana expansiva**:
+entrena con el pasado, predice el siguiente bloque, avanza — como en vivo.
+Herramienta: `engine/calibration/walk_forward.py` (478 predicciones fuera de
+muestra sobre los 678 casos).
+
+| Modo | Método | Brier OOS | Base | Skill |
+|---|---|---:|---:|---:|
+| **señal ponderada** | **Platt** | **0.2227** | 0.2477 | **10.1%** |
+| señal simple | Platt | 0.2258 | 0.2477 | 8.8% |
+| señal ponderada | Isotónica | 0.2265 | 0.2477 | 8.6% |
+| señal simple | Isotónica | 0.2308 | 0.2477 | 6.8% |
+| dirección | Platt | 0.2335 | 0.2477 | 5.7% |
+| dirección | Isotónica | 0.2351 | 0.2477 | 5.1% |
+
+**Conclusiones:**
+- El calibrador **gana ~10% de skill** fuera de muestra sobre la tasa base —
+  modesto pero real y consistente entre métodos.
+- La **señal ponderada le gana a la simple en los dos métodos**: la Intervención
+  A aguanta la prueba estricta, no era un artefacto del corte 2/3.
+- El mejor (señal ponderada + Platt) **supera el margen de promoción** (0.025 >
+  0.005) → `promover()` lo marca **PROMOVIDO** y deja el calibrador ya ajustado
+  con todos los datos, listo para que el motor lo cargue.
+
+**Pendiente humano (no lo hago solo):** publicar `probabilidad_subida` en vivo
+es una decisión con lenguaje CMF (no puede sonar a recomendación de inversión).
+La validación y el calibrador están listos; el cómo y con qué palabras se muestra
+lo decide Giorgio. Tests: `test_walk_forward.py`.

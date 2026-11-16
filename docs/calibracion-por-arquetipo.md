@@ -189,3 +189,37 @@ muestra sobre los 678 casos).
 es una decisión con lenguaje CMF (no puede sonar a recomendación de inversión).
 La validación y el calibrador están listos; el cómo y con qué palabras se muestra
 lo decide Giorgio. Tests: `test_walk_forward.py`.
+
+## ✅ Fase 1 del plan — A/B del doomer en ACCIÓN: NO activar (medido)
+
+Se midió con IA real si activar el `doomer_selectivo` en el mercado **acción**
+(candidato "índice-like" pendiente), usando `evaluar` sobre la base local (678
+casos; la herramienta se arregló para no depender del respaldo remoto roto).
+
+**Comparación controlada (mismos 40 casos, misma lectura de IA, solo cambia la
+perilla del doomer):**
+
+| Doomer en acción | Negativas | Positivas |
+|---|---:|---:|
+| **0.0 (base)** | **42.9%** (12/28) | 100% (12/12) |
+| **1.0 (tratamiento)** | 39.3% (11/28) | 100% (12/12) |
+
+El tratamiento completo (189 casos) cerró en **26.3%** de negativas (20/76) — la
+señal bajó tanda a tanda (39→36→32→27→26%), confirmando que las primeras tandas
+engañaban.
+
+**Veredicto: el doomer NO ayuda en acción; incluso estorba un poco.** Se deja
+`peso_doomer_por_mercado.accion = 0.0` (sin cambio).
+
+**Lección honesta:** el "+10 pts" que sugería la primera medición era un
+**artefacto**: comparaba el tratamiento contra una base vieja contaminada
+(22.4%), no contra la base limpia sobre los mismos casos. Al medir bien
+(mismos casos, misma caché de IA, solo la perilla), el beneficio desaparece.
+Medir en vez de asumir evitó desplegar un cambio inútil.
+
+**Estado del `peso_doomer_por_mercado`:** índice = 1.0 (confirmado antes);
+acción/cripto/oro/petróleo = 0.0. Oro y petróleo no se midieron a fondo: sus
+muestras son muy chicas (8 y 11 negativas) y, dado que el candidato más fuerte
+(acción) no rindió —y que el oro es refugio (puede subir con malas noticias, con
+el doomer siendo contraproducente)—, el valor esperado de activarlos es bajo. Se
+dejan en 0.0; se pueden revisar después del evento con más datos.

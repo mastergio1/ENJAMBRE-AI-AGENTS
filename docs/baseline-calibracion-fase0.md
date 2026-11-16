@@ -51,3 +51,26 @@ casos usables: 678   hit global: 60.3%
   ia_real            60.7% (n=651)
   respaldo_lexico    51.9% (n=27)
 ```
+
+---
+
+## Fase 2 — medición offline de consenso (antes de cablear)
+
+Medido con walk-forward (Platt, fuera de muestra) sobre los 678 casos:
+
+| Esquema | Brier OOS | Skill |
+|---|---:|---:|
+| **ponderada 0.3 (actual, prioridad 1)** | **0.2227** | **10.1%** |
+| fiabilidad (re-pesar por acierto histórico, H5) | 0.2236 | 9.7% |
+| simple | 0.2258 | 8.8% |
+| recortada ~12% (H4) | 0.2328 | 6.0% |
+| mediana (H4) | 0.2384 | 3.8% |
+
+**Verdicto:** H4 (consenso robusto: mediana/recortada) **empeora**; H5 (re-pesar por
+fiabilidad) **empata/no supera** a la señal ponderada que ya está en producción.
+→ **No se cablean.** La señal ponderada 0.3 sigue siendo el mejor estimador OOS.
+Medir antes de implementar evitó dos cambios inútiles.
+
+Lo que queda de Fase 2 (Plan A suave, MINIMO_IA gradual, hash de prompt en caché)
+toca el motor en vivo → requiere despliegue (reinicia Render) → se decide con
+Giorgio respecto al evento del 21.

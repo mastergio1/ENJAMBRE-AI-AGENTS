@@ -274,10 +274,23 @@ def _mercado_de_caso(caso: dict) -> str:
     return "accion"
 
 
+def _casos_locales() -> list[dict]:
+    """Casos de calibración desde la base LOCAL (no depende del respaldo remoto,
+    que puede estar caído o con el token vencido). Mismo formato que
+    casos_remotos(): sim_id, reaccion_real, fecha, simbolos, …"""
+    from contenido import persistencia, respaldo
+    con = persistencia.conectar()
+    try:
+        return respaldo.exportar_casos(con)
+    finally:
+        con.close()
+
+
 def evaluar(tamano: int | None = None, mercado: str | None = None,
             peso: float | None = None, umbral: float | None = None,
             doomer: float | None = None, reiniciar: bool = False,
-            simular=None, guardar: bool = True, refrescar: bool = False) -> dict:
+            simular=None, guardar: bool = True, refrescar: bool = False,
+            local: bool = False) -> dict:
     """Re-simula los exámenes YA respaldados bajo el código/entorno ACTUAL y
     mide el acierto de DIRECCIÓN por categoría, comparándolo con el resultado
     real ya conocido. Sirve para medir el impacto de un cambio (ej. P2) SIN
@@ -306,7 +319,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         try:
             return evaluar(tamano=tamano, mercado=mercado, peso=peso, umbral=umbral,
                            doomer=doomer, reiniciar=reiniciar, simular=simular,
-                           guardar=guardar, refrescar=False)
+                           guardar=guardar, refrescar=False, local=local)
         finally:
             if previo is None:
                 os.environ.pop("ENJAMBRE_IGNORAR_CACHE", None)
@@ -320,7 +333,7 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         try:
             return evaluar(tamano=tamano, mercado=mercado, peso=peso, umbral=umbral,
                            doomer=None, reiniciar=reiniciar, simular=simular,
-                           guardar=guardar)
+                           guardar=guardar, local=local)
         finally:
             if previo is None:
                 os.environ.pop("ENJAMBRE_PESO_DOOMER", None)
@@ -334,7 +347,8 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         os.environ["ENJAMBRE_UMBRAL_CORRECCION_SESGO"] = str(umbral)
         try:
             return evaluar(tamano=tamano, mercado=mercado, peso=peso, umbral=None,
-                           reiniciar=reiniciar, simular=simular, guardar=guardar)
+                           reiniciar=reiniciar, simular=simular, guardar=guardar,
+                           local=local)
         finally:
             if previo is None:
                 os.environ.pop("ENJAMBRE_UMBRAL_CORRECCION_SESGO", None)
@@ -346,7 +360,8 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
         os.environ["ENJAMBRE_PESO_TONO_INVERSORES"] = str(peso)
         try:
             return evaluar(tamano=tamano, mercado=mercado, peso=None, umbral=None,
-                           reiniciar=reiniciar, simular=simular, guardar=guardar)
+                           reiniciar=reiniciar, simular=simular, guardar=guardar,
+                           local=local)
         finally:
             if previo is None:
                 os.environ.pop("ENJAMBRE_PESO_TONO_INVERSORES", None)
@@ -360,10 +375,18 @@ def evaluar(tamano: int | None = None, mercado: str | None = None,
     from contenido import respaldo
     from contenido.corrector import cerebros_ia
 
-    try:
-        casos = respaldo.casos_remotos()
-    except Exception:
-        casos = []
+    if local:
+        casos = _casos_locales()
+    else:
+        try:
+            casos = respaldo.casos_remotos()
+        except Exception:
+            casos = []
+        if not casos:
+            # El respaldo remoto está vacío o caído (p. ej. token vencido): en vez
+            # de medir sobre 0 casos, caemos a la base LOCAL. La medición no debe
+            # depender de la salud del respaldo.
+            casos = _casos_locales()
     # Evaluación DIRECTA sobre los casos ya respaldados (traen titular + el
     # resultado real). NO se cruza con el banco de eventos: ese cruce por sim_id
     # es frágil (el raw y la API de GitHub sirven versiones distintas del

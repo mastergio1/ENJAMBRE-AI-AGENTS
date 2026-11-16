@@ -60,8 +60,9 @@ class AgenteBase(mesa.Agent):
 
     @property
     def precio(self) -> float:
-        """Precio de referencia: el cierre VWAP del último tick.
-        (El último precio transado rebota demasiado entre bid y ask.)"""
+        """Precio de referencia: el cierre del último tick de la serie, que es
+        el ÚLTIMO PRECIO TRANSADO (no el VWAP; ver la política de precio en
+        market/order_book.py — el VWAP mete arrastre artificial, medido)."""
         return self.model.historial_precios[-1]
 
     def valor_cartera(self) -> float:

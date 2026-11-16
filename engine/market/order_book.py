@@ -3,9 +3,16 @@
 Todas las órdenes son órdenes límite. Un agente con urgencia cruza el
 libro poniendo un precio agresivo (dispuesto a pagar más / recibir menos);
 lo que no encuentra contraparte queda reposando y da liquidez al resto.
-Las órdenes viejas expiran. El precio del tick es el VWAP: el promedio
-de donde realmente se operó. Así el precio emerge del cruce de oferta y
+Las órdenes viejas expiran. Así el precio emerge del cruce de oferta y
 demanda, sin mecanismos artificiales.
+
+POLÍTICA DE PRECIO DE LA SERIE (explícita): la serie del mercado
+(`model.historial_precios`) usa el ÚLTIMO PRECIO TRANSADO del tick
+(`ultimo_precio`), no el VWAP. Se midió que usar el VWAP para la serie mete
+autocorrelación artificial en los retornos (arrastre ~0.40 vs ~0.05 con
+último-trade) y rompe el hecho estilizado de "sin arrastre". El VWAP
+(`vwap_tick()`) queda disponible como métrica SEPARADA de ejecución/liquidez,
+no como el precio de la serie. Ver docs/decision-politica-precio.md.
 """
 
 from dataclasses import dataclass

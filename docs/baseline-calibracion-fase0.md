@@ -101,3 +101,41 @@ de líderes, con zona muerta 0.3% y cobertura:
   cosechador de la Propuesta 3** → para un examen realista falta: ventana de
   pct_real que empiece tras el titular + días NO elegidos por "ya se movió".
   Eso requiere re-cosechar (IA/Render), no es offline.
+
+---
+
+## Prioridad 2b (a) — LA FUGA DEL EXAMEN (medido SIN IA, hallazgo crítico)
+
+Se re-midió `pct_real` de los 616 casos históricos con ventana SIN fuga: desde el
+cierre del **día del titular** hacia adelante (no desde el cierre anterior, que
+incluía el movimiento que hizo seleccionar ese día). Solo Yahoo, sin IA.
+
+| Mercado | n | Con fuga (examen actual) precio/señal | **SIN fuga** precio/señal |
+|---|--:|--:|--:|
+| TODOS | 616 | 60.8 / 64.4 | **49.4 / 50.6** |
+| **índice** | 163 | 55.2 / 63.8 | **56.7 / 63.1** |
+| acción | 188 | 60.1 / 60.1 | **44.2 / 44.2** |
+| cripto | 220 | 68.8 / 71.6 | **50.7 / 48.8** |
+| petróleo | 25 | 48.0 / 56.0 | 36.4 / 45.5 |
+| oro | 20 | 42.1 / 42.1 | 45.0 / 45.0 |
+
+**Conclusión (dura y honesta):**
+- **Gran parte del "acierto" del examen era FUGA.** El examen medía el mismo
+  movimiento que hizo elegir el día, y el titular ya lo describía. Sin esa fuga,
+  el acierto cae a ~50% (moneda al aire) en el agregado.
+- **Solo ÍNDICE conserva señal real:** 63.1% con la señal (vs 50% de azar) aun sin
+  fuga. Ahí el enjambre SÍ anticipa el movimiento posterior a la noticia.
+- **Acción y cripto caen a ~45-50%:** la dirección posterior a un titular de una
+  acción/cripto individual es casi impredecible desde el texto (techo estructural).
+- **La ventaja relativa de la SEÑAL sobre el PRECIO se mantiene donde hay señal**
+  (índice +6.4, petróleo +9.1) → Prioridad 1 sigue válida como fuente de dirección.
+
+**Caveat:** la ventana corregida (estrictamente tras el cierre del día del titular)
+puede ser DEMASIADO conservadora si la noticia salió intradía (ese mismo día es
+reacción legítima). La verdad está entre el examen con fuga (inflado) y este (piso
+honesto). Pero la dirección del hallazgo es inequívoca.
+
+**Implicación de producto/CMF:** NO se deben publicar cifras de "acierto" basadas
+en el examen con fuga. El marco honesto y regulatoriamente seguro es el que ya
+usa el producto: **visualización educativa del comportamiento de masas, no un
+predictor.** Donde sí hay valor predictivo real es en índice/macro.

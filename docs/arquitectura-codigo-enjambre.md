@@ -2,6 +2,7 @@
 
 *Rubicón Lab · documento técnico factual · referencia del motor de simulación.*
 *Solo describe cómo está construido el código actual. Sin recomendaciones.*
+*Regenerado: 2026-11-16.*
 
 ---
 
@@ -15,31 +16,35 @@
 - **Red de influencia:** `networkx==3.6.1`.
 - **Imagen:** `Pillow==12.3.0`.
 - **Persistencia:** SQLite (biblioteca estándar `sqlite3`, modo WAL).
+- **Frontend:** Vite + Three.js + GSAP (JS vanilla), desplegado en Vercel
+  (`enjambre-ai-agents.vercel.app`). Motor en Render (`enjambre-motor.onrender.com`).
 
 ## 2. Estructura del directorio `engine/`
 
 ```
 engine/
-├── model.py                 # MercadoEnjambre: modelo central, ciclo de ticks
-├── market/order_book.py     # LibroOrdenes: formación de precio (VWAP)
+├── model.py                 # MercadoEnjambre: modelo central, ciclo de ticks, overrides, instrumentación
+├── market/order_book.py     # LibroOrdenes: formación de precio (último-trade) + reservas
+├── llm_texto.py             # texto_de(respuesta): extrae texto de una respuesta de la API
 ├── agents/
-│   ├── base.py              # AgenteBase: cartera, órdenes, memoria
+│   ├── base.py              # AgenteBase: cartera, órdenes (con reservas), memoria
 │   ├── reglas.py            # 12 tipos de agentes de reglas
 │   └── lider.py             # LiderOpinion (tipo 13, LLM)
 ├── brains/
 │   ├── arquetipos.py        # 9 arquetipos LLM (prompts, cantidades, seguidores)
-│   ├── cerebro.py           # llamadas a la API, caché, concurrencia
+│   ├── cerebro.py           # llamadas a la API de opinión, caché, concurrencia
 │   ├── reparto.py           # reparto de ~110 cerebros entre 1150 líderes
 │   ├── fallback.py          # respaldo léxico (sin API)
-│   └── mercado.py           # clasificador de mercado + perfiles de personalidad
+│   ├── mercado.py           # clasificador de mercado + perfiles de personalidad
+│   └── entrevista.py        # cerebro de "entrevistar a un líder" (chat en personaje)
 ├── network/red.py           # construcción de la red de influencia (scale-free)
 ├── config/agentes.json      # la mezcla de 10.150 agentes + perillas globales
 ├── validation/
 │   ├── hechos_estilizados.py# curtosis, autocorrelación, asimetría de pánico
-│   └── test_*.py            # ~45 archivos de tests
+│   └── test_*.py            # ~50 archivos de tests
 ├── calibration/             # laboratorio de calibración offline (no lo usa el motor en vivo)
-├── contenido/               # capa de contenido (backtest, libreta, persistencia, pulso…)
-├── server.py                # FastAPI + WebSocket; orquesta una simulación
+├── contenido/               # capa de contenido (backtest, libreta, persistencia, pulso, muro…)
+├── server.py                # FastAPI + WebSocket; orquesta una simulación y expone los endpoints
 ├── simular.py               # runner CLI de hechos estilizados
 └── demo_titular.py          # runner CLI de un titular
 ```
@@ -51,11 +56,11 @@ engine/
 - `FACTORES_LIQUIDEZ = {"cripto": 30.0, "accion": 40.0}` — tope de `|direccion_pct|` reportado por mercado (función `acotar_magnitud`, P3: recorta magnitud, conserva el signo).
 - `GANANCIA_CONSENSO = 0.8` — factor de magnitud aplicado al consenso de la IA al usarlo como tono.
 - `MINIMO_IA_CONSENSO = 0.5` — fracción mínima de líderes con respuesta real de IA para usar el consenso como tono (si no, se usa el léxico).
-- `ARQUETIPOS_INVERSORES = {quant_esceptico, contrarian_sabio, influencer_optimista}`.
-- `ARQUETIPOS_DOOMER = {doomer_selectivo}`.
+- `ARQUETIPOS_INVERSORES = {quant_esceptico, contrarian_sabio, influencer_optimista}` — su peso en el TONO se modula con `peso_tono_invertidores`.
+- `ARQUETIPOS_DOOMER = {doomer_selectivo}` — su peso en el TONO se modula con `peso_doomer`.
 
 ### 3.2 Estado (`__init__`)
-`seed`, `precio_inicial=100.0`, `ticks_horizonte=400`, `ruta_config=config/agentes.json`.
+Firma: `MercadoEnjambre(seed, precio_inicial=100.0, ticks_horizonte=400, ruta_config=config/agentes.json, overrides=None)`.
 - `self.libro = LibroOrdenes(precio_inicial)` con callback `notificar_ejecucion`.
 - `self.sentimiento = 0.0` (sentimiento global, decae `*0.95`/tick).
 - `self._ultimo_consenso = 0.0` (P4, fuerza de la señal → "confianza" del reporte).
@@ -63,27 +68,31 @@ engine/
 - Series: `historial_precios` (empieza `[100.0]`), `retornos`, `flujo_compras`, `flujo_ventas`.
 - `cola_senales`: cola del rumor `(tick_entrega, agente, valor, salto)`.
 - `MAX_HISTORIAL = 600` (recorte de colas en sesiones largas).
+- `self.overrides = overrides or {}` (ajustes de parámetros SOLO para experimentos; producción pasa `None`).
 - Crea agentes (`_crear_agentes`), indexa por id, aísla líderes (`_lideres`), y llama `construir_red(self)`.
 
 ### 3.3 Creación de agentes (`_crear_agentes`)
 - Lee `config/agentes.json`.
-- Perillas globales leídas con override por entorno:
+- Perillas globales leídas con override por entorno y por `overrides`:
   - `_peso_tono_invertidores` ← `peso_tono_invertidores` (config, def 1.0) / `ENJAMBRE_PESO_TONO_INVERSORES`.
   - `_umbral_correccion` ← `umbral_correccion_sesgo` (config) / `ENJAMBRE_UMBRAL_CORRECCION_SESGO`.
   - `_peso_doomer` ← `ENJAMBRE_PESO_DOOMER` (override global, o `None`).
   - `_peso_doomer_por_mercado` ← config `peso_doomer_por_mercado`.
   - `_peso_doomer_defecto` ← config `peso_doomer`.
   - `_sigma_ruido` ← `ruido_parametros_sigma` (def 0.15).
+- **Overrides de experimento** (validados):
+  - `overrides["global"]`: claves permitidas en `_GLOBALES_OVERRIDE = {peso_tono_invertidores, umbral_correccion_sesgo, peso_doomer, peso_doomer_por_mercado, ruido_parametros_sigma}`; una clave desconocida lanza `ValueError`.
+  - `overrides[<tipo_id>]`: se fusionan sobre los parámetros base del tipo; una clave que el tipo no tiene lanza `ValueError`.
 - Por cada tipo: `capital = capital_relativo * CAPITAL_BASE`; expone `parametros` del tipo en `_cfg_agentes_actual` (lo lee `AgenteBase.cfg`); instancia `cantidad` agentes. Para `lider_opinion`, instancia por arquetipo.
 - `CLASES_POR_TIPO` mapea id→clase (fundamentalista, quant_momentum, fondo_pasivo, market_maker, ejecutor_twap, arbitrajista, noise_trader, manada, fomo, miedoso, contrarian, buy_and_hold).
 
 ### 3.4 Ciclo de un tick (`step`)
 1. `self.tick += 1`.
-2. `self.libro.reiniciar_tick(tick)` (expira órdenes viejas, reinicia flujo).
+2. `self.libro.reiniciar_tick(tick)` (expira órdenes viejas y **libera sus reservas**, reinicia flujo).
 3. `self._entregar_senales()` (entrega el rumor que vence este tick).
 4. `self.agents.shuffle_do("step")` (cada agente opera, en orden aleatorio).
 5. Decaimiento de `senal_social` de cada agente `*0.75` (se anula bajo 0.01).
-6. Precio del tick = `libro.ultimo_precio` si hubo volumen, si no el último precio.
+6. **Precio del tick = `libro.ultimo_precio`** si hubo volumen, si no el último precio (línea 485). **No es el VWAP** (ver §4).
 7. Append a `historial_precios`, `retornos`, `flujo_compras`, `flujo_ventas`.
 8. `self.sentimiento *= 0.95`.
 9. Recorte de colas a `MAX_HISTORIAL`.
@@ -91,19 +100,32 @@ engine/
 ### 3.5 Series consultadas por los agentes
 - `retorno_acumulado(n)`, `volatilidad_reciente(n)` (desv. est. de los últimos n retornos), `fraccion_compras(n)` (fracción compradora del volumen; `None` si volumen < 100).
 
+### 3.6 Instrumentación (opt-in, para medir quién mueve el precio)
+- `activar_instrumentacion()`: fija `libro.registrar_ejecucion_instr = self._instr_ejecucion`. Sin llamarla, el callback es `None` y producción queda intacta.
+- `_instr_ejecucion(agresor_id, proveedor_id, cantidad, precio)`: acumula volumen por tipo de agente como AGRESOR (quien cruza) y como PROVEEDOR (quien reposaba).
+- `resumen_instrumentacion()`: devuelve `{agresor, proveedor, agresor_pct, proveedor_pct}` (volumen y % por tipo).
+
 ## 4. Formación de precio — `market/order_book.py` → `LibroOrdenes`
 
 - **Todas las órdenes son límite.** `VIDA_ORDEN = 4` ticks (luego expiran en `reiniciar_tick`).
-- `orden_limite(agente_id, lado, precio, cantidad)`: cruza contra el lado contrario mientras el precio cruce; lo no ejecutado queda reposando (compras ordenadas desc por precio, ventas asc). Devuelve `(ejecutado, dinero)`.
-- Cuando se ejecuta una orden en reposo, se llama `notificar_ejecucion(agente_id, lado_dueño, cantidad, precio)` → `MercadoEnjambre._notificar_ejecucion` → `agente.aplicar_ejecucion`.
-- Precio del tick = **VWAP** (`valor_tick / volumen_tick`); `ultimo_precio` = último precio transado.
-- Contadores por tick: `volumen_tick`, `valor_tick`, `volumen_compras_tick`, `volumen_ventas_tick`.
+- **Política de precio de la SERIE: último precio transado (`ultimo_precio`), NO el VWAP.** Se midió que usar el VWAP para la serie sube el arrastre (autocorrelación de retornos de ~0.05 a ~0.40) y rompe el hecho estilizado "sin arrastre". El `vwap_tick()` queda disponible como métrica SEPARADA de ejecución/liquidez (no alimenta la serie).
+- `orden_limite(agente_id, lado, precio, cantidad)`: cruza contra el lado contrario mientras el precio cruce; lo no ejecutado queda reposando (compras ordenadas desc por precio, ventas asc) y **reserva** inventario/efectivo (`_reservar`). Devuelve `(ejecutado, dinero)`.
+- **Sistema de reservas (Fase 0):** evita ventas en corto / efectivo negativo por órdenes en reposo.
+  - `_reserva_venta[id]` (acciones comprometidas por ventas en reposo), `_reserva_compra[id]` (efectivo comprometido por compras en reposo).
+  - `reserva_venta(id)`, `reserva_compra(id)`: consultadas por `AgenteBase.colocar_orden`.
+  - `_reservar(orden)` al reposar; `_liberar(orden, cantidad)` al ejecutar o expirar; `reiniciar_tick` y `cancelar_ordenes` liberan reservas.
+- Cuando se ejecuta una orden en reposo: se libera la cantidad ejecutada, se llama `notificar_ejecucion(agente_id, lado_dueño, cantidad, precio)` → `MercadoEnjambre._notificar_ejecucion` → `agente.aplicar_ejecucion`, y (si está activo) el callback `registrar_ejecucion_instr(agresor_id, proveedor_id, cantidad, precio)`.
+- `ultimo_precio` = último precio transado. Contadores por tick: `volumen_tick`, `valor_tick` (Σ cantidad×precio, para el VWAP), `volumen_compras_tick`, `volumen_ventas_tick`.
 
 ## 5. Clase base — `agents/base.py` → `AgenteBase(mesa.Agent)`
 
 - Arranca `efectivo = capital*0.5`, `acciones = (capital*0.5)/precio`.
-- `cfg` = parámetros del tipo (del config); `ruido(valor, sigma=0.15)` = `valor * gauss(1, sigma)`.
-- `colocar_orden(lado, precio_limite, cantidad)`: compra limitada por efectivo y por `tope_sano = 2*capital_inicial/precio`; venta limitada a `acciones` (sin ventas en corto). Ejecuta vía `libro.orden_limite`.
+- `cfg` = parámetros del tipo (del config, ya fusionados con overrides); `ruido(valor, sigma=0.15)` = `valor * gauss(1, sigma)`.
+- `precio` (property) = último precio transado del libro.
+- `colocar_orden(lado, precio_limite, cantidad)`:
+  - Compra limitada por `efectivo - libro.reserva_compra(id)` (y por `tope_sano = 2*capital_inicial/precio`).
+  - Venta limitada por `acciones - libro.reserva_venta(id)` (sin ventas en corto).
+  - Ejecuta vía `libro.orden_limite`.
 - `comprar_mercado/vender_mercado(cantidad, urgencia)`: urgencia por defecto `min(expovariate(125), 0.06)`; coloca orden a `precio*(1±urgencia)`.
 - `aplicar_ejecucion(lado, cantidad, precio)`: actualiza efectivo/acciones, `ultima_accion`, `tick_ultima_accion`.
 - **Memoria (Nivel 1):** `actualizar_memoria(sentimiento)` guarda las últimas 5 noticias; `modo_cautela = (nº noticias con sentimiento < -0.3) >= 3`. Lo usa el freno de la manada.
@@ -152,7 +174,8 @@ Cada arquetipo define `id`, `nombre`, `cantidad`, `seguidores` (rango), `sigue` 
 | `doomer_selectivo` | El Analista de Riesgo Selectivo | 150 | 20–55 | no | miedoso |
 
 - `INSTRUCCION_JSON`: obliga a responder solo `{"senal", "confianza", "frase"}`.
-- `RAZONAMIENTO_CONTEXTUAL`: texto extra que se añade al prompt de los arquetipos `contextual: True` (descontar el futuro / contexto). Los no-contextual reaccionan en frío.
+- `RAZONAMIENTO_CONTEXTUAL`: texto extra que se añade al prompt de los arquetipos `contextual: True` (descontar el futuro / contexto / distinguir sorpresa de lo ya esperado / posible cambio de signo). Los no-contextual (fomo, doomer, influencer_optimista, doomer_selectivo) reaccionan en frío al titular.
+- `POR_ID = {a["id"]: a for a in ARQUETIPOS}`.
 
 ## 9. Cerebros LLM — `brains/cerebro.py` y `brains/reparto.py`
 
@@ -169,6 +192,7 @@ Cada arquetipo define `id`, `nombre`, `cantidad`, `seguidores` (rango), `sigue` 
 - `ENJAMBRE_IGNORAR_CACHE` fuerza respuestas frescas (para medir cambios de prompt) y sobrescribe la caché.
 - `_validar_respuesta`: extrae JSON, recorta `senal∈[-1,1]`, `confianza∈[0,1]`, `frase` a 160 chars.
 - Prompt enviado = `prompt del arquetipo` (+ `RAZONAMIENTO_CONTEXTUAL` si contextual) + `INSTRUCCION_JSON` como `system`; `user` = "Titular de hoy: {titular}".
+- `_reportar_primera_falla`: deja UNA línea en el log con la causa real de la primera falla de API del proceso.
 
 ### 9.3 Fallback léxico (`brains/fallback.py`)
 - `respuesta_fallback(titular, arquetipo_id, semilla)` → `{senal, confianza, frase, fuente:"fallback"}` con una función por arquetipo (frases precargadas + `sentimiento_lexico`).
@@ -206,6 +230,7 @@ Cada arquetipo define `id`, `nombre`, `cantidad`, `seguidores` (rango), `sigue` 
 2. Cada agente `actualizar_memoria`.
 3. Cada líder `recibir_noticia` (señal precomputada).
 4. `_propagar_desde_lideres`.
+(No llama a la API; la usan los tests y los escenarios de estrés.)
 
 ### 12.2 Ruta de titular real — `model.aplicar_titular(titular, respuestas, perfil)`
 1. Los 1150 líderes reciben `senal/confianza/frase` de `respuestas` (de `cerebro.analizar_titular` vía reparto).
@@ -227,6 +252,7 @@ Cada arquetipo define `id`, `nombre`, `cantidad`, `seguidores` (rango), `sigue` 
 ## 13. Configuración — `config/agentes.json`
 
 - **Perillas globales (top-level):** `total_agentes: 10150`, `ruido_parametros_sigma: 0.15`, `umbral_correccion_sesgo: 0.35`, `peso_doomer: 0.0`, `peso_doomer_por_mercado: {indice:1.0, accion:0.0, cripto:0.0, oro:0.0, petroleo:0.0}`.
+  - `peso_tono_invertidores` **no está en el config** → usa el default 1.0 (los arquetipos invertidores pesan completo en el tono).
 - **Mezcla (10.150 agentes):** 9.000 de reglas + 1.150 líderes.
 
 | tipo | cantidad | capital_relativo | en_red_social |
@@ -247,20 +273,24 @@ Cada arquetipo define `id`, `nombre`, `cantidad`, `seguidores` (rango), `sigue` 
 
 - `test_config_enchufado.py` verifica que cada parámetro del config sea leído por su agente (excepto `sensibilidad_noticias` del fondo pasivo, constante por diseño).
 
-## 14. Reporte final — `server.py` → `_generar_reporte`
+## 14. Reporte final — `server.py` → `_generar_reporte(modelo, precio_previo, respuestas, lideres, contador)`
 
 Devuelve un dict con:
 - `direccion_pct`, `minimo_pct`, `maximo_pct` (recortados por `acotar_magnitud` según mercado).
+- `direccion_pct_cruda` (sin recorte) y `recorte_aplicado` (bool).
 - `volatilidad_pct` (desv. est. de los retornos posteriores).
-- `confianza` = `abs(_ultimo_consenso)` (P4).
-- `senal_media_lideres` = promedio de `senal` de todas las respuestas.
+- `confianza` = `fuerza_consenso` = `abs(_ultimo_consenso)` (P4; se mantiene `confianza` por compatibilidad con el frontend).
+- `senal_media_lideres` = promedio SIMPLE de `senal` de todas las respuestas.
+- `senal_media_ponderada` = promedio de las señales BAJANDO el peso de las voces contrarian (ver §18); es la señal de PREDICCIÓN que alimenta la calibración (no se muestra en el producto aún). No afecta el enjambre, el tono ni las frases.
 - `desglose` = `{nombre_tipo: {compras, ventas}}` (conteo de operaciones por tipo).
-- `frases` = 3 frases (la más bajista, la mediana, la más alcista).
+- `frases` = 3 frases (la más bajista, la mediana, la más alcista), cada una `{arquetipo, nombre, frase, senal}`.
 - `descargo` = disclaimer CMF (`contenido/vocabulario.py → DISCLAIMER`).
 
 ## 15. Servidor y flujo de simulación — `server.py`
 
+- Middleware `blindaje`: rate-limit por IP en `/api/*` (`seguridad.permitir_http`), tope de cuerpo (`MAX_CUERPO`), cabeceras de seguridad, limpieza periódica.
 - Constantes: `TICKS_CALENTAMIENTO = 60` (no se transmite), `TICKS_PREVIOS = 10`, `TICKS_POSTERIORES = 140`, `RITMO_DEFECTO = 0.08` s/tick.
+- `_token_admin_ok(recibido)`: compara `ENJAMBRE_PIPELINE_TOKEN` en tiempo constante (falla cerrado si no está configurado).
 - Flujo de una simulación (WebSocket):
   1. `_crear_mercado(semilla)` (horizonte = 60+140).
   2. En paralelo: `analizar_titular_async` (líderes leen el titular, compartiendo cerebros) + `clasificar_async` (tipo de mercado).
@@ -269,7 +299,9 @@ Devuelve un dict con:
   5. `modelo.aplicar_titular(...)` inyecta la noticia.
   6. `TICKS_POSTERIORES` transmitidos (`modelo.step` + `_contar_acciones` + paquete binario por WS).
   7. `_generar_reporte(...)`; persistencia en SQLite.
-- Endpoints principales (prefijo `/api` salvo indicado): `/salud`, `/api/estado`, `/api/muro`, `/api/simulacion/{id}`, `/api/simulacion/{id}/replay`, `/api/duelo/{a}/{b}`, `/api/simular-titular` (POST), `/api/backtest` (POST, protegido), `/api/libreta` (GET, protegido con `x_pipeline_token`), `/api/corrector` (POST), `/api/pipeline` (POST), endpoints de El Pulso/panel/pagos.
+- **Endpoints** (prefijo `/api` salvo indicado):
+  - Públicos: `/salud` (incluye `version` = commit de Render), `/api/estado`, `/api/muro`, `/api/simulacion/{id}`, `/api/simulacion/{id}/replay`, `/api/duelo/{a}/{b}`, `/api/simular-titular` (POST, chequeo previo de cupo), **`/api/entrevista` (POST)** (ver §19), endpoints de El Pulso (suscripción, desbloqueo), contacto, pagos, widget.
+  - Protegidos con `x_pipeline_token`: `/api/backtest` (POST/GET), `/api/libreta` (GET), **`/api/calibracion/export` (GET)** (ver §17.6), `/api/corrector` (POST), `/api/pipeline` (POST), **`/api/evaluar` (POST inicia, GET resultado)** (ver §17.5), `/api/backtest/reiniciar` (POST), `/api/cosechar` (POST), `/api/epilogo/{sim_id}` (POST), paneles de edición del Pulso.
 
 ## 16. Validación de realismo — `validation/hechos_estilizados.py`
 
@@ -277,53 +309,97 @@ Devuelve un dict con:
 - `autocorrelacion(serie, rezago)` = autocorrelación en un rezago.
 - `asimetria_panico(retornos)` = media del |2.5% peor| / media del 2.5% mejor.
 - `simular.py` corre una sesión de 600 ticks con noticias aleatorias e imprime: curtosis, AC de |retornos| (rezagos 1/5/10), AC de retornos (rezago 1), asimetría de pánico, volumen.
-- Tests en `validation/test_hechos_estilizados.py` y otros.
+- Tests en `validation/test_hechos_estilizados.py` y otros (~50 archivos de test; incluyen invariantes de contabilidad, config enchufado, laboratorio, ablación, walk-forward, señal ponderada, entrevista).
 
 ## 17. Backtest, libreta y calibración
 
 ### 17.1 Backtest — `contenido/backtest.py`
-- `evaluar(tamano, mercado, …)`: pasa titulares históricos (`backtest_eventos.json` + cosecha) al enjambre, compara `signo(direccion_pct)` vs `signo(movimiento_real)` (Alpaca), acumula acierto por categoría (`negativa/positiva/neutra`) en un progreso por clave `{mercado|peso|umbral|doomer}`.
-- Reporta `con_ia`/`sin_ia` por tanda. `RUEDAS = 2` ticks de medición; `TANDA_MAXIMA = 40`.
+- `correr_tanda(tamano, mercado)`: pasa titulares históricos (banco de eventos + cosecha) al enjambre con IA real, mide la reacción real del símbolo (Yahoo/Alpaca) y respalda el caso. `RUEDAS = 2` ticks de medición.
+- `evaluar(tamano, mercado, peso, umbral, doomer, reiniciar, refrescar, local)`: RE-SIMULA los exámenes YA respaldados bajo el código/entorno actual (no re-respalda), compara `signo(direccion_pct)` vs `signo(movimiento_real)`, acumula acierto por categoría (`negativa/positiva/neutra`) en un progreso por clave `{mercado|peso|umbral|doomer}`.
+  - `peso`/`umbral`/`doomer` (si 0..1) fijan el env correspondiente SOLO durante la medición (barrido sin re-desplegar); `refrescar=true` ignora la caché de cerebros (mide cambios de prompt; gasta LLM).
+  - **`local=true`** lee los casos de la BASE LOCAL (`respaldo.exportar_casos`) en vez del respaldo remoto; además, si el remoto viene vacío/cae, cae a local automáticamente (`_casos_locales`). Así la medición no depende de la salud del respaldo remoto.
+  - `TANDA_EVAL_MAX` acota la tanda; es RESUMIBLE (repetir avanza). Reporta `con_ia`/`sin_ia`.
+- `_mercado_de_caso` / `_SIMBOLOS_MERCADO`: infiere el mercado de un caso por su símbolo (oro: IAU/NEM/GDX/GLD/GOLD; cripto: MSTR/RIOT/GBTC/ETHE/MARA/COIN/BITO/BTC-USD; petróleo: XLE/SLB/USO/OXY; índice: DIA/SPY/QQQ/IWM; resto: acción).
 
 ### 17.2 Libreta — `contenido/corrector.py → libreta()`
 - Lee `simulaciones` con `reaccion_real` (destacadas o backtest), excluye `cerebros == "respaldo"`, arma pares `(sim = direccion_pct, real = pct_real)` separando en vivo vs histórico; devuelve resúmenes.
+- `corregir_pendientes()`: mide la reacción real de las destacadas aún sin resultado.
 
 ### 17.3 Persistencia — `contenido/persistencia.py`
-- SQLite (WAL). Tabla `simulaciones(id, titular, fuente, fecha, seed, resumen_json, lideres_json, serie_precios, reaccion_real, destacada)`. Ruta `ENJAMBRE_DB` o `engine/datos/enjambre.db`.
+- SQLite (WAL). Tabla `simulaciones(id, titular, fuente, fecha, seed, resumen_json, lideres_json, serie_precios, reaccion_real, destacada, epilogo…)` + `titulares`, `suscriptores`, etc. Ruta `ENJAMBRE_DB` o `engine/datos/enjambre.db`. `conectar()` crea esquema y aplica migraciones suaves.
 
-### 17.4 Laboratorio de calibración offline — `calibration/`
+### 17.4 Respaldo — `contenido/respaldo.py`
+- `exportar_casos(conexion)`: casos de calibración como dicts planos (destacadas corregidas + exámenes de backtest), cada uno con `senales_arquetipo` = `_senales_por_arquetipo(lideres_json)` (señal media, confianza media y n por arquetipo, ~9 entradas).
+- `respaldar(conexion)`: sube los casos fusionados a la rama `respaldo-datos` (datos/calibracion.json) vía la API de GitHub (`GITHUB_RESPALDO_TOKEN`). NUNCA lanza; fusiona por `sim_id`. `casos_remotos()` los lee de vuelta.
+
+### 17.5 Laboratorio de calibración offline — `calibration/`
+- `calibracion.py` (en `contenido/`): mapeos `senal_a_prob_cruda` (registro `MAPEOS`: `senal_media`, **`senal_ponderada`**, `direccion`), calibradores `CalibradorPlatt` y `CalibradorIsotonic` (Python puro), métricas `brier`, `log_loss`, `curva_confiabilidad`, `tasa_base`, `skill_score`, `evaluar_calibracion`.
+- `ablacion_arquetipos.py`: ablación por arquetipo (partición temporal) — acierto direccional y Brier calibrado por arquetipo suelto, consenso, leave-one-out (quién desorienta) y desglose por clase de titular.
+- `walk_forward.py`: validación WALK-FORWARD (ventana expansiva) del calibrador por modo/método + `promover()` (decide si un calibrador supera la base por `MARGEN_PROMOCION`=0.005 y lo deja ajustado).
+- `calibrar_respaldo.py`: carga casos del respaldo, partición temporal, reporte Brier por mercado.
+- `escenarios.py`: banco de escenarios de estrés reproducibles SIN IA (sentimiento numérico): `negativa_fuerte`, `positiva_fuerte`, `negativa_leve`, `cinco_negativas`, `neutral`, `pos_luego_neg`, `crash_profundo`; `correr_escenario`, `correr_todos`, `variabilidad`.
 - `real_optimizer.py`: optimiza (Optuna) contra hechos estilizados usando el motor real `MercadoEnjambre` (headless).
 - `optimizer.py`: modelo de agente reducido (NO el motor real).
-- `optimizar_freno.py`: optimiza `factor_freno_cautela` de la manada.
+- `optimizar_freno.py`, `validar_freno_hechos.py`: optimizan/validan `factor_freno_cautela` de la manada.
 - `validacion_base.py`, `verificador.py`: arnés que congela baseline y separa casos visibles/held-out (local, sin IA).
 - `data_loader.py`, `recopilar_datos.py`: descargan benchmark real (SPY/Yahoo) para laboratorio.
+- `calibrar_libreta.py`, `exportar_libreta.py` (en `contenido/`): tubería crudo→calibrado desde la base; `exportar_libreta` vuelca `(direccion_pct, senal_media_lideres, senal_media_ponderada, confianza, pct_real, categoria, fuente)`.
 
-### 17.5 Capa de probabilidad calibrada — `contenido/calibracion.py`, `calibrar_libreta.py`, `exportar_libreta.py`
-- `calibracion.py`: mapeo `senal_a_prob_cruda` (reemplazable), calibradores `CalibradorPlatt` y `CalibradorIsotonic` (Python puro), métricas `brier`, `log_loss`, `curva_confiabilidad`, `tasa_base`, `skill_score`.
-- `exportar_libreta.py`: vuelca pares crudos `(direccion_pct, senal_media_lideres, confianza, pct_real, categoria, fuente)` de la base.
-- `calibrar_libreta.py`: parte entrena/prueba, ajusta y reporta Brier crudo vs calibrado vs líneas base.
+### 17.6 Canal propio de export — `/api/calibracion/export`
+- GET protegido con `x_pipeline_token`. Devuelve `{"n", "casos"}` con TODOS los casos (`respaldo.exportar_casos`), incluido `senales_arquetipo`. Es independiente del respaldo remoto. El workflow `exportar-calibracion.yml` lo descarga y lo sube como artefacto.
 
-## 18. Variables de entorno
+## 18. Señal de predicción ponderada — `contenido/senal_prediccion.py`
+
+- `ARQUETIPOS_CONTRARIAN_SENAL = {quant_esceptico, contrarian_sabio}`.
+- `senal_media_ponderada(lideres, respuestas)`: media de las señales de los líderes bajando el peso de esas dos voces contrarian a `PESO_DEFECTO = 0.3` (el optimista NO se baja).
+- `peso_contrarians()`: lee `ENJAMBRE_PESO_CONTRARIANS` (vacío = 0.3; 1.0 = promedio simple, sin cambio).
+- Alimenta el campo `senal_media_ponderada` del reporte y el mapeo de calibración `senal_ponderada`. No toca el enjambre, ni el tono, ni las frases, ni `senal_media_lideres`.
+
+## 19. Entrevistar a un líder — `brains/entrevista.py` + `/api/entrevista`
+
+- `MODELO = "claude-haiku-4-5-20251001"`, `MAX_TOKENS=200`, `TIMEOUT_SEGUNDOS=15.0`, `MAX_PREGUNTA=300`, `MAX_RESPUESTA=1100`, `MAX_TURNOS=6`.
+- `entrevistar(arquetipo_id, titular, pregunta, senal, frase_original, historial)` → `{respuesta, fuente, arquetipo}`. System = `prompt del arquetipo` + `INSTRUCCION` (responde EN PERSONAJE, breve, CMF: nunca "compra/vende", es un personaje de simulación, no añade descargo propio ni cifra de señal) + contexto (titular, señal, frase inicial). NUNCA se cae: fallback en personaje si no hay API o falla.
+- Endpoint `POST /api/entrevista` (body `{arquetipo, titular, pregunta, senal?, frase?, historial[]}`), rate-limit por el middleware `blindaje`, añade `descargo` CMF. Frontend: clic en una voz del reporte → panel de chat (`web/src/ui/panel.js`, estilos `.entrevista`).
+
+## 20. Capa de contenido (resumen de módulos) — `contenido/`
+
+No forman parte del motor de simulación pero viven en el mismo servicio:
+- `portero.py`: elige los titulares del día (dos pisos: heurístico + `claude-haiku-4-5`); `MODELO_PORTERO`.
+- `cosechador.py`: cosecha eventos históricos (días de movimiento + titular) para el backtest.
+- `boletin.py`, `disparar_pulso.py`, `notificar.py`: El Pulso (newsletter diaria por Resend, double opt-in, cron a endpoint protegido).
+- `redaccion.py`, `redaccion_ia.py`, `investigador.py`, `analisis_semanal.py`, `resumen_semanal.py`: La Redacción (reportero/verificador/editor; `claude-sonnet-5`; datos Barchart con degradación).
+- `graficos.py`, `captura.py`: gráficos e imagen del "momento dramático".
+- `pagos.py`: Premium (Polar), cupos.
+- `limites.py`: cupos de simulación (1/día por cliente o IP; Premium 40/mes; tope global diario de billetera).
+- `seguridad.py`: rate-limit HTTP (ventana deslizante por IP), sanitización, validación de ids/correo, cabeceras.
+- `vocabulario.py`: filtro CMF de frases (`sanear_frases`) + `DISCLAIMER`.
+- Frontend (`web/src/`): `swarm/` (enjambre 3D instanced, Three.js), `ui/` (panel, tooltip de líderes, entrevista), `muro/`, `archivo/`, `duelo/`, `widget/`.
+
+## 21. Variables de entorno
 
 | Variable | Efecto |
 |---|---|
 | `ANTHROPIC_API_KEY` | sin ella, todos los líderes usan fallback léxico |
 | `ENJAMBRE_DB` | ruta de la base SQLite (y de la caché de cerebros) |
+| `ENJAMBRE_PIPELINE_TOKEN` | token de admin para los endpoints protegidos |
+| `GITHUB_RESPALDO_TOKEN` | sube los casos a la rama respaldo-datos |
 | `ENJAMBRE_PESO_TONO_INVERSORES` | override de `peso_tono_invertidores` [0,1] |
 | `ENJAMBRE_UMBRAL_CORRECCION_SESGO` | override de `umbral_correccion_sesgo` [0,1] |
 | `ENJAMBRE_PESO_DOOMER` | override GLOBAL del peso doomer (manda sobre la segmentación) |
+| `ENJAMBRE_PESO_CONTRARIANS` | peso de las 2 voces contrarian en `senal_media_ponderada` (vacío=0.3; 1.0=promedio simple) |
 | `ENJAMBRE_IGNORAR_CACHE` | fuerza respuestas frescas de la IA y sobrescribe la caché |
 
-## 19. Resumen numérico de referencia
+## 22. Resumen numérico de referencia
 
 - Agentes: **10.150** = 9.000 reglas + 1.150 líderes (9 arquetipos).
-- Llamadas LLM por simulación: **~110 cerebros** (`claude-sonnet-5`) + **1 clasificación** (`claude-haiku-4-5`).
+- Llamadas LLM por simulación: **~110 cerebros** (`claude-sonnet-5`) + **1 clasificación** (`claude-haiku-4-5`). La entrevista es 1 llamada extra a demanda (`claude-haiku-4-5`).
 - Ticks por simulación en vivo: 60 calentamiento (oculto) + 10 previos + 140 posteriores.
-- Precio inicial: 100.0; VWAP por tick; órdenes viven 4 ticks.
+- Precio inicial: 100.0; **serie = último precio transado** (VWAP solo como métrica separada); órdenes viven 4 ticks; reservas impiden corto/efectivo negativo.
 - Propagación: atenuación 0.7/salto, retardo 1-4 ticks, 2 saltos máximo.
 - Mercados activos: índice, acción, cripto (oro/petróleo en pausa).
-- Perillas globales actuales: `ruido 0.15`, `umbral_correccion_sesgo 0.35`, `peso_doomer` segmentado (índice 1.0, resto 0.0), `GANANCIA_CONSENSO 0.8`.
+- Perillas globales actuales: `ruido 0.15`, `umbral_correccion_sesgo 0.35`, `peso_doomer` segmentado (índice 1.0, resto 0.0), `GANANCIA_CONSENSO 0.8`, `peso_tono_invertidores` ausente→1.0, `peso_contrarians` (señal de predicción) 0.3.
+- Base de calibración (medida 2026-11-16): **678 casos** reales con IA (617 backtest + 61 destacadas).
 
 ---
 
-*Fin del documento. Describe el estado del código a la fecha de generación.*
+*Fin del documento. Describe el estado del código a la fecha de regeneración (2026-11-16).*

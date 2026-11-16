@@ -17,15 +17,18 @@ from llm_texto import texto_de
 
 MODELO = "claude-haiku-4-5-20251001"   # barato: 1 llamada por pregunta, a demanda
 TIMEOUT_SEGUNDOS = 15.0
+MAX_TOKENS = 200          # fuerza respuestas breves que CIERRAN la idea (no cortadas)
 MAX_PREGUNTA = 300        # recorta la pregunta del usuario (anti-abuso/costo)
-MAX_RESPUESTA = 600       # recorta la respuesta y los turnos del historial
+MAX_RESPUESTA = 1100      # red de seguridad (muy por encima de MAX_TOKENS): así el
+                          # recorte por caracteres casi nunca corta a media frase
 MAX_TURNOS = 6            # cuánto historial se reenvía (acota el costo por turno)
 
 INSTRUCCION = (
     "Eres este personaje dentro de 'El Enjambre', una simulación educativa de "
     "mercado. Un usuario te pregunta por tu reacción a la noticia. Responde EN "
-    "PERSONAJE, en primera persona, en español, breve (2 a 4 frases), fiel a tu "
-    "estilo y sesgos. Explica tu RAZONAMIENTO como el personaje que eres.\n"
+    "PERSONAJE, en primera persona, en español, MUY breve (2 o 3 frases) y "
+    "CIERRA siempre tu idea (nunca te cortes a media frase), fiel a tu estilo y "
+    "sesgos. Explica tu RAZONAMIENTO como el personaje que eres.\n"
     "REGLAS CMF (obligatorias e inquebrantables): esto es simulación y educación, "
     "NO asesoría financiera. NUNCA le digas al usuario que compre, venda o "
     "mantenga nada, ni le des recomendaciones de inversión personales. Habla solo "
@@ -79,7 +82,7 @@ async def entrevistar_async(arquetipo_id: str, titular: str, pregunta: str,
         import anthropic
         cliente = anthropic.AsyncAnthropic()
         respuesta = await asyncio.wait_for(
-            cliente.messages.create(model=MODELO, max_tokens=300, system=system,
+            cliente.messages.create(model=MODELO, max_tokens=MAX_TOKENS, system=system,
                                     messages=_mensajes(pregunta, historial)),
             timeout=TIMEOUT_SEGUNDOS,
         )

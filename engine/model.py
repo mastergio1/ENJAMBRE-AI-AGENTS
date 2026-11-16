@@ -207,8 +207,16 @@ class MercadoEnjambre(mesa.Model):
         precio_inicial: float = 100.0,
         ticks_horizonte: int = 400,
         ruta_config: Path = RUTA_CONFIG,
+        overrides: dict | None = None,
     ):
         super().__init__(seed=seed)
+        # overrides: ajustes de parámetros SOLO para experimentos de calibración,
+        # sin tocar config/agentes.json. Forma:
+        #   {"<tipo_id>": {"<param>": valor, ...},   # params por tipo de agente
+        #    "global": {"<clave_global>": valor, ...}}  # perillas top-level
+        # Se validan las claves: una desconocida lanza ValueError (para no
+        # "calibrar" algo que el motor ignora). Producción pasa overrides=None.
+        self.overrides = overrides or {}
         self.ticks_horizonte = ticks_horizonte
         self.libro = LibroOrdenes(precio_inicial)
         self.libro.notificar_ejecucion = self._notificar_ejecucion
@@ -242,9 +250,21 @@ class MercadoEnjambre(mesa.Model):
 
     # ---------- construcción ----------
 
+    _GLOBALES_OVERRIDE = frozenset({
+        "peso_tono_invertidores", "umbral_correccion_sesgo", "peso_doomer",
+        "peso_doomer_por_mercado", "ruido_parametros_sigma",
+    })
+
     def _crear_agentes(self, ruta_config: Path) -> None:
         with open(ruta_config, encoding="utf-8") as f:
             config = json.load(f)
+        # overrides globales (experimentos): reemplazan el valor de config antes
+        # de leerlo; las env vars siguen mandando por encima (medición/rollback).
+        ov_global = self.overrides.get("global", {})
+        for clave in ov_global:
+            if clave not in self._GLOBALES_OVERRIDE:
+                raise ValueError(f"override global desconocido: {clave}")
+        config = {**config, **ov_global}
         # P2: peso de los arquetipos invertidores en el TONO de mercado
         # (1.0 = comportamiento histórico). La variable de entorno
         # ENJAMBRE_PESO_TONO_INVERSORES manda sobre la config, para medir en el
@@ -274,7 +294,15 @@ class MercadoEnjambre(mesa.Model):
             capital = tipo["capital_relativo"] * CAPITAL_BASE
             # expone los "parametros" del tipo para que sus agentes los lean en
             # __init__ (vía AgenteBase.cfg). Con la config original no cambia nada.
-            self._cfg_agentes_actual = tipo.get("parametros") or {}
+            base_params = tipo.get("parametros") or {}
+            # overrides por tipo (experimentos): validar y fusionar sobre los base
+            ov_tipo = self.overrides.get(tipo["id"], {})
+            for clave in ov_tipo:
+                if clave not in base_params:
+                    raise ValueError(
+                        f"override desconocido: {tipo['id']}.{clave} "
+                        f"(parámetros válidos: {sorted(base_params)})")
+            self._cfg_agentes_actual = {**base_params, **ov_tipo}
             if tipo["id"] == "lider_opinion":
                 for arquetipo in tipo["arquetipos"]:
                     for _ in range(arquetipo["cantidad"]):

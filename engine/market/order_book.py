@@ -39,6 +39,9 @@ class LibroOrdenes:
         self.tick_actual = 0
         # callback: se llama cuando la orden en reposo de un agente se ejecuta
         self.notificar_ejecucion = None
+        # callback opcional de instrumentación (laboratorio): (agresor_id,
+        # proveedor_id, cantidad, precio) por ejecución. None en producción.
+        self.registrar_ejecucion_instr = None
         # Reservas por agente para las órdenes EN REPOSO (no ejecutadas aún):
         # inventario comprometido en ventas y efectivo comprometido en compras.
         # Así un agente nunca vende más acciones de las que tiene ni compromete
@@ -142,7 +145,7 @@ class LibroOrdenes:
                 break
             ejecutado = min(restante, tope.cantidad)
             dinero += ejecutado * tope.precio
-            self._ejecutar(lado, tope, ejecutado)
+            self._ejecutar(agente_id, lado, tope, ejecutado)
             restante -= ejecutado
             if tope.cantidad <= EPSILON:
                 contra.pop(0)
@@ -159,7 +162,8 @@ class LibroOrdenes:
 
     # ---------- interno ----------
 
-    def _ejecutar(self, lado_agresor: str, orden_reposo: OrdenLimite, cantidad: float) -> None:
+    def _ejecutar(self, agresor_id: int, lado_agresor: str,
+                  orden_reposo: OrdenLimite, cantidad: float) -> None:
         """Cruza una cantidad contra una orden que reposaba en el libro."""
         orden_reposo.cantidad -= cantidad
         self._liberar(orden_reposo, cantidad)  # lo ejecutado deja de estar reservado
@@ -168,6 +172,11 @@ class LibroOrdenes:
             # el dueño de la orden en reposo operó en el lado contrario al agresor
             lado_dueno = "venta" if lado_agresor == "compra" else "compra"
             self.notificar_ejecucion(orden_reposo.agente_id, lado_dueno, cantidad, orden_reposo.precio)
+        # instrumentación opcional (laboratorio): quién fue agresor y quién proveyó
+        # liquidez en esta ejecución. None en producción → sin costo.
+        if self.registrar_ejecucion_instr is not None:
+            self.registrar_ejecucion_instr(agresor_id, orden_reposo.agente_id,
+                                           cantidad, orden_reposo.precio)
 
     def _registrar(self, lado_agresor: str, cantidad: float, precio: float) -> None:
         self.ultimo_precio = precio

@@ -36,3 +36,24 @@ def test_override_global_desconocido_lanza():
         assert False, "debió lanzar ValueError"
     except ValueError:
         pass
+
+
+def test_instrumentacion_registra_volumen_por_tipo():
+    m = MercadoEnjambre(seed=42, ticks_horizonte=200)
+    m.activar_instrumentacion()
+    for _ in range(40):
+        m.step()
+    m.aplicar_noticia(-0.8)
+    for _ in range(40):
+        m.step()
+    r = m.resumen_instrumentacion()
+    assert r["agresor"] and r["proveedor"], "debe registrar volumen"
+    # los porcentajes suman ~100
+    assert abs(sum(r["agresor_pct"].values()) - 100) < 1.0
+    assert abs(sum(r["proveedor_pct"].values()) - 100) < 1.0
+
+
+def test_instrumentacion_es_opt_in():
+    # sin activar, no hay callback ni contadores (producción intacta)
+    m = MercadoEnjambre(seed=1, ticks_horizonte=50)
+    assert m.libro.registrar_ejecucion_instr is None

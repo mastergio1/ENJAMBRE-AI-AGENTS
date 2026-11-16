@@ -530,6 +530,38 @@ class MercadoEnjambre(mesa.Model):
             return None
         return compras / total
 
+    # ---------- instrumentación (laboratorio: quién mueve el precio) ----------
+
+    def activar_instrumentacion(self) -> None:
+        """Enciende el registro de volumen por tipo de agente, separando quién fue
+        AGRESOR (cruzó el libro → empuja el precio) de quién PROVEYÓ liquidez (su
+        orden reposaba → absorbe). Opt-in: en producción no se llama (sin costo)."""
+        from collections import defaultdict
+        self._instr = True
+        self.vol_agresor_tipo: dict[str, float] = defaultdict(float)
+        self.vol_proveedor_tipo: dict[str, float] = defaultdict(float)
+        self.libro.registrar_ejecucion_instr = self._instr_ejecucion
+
+    def _instr_ejecucion(self, agresor_id: int, proveedor_id: int,
+                         cantidad: float, precio: float) -> None:
+        ta = type(self._agentes_por_id[agresor_id]).__name__
+        tp = type(self._agentes_por_id[proveedor_id]).__name__
+        self.vol_agresor_tipo[ta] += cantidad
+        self.vol_proveedor_tipo[tp] += cantidad
+
+    def resumen_instrumentacion(self) -> dict:
+        """Volumen agresor y proveedor por tipo de agente, en bruto y en %."""
+        ag = dict(getattr(self, "vol_agresor_tipo", {}))
+        pr = dict(getattr(self, "vol_proveedor_tipo", {}))
+        tot_ag = sum(ag.values()) or 1.0
+        tot_pr = sum(pr.values()) or 1.0
+        return {
+            "agresor": {k: round(v, 1) for k, v in sorted(ag.items(), key=lambda x: -x[1])},
+            "agresor_pct": {k: round(100 * v / tot_ag, 1) for k, v in sorted(ag.items(), key=lambda x: -x[1])},
+            "proveedor": {k: round(v, 1) for k, v in sorted(pr.items(), key=lambda x: -x[1])},
+            "proveedor_pct": {k: round(100 * v / tot_pr, 1) for k, v in sorted(pr.items(), key=lambda x: -x[1])},
+        }
+
     # ---------- interno ----------
 
     def _notificar_ejecucion(self, agente_id: int, lado: str, cantidad: float, precio: float) -> None:

@@ -78,3 +78,20 @@ def test_escenario_desconocido_lanza():
         assert False, "debió lanzar ValueError"
     except ValueError:
         pass
+
+
+def test_senales_por_arquetipo_resume_bien():
+    import json
+    from contenido.respaldo import _senales_por_arquetipo
+    lideres = json.dumps([
+        {"arquetipo": "doomer", "senal": -0.8, "confianza": 0.9},
+        {"arquetipo": "doomer", "senal": -0.6, "confianza": 0.7},
+        {"arquetipo": "fomo_evangelista", "senal": 0.9, "confianza": 0.95},
+    ])
+    r = _senales_por_arquetipo(lideres)
+    assert r["doomer"]["senal_media"] == -0.7
+    assert r["doomer"]["n"] == 2
+    assert r["fomo_evangelista"]["senal_media"] == 0.9
+    # entrada vacía o inválida no rompe
+    assert _senales_por_arquetipo(None) == {}
+    assert _senales_por_arquetipo("no-json") == {}

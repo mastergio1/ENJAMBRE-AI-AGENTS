@@ -134,12 +134,36 @@ def subir_cosecha(nuevos: list[dict], reemplazar: bool = False) -> dict:
                 "motivo": f"{type(error).__name__}: {str(error)[:120]}"}
 
 
+def _senales_por_arquetipo(lideres_json: str | None) -> dict:
+    """Resume las señales de los líderes por arquetipo: señal y confianza medias
+    y cuántos líderes (compacto, ~9 entradas). Alimenta la calibración POR
+    ARQUETIPO (¿quién descalibra el consenso?) sin volcar las 1.150 señales."""
+    if not lideres_json:
+        return {}
+    try:
+        lideres = json.loads(lideres_json)
+    except (json.JSONDecodeError, TypeError):
+        return {}
+    from collections import defaultdict
+    acc = defaultdict(lambda: [0.0, 0.0, 0])  # suma_senal, suma_confianza, n
+    for lider in lideres:
+        arq = lider.get("arquetipo")
+        if not arq:
+            continue
+        acc[arq][0] += float(lider.get("senal", 0) or 0)
+        acc[arq][1] += float(lider.get("confianza", 0) or 0)
+        acc[arq][2] += 1
+    return {arq: {"senal_media": round(s / n, 4),
+                  "confianza_media": round(c / n, 4), "n": n}
+            for arq, (s, c, n) in acc.items() if n}
+
+
 def exportar_casos(conexion) -> list[dict]:
     """Los casos de calibración como dicts planos: destacadas corregidas
     (origen 'en_vivo') y exámenes históricos del backtest ('historico')."""
     filas = conexion.execute(
         """SELECT s.id, s.fecha, s.titular, s.resumen_json, s.reaccion_real,
-                  s.epilogo, s.fuente, t.simbolos
+                  s.epilogo, s.fuente, s.lideres_json, t.simbolos
            FROM simulaciones s LEFT JOIN titulares t ON t.sim_id = s.id
            WHERE s.reaccion_real IS NOT NULL
              AND (s.destacada = 1 OR s.fuente = 'backtest')
@@ -157,6 +181,7 @@ def exportar_casos(conexion) -> list[dict]:
             "simbolos": fila["simbolos"] or reaccion.get("simbolo", ""),
             "direccion_pct": resumen.get("direccion_pct"),
             "volatilidad_pct": resumen.get("volatilidad_pct"),
+            "senales_arquetipo": _senales_por_arquetipo(fila["lideres_json"]),
             "reaccion_real": reaccion,
             "epilogo": fila["epilogo"],
         })

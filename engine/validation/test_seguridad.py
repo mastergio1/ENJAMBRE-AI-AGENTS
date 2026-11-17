@@ -112,8 +112,13 @@ def test_el_muro_escapa_datos_antes_de_innerhtml():
     assert "${esc(r.frase.frase)}" in muro
 
     panel = (Path(__file__).parent.parent.parent / "web" / "src" / "ui" / "panel.js").read_text(encoding="utf-8")
-    assert "${esc(f.frase)}" in panel
-    assert re.search(r"\$\{f\.frase\}", panel) is None  # nunca crudo
+    # la voz del reporte/archivo se escapa antes del innerHTML (var normalizada a `v`)
+    assert "${esc(v.frase)}" in panel
+    assert re.search(r"\$\{v\.frase\}", panel) is None   # nunca cruda
+    assert re.search(r"\$\{f\.frase\}", panel) is None   # nunca cruda
+    # la entrevista también escapa la frase del líder antes del innerHTML
+    assert "${esc(voz.frase)}" in panel
+    assert re.search(r"\$\{voz\.frase\}", panel) is None
     # el tooltip del líder también escapa la frase del LLM (defensa en profundidad)
     assert "${esc(lider.frase)}" in panel
     assert re.search(r"\$\{lider\.frase\}", panel) is None

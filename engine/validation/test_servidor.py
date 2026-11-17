@@ -50,6 +50,35 @@ def test_suscriptores_protegido_sin_secreto_en_codigo(monkeypatch):
     assert cliente.get("/api/pulso/suscriptores?clave=otra-cosa").status_code == 404
 
 
+def test_cuerpo_chunked_grande_se_rechaza(monkeypatch):
+    """Auditoría 4.3: una subida sin Content-Length (chunked) también se corta al
+    superar el tope — antes solo se cubría el caso con Content-Length."""
+    monkeypatch.setattr(server, "MAX_CUERPO", 2000)
+    cliente = TestClient(server.app)
+
+    def cuerpo_enorme():
+        for _ in range(50):
+            yield b"x" * 1000  # 50 KB en trozos, sin Content-Length
+
+    # httpx envía un generador como chunked (sin Content-Length)
+    r = cliente.post("/api/suscribir", content=cuerpo_enorme())
+    assert r.status_code == 413
+
+
+def test_cuerpo_chunked_valido_llega_al_handler(monkeypatch):
+    """La re-inyección del cuerpo no rompe una petición chunked legítima."""
+    import json as _json
+    cliente = TestClient(server.app)
+
+    def cuerpo_ok():
+        yield _json.dumps({"email": "persona@ejemplo.com", "origen": "web"}).encode()
+
+    r = cliente.post("/api/suscribir", content=cuerpo_ok(),
+                     headers={"content-type": "application/json"})
+    assert r.status_code == 200
+    assert r.json()["estado"] in ("suscrito", "ya_suscrito")
+
+
 def test_flujo_completo_por_websocket():
     cliente = TestClient(server.app)
     with cliente.websocket_connect("/ws") as ws:

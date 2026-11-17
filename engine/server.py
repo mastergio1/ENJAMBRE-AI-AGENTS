@@ -167,8 +167,9 @@ _CADA_LIMPIEZA = 500  # cada tantas requests se purga el estado vencido
 # (el texto completo de una edición del Pulso: unos pocos KB), así que 256 KB
 # sobra. Sin este freno, un POST de cientos de MB se carga entero en memoria
 # antes de que pydantic lo valide → el motor (512 MB en Render) se queda sin
-# memoria y reinicia. Nota: cubre el caso con Content-Length (el normal); una
-# subida "chunked" sin ese encabezado sigue acotada por los frenos de más abajo.
+# memoria y reinicia. Cubre DOS casos: (a) con Content-Length, rechaza antes de
+# leer nada; (b) sin Content-Length ("chunked"), lee el stream con tope y corta
+# en cuanto se pasa — así nunca se acumulan más de ~256 KB en memoria.
 MAX_CUERPO = 256_000
 
 
@@ -179,8 +180,18 @@ async def blindaje(request: Request, call_next):
     ruta = request.url.path
     if request.method in ("POST", "PUT", "PATCH"):
         declarado = request.headers.get("content-length", "")
-        if declarado.isdigit() and int(declarado) > MAX_CUERPO:
-            return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+        if declarado.isdigit():
+            if int(declarado) > MAX_CUERPO:
+                return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+        else:
+            # sin Content-Length (chunked): leemos el stream acotado y re-inyectamos
+            # el cuerpo para el handler. Cortamos apenas supera el tope (auditoría 4.3).
+            cuerpo = bytearray()
+            async for parte in request.stream():
+                cuerpo += parte
+                if len(cuerpo) > MAX_CUERPO:
+                    return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+            request._body = bytes(cuerpo)  # Starlette sirve este cuerpo al handler
     if ruta.startswith("/api/"):
         ip = seguridad.ip_cliente(request.headers, request.client.host if request.client else None)
         if not seguridad.permitir_http(ip, ruta):

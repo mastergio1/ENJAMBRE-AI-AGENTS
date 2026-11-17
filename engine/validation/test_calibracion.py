@@ -86,6 +86,23 @@ def _datos_descalibrados(n=400, seed=7):
     return scores, ys
 
 
+def test_ece_cero_si_perfectamente_calibrado():
+    """ECE = 0 cuando en cada tramo la predicción iguala la frecuencia observada."""
+    # 10 casos con p=0.0 y resultado 0; 10 con p=1.0 y resultado 1 → calibración perfecta
+    probs = [0.0] * 10 + [1.0] * 10
+    ys = [0] * 10 + [1] * 10
+    assert cal.ece(probs, ys) == 0.0
+    assert cal.mce(probs, ys) == 0.0
+
+
+def test_ece_detecta_descalibracion():
+    """Si el modelo dice 0.9 pero solo acierta la mitad, ECE y MCE lo delatan."""
+    probs = [0.9] * 10
+    ys = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]  # obs_frac = 0.5, pred = 0.9 → error 0.4
+    assert abs(cal.ece(probs, ys) - 0.4) < 1e-9
+    assert abs(cal.mce(probs, ys) - 0.4) < 1e-9
+
+
 def test_platt_mejora_brier():
     scores, ys = _datos_descalibrados()
     corte = len(scores) // 2

@@ -140,6 +140,26 @@ def curva_confiabilidad(probs, resultados, n_tramos: int = 10):
     return salida
 
 
+def ece(probs, resultados, n_tramos: int = 10) -> float:
+    """Expected Calibration Error (auditoría, métricas D): error de calibración
+    PROMEDIO, ponderado por nº de casos en cada tramo = Σ (n_tramo/N)·|pred−obs|.
+    0 = perfectamente calibrado. Complementa al Brier, que mezcla calibración con
+    discriminación. OJO: sensible al binning y al N (tramos con pocos casos son
+    ruidosos) — reportar siempre junto al tamaño muestral."""
+    curva = curva_confiabilidad(probs, resultados, n_tramos=n_tramos)
+    total = sum(t["n"] for t in curva)
+    if not total:
+        return 0.0
+    return sum(t["n"] / total * abs(t["pred_media"] - t["obs_frac"]) for t in curva)
+
+
+def mce(probs, resultados, n_tramos: int = 10) -> float:
+    """Maximum Calibration Error: el PEOR tramo (máx |pred−obs|). Vigila el tramo
+    donde el modelo más miente, no solo el promedio."""
+    curva = curva_confiabilidad(probs, resultados, n_tramos=n_tramos)
+    return max((abs(t["pred_media"] - t["obs_frac"]) for t in curva), default=0.0)
+
+
 def skill_score(brier_modelo: float, brier_base: float) -> float:
     """1 − (Brier modelo / Brier base). >0 = mejor que la línea base."""
     if brier_base <= 0:

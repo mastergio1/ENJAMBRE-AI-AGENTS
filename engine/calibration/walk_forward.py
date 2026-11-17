@@ -112,6 +112,9 @@ def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt"):
         "brier": round(brier_modelo, 4),
         "brier_base": round(brier_base, 4),
         "skill": round(cal.skill_score(brier_modelo, brier_base), 4),
+        "log_loss": round(cal.log_loss(preds_oos, ys_oos), 4),
+        "ece": round(cal.ece(preds_oos, ys_oos, n_tramos=5), 4),
+        "mce": round(cal.mce(preds_oos, ys_oos, n_tramos=5), 4),
         "confiabilidad": cal.curva_confiabilidad(preds_oos, ys_oos, n_tramos=5),
     }
 

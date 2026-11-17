@@ -753,6 +753,28 @@ def sumar_gasto_dia(conexion, fecha: str, n: int = 1) -> int:
     return gasto_dia(conexion, fecha)
 
 
+def reservar_gasto_dia(conexion, fecha: str, tope: int, n: int = 1) -> bool:
+    """Reserva ATÓMICAMENTE `n` del cupo global de `fecha` si no supera `tope`.
+
+    Devuelve True si reservó (incrementó el gasto), False si el tope ya está lleno.
+    El chequeo y el incremento ocurren en UNA sola sentencia, bajo el candado de
+    escritura de SQLite (WAL serializa a un escritor a la vez), así dos peticiones
+    simultáneas NO pueden pasar ambas el tope — elimina la carrera
+    check-then-increment de la auditoría 4.2 (el presupuesto nunca se supera).
+    """
+    if n <= 0:
+        return True
+    if n > tope:
+        return False  # ni el primer uso cabe; no creamos fila
+    cur = conexion.execute(
+        "INSERT INTO gasto_diario (fecha, consumidas) VALUES (?, ?) "
+        "ON CONFLICT(fecha) DO UPDATE SET consumidas = consumidas + excluded.consumidas "
+        "WHERE gasto_diario.consumidas + excluded.consumidas <= ?",
+        (fecha, n, tope))
+    conexion.commit()
+    return cur.rowcount > 0
+
+
 def reiniciar_gasto(conexion) -> None:
     """Borra todo el gasto registrado (solo para los tests)."""
     conexion.execute("DELETE FROM gasto_diario")

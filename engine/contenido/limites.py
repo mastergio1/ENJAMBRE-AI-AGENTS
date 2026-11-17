@@ -81,36 +81,50 @@ def permitir(ip: str, premium_token: str | None = None, cliente_id: str | None =
     conexion = persistencia.conectar()
     try:
         hoy = date.today().isoformat()
-        # 1) la muralla de la billetera (en disco) — sobre todos
-        if persistencia.gasto_dia(conexion, hoy) >= tope_global_dia():
-            return False, MENSAJE_GLOBAL
-
+        tope_global = tope_global_dia()
         # el token (no el correo desnudo) prueba que es el dueño del buzón Premium
         email = persistencia.email_por_token_enjambre(conexion, (premium_token or "").strip())
         es_prem = bool(email) and persistencia.es_premium(conexion, email)
+        mes = hoy[:7]
+        cid = (cliente_id or "").strip()[:64]
+        clave = f"cid:{cid}" if cid else f"ip:{ip}"
 
+        # --- solo chequear (no consume): lecturas, sin reservar nada ---
+        if not consumir:
+            if persistencia.gasto_dia(conexion, hoy) >= tope_global:
+                return False, MENSAJE_GLOBAL
+            if es_prem:
+                if persistencia.gasto_premium_mes(conexion, email, mes) >= tope_mes_premium():
+                    return False, _mensaje_premium()
+                return True, ""
+            fecha, cuenta = _uso.get(clave, (hoy, 0))
+            if fecha != hoy:
+                cuenta = 0
+            if cuenta >= tope_dia_gratis():
+                return False, _mensaje_gratis()
+            return True, ""
+
+        # --- consumir: primero el sub-cupo, luego la RESERVA GLOBAL atómica ---
+        # (la muralla de la billetera se reserva en UNA sentencia: dos peticiones
+        # simultáneas no pueden superar el presupuesto — auditoría 4.2).
         if es_prem:
-            # PREMIUM: cupo mensual en disco
-            mes = hoy[:7]
             if persistencia.gasto_premium_mes(conexion, email, mes) >= tope_mes_premium():
                 return False, _mensaje_premium()
-            if consumir:
-                persistencia.sumar_gasto_premium(conexion, email, mes, 1)
-                persistencia.sumar_gasto_dia(conexion, hoy, 1)
+            if not persistencia.reservar_gasto_dia(conexion, hoy, tope_global):
+                return False, MENSAJE_GLOBAL
+            persistencia.sumar_gasto_premium(conexion, email, mes, 1)
             return True, ""
 
         # GRATIS: cupo diario en memoria, por dispositivo (o IP si no hay huella)
-        cid = (cliente_id or "").strip()[:64]
-        clave = f"cid:{cid}" if cid else f"ip:{ip}"
         fecha, cuenta = _uso.get(clave, (hoy, 0))
         if fecha != hoy:          # cambió el día: cupo fresco
             cuenta = 0
         if cuenta >= tope_dia_gratis():
             _uso[clave] = (hoy, cuenta)
             return False, _mensaje_gratis()
-        if consumir:
-            _uso[clave] = (hoy, cuenta + 1)
-            persistencia.sumar_gasto_dia(conexion, hoy, 1)
+        if not persistencia.reservar_gasto_dia(conexion, hoy, tope_global):
+            return False, MENSAJE_GLOBAL
+        _uso[clave] = (hoy, cuenta + 1)
         return True, ""
     finally:
         conexion.close()

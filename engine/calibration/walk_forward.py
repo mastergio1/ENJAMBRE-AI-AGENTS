@@ -77,7 +77,7 @@ def _score(caso, modo):
     raise ValueError(f"modo desconocido: {modo}")
 
 
-def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt"):
+def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt", embargo=0):
     """Ventana expansiva: entrena con [0:t], predice [t:t+paso], avanza. Acumula
     predicciones fuera de muestra y las evalúa en conjunto."""
     scores = [_score(c, modo) for c in casos]
@@ -85,7 +85,11 @@ def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt"):
     preds_oos, ys_oos, preds_base = [], [], []
     t = min_entrena
     while t < len(scores):
-        s_tr, y_tr = scores[:t], ys[:t]
+        # EMBARGO (auditoría 4.7/C): el train excluye los `embargo` casos justo
+        # antes del bloque de test, para que una ventana de resultado solapada no
+        # filtre info del futuro inmediato al entrenamiento. 0 = sin embargo.
+        corte_tr = max(1, t - max(0, embargo))
+        s_tr, y_tr = scores[:corte_tr], ys[:corte_tr]
         fin = min(t + paso, len(scores))
         # Baseline HONESTO (auditoría 4.5): la tasa base de esta ventana se calcula
         # SOLO con el train disponible hasta el corte `t`, nunca con las etiquetas

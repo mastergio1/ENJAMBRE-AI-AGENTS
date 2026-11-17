@@ -82,6 +82,16 @@ def test_senal_incluye_doomer_selectivo(tmp_path):
     assert "doomer_selectivo" in wf.VOCES and "doomer_selectivo" not in wf.BASE
 
 
+def test_walk_forward_con_embargo_sigue_funcionando(tmp_path):
+    """Auditoría 4.7/C: con embargo el walk-forward entrena excluyendo los casos
+    justo antes del test (anti-solape) y sigue produciendo métricas válidas."""
+    casos = wf.cargar(_archivo(tmp_path, senal_util=True))
+    r = wf.walk_forward(casos, "senal_ponderada", min_entrena=150, paso=20, embargo=5)
+    assert r["n_oos"] > 0 and 0.0 <= r["ece"] <= 1.0
+    # con señal útil, aun con embargo le gana a la base honesta
+    assert r["brier"] < r["brier_base"]
+
+
 def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
     """Auditoría 4.8: el contrato es que los casos se procesan en orden temporal.
     Aunque lleguen desordenados, `cargar` los ordena por fecha."""

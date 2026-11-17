@@ -45,8 +45,28 @@ RUTA_CACHE = _ruta_cache_defecto()
 
 # ---------- caché (repetir demos no cuesta nada) ----------
 
+# huella (modelo + prompt + esquema) por arquetipo; memoizada: son constantes en
+# el proceso. Cambiar el modelo, el prompt del arquetipo, el razonamiento
+# contextual o el esquema JSON cambia la huella → la caché se invalida SOLA para
+# ese arquetipo (auditoría 4.14). Antes la clave era titular+arquetipo+semilla sin
+# el prompt: editar un prompt reutilizaba respuestas viejas en silencio (solo el
+# flag manual ENJAMBRE_IGNORAR_CACHE lo evitaba).
+_VERSIONES: dict[str, str] = {}
+
+
+def _version_arquetipo(arquetipo_id: str) -> str:
+    if arquetipo_id not in _VERSIONES:
+        arq = POR_ID.get(arquetipo_id, {})
+        prompt = arq.get("prompt", "")
+        if arq.get("contextual"):
+            prompt = f"{prompt}\n\n{RAZONAMIENTO_CONTEXTUAL}"
+        crudo = f"{MODELO}|{prompt}|{INSTRUCCION_JSON}"
+        _VERSIONES[arquetipo_id] = hashlib.sha256(crudo.encode()).hexdigest()[:8]
+    return _VERSIONES[arquetipo_id]
+
+
 def _clave_cache(titular: str, arquetipo_id: str, semilla: int) -> str:
-    crudo = f"{titular}|{arquetipo_id}|{semilla}"
+    crudo = f"{titular}|{arquetipo_id}|{semilla}|{_version_arquetipo(arquetipo_id)}"
     return hashlib.sha256(crudo.encode()).hexdigest()[:16]
 
 

@@ -88,6 +88,31 @@ def test_cache_guarda_la_api_pero_no_el_fallback():
     assert respuesta["frase"] == "voz real"
 
 
+def test_clave_cache_cambia_con_modelo_o_prompt(monkeypatch):
+    """Auditoría 4.14: la clave de caché incorpora una huella del modelo/prompt/
+    esquema, así cambiar el modelo o el prompt invalida la caché sola (no reutiliza
+    respuestas incompatibles)."""
+    from brains import cerebro as cb
+
+    cb._VERSIONES.clear()
+    clave_antes = cb._clave_cache(TITULAR_NEGATIVO, "doomer", 0)
+
+    # cambia el modelo → la huella cambia → la clave cambia
+    cb._VERSIONES.clear()
+    monkeypatch.setattr(cb, "MODELO", "modelo-distinto-xyz")
+    clave_otro_modelo = cb._clave_cache(TITULAR_NEGATIVO, "doomer", 0)
+    assert clave_otro_modelo != clave_antes
+
+    # dos arquetipos con prompts distintos no comparten huella
+    cb._VERSIONES.clear()
+    assert cb._version_arquetipo("doomer") != cb._version_arquetipo("fomo_evangelista")
+
+    # misma config → misma clave (estable/reproducible)
+    cb._VERSIONES.clear()
+    monkeypatch.setattr(cb, "MODELO", "claude-sonnet-5")
+    assert cb._clave_cache(TITULAR_NEGATIVO, "doomer", 0) == clave_antes
+
+
 def test_validacion_del_json_del_llm():
     assert _validar_respuesta('{"senal": 0.5, "confianza": 0.8, "frase": "ok"}') is not None
     # señal fuera de rango se recorta a [-1, 1]

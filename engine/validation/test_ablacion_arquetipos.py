@@ -59,6 +59,32 @@ def test_analizar_estructura_y_senal(tmp_path):
     assert rep["leave_one_out"]["contrarian_sabio"]["delta"] <= 0.02
 
 
+def test_arquetipo_opcional_se_evalua_en_su_subconjunto(tmp_path):
+    """Auditoría: doomer_selectivo (opcional, no en todos los casos) se mide sobre
+    el subconjunto donde aparece, sin contaminar el consenso de los 8."""
+    import json
+    import random
+    rng = random.Random(7)
+    casos = []
+    for i in range(120):
+        sube = rng.random() < 0.5
+        pct = rng.uniform(0.1, 3) if sube else -rng.uniform(0.1, 3)
+        senales = {a: rng.uniform(-0.3, 0.3) for a in ab.BASE}
+        # en la mitad de los casos añadimos doomer_selectivo, buen predictor bajista
+        if i % 2 == 0:
+            senales["doomer_selectivo"] = (0.6 if sube else -0.6) + rng.uniform(-0.1, 0.1)
+        casos.append(_caso(f"2026-08-{i % 28 + 1:02d}T00:00:00", pct, senales))
+    ruta = tmp_path / "c.json"
+    ruta.write_text(json.dumps({"casos": casos}))
+    rep = ab.analizar(str(ruta))
+    assert "arquetipo_opcional" in rep
+    ds = rep["arquetipo_opcional"]["doomer_selectivo"]
+    assert ds["n"] == 60  # solo donde está presente
+    assert ds["acierto"] is not None and ds["acierto"] > 60  # buen predictor
+    # el consenso sigue siendo sobre los 8 (no se rompió con el opcional)
+    assert rep["consenso"]["acierto"] is not None
+
+
 def test_acierto_direccional_medio_punto_en_cero():
     assert ab.acierto_direccional([0.0], [1]) == 50.0
     assert ab.acierto_direccional([0.5], [1]) == 100.0

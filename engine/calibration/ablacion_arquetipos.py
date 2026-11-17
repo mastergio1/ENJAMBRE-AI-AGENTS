@@ -29,6 +29,10 @@ from contenido import calibracion as cal
 
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# arquetipos OPCIONALES (no están en todos los casos: se activaron después). Se
+# evalúan sueltos sobre el subconjunto donde aparecen (auditoría: medir la utilidad
+# del doomer_selectivo, no asumirla).
+OPCIONALES = ["doomer_selectivo"]
 # Los que, por el diagnóstico, aportan dirección vs. los que la restan.
 DIRECCIONALES = ["institucional_frio", "fomo_evangelista", "doomer", "influencer_optimista"]
 CONTRARIANS = ["quant_esceptico", "contrarian_sabio"]
@@ -48,12 +52,17 @@ def cargar(ruta: str) -> list[dict]:
         sa = c.get("senales_arquetipo") or {}
         if not all(a in sa for a in BASE):
             continue
-        out.append({
+        caso = {
             "fecha": c.get("fecha") or "",
             "y": 1 if pct > 0 else 0,
             "cat": r.get("categoria", "?"),
             "senal": {a: sa[a]["senal_media"] for a in BASE},
-        })
+        }
+        # arquetipos opcionales: se guardan solo si el caso los trae
+        for a in OPCIONALES:
+            if a in sa:
+                caso["senal"][a] = sa[a]["senal_media"]
+        out.append(caso)
     out.sort(key=lambda x: x["fecha"])
     return out
 
@@ -93,8 +102,10 @@ def brier_calibrado(scores, ys, frac=2 / 3):
 
 
 def consenso(caso, excluir=()):
-    ss = [v for a, v in caso["senal"].items() if a not in excluir]
-    return sum(ss) / len(ss)
+    # el consenso/leave-one-out viven SOBRE LOS 8 BASE (presentes en todos los
+    # casos), para que sea comparable entre casos; los opcionales se evalúan aparte.
+    ss = [caso["senal"][a] for a in BASE if a not in excluir and a in caso["senal"]]
+    return sum(ss) / len(ss) if ss else 0.0
 
 
 def analizar(ruta: str) -> dict:
@@ -107,6 +118,20 @@ def analizar(ruta: str) -> dict:
         bc, bb, nte = brier_calibrado([prob(c["senal"][a]) for c in casos], ys)
         rep["arquetipo_suelto"][a] = {
             "acierto": acierto_direccional([c["senal"][a] for c in casos], ys),
+            "brier_cal": bc, "brier_base": bb, "n_test": nte}
+
+    # arquetipos opcionales (p.ej. doomer_selectivo): sobre su subconjunto presente
+    rep["arquetipo_opcional"] = {}
+    for a in OPCIONALES:
+        sub = [c for c in casos if a in c["senal"]]
+        if len(sub) < 30:
+            rep["arquetipo_opcional"][a] = {"n": len(sub), "nota": "muestra insuficiente"}
+            continue
+        ys_sub = [c["y"] for c in sub]
+        bc, bb, nte = brier_calibrado([prob(c["senal"][a]) for c in sub], ys_sub)
+        rep["arquetipo_opcional"][a] = {
+            "n": len(sub),
+            "acierto": acierto_direccional([c["senal"][a] for c in sub], ys_sub),
             "brier_cal": bc, "brier_base": bb, "n_test": nte}
 
     bc_c, bb_c, nte = brier_calibrado([prob(consenso(c)) for c in casos], ys)
@@ -150,6 +175,13 @@ def imprimir(rep: dict) -> None:
     print(f"{'arquetipo':22}{'acierto%':>9}{'brier_cal':>11}{'brier_base':>12}")
     for a, v in rep["arquetipo_suelto"].items():
         print(f"{a:22}{v['acierto']:>9}{str(v['brier_cal']):>11}{str(v['brier_base']):>12}")
+    if rep.get("arquetipo_opcional"):
+        print("\n=== ARQUETIPOS OPCIONALES (sobre su subconjunto presente) ===")
+        for a, v in rep["arquetipo_opcional"].items():
+            if "acierto" in v:
+                print(f"{a:22} n={v['n']}  acierto={v['acierto']}%  brier_cal={v['brier_cal']}  base={v['brier_base']}")
+            else:
+                print(f"{a:22} n={v['n']}  ({v.get('nota')})")
     c = rep["consenso"]
     print(f"\n=== CONSENSO (8) ===\nacierto={c['acierto']}%  brier_cal={c['brier_cal']}  "
           f"base={c['brier_base']}  n_test={c['n_test']}")

@@ -1,18 +1,20 @@
-# El Enjambre — Código fuente del motor
-*Rubicón Lab · volcado completo del código del motor de simulación (`engine/`), para revisión y análisis externo. Generado 2026-11-16.*
-*Cada archivo va con su ruta y su contenido íntegro. No se omite nada del motor. Incluye las herramientas de calibración más recientes: la re-medición SIN FUGA de selección (`engine/calibration/remedir_sin_fuga.py`, con su vista de gating por fuerza de señal), la señal media ponderada (`engine/contenido/senal_prediccion.py`), el cerebro de entrevista (`engine/brains/entrevista.py`) y el diagnóstico por segmento (`engine/calibration/evaluar_por_segmento.py`). El frontend 3D en `web/src/` y los binarios/datos (bases SQLite, JSON de eventos) no se incluyen aquí; se entregan aparte si se piden.*
+# El Enjambre — Código fuente completo
+*Rubicón Lab · volcado completo del código fuente para revisión y auditoría externa. Generado 2026-11-17. Refleja el estado ACTUAL del repositorio (rama desplegada en producción), con todas las mejoras recientes ya incluidas.*
+*Dos partes: **(1) el motor** de simulación (`engine/` — Python/Mesa/FastAPI) y **(2) el frontend** (`web/` — Vite/Three.js). Cada archivo va con su ruta y su contenido íntegro; no se omite nada de código. Se excluyen solo: dependencias (`node_modules/`), artefactos de build (`dist/`), el lockfile autogenerado, y los datos/binarios (bases SQLite, JSON de eventos), que se entregan aparte si se piden.*
 
 ---
 
 ## Índice de archivos
-- `engine/config/agentes.json` (269 líneas)
-- `engine/model.py` (569 líneas)
+
+### Parte 1 — Motor (`engine/`)
+- `engine/config/agentes.json` (270 líneas)
+- `engine/model.py` (627 líneas)
 - `engine/llm_texto.py` (31 líneas)
 - `engine/nlp_scorer.py` (69 líneas)
 - `engine/simular.py` (42 líneas)
 - `engine/demo_titular.py` (57 líneas)
 - `engine/probar_portero.py` (27 líneas)
-- `engine/server.py` (2015 líneas)
+- `engine/server.py` (2050 líneas)
 - `engine/conftest.py` (31 líneas)
 - `engine/market/__init__.py` (0 líneas)
 - `engine/market/order_book.py` (188 líneas)
@@ -22,7 +24,7 @@
 - `engine/agents/reglas.py` (366 líneas)
 - `engine/brains/__init__.py` (0 líneas)
 - `engine/brains/arquetipos.py` (172 líneas)
-- `engine/brains/cerebro.py` (196 líneas)
+- `engine/brains/cerebro.py` (216 líneas)
 - `engine/brains/entrevista.py` (103 líneas)
 - `engine/brains/fallback.py` (376 líneas)
 - `engine/brains/mercado.py` (160 líneas)
@@ -30,25 +32,26 @@
 - `engine/network/__init__.py` (0 líneas)
 - `engine/network/red.py` (119 líneas)
 - `engine/calibration/__init__.py` (0 líneas)
-- `engine/calibration/ablacion_arquetipos.py` (172 líneas)
+- `engine/calibration/ablacion_arquetipos.py` (204 líneas)
+- `engine/calibration/benchmark_motor.py` (87 líneas)
 - `engine/calibration/calibrar_respaldo.py` (83 líneas)
 - `engine/calibration/data_loader.py` (51 líneas)
 - `engine/calibration/escenarios.py` (88 líneas)
-- `engine/calibration/evaluar_por_segmento.py` (216 líneas)
+- `engine/calibration/evaluar_por_segmento.py` (219 líneas)
 - `engine/calibration/optimizar_freno.py` (129 líneas)
 - `engine/calibration/optimizer.py` (155 líneas)
 - `engine/calibration/real_optimizer.py` (342 líneas)
 - `engine/calibration/recopilar_datos.py` (147 líneas)
-- `engine/calibration/remedir_sin_fuga.py` (172 líneas)
+- `engine/calibration/remedir_sin_fuga.py` (174 líneas)
 - `engine/calibration/validacion_base.py` (160 líneas)
 - `engine/calibration/validar_freno_hechos.py` (124 líneas)
-- `engine/calibration/verificador.py` (87 líneas)
-- `engine/calibration/walk_forward.py` (155 líneas)
+- `engine/calibration/verificador.py` (120 líneas)
+- `engine/calibration/walk_forward.py` (246 líneas)
 - `engine/contenido/__init__.py` (0 líneas)
 - `engine/contenido/analisis_semanal.py` (220 líneas)
 - `engine/contenido/backtest.py` (518 líneas)
 - `engine/contenido/boletin.py` (1049 líneas)
-- `engine/contenido/calibracion.py` (293 líneas)
+- `engine/contenido/calibracion.py` (313 líneas)
 - `engine/contenido/calibrar_libreta.py` (122 líneas)
 - `engine/contenido/captura.py` (149 líneas)
 - `engine/contenido/cierre.py` (26 líneas)
@@ -63,10 +66,10 @@
 - `engine/contenido/fuentes/yahoo.py` (320 líneas)
 - `engine/contenido/graficos.py` (127 líneas)
 - `engine/contenido/investigador.py` (142 líneas)
-- `engine/contenido/limites.py` (138 líneas)
+- `engine/contenido/limites.py` (152 líneas)
 - `engine/contenido/notificar.py` (57 líneas)
 - `engine/contenido/pagos.py` (128 líneas)
-- `engine/contenido/persistencia.py` (886 líneas)
+- `engine/contenido/persistencia.py` (908 líneas)
 - `engine/contenido/pipeline.py` (480 líneas)
 - `engine/contenido/portero.py` (220 líneas)
 - `engine/contenido/redaccion.py` (239 líneas)
@@ -74,18 +77,19 @@
 - `engine/contenido/respaldo.py` (263 líneas)
 - `engine/contenido/resumen_semanal.py` (100 líneas)
 - `engine/contenido/seguridad.py` (123 líneas)
-- `engine/contenido/senal_prediccion.py` (36 líneas)
+- `engine/contenido/senal_prediccion.py` (95 líneas)
 - `engine/contenido/vocabulario.py` (116 líneas)
 - `engine/validation/__init__.py` (0 líneas)
 - `engine/validation/conftest.py` (16 líneas)
 - `engine/validation/hechos_estilizados.py` (36 líneas)
-- `engine/validation/test_ablacion_arquetipos.py` (65 líneas)
+- `engine/validation/test_ablacion_arquetipos.py` (91 líneas)
 - `engine/validation/test_analisis_semanal.py` (229 líneas)
 - `engine/validation/test_archivo.py` (151 líneas)
 - `engine/validation/test_backtest.py` (237 líneas)
-- `engine/validation/test_calibracion.py` (145 líneas)
+- `engine/validation/test_benchmark_motor.py` (39 líneas)
+- `engine/validation/test_calibracion.py` (162 líneas)
 - `engine/validation/test_calibrar_libreta.py` (57 líneas)
-- `engine/validation/test_cerebros.py` (120 líneas)
+- `engine/validation/test_cerebros.py` (145 líneas)
 - `engine/validation/test_cierre.py` (157 líneas)
 - `engine/validation/test_config_enchufado.py` (80 líneas)
 - `engine/validation/test_contacto.py` (67 líneas)
@@ -93,6 +97,7 @@
 - `engine/validation/test_correccion_sesgo.py` (102 líneas)
 - `engine/validation/test_corrector.py` (138 líneas)
 - `engine/validation/test_cosechador.py` (113 líneas)
+- `engine/validation/test_cuota_atomica.py` (76 líneas)
 - `engine/validation/test_doomer.py` (86 líneas)
 - `engine/validation/test_doomer_segmentado.py` (84 líneas)
 - `engine/validation/test_duelo.py` (54 líneas)
@@ -101,6 +106,7 @@
 - `engine/validation/test_evaluar_por_segmento.py` (46 líneas)
 - `engine/validation/test_freno_manada.py` (86 líneas)
 - `engine/validation/test_graficos.py` (57 líneas)
+- `engine/validation/test_guardia_polaridad.py` (38 líneas)
 - `engine/validation/test_hechos_estilizados.py` (86 líneas)
 - `engine/validation/test_invariantes_mercado.py` (68 líneas)
 - `engine/validation/test_investigador.py` (79 líneas)
@@ -121,17 +127,50 @@
 - `engine/validation/test_reparto.py` (62 líneas)
 - `engine/validation/test_respaldo.py` (140 líneas)
 - `engine/validation/test_resumen_semanal.py` (124 líneas)
-- `engine/validation/test_seguridad.py` (336 líneas)
-- `engine/validation/test_senal_ponderada.py` (57 líneas)
-- `engine/validation/test_servidor.py` (88 líneas)
+- `engine/validation/test_seguridad.py` (341 líneas)
+- `engine/validation/test_senal_ponderada.py` (86 líneas)
+- `engine/validation/test_servidor.py` (143 líneas)
 - `engine/validation/test_setup.py` (54 líneas)
-- `engine/validation/test_verificador.py` (59 líneas)
-- `engine/validation/test_walk_forward.py` (60 líneas)
+- `engine/validation/test_verificador.py` (91 líneas)
+- `engine/validation/test_walk_forward.py` (137 líneas)
 - `engine/__init__.py` (0 líneas)
 
-**Total: 123 archivos, 20301 líneas.**
+**Subtotal motor: 127 archivos, 21197 líneas.**
+
+### Parte 2 — Frontend (`web/`)
+- `web/package.json` (21 líneas)
+- `web/vite.config.js` (16 líneas)
+- `web/vercel.json` (25 líneas)
+- `web/index.html` (55 líneas)
+- `web/widget.html` (18 líneas)
+- `web/pulso/gracias.html` (51 líneas)
+- `web/pulso/index.html` (513 líneas)
+- `web/pulso/vercel.json` (20 líneas)
+- `web/src/main.js` (498 líneas)
+- `web/src/style.css` (1720 líneas)
+- `web/src/swarm/datos.js` (99 líneas)
+- `web/src/swarm/enjambre.js` (302 líneas)
+- `web/src/swarm/escenario.js` (125 líneas)
+- `web/src/swarm/replay-frame.js` (34 líneas)
+- `web/src/ui/conexion.js` (235 líneas)
+- `web/src/ui/correo.js` (92 líneas)
+- `web/src/ui/guia.js` (134 líneas)
+- `web/src/ui/navegacion.js` (28 líneas)
+- `web/src/ui/panel.js` (416 líneas)
+- `web/src/ui/premium.js` (165 líneas)
+- `web/src/ui/tour.js` (87 líneas)
+- `web/src/muro/muro.js` (373 líneas)
+- `web/src/archivo/archivo.js` (185 líneas)
+- `web/src/duelo/duelo.js` (270 líneas)
+- `web/src/widget/widget.js` (148 líneas)
+
+**Subtotal frontend: 25 archivos, 5630 líneas.**
+
+**TOTAL: 152 archivos, 26827 líneas.**
 
 ---
+
+# PARTE 1 — EL MOTOR (`engine/`)
 
 ## engine/config/agentes.json
 ```json
@@ -140,6 +179,7 @@
   "total_agentes": 10150,
   "ruido_parametros_sigma": 0.15,
   "umbral_correccion_sesgo": 0.35,
+  "umbral_guardia_polaridad": 0.0,
   "peso_doomer": 0.0,
   "peso_doomer_por_mercado": {
     "indice": 1.0,
@@ -524,11 +564,25 @@ def _peso_invertidores_env(por_defecto: float) -> float:
     return max(0.0, min(1.0, valor))
 
 
-# Plan A — corrección del sesgo alcista en el consenso. Diagnóstico
-# (INFORME_CAUSA_RAIZ_NEGATIVAS.md): el enjambre acierta ~80% en positivas pero
-# ~53% en negativas porque el TONO se suaviza hacia arriba — el descuento de
+# Plan A — corrección del sesgo alcista en el consenso.
+#
+# ⚠️ OBSOLETO (2026-11-16) el diagnóstico original. El informe que motivó este
+# Plan A (INFORME_CAUSA_RAIZ_NEGATIVAS.md) decía "~80% en positivas / ~53% en
+# negativas", pero esas cifras venían de la métrica CON FUGA y CIRCULAR: la
+# `categoria` ("negativa"/"positiva") se calcula DEL RESULTADO del precio, no del
+# titular (cosechador._categoria), y la ventana de resultado incluía el mismo
+# salto que seleccionó el día. Re-medido SIN FUGA
+# (engine/calibration/remedir_sin_fuga.py, 616 casos, Yahoo): el acierto agregado
+# es ~50% (azar) y solo ÍNDICE conserva señal real (~63%); el "sesgo en negativas"
+# casi desaparece. Para cripto/acción la dirección NO está en el texto (techo
+# estructural). Ver docs/baseline-calibracion-fase0.md y
+# docs/analisis-propuesta-gating-tono.md. El MECANISMO de abajo sigue siendo
+# válido como perilla (está desactivado por defecto), pero NO lo justifiques con
+# el 80/53: el ángulo honesto es índice + gating por fuerza de señal.
+#
+# Mecanismo (histórico): el TONO se suaviza hacia arriba — el descuento de
 # magnitud (GANANCIA_CONSENSO=0.8) encoge una mala noticia clara, y el enjambre
-# predice "sube" sobre una caída real. La corrección: cuando los líderes que
+# podía predecir "sube" sobre una caída real. La corrección: cuando los líderes que
 # hablaron con la IA ya leen la noticia como CLARAMENTE bajista (consenso <
 # -umbral), NO la suavizamos; usamos la lectura directa a plena magnitud (nunca
 # para invertir el signo — solo para no diluir el bajón). `umbral_correccion_
@@ -548,7 +602,10 @@ def _umbral_correccion_env(por_defecto: float) -> float:
 
 
 # Intervención 1 — voz "doomer pura" (fiel, que NO invierte) mezclada en el
-# consenso. El sesgo alcista viene de que los invertidores (quant/contrarian/
+# consenso. (Mismo aviso que Plan A: el "sesgo alcista en negativas" que motivó
+# esto venía de la métrica con fuga/circular; sin fuga casi no existe. Es una
+# perilla desactivada por defecto, no una mejora comprobada contra el acierto
+# honesto.) El sesgo alcista viene de que los invertidores (quant/contrarian/
 # optimista) empujan positivo ante una mala noticia y cancelan a los fieles.
 # En vez de silenciarlos (P2, que falló), AÑADIMOS al consenso una voz que lee
 # la noticia sin invertir (el léxico, a 0.9 de magnitud — el "LiderDoomerPuro"
@@ -564,6 +621,32 @@ def _peso_doomer_env(por_defecto: float) -> float:
     except ValueError:
         valor = float(por_defecto)
     return max(0.0, min(1.0, valor))
+
+
+def _umbral_guardia_env(por_defecto: float) -> float:
+    """Umbral de la guardia de polaridad (ENJAMBRE_GUARDIA_POLARIDAD).
+    Recortado a [0, 1]; 0 = desactivada."""
+    crudo = os.environ.get("ENJAMBRE_GUARDIA_POLARIDAD")
+    try:
+        valor = float(crudo) if crudo not in (None, "") else float(por_defecto)
+    except ValueError:
+        valor = float(por_defecto)
+    return max(0.0, min(1.0, valor))
+
+
+def guardia_polaridad(consenso: float, directo: float, umbral: float,
+                      atenuacion: float = 0.5) -> float:
+    """Freno defensivo ante titulares ambiguos/compuestos. Si la lectura de la IA
+    (`consenso`) y la léxica (`directo`) DISCREPAN en signo y AMBAS son fuertes
+    (|·| ≥ umbral), atenúa el consenso hacia neutro (×`atenuacion`) en vez de
+    moverse con convicción hacia un lado dudoso. NUNCA invierte el signo del
+    consenso. umbral ≤ 0 = desactivada (no toca nada)."""
+    if umbral <= 0 or consenso == 0:
+        return consenso
+    discrepan = (consenso > 0) != (directo > 0) and directo != 0
+    if discrepan and abs(consenso) >= umbral and abs(directo) >= umbral:
+        return consenso * atenuacion
+    return consenso
 
 
 def _peso_doomer_env_forzado() -> float | None:
@@ -686,6 +769,13 @@ class MercadoEnjambre(mesa.Model):
         # medir en el backtest / rollback sin re-desplegar (patrón de P2).
         self._umbral_correccion = _umbral_correccion_env(
             config.get("umbral_correccion_sesgo", 0.0))
+        # Guardia de polaridad (defensiva, Propuesta gating punto 5): si la lectura
+        # IA y la léxica DISCREPAN en signo y ambas son fuertes, el titular es
+        # ambiguo/compuesto ("slash tariffs") → atenúa el consenso en vez de
+        # moverse con convicción hacia un lado dudoso. 0.0 = desactivada (defecto).
+        # Entorno ENJAMBRE_GUARDIA_POLARIDAD manda sobre la config.
+        self._umbral_guardia = _umbral_guardia_env(
+            config.get("umbral_guardia_polaridad", 0.0))
         # Intervención 1: peso de la voz doomer SELECTIVO en el tono.
         # SEGMENTADO POR MERCADO: la medición mostró que ayuda en índice (+7.6 pts
         # en negativas) pero es inerte en cripto, así que el peso depende del
@@ -822,6 +912,14 @@ class MercadoEnjambre(mesa.Model):
             return s
         consenso = num / den
         directo = None  # lectura léxica (fiel, no invierte); se calcula si hace falta
+        # Guardia de polaridad (defensiva, desactivada por defecto): ante un
+        # titular donde la IA y el léxico discrepan en signo con fuerza, atenúa el
+        # consenso hacia neutro en vez de moverse con convicción hacia un lado
+        # dudoso. No invierte el signo. Solo calcula el léxico si la guardia activa.
+        umbral_g = getattr(self, "_umbral_guardia", 0.0)
+        if umbral_g > 0:
+            directo = sentimiento_lexico(titular)
+            consenso = guardia_polaridad(consenso, directo, umbral_g)
         self._ultimo_consenso = consenso     # P4: fuerza de la señal (confianza)
         # Plan A — corrección del sesgo alcista: cuando los líderes ya leen la
         # noticia como CLARAMENTE bajista, no dejamos que el descuento de
@@ -1396,8 +1494,9 @@ _CADA_LIMPIEZA = 500  # cada tantas requests se purga el estado vencido
 # (el texto completo de una edición del Pulso: unos pocos KB), así que 256 KB
 # sobra. Sin este freno, un POST de cientos de MB se carga entero en memoria
 # antes de que pydantic lo valide → el motor (512 MB en Render) se queda sin
-# memoria y reinicia. Nota: cubre el caso con Content-Length (el normal); una
-# subida "chunked" sin ese encabezado sigue acotada por los frenos de más abajo.
+# memoria y reinicia. Cubre DOS casos: (a) con Content-Length, rechaza antes de
+# leer nada; (b) sin Content-Length ("chunked"), lee el stream con tope y corta
+# en cuanto se pasa — así nunca se acumulan más de ~256 KB en memoria.
 MAX_CUERPO = 256_000
 
 
@@ -1408,8 +1507,18 @@ async def blindaje(request: Request, call_next):
     ruta = request.url.path
     if request.method in ("POST", "PUT", "PATCH"):
         declarado = request.headers.get("content-length", "")
-        if declarado.isdigit() and int(declarado) > MAX_CUERPO:
-            return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+        if declarado.isdigit():
+            if int(declarado) > MAX_CUERPO:
+                return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+        else:
+            # sin Content-Length (chunked): leemos el stream acotado y re-inyectamos
+            # el cuerpo para el handler. Cortamos apenas supera el tope (auditoría 4.3).
+            cuerpo = bytearray()
+            async for parte in request.stream():
+                cuerpo += parte
+                if len(cuerpo) > MAX_CUERPO:
+                    return JSONResponse({"error": "cuerpo demasiado grande"}, status_code=413)
+            request._body = bytes(cuerpo)  # Starlette sirve este cuerpo al handler
     if ruta.startswith("/api/"):
         ip = seguridad.ip_cliente(request.headers, request.client.host if request.client else None)
         if not seguridad.permitir_http(ip, ruta):
@@ -1874,6 +1983,24 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
     # Se mantiene el campo `confianza` por compatibilidad con el frontend.
     fuerza_consenso = round(abs(getattr(modelo, "_ultimo_consenso", 0.0)), 2)
 
+    # GATING por fuerza de señal (Propuesta "gating", punto 1): clasificamos la
+    # convicción y marcamos si la DIRECCIÓN es fiable (solo índice + señal fuerte,
+    # la banda donde el historial sin fuga da ~80%). No cambia el motor: etiqueta
+    # el reporte para no sobre-afirmar. Umbrales/mercados overridables por entorno.
+    senal_pond = senal_prediccion.senal_media_ponderada(lideres, respuestas)
+    conviccion = senal_prediccion.clasificar_conviccion(senal_pond, mercado)
+    # Ventana A (Propuesta 3): la SEÑAL de los líderes predice la dirección mejor
+    # que el PRECIO simulado (índice sin fuga: ~63% vs ~57%). Exponemos la dirección
+    # de la señal para que el producto la use como titular CUANDO la convicción es
+    # fiable (gating); el precio sigue siendo el movimiento visual del enjambre.
+    direccion_senal = "alza" if senal_pond > 0 else "baja" if senal_pond < 0 else "neutra"
+    # La dirección que conviene mostrar como titular: la de la señal si es fiable,
+    # si no la del precio (mantiene coherencia con lo que se ve y no sobre-afirma).
+    if conviccion["fiable_direccion"]:
+        direccion_titular = direccion_senal
+    else:
+        direccion_titular = "alza" if direccion > 0 else "baja" if direccion < 0 else "neutra"
+
     return {
         "direccion_pct": direccion,
         "direccion_pct_cruda": direccion_cruda,
@@ -1883,8 +2010,11 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
         "volatilidad_pct": round(volatilidad * 100, 2),
         "confianza": fuerza_consenso,
         "fuerza_consenso": fuerza_consenso,
+        "conviccion": conviccion,
+        "direccion_senal": direccion_senal,
+        "direccion_titular": direccion_titular,
         "senal_media_lideres": round(sum(r["senal"] for r in respuestas) / len(respuestas), 2),
-        "senal_media_ponderada": senal_prediccion.senal_media_ponderada(lideres, respuestas),
+        "senal_media_ponderada": senal_pond,
         "desglose": {
             NOMBRES_TIPO.get(clase, clase): {"compras": c, "ventas": v}
             for clase, (c, v) in sorted(contador.items(), key=lambda kv: -sum(kv[1]))
@@ -2762,11 +2892,14 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
 
 
 @app.get("/api/pulso/suscriptores")
-def pulso_suscriptores(clave: str = "", email: str = ""):
+def pulso_suscriptores(clave: str = "", email: str = "",
+                       x_pipeline_token: str = Header(default="")):
     """Conteo de suscriptores (solo números, sin correos): registrados, activos
     (confirmados), sin confirmar (double opt-in pendiente) y bajas. Con `email`,
-    reporta el estado de ESE correo. De solo lectura; protegido con clave."""
-    if clave != "revisar-pulso-2026":
+    reporta el estado de ESE correo. De solo lectura; protegido con el token de
+    admin (cabecera X-Pipeline-Token, o `?clave=` por compatibilidad). Sin token
+    configurado, nadie pasa (falla cerrado). No hay secreto en el código."""
+    if not _token_admin_ok(x_pipeline_token or clave):
         return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
     try:
@@ -4257,8 +4390,28 @@ RUTA_CACHE = _ruta_cache_defecto()
 
 # ---------- caché (repetir demos no cuesta nada) ----------
 
+# huella (modelo + prompt + esquema) por arquetipo; memoizada: son constantes en
+# el proceso. Cambiar el modelo, el prompt del arquetipo, el razonamiento
+# contextual o el esquema JSON cambia la huella → la caché se invalida SOLA para
+# ese arquetipo (auditoría 4.14). Antes la clave era titular+arquetipo+semilla sin
+# el prompt: editar un prompt reutilizaba respuestas viejas en silencio (solo el
+# flag manual ENJAMBRE_IGNORAR_CACHE lo evitaba).
+_VERSIONES: dict[str, str] = {}
+
+
+def _version_arquetipo(arquetipo_id: str) -> str:
+    if arquetipo_id not in _VERSIONES:
+        arq = POR_ID.get(arquetipo_id, {})
+        prompt = arq.get("prompt", "")
+        if arq.get("contextual"):
+            prompt = f"{prompt}\n\n{RAZONAMIENTO_CONTEXTUAL}"
+        crudo = f"{MODELO}|{prompt}|{INSTRUCCION_JSON}"
+        _VERSIONES[arquetipo_id] = hashlib.sha256(crudo.encode()).hexdigest()[:8]
+    return _VERSIONES[arquetipo_id]
+
+
 def _clave_cache(titular: str, arquetipo_id: str, semilla: int) -> str:
-    crudo = f"{titular}|{arquetipo_id}|{semilla}"
+    crudo = f"{titular}|{arquetipo_id}|{semilla}|{_version_arquetipo(arquetipo_id)}"
     return hashlib.sha256(crudo.encode()).hexdigest()[:16]
 
 
@@ -5310,6 +5463,10 @@ from contenido import calibracion as cal
 
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# arquetipos OPCIONALES (no están en todos los casos: se activaron después). Se
+# evalúan sueltos sobre el subconjunto donde aparecen (auditoría: medir la utilidad
+# del doomer_selectivo, no asumirla).
+OPCIONALES = ["doomer_selectivo"]
 # Los que, por el diagnóstico, aportan dirección vs. los que la restan.
 DIRECCIONALES = ["institucional_frio", "fomo_evangelista", "doomer", "influencer_optimista"]
 CONTRARIANS = ["quant_esceptico", "contrarian_sabio"]
@@ -5329,12 +5486,17 @@ def cargar(ruta: str) -> list[dict]:
         sa = c.get("senales_arquetipo") or {}
         if not all(a in sa for a in BASE):
             continue
-        out.append({
+        caso = {
             "fecha": c.get("fecha") or "",
             "y": 1 if pct > 0 else 0,
             "cat": r.get("categoria", "?"),
             "senal": {a: sa[a]["senal_media"] for a in BASE},
-        })
+        }
+        # arquetipos opcionales: se guardan solo si el caso los trae
+        for a in OPCIONALES:
+            if a in sa:
+                caso["senal"][a] = sa[a]["senal_media"]
+        out.append(caso)
     out.sort(key=lambda x: x["fecha"])
     return out
 
@@ -5374,8 +5536,10 @@ def brier_calibrado(scores, ys, frac=2 / 3):
 
 
 def consenso(caso, excluir=()):
-    ss = [v for a, v in caso["senal"].items() if a not in excluir]
-    return sum(ss) / len(ss)
+    # el consenso/leave-one-out viven SOBRE LOS 8 BASE (presentes en todos los
+    # casos), para que sea comparable entre casos; los opcionales se evalúan aparte.
+    ss = [caso["senal"][a] for a in BASE if a not in excluir and a in caso["senal"]]
+    return sum(ss) / len(ss) if ss else 0.0
 
 
 def analizar(ruta: str) -> dict:
@@ -5388,6 +5552,20 @@ def analizar(ruta: str) -> dict:
         bc, bb, nte = brier_calibrado([prob(c["senal"][a]) for c in casos], ys)
         rep["arquetipo_suelto"][a] = {
             "acierto": acierto_direccional([c["senal"][a] for c in casos], ys),
+            "brier_cal": bc, "brier_base": bb, "n_test": nte}
+
+    # arquetipos opcionales (p.ej. doomer_selectivo): sobre su subconjunto presente
+    rep["arquetipo_opcional"] = {}
+    for a in OPCIONALES:
+        sub = [c for c in casos if a in c["senal"]]
+        if len(sub) < 30:
+            rep["arquetipo_opcional"][a] = {"n": len(sub), "nota": "muestra insuficiente"}
+            continue
+        ys_sub = [c["y"] for c in sub]
+        bc, bb, nte = brier_calibrado([prob(c["senal"][a]) for c in sub], ys_sub)
+        rep["arquetipo_opcional"][a] = {
+            "n": len(sub),
+            "acierto": acierto_direccional([c["senal"][a] for c in sub], ys_sub),
             "brier_cal": bc, "brier_base": bb, "n_test": nte}
 
     bc_c, bb_c, nte = brier_calibrado([prob(consenso(c)) for c in casos], ys)
@@ -5431,6 +5609,13 @@ def imprimir(rep: dict) -> None:
     print(f"{'arquetipo':22}{'acierto%':>9}{'brier_cal':>11}{'brier_base':>12}")
     for a, v in rep["arquetipo_suelto"].items():
         print(f"{a:22}{v['acierto']:>9}{str(v['brier_cal']):>11}{str(v['brier_base']):>12}")
+    if rep.get("arquetipo_opcional"):
+        print("\n=== ARQUETIPOS OPCIONALES (sobre su subconjunto presente) ===")
+        for a, v in rep["arquetipo_opcional"].items():
+            if "acierto" in v:
+                print(f"{a:22} n={v['n']}  acierto={v['acierto']}%  brier_cal={v['brier_cal']}  base={v['brier_base']}")
+            else:
+                print(f"{a:22} n={v['n']}  ({v.get('nota')})")
     c = rep["consenso"]
     print(f"\n=== CONSENSO (8) ===\nacierto={c['acierto']}%  brier_cal={c['brier_cal']}  "
           f"base={c['brier_base']}  n_test={c['n_test']}")
@@ -5451,6 +5636,97 @@ def imprimir(rep: dict) -> None:
 if __name__ == "__main__":
     ruta = sys.argv[1] if len(sys.argv) > 1 else "calibracion.json"
     imprimir(analizar(ruta))
+```
+
+## engine/calibration/benchmark_motor.py
+```python
+"""Benchmark REPRODUCIBLE del motor (Fase 3, paso 1 de la auditoría).
+
+"No optimizar a ciegas: primero un benchmark reproducible." Esta herramienta mide
+el coste del motor (tiempo por tick, ticks/seg, memoria pico) con semilla FIJA y
+SIN IA, para tener una línea base antes de tocar nada — y para comprobar después
+que una optimización no cambió el comportamiento ni empeoró el tiempo.
+
+NO cambia el motor. Es determinística: misma semilla → mismos números de
+comportamiento (precio final, volumen); los tiempos varían con la máquina, por eso
+se reportan percentiles, no un único promedio frágil.
+
+Uso:
+    python3 engine/calibration/benchmark_motor.py [seed] [ticks]
+"""
+import sys
+import time
+import tracemalloc
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from model import MercadoEnjambre
+
+
+def _percentil(valores, p):
+    if not valores:
+        return None
+    orden = sorted(valores)
+    k = max(0, min(len(orden) - 1, int(round((p / 100) * (len(orden) - 1)))))
+    return orden[k]
+
+
+def correr(seed: int = 42, ticks: int = 600, prob_noticia: float = 0.02,
+           medir_memoria: bool = True) -> dict:
+    """Corre una sesión headless cronometrando cada step(). Devuelve métricas de
+    tiempo (ms por tick) + de comportamiento (para confirmar reproducibilidad)."""
+    if medir_memoria:
+        tracemalloc.start()
+    modelo = MercadoEnjambre(seed=seed, ticks_horizonte=ticks)
+    por_tick_ms = []
+    t0 = time.perf_counter()
+    for _ in range(ticks):
+        if modelo.random.random() < prob_noticia:
+            modelo.aplicar_noticia(modelo.random.gauss(0, 0.45))
+        ini = time.perf_counter()
+        modelo.step()
+        por_tick_ms.append((time.perf_counter() - ini) * 1000)
+    total_s = time.perf_counter() - t0
+
+    mem_pico_mb = None
+    if medir_memoria:
+        _, pico = tracemalloc.get_traced_memory()
+        mem_pico_mb = round(pico / 1_000_000, 1)
+        tracemalloc.stop()
+
+    volumen = sum(modelo.flujo_compras) + sum(modelo.flujo_ventas)
+    return {
+        "seed": seed,
+        "ticks": ticks,
+        "n_agentes": len(modelo.agents) if hasattr(modelo, "agents") else None,
+        "total_s": round(total_s, 3),
+        "ticks_por_seg": round(ticks / total_s, 1) if total_s else None,
+        "ms_por_tick": {
+            "p50": round(_percentil(por_tick_ms, 50), 3),
+            "p95": round(_percentil(por_tick_ms, 95), 3),
+            "max": round(max(por_tick_ms), 3),
+        },
+        "mem_pico_mb": mem_pico_mb,
+        # comportamiento (reproducible por semilla): sirve para verificar que una
+        # optimización futura NO cambió la simulación, solo su velocidad.
+        "precio_final": round(modelo.historial_precios[-1], 4),
+        "volumen_total": round(volumen, 1),
+    }
+
+
+def imprimir(r: dict) -> None:
+    print(f"seed={r['seed']}  ticks={r['ticks']}  agentes={r['n_agentes']}")
+    print(f"total: {r['total_s']}s   {r['ticks_por_seg']} ticks/seg")
+    m = r["ms_por_tick"]
+    print(f"ms/tick  p50={m['p50']}  p95={m['p95']}  max={m['max']}")
+    print(f"memoria pico: {r['mem_pico_mb']} MB")
+    print(f"[reproducibilidad] precio_final={r['precio_final']}  volumen={r['volumen_total']}")
+
+
+if __name__ == "__main__":
+    seed = int(sys.argv[1]) if len(sys.argv) > 1 else 42
+    ticks = int(sys.argv[2]) if len(sys.argv) > 2 else 600
+    imprimir(correr(seed, ticks))
 ```
 
 ## engine/calibration/calibrar_respaldo.py
@@ -5716,13 +5992,16 @@ from contenido.backtest import _mercado_de_caso
 
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# incluye doomer_selectivo (9º) para medir la MISMA señal que usa producción, no
+# una de 8 que lo ignora (auditoría ampliada). Se suma solo cuando está presente.
+VOCES = BASE + ["doomer_selectivo"]
 CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
 
 
 def _senal_ponderada(sa, peso_contr=0.3) -> float:
     """senal_media_ponderada reconstruida desde senales_arquetipo (contrarians×0.3)."""
     num = den = 0.0
-    for a in BASE:
+    for a in VOCES:
         if a in sa:
             w = sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
             num += sa[a]["senal_media"] * w
@@ -5752,7 +6031,7 @@ def _consenso(caso) -> float:
     trae `confianza`): media ponderada por confianza×n sobre los 8 arquetipos."""
     sa = caso.get("senales_arquetipo") or {}
     num = den = 0.0
-    for a in BASE:
+    for a in VOCES:
         if a in sa:
             w = sa[a]["confianza_media"] * sa[a]["n"]
             num += sa[a]["senal_media"] * w
@@ -6728,12 +7007,14 @@ from contenido.backtest import _mercado_de_caso
 URL = "https://query1.finance.yahoo.com/v8/finance/chart/{simbolo}"
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# incluye doomer_selectivo (9º) para medir la MISMA señal que usa producción.
+VOCES = BASE + ["doomer_selectivo"]
 CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
 
 
 def _pond(sa, w=0.3):
-    num = sum(sa[a]["senal_media"] * sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in BASE if a in sa)
-    den = sum(sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in BASE if a in sa)
+    num = sum(sa[a]["senal_media"] * sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in VOCES if a in sa)
+    den = sum(sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in VOCES if a in sa)
     return num / den if den else 0.0
 
 
@@ -7204,10 +7485,43 @@ def es_holdout(sim_id: str, pct: int = PORCENTAJE_HOLDOUT) -> bool:
 
 
 def particionar(casos: list[dict]) -> tuple[list, list]:
-    """Separa casos (cada uno con 'sim_id') en (visible, held_out)."""
+    """Separa casos (cada uno con 'sim_id') en (visible, held_out) por hash.
+
+    ⚠️ DEPRECADO para validar de verdad: el reparto por hash puede meter en el
+    holdout casos ANTERIORES en el tiempo o partir un mismo evento entre train y
+    holdout (auditoría 4.9). Para una validación honesta usa
+    `particionar_temporal`. Se conserva por compatibilidad."""
     visible, holdout = [], []
     for c in casos:
         (holdout if es_holdout(c.get("sim_id", "")) else visible).append(c)
+    return visible, holdout
+
+
+def particionar_temporal(casos: list[dict], pct: int = PORCENTAJE_HOLDOUT,
+                         embargo: int = 0, clave_fecha: str = "fecha",
+                         clave_grupo: str | None = None) -> tuple[list, list]:
+    """Holdout TEMPORAL con embargo y purga por grupo (auditoría 4.9 y 4.7).
+
+    El `pct`% MÁS RECIENTE por fecha se reserva para validar; el resto es visible
+    —como en vivo, se valida sobre el FUTURO, no sobre casos sorteados por hash—.
+      - `embargo`: nº de casos justo antes del corte que se DESCARTAN del visible,
+        para que ventanas de resultado solapadas no filtren info al holdout.
+      - `clave_grupo` (p.ej. 'simbolos'): PURGA del visible todo caso cuyo grupo
+        aparezca también en el holdout, evitando contaminación por evento/activo.
+    Devuelve (visible, holdout). El holdout queda intacto (es el futuro);
+    la purga y el embargo solo quitan casos del visible.
+    """
+    ordenados = sorted(casos, key=lambda c: c.get(clave_fecha) or "")
+    n = len(ordenados)
+    n_hold = round(n * pct / 100)
+    if n_hold <= 0:
+        return list(ordenados), []
+    corte = n - n_hold
+    holdout = ordenados[corte:]
+    visible = ordenados[:max(0, corte - max(0, embargo))]
+    if clave_grupo:
+        grupos_hold = {c.get(clave_grupo) for c in holdout if c.get(clave_grupo)}
+        visible = [c for c in visible if c.get(clave_grupo) not in grupos_hold]
     return visible, holdout
 
 
@@ -7286,8 +7600,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
 from contenido import calibracion as cal
 
+# los 8 arquetipos clásicos que TODOS los casos traen (se exige su presencia).
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# VOCES = las que SUMAN a la señal. Incluye doomer_selectivo (9º arquetipo): la
+# señal de PRODUCCIÓN (senal_media_ponderada) lo incorpora, así que las
+# herramientas offline deben medir la MISMA señal, no una de 8 que lo ignora
+# (auditoría ampliada). Se suma solo cuando está presente (los casos viejos,
+# cosechados antes de activarlo, simplemente no lo traen y no se descartan).
+VOCES = BASE + ["doomer_selectivo"]
 CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
 MODOS = ("senal_media", "senal_ponderada", "direccion")
 MARGEN_PROMOCION = 0.005  # el Brier WF debe ganarle a la base por al menos esto
@@ -7295,9 +7616,9 @@ MARGEN_PROMOCION = 0.005  # el Brier WF debe ganarle a la base por al menos esto
 
 def _senal(sa, peso_contr=1.0):
     num = sum(sa[a]["senal_media"] * sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
-              for a in BASE if a in sa)
+              for a in VOCES if a in sa)
     den = sum(sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
-              for a in BASE if a in sa)
+              for a in VOCES if a in sa)
     return num / den if den else 0.0
 
 
@@ -7329,34 +7650,48 @@ def _score(caso, modo):
     raise ValueError(f"modo desconocido: {modo}")
 
 
-def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt"):
+def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt", embargo=0):
     """Ventana expansiva: entrena con [0:t], predice [t:t+paso], avanza. Acumula
     predicciones fuera de muestra y las evalúa en conjunto."""
     scores = [_score(c, modo) for c in casos]
     ys = [c["y"] for c in casos]
-    preds_oos, ys_oos = [], []
+    preds_oos, ys_oos, preds_base = [], [], []
     t = min_entrena
     while t < len(scores):
-        s_tr, y_tr = scores[:t], ys[:t]
+        # EMBARGO (auditoría 4.7/C): el train excluye los `embargo` casos justo
+        # antes del bloque de test, para que una ventana de resultado solapada no
+        # filtre info del futuro inmediato al entrenamiento. 0 = sin embargo.
+        corte_tr = max(1, t - max(0, embargo))
+        s_tr, y_tr = scores[:corte_tr], ys[:corte_tr]
         fin = min(t + paso, len(scores))
+        # Baseline HONESTO (auditoría 4.5): la tasa base de esta ventana se calcula
+        # SOLO con el train disponible hasta el corte `t`, nunca con las etiquetas
+        # OOS [t:fin] (que no se conocen al momento de predecir). Antes se usaba
+        # cal.tasa_base(ys_oos) — el baseline "veía" el balance de clases del futuro.
+        base_t = cal.tasa_base(y_tr)
         try:
             calib = cal.ajustar_calibrador(s_tr, y_tr, metodo=metodo)
             preds_oos.extend(calib.predict(scores[t:fin]))
         except Exception:
             preds_oos.extend(scores[t:fin])  # si falla, crudo (conservador)
+        preds_base.extend([base_t] * (fin - t))
         ys_oos.extend(ys[t:fin])
         t = fin
     if not preds_oos:
         return {"error": "no hay suficientes datos para walk-forward"}
-    base = cal.tasa_base(ys_oos)
+    base = round(sum(preds_base) / len(preds_base), 4)  # base media (solo-train)
     brier_modelo = cal.brier(preds_oos, ys_oos)
-    brier_base = cal.brier([base] * len(ys_oos), ys_oos)
+    brier_base = cal.brier(preds_base, ys_oos)
     return {
         "modo": modo, "metodo": metodo,
         "n_oos": len(preds_oos),
+        "base": base,  # tasa base media (solo-train), para transparencia
         "brier": round(brier_modelo, 4),
         "brier_base": round(brier_base, 4),
         "skill": round(cal.skill_score(brier_modelo, brier_base), 4),
+        "log_loss": round(cal.log_loss(preds_oos, ys_oos), 4),
+        "ece": round(cal.ece(preds_oos, ys_oos, n_tramos=5), 4),
+        "mce": round(cal.mce(preds_oos, ys_oos, n_tramos=5), 4),
         "confiabilidad": cal.curva_confiabilidad(preds_oos, ys_oos, n_tramos=5),
     }
 
@@ -7388,6 +7723,76 @@ def promover(casos, min_entrena=200, paso=20):
         calib = cal.ajustar_calibrador(scores, ys, metodo=mejor["metodo"])
         salida["calibrador"] = {"modo": mejor["modo"], "metodo": mejor["metodo"],
                                 "params": _serializar(calib)}
+    return salida
+
+
+def promover_anidado(casos, min_entrena=150, paso=20, pct_holdout=20, embargo=0):
+    """Promoción con holdout final CONGELADO (auditoría 4.6 y 'congelar holdout').
+
+    Evita el sesgo de selección múltiple: `promover` elige el mejor de 6 configs
+    mirando el MISMO OOS que luego reporta (optimismo). Aquí:
+      1. Se parte temporalmente: desarrollo (lo viejo) y holdout final (el pct%
+         más reciente), con un `embargo` de separación. Los casos ya vienen
+         ordenados por fecha desde `cargar`.
+      2. La elección de (modo, método) se hace SOLO con el desarrollo (walk-forward
+         interno). El holdout NO participa en la selección.
+      3. El calibrador elegido se ajusta con TODO el desarrollo y se evalúa UNA vez
+         sobre el holdout congelado. Ese número es el veredicto honesto.
+      4. Promueve solo si le gana a la base (del desarrollo) EN EL HOLDOUT.
+    """
+    n = len(casos)
+    n_hold = round(n * pct_holdout / 100)
+    corte = n - n_hold
+    if corte - embargo < min_entrena or n_hold < 20:
+        return {"promovido": False, "motivo": "datos insuficientes para anidar",
+                "n": n, "n_holdout": n_hold}
+    desarrollo = casos[:corte - embargo] if embargo else casos[:corte]
+    holdout = casos[corte:]
+
+    # 1) selección SOLO en desarrollo (walk-forward interno)
+    candidatos = []
+    for modo in MODOS:
+        for metodo in ("platt", "isotonic"):
+            r = walk_forward(desarrollo, modo, min_entrena, paso, metodo, embargo=embargo)
+            if "error" not in r:
+                candidatos.append(r)
+    if not candidatos:
+        return {"promovido": False, "motivo": "sin candidatos", "candidatos": []}
+    candidatos.sort(key=lambda r: r["brier"])
+    elegido = candidatos[0]
+
+    # 2) ajustar el elegido con TODO el desarrollo y evaluar UNA vez en el holdout
+    s_dev = [_score(c, elegido["modo"]) for c in desarrollo]
+    y_dev = [c["y"] for c in desarrollo]
+    calib = cal.ajustar_calibrador(s_dev, y_dev, metodo=elegido["metodo"])
+    s_hold = [_score(c, elegido["modo"]) for c in holdout]
+    y_hold = [c["y"] for c in holdout]
+    preds_hold = calib.predict(s_hold)
+    base_dev = cal.tasa_base(y_dev)  # base HONESTA: solo-desarrollo, no ve el holdout
+    brier_hold = cal.brier(preds_hold, y_hold)
+    brier_base_hold = cal.brier([base_dev] * len(y_hold), y_hold)
+    gana = brier_base_hold - brier_hold
+    holdout_metricas = {
+        "n": len(y_hold), "brier": round(brier_hold, 4),
+        "brier_base": round(brier_base_hold, 4),
+        "skill": round(cal.skill_score(brier_hold, brier_base_hold), 4),
+        "log_loss": round(cal.log_loss(preds_hold, y_hold), 4),
+        "ece": round(cal.ece(preds_hold, y_hold, n_tramos=5), 4),
+    }
+    promovido = gana >= MARGEN_PROMOCION
+    salida = {"promovido": promovido, "margen_requerido": MARGEN_PROMOCION,
+              "ganancia_vs_base_holdout": round(gana, 4),
+              "elegido": {"modo": elegido["modo"], "metodo": elegido["metodo"]},
+              "seleccion_desarrollo": elegido,  # su métrica de desarrollo (optimista)
+              "holdout_final": holdout_metricas,  # el veredicto honesto
+              "candidatos": candidatos}
+    if promovido:
+        # calibrador final con TODOS los datos (dev+holdout), ya validado
+        scores = [_score(c, elegido["modo"]) for c in casos]
+        ys = [c["y"] for c in casos]
+        final = cal.ajustar_calibrador(scores, ys, metodo=elegido["metodo"])
+        salida["calibrador"] = {"modo": elegido["modo"], "metodo": elegido["metodo"],
+                                "params": _serializar(final)}
     return salida
 
 
@@ -9360,6 +9765,26 @@ def curva_confiabilidad(probs, resultados, n_tramos: int = 10):
             "n": len(t),
         })
     return salida
+
+
+def ece(probs, resultados, n_tramos: int = 10) -> float:
+    """Expected Calibration Error (auditoría, métricas D): error de calibración
+    PROMEDIO, ponderado por nº de casos en cada tramo = Σ (n_tramo/N)·|pred−obs|.
+    0 = perfectamente calibrado. Complementa al Brier, que mezcla calibración con
+    discriminación. OJO: sensible al binning y al N (tramos con pocos casos son
+    ruidosos) — reportar siempre junto al tamaño muestral."""
+    curva = curva_confiabilidad(probs, resultados, n_tramos=n_tramos)
+    total = sum(t["n"] for t in curva)
+    if not total:
+        return 0.0
+    return sum(t["n"] / total * abs(t["pred_media"] - t["obs_frac"]) for t in curva)
+
+
+def mce(probs, resultados, n_tramos: int = 10) -> float:
+    """Maximum Calibration Error: el PEOR tramo (máx |pred−obs|). Vigila el tramo
+    donde el modelo más miente, no solo el promedio."""
+    curva = curva_confiabilidad(probs, resultados, n_tramos=n_tramos)
+    return max((abs(t["pred_media"] - t["obs_frac"]) for t in curva), default=0.0)
 
 
 def skill_score(brier_modelo: float, brier_base: float) -> float:
@@ -11390,36 +11815,50 @@ def permitir(ip: str, premium_token: str | None = None, cliente_id: str | None =
     conexion = persistencia.conectar()
     try:
         hoy = date.today().isoformat()
-        # 1) la muralla de la billetera (en disco) — sobre todos
-        if persistencia.gasto_dia(conexion, hoy) >= tope_global_dia():
-            return False, MENSAJE_GLOBAL
-
+        tope_global = tope_global_dia()
         # el token (no el correo desnudo) prueba que es el dueño del buzón Premium
         email = persistencia.email_por_token_enjambre(conexion, (premium_token or "").strip())
         es_prem = bool(email) and persistencia.es_premium(conexion, email)
+        mes = hoy[:7]
+        cid = (cliente_id or "").strip()[:64]
+        clave = f"cid:{cid}" if cid else f"ip:{ip}"
 
+        # --- solo chequear (no consume): lecturas, sin reservar nada ---
+        if not consumir:
+            if persistencia.gasto_dia(conexion, hoy) >= tope_global:
+                return False, MENSAJE_GLOBAL
+            if es_prem:
+                if persistencia.gasto_premium_mes(conexion, email, mes) >= tope_mes_premium():
+                    return False, _mensaje_premium()
+                return True, ""
+            fecha, cuenta = _uso.get(clave, (hoy, 0))
+            if fecha != hoy:
+                cuenta = 0
+            if cuenta >= tope_dia_gratis():
+                return False, _mensaje_gratis()
+            return True, ""
+
+        # --- consumir: primero el sub-cupo, luego la RESERVA GLOBAL atómica ---
+        # (la muralla de la billetera se reserva en UNA sentencia: dos peticiones
+        # simultáneas no pueden superar el presupuesto — auditoría 4.2).
         if es_prem:
-            # PREMIUM: cupo mensual en disco
-            mes = hoy[:7]
             if persistencia.gasto_premium_mes(conexion, email, mes) >= tope_mes_premium():
                 return False, _mensaje_premium()
-            if consumir:
-                persistencia.sumar_gasto_premium(conexion, email, mes, 1)
-                persistencia.sumar_gasto_dia(conexion, hoy, 1)
+            if not persistencia.reservar_gasto_dia(conexion, hoy, tope_global):
+                return False, MENSAJE_GLOBAL
+            persistencia.sumar_gasto_premium(conexion, email, mes, 1)
             return True, ""
 
         # GRATIS: cupo diario en memoria, por dispositivo (o IP si no hay huella)
-        cid = (cliente_id or "").strip()[:64]
-        clave = f"cid:{cid}" if cid else f"ip:{ip}"
         fecha, cuenta = _uso.get(clave, (hoy, 0))
         if fecha != hoy:          # cambió el día: cupo fresco
             cuenta = 0
         if cuenta >= tope_dia_gratis():
             _uso[clave] = (hoy, cuenta)
             return False, _mensaje_gratis()
-        if consumir:
-            _uso[clave] = (hoy, cuenta + 1)
-            persistencia.sumar_gasto_dia(conexion, hoy, 1)
+        if not persistencia.reservar_gasto_dia(conexion, hoy, tope_global):
+            return False, MENSAJE_GLOBAL
+        _uso[clave] = (hoy, cuenta + 1)
         return True, ""
     finally:
         conexion.close()
@@ -12395,6 +12834,28 @@ def sumar_gasto_dia(conexion, fecha: str, n: int = 1) -> int:
         (fecha, n))
     conexion.commit()
     return gasto_dia(conexion, fecha)
+
+
+def reservar_gasto_dia(conexion, fecha: str, tope: int, n: int = 1) -> bool:
+    """Reserva ATÓMICAMENTE `n` del cupo global de `fecha` si no supera `tope`.
+
+    Devuelve True si reservó (incrementó el gasto), False si el tope ya está lleno.
+    El chequeo y el incremento ocurren en UNA sola sentencia, bajo el candado de
+    escritura de SQLite (WAL serializa a un escritor a la vez), así dos peticiones
+    simultáneas NO pueden pasar ambas el tope — elimina la carrera
+    check-then-increment de la auditoría 4.2 (el presupuesto nunca se supera).
+    """
+    if n <= 0:
+        return True
+    if n > tope:
+        return False  # ni el primer uso cabe; no creamos fila
+    cur = conexion.execute(
+        "INSERT INTO gasto_diario (fecha, consumidas) VALUES (?, ?) "
+        "ON CONFLICT(fecha) DO UPDATE SET consumidas = consumidas + excluded.consumidas "
+        "WHERE gasto_diario.consumidas + excluded.consumidas <= ?",
+        (fecha, n, tope))
+    conexion.commit()
+    return cur.rowcount > 0
 
 
 def reiniciar_gasto(conexion) -> None:
@@ -14844,6 +15305,65 @@ def senal_media_ponderada(lideres, respuestas) -> float:
         num += r["senal"] * w
         den += w
     return round(num / den, 2) if den else 0.0
+
+
+# ---------- GATING por fuerza de señal (Propuesta "gating", punto 1) ----------
+# La re-medición SIN FUGA (remedir_sin_fuga.py, 616 casos) mostró que la DIRECCIÓN
+# solo es fiable cuando se cumplen DOS condiciones a la vez:
+#   1. el mercado tiene señal real en el texto → solo ÍNDICE (cripto/acción/oro/
+#      petróleo quedan en ~azar: su dirección NO está en la noticia), y
+#   2. el enjambre está muy convencido → |senal_media_ponderada| ≥ 0.3.
+# En esa banda el acierto histórico (sin fuga) fue ~80% en índice. Fuera de ella
+# NO afirmamos dirección: la mostramos como "lectura ambigua / visualización".
+# Esto SUBE el acierto condicional a cambio de cobertura (trade-off correcto) y es
+# MÁS honesto ante la CMF (no sobre-afirma). Umbrales y mercados fiables son
+# overridables por entorno para medir/rollback sin re-desplegar.
+UMBRAL_FUERTE = 0.30
+UMBRAL_MODERADA = 0.20
+MERCADOS_FIABLES_DEFECTO = frozenset({"indice"})
+
+
+def _umbral(nombre: str, por_defecto: float) -> float:
+    try:
+        v = os.environ.get(nombre, "")
+        return float(v) if v != "" else por_defecto
+    except ValueError:
+        return por_defecto
+
+
+def mercados_fiables() -> frozenset:
+    """Mercados donde la dirección se considera fiable (env
+    ENJAMBRE_MERCADOS_FIABLES = lista separada por comas; vacío = solo índice)."""
+    crudo = os.environ.get("ENJAMBRE_MERCADOS_FIABLES", "").strip()
+    if not crudo:
+        return MERCADOS_FIABLES_DEFECTO
+    return frozenset(m.strip() for m in crudo.split(",") if m.strip())
+
+
+def clasificar_conviccion(senal_ponderada: float, mercado: str | None) -> dict:
+    """Clasifica la convicción del enjambre y si la DIRECCIÓN es fiable.
+
+    Devuelve: nivel ('fuerte'|'moderada'|'debil'), fiable_direccion (bool) y una
+    nota honesta para la UI. NO cambia el motor ni el precio: solo etiqueta el
+    reporte para que el producto afirme dirección solo cuando el historial
+    (sin fuga) la respalda."""
+    a = abs(senal_ponderada or 0.0)
+    fuerte = _umbral("ENJAMBRE_UMBRAL_FUERTE", UMBRAL_FUERTE)
+    moderada = _umbral("ENJAMBRE_UMBRAL_MODERADA", UMBRAL_MODERADA)
+    if a >= fuerte:
+        nivel = "fuerte"
+    elif a >= moderada:
+        nivel = "moderada"
+    else:
+        nivel = "debil"
+    fiable = nivel == "fuerte" and (mercado in mercados_fiables())
+    if fiable:
+        nota = "El enjambre está muy convencido y en este tipo de mercado su lectura ha sido confiable."
+    elif nivel == "debil":
+        nota = "Lectura ambigua: el enjambre no se decide. Tómalo como visualización, no como dirección."
+    else:
+        nota = "Convicción parcial, o un mercado donde la dirección no suele leerse en la noticia. Visualización."
+    return {"nivel": nivel, "fiable_direccion": fiable, "nota": nota}
 ```
 
 ## engine/contenido/vocabulario.py
@@ -15092,6 +15612,32 @@ def test_analizar_estructura_y_senal(tmp_path):
             > rep["arquetipo_suelto"]["contrarian_sabio"]["acierto"])
     # quitar el contrarian invertido no debe EMPEORAR el Brier (Δ <= algo pequeño)
     assert rep["leave_one_out"]["contrarian_sabio"]["delta"] <= 0.02
+
+
+def test_arquetipo_opcional_se_evalua_en_su_subconjunto(tmp_path):
+    """Auditoría: doomer_selectivo (opcional, no en todos los casos) se mide sobre
+    el subconjunto donde aparece, sin contaminar el consenso de los 8."""
+    import json
+    import random
+    rng = random.Random(7)
+    casos = []
+    for i in range(120):
+        sube = rng.random() < 0.5
+        pct = rng.uniform(0.1, 3) if sube else -rng.uniform(0.1, 3)
+        senales = {a: rng.uniform(-0.3, 0.3) for a in ab.BASE}
+        # en la mitad de los casos añadimos doomer_selectivo, buen predictor bajista
+        if i % 2 == 0:
+            senales["doomer_selectivo"] = (0.6 if sube else -0.6) + rng.uniform(-0.1, 0.1)
+        casos.append(_caso(f"2026-08-{i % 28 + 1:02d}T00:00:00", pct, senales))
+    ruta = tmp_path / "c.json"
+    ruta.write_text(json.dumps({"casos": casos}))
+    rep = ab.analizar(str(ruta))
+    assert "arquetipo_opcional" in rep
+    ds = rep["arquetipo_opcional"]["doomer_selectivo"]
+    assert ds["n"] == 60  # solo donde está presente
+    assert ds["acierto"] is not None and ds["acierto"] > 60  # buen predictor
+    # el consenso sigue siendo sobre los 8 (no se rompió con el opcional)
+    assert rep["consenso"]["acierto"] is not None
 
 
 def test_acierto_direccional_medio_punto_en_cero():
@@ -15729,6 +16275,49 @@ def test_endpoints_del_backtest_exigen_token(monkeypatch):
     assert "_lista_pendiente" not in avance.json()
 ```
 
+## engine/validation/test_benchmark_motor.py
+```python
+"""El benchmark del motor (Fase 3): mide sin cambiar el comportamiento y es
+reproducible por semilla — misma semilla da el MISMO resultado de simulación
+(precio final, volumen), que es lo que permitirá verificar que una optimización
+futura solo cambió la velocidad, no el modelo."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # engine/
+
+from calibration import benchmark_motor as bm
+
+
+def test_reproducible_por_semilla():
+    a = bm.correr(seed=7, ticks=40, medir_memoria=False)
+    b = bm.correr(seed=7, ticks=40, medir_memoria=False)
+    # el COMPORTAMIENTO es idéntico (los tiempos no, dependen de la máquina)
+    assert a["precio_final"] == b["precio_final"]
+    assert a["volumen_total"] == b["volumen_total"]
+
+
+def test_semillas_distintas_dan_sesiones_distintas():
+    a = bm.correr(seed=1, ticks=40, medir_memoria=False)
+    b = bm.correr(seed=2, ticks=40, medir_memoria=False)
+    assert a["precio_final"] != b["precio_final"]
+
+
+def test_estructura_de_metricas():
+    r = bm.correr(seed=3, ticks=30)
+    assert r["n_agentes"] == 10150
+    assert r["ticks"] == 30 and r["total_s"] > 0
+    for k in ("p50", "p95", "max"):
+        assert r["ms_por_tick"][k] >= 0
+    assert r["mem_pico_mb"] is not None and r["mem_pico_mb"] > 0
+
+
+def test_percentil_borde():
+    assert bm._percentil([], 50) is None
+    assert bm._percentil([5], 95) == 5
+    assert bm._percentil([1, 2, 3, 4], 50) in (2, 3)  # cercano a la mediana
+```
+
 ## engine/validation/test_calibracion.py
 ```python
 """Tests del módulo de calibración (Python puro, sin dependencias nuevas).
@@ -15817,6 +16406,23 @@ def _datos_descalibrados(n=400, seed=7):
         scores.append(cruda)
         ys.append(y)
     return scores, ys
+
+
+def test_ece_cero_si_perfectamente_calibrado():
+    """ECE = 0 cuando en cada tramo la predicción iguala la frecuencia observada."""
+    # 10 casos con p=0.0 y resultado 0; 10 con p=1.0 y resultado 1 → calibración perfecta
+    probs = [0.0] * 10 + [1.0] * 10
+    ys = [0] * 10 + [1] * 10
+    assert cal.ece(probs, ys) == 0.0
+    assert cal.mce(probs, ys) == 0.0
+
+
+def test_ece_detecta_descalibracion():
+    """Si el modelo dice 0.9 pero solo acierta la mitad, ECE y MCE lo delatan."""
+    probs = [0.9] * 10
+    ys = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]  # obs_frac = 0.5, pred = 0.9 → error 0.4
+    assert abs(cal.ece(probs, ys) - 0.4) < 1e-9
+    assert abs(cal.mce(probs, ys) - 0.4) < 1e-9
 
 
 def test_platt_mejora_brier():
@@ -16029,6 +16635,31 @@ def test_cache_guarda_la_api_pero_no_el_fallback():
     respuesta = analizar_titular(TITULAR_NEGATIVO, [(0, "doomer")])[0]
     assert respuesta["fuente"] == "cache"
     assert respuesta["frase"] == "voz real"
+
+
+def test_clave_cache_cambia_con_modelo_o_prompt(monkeypatch):
+    """Auditoría 4.14: la clave de caché incorpora una huella del modelo/prompt/
+    esquema, así cambiar el modelo o el prompt invalida la caché sola (no reutiliza
+    respuestas incompatibles)."""
+    from brains import cerebro as cb
+
+    cb._VERSIONES.clear()
+    clave_antes = cb._clave_cache(TITULAR_NEGATIVO, "doomer", 0)
+
+    # cambia el modelo → la huella cambia → la clave cambia
+    cb._VERSIONES.clear()
+    monkeypatch.setattr(cb, "MODELO", "modelo-distinto-xyz")
+    clave_otro_modelo = cb._clave_cache(TITULAR_NEGATIVO, "doomer", 0)
+    assert clave_otro_modelo != clave_antes
+
+    # dos arquetipos con prompts distintos no comparten huella
+    cb._VERSIONES.clear()
+    assert cb._version_arquetipo("doomer") != cb._version_arquetipo("fomo_evangelista")
+
+    # misma config → misma clave (estable/reproducible)
+    cb._VERSIONES.clear()
+    monkeypatch.setattr(cb, "MODELO", "claude-sonnet-5")
+    assert cb._clave_cache(TITULAR_NEGATIVO, "doomer", 0) == clave_antes
 
 
 def test_validacion_del_json_del_llm():
@@ -16915,6 +17546,86 @@ def test_respeta_el_tope_por_simbolo(monkeypatch):
     assert len(r["eventos"]) == 2
 ```
 
+## engine/validation/test_cuota_atomica.py
+```python
+"""Reserva ATÓMICA del cupo global (auditoría 4.2): bajo concurrencia, el gasto
+registrado nunca supera el tope. Antes el chequeo y el incremento eran dos pasos
+(carrera check-then-increment); ahora son una sola sentencia bajo el candado de
+escritura de SQLite."""
+import os
+import sys
+import threading
+
+import pytest
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # engine/
+
+from contenido import limites, persistencia
+
+
+@pytest.fixture(autouse=True)
+def entorno(monkeypatch, tmp_path):
+    monkeypatch.setenv("ENJAMBRE_DB", str(tmp_path / "enjambre.db"))
+    persistencia._inicializadas.clear()
+    limites.reiniciar()
+    yield
+    limites.reiniciar()
+
+
+def test_reservar_respeta_el_tope_secuencial():
+    conexion = persistencia.conectar()
+    try:
+        # tope 3: las 3 primeras reservan, la 4ª no
+        assert persistencia.reservar_gasto_dia(conexion, "2026-11-17", 3) is True
+        assert persistencia.reservar_gasto_dia(conexion, "2026-11-17", 3) is True
+        assert persistencia.reservar_gasto_dia(conexion, "2026-11-17", 3) is True
+        assert persistencia.reservar_gasto_dia(conexion, "2026-11-17", 3) is False
+        assert persistencia.gasto_dia(conexion, "2026-11-17") == 3
+    finally:
+        conexion.close()
+
+
+def test_reservar_no_crea_fila_si_no_cabe_ni_el_primero():
+    conexion = persistencia.conectar()
+    try:
+        assert persistencia.reservar_gasto_dia(conexion, "2026-11-17", 0) is False
+        assert persistencia.gasto_dia(conexion, "2026-11-17") == 0  # sin fila sobre el tope
+    finally:
+        conexion.close()
+
+
+def test_concurrencia_nunca_supera_el_presupuesto(monkeypatch):
+    """20 peticiones simultáneas (dispositivos distintos) contra un tope global de
+    5: exactamente 5 pasan, nunca 6. Cada hilo usa su propia conexión."""
+    monkeypatch.setenv("ENJAMBRE_MAX_SIM_DIA", "5")
+    monkeypatch.setenv("ENJAMBRE_SIM_DIA_GRATIS", "1")
+
+    permitidos = []
+    lock = threading.Lock()
+    barrera = threading.Barrier(20)
+
+    def intentar(i):
+        barrera.wait()  # todos arrancan a la vez → máxima contención
+        ok, _ = limites.permitir(ip=f"10.0.0.{i}", cliente_id=f"dev-{i}")
+        if ok:
+            with lock:
+                permitidos.append(i)
+
+    hilos = [threading.Thread(target=intentar, args=(i,)) for i in range(20)]
+    for h in hilos:
+        h.start()
+    for h in hilos:
+        h.join()
+
+    assert len(permitidos) == 5, f"pasaron {len(permitidos)}, debían ser 5"
+    conexion = persistencia.conectar()
+    try:
+        from datetime import date
+        assert persistencia.gasto_dia(conexion, date.today().isoformat()) == 5
+    finally:
+        conexion.close()
+```
+
 ## engine/validation/test_doomer.py
 ```python
 """
@@ -17538,6 +18249,48 @@ def test_endpoint_grafico_sin_datos_es_404(monkeypatch):
     monkeypatch.setattr(yahoo, "serie_reciente", lambda *a, **k: None)
     cliente = TestClient(server.app)
     assert cliente.get("/api/grafico/ZZZZ").status_code == 404
+```
+
+## engine/validation/test_guardia_polaridad.py
+```python
+"""La guardia de polaridad defensiva (Propuesta gating, punto 5): ante un titular
+donde la IA y el léxico discrepan en signo con fuerza, atenúa el consenso hacia
+neutro en vez de moverse con convicción hacia un lado dudoso. Desactivada por
+defecto (umbral 0.0). Nunca invierte el signo."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # engine/
+
+from model import guardia_polaridad  # noqa: E402
+
+
+def test_desactivada_no_toca_nada():
+    assert guardia_polaridad(0.8, -0.9, umbral=0.0) == 0.8
+
+
+def test_discrepancia_fuerte_atenua():
+    # IA dice +0.8, léxico dice -0.9: discrepan y ambas fuertes → atenúa ×0.5
+    assert guardia_polaridad(0.8, -0.9, umbral=0.3) == 0.4
+
+
+def test_discrepancia_pero_lexico_debil_no_atenua():
+    # el léxico discrepa pero es débil (0.1 < 0.3) → no es ambigüedad real
+    assert guardia_polaridad(0.8, -0.1, umbral=0.3) == 0.8
+
+
+def test_acuerdo_no_atenua():
+    # mismo signo → no toca
+    assert guardia_polaridad(0.8, 0.9, umbral=0.3) == 0.8
+
+
+def test_nunca_invierte_el_signo():
+    r = guardia_polaridad(-0.8, 0.9, umbral=0.3)
+    assert r < 0 and r == -0.4  # sigue bajista, solo atenuado
+
+
+def test_consenso_cero_se_devuelve_igual():
+    assert guardia_polaridad(0.0, -0.9, umbral=0.3) == 0.0
 ```
 
 ## engine/validation/test_hechos_estilizados.py
@@ -20368,8 +21121,13 @@ def test_el_muro_escapa_datos_antes_de_innerhtml():
     assert "${esc(r.frase.frase)}" in muro
 
     panel = (Path(__file__).parent.parent.parent / "web" / "src" / "ui" / "panel.js").read_text(encoding="utf-8")
-    assert "${esc(f.frase)}" in panel
-    assert re.search(r"\$\{f\.frase\}", panel) is None  # nunca crudo
+    # la voz del reporte/archivo se escapa antes del innerHTML (var normalizada a `v`)
+    assert "${esc(v.frase)}" in panel
+    assert re.search(r"\$\{v\.frase\}", panel) is None   # nunca cruda
+    assert re.search(r"\$\{f\.frase\}", panel) is None   # nunca cruda
+    # la entrevista también escapa la frase del líder antes del innerHTML
+    assert "${esc(voz.frase)}" in panel
+    assert re.search(r"\$\{voz\.frase\}", panel) is None
     # el tooltip del líder también escapa la frase del LLM (defensa en profundidad)
     assert "${esc(lider.frase)}" in panel
     assert re.search(r"\$\{lider\.frase\}", panel) is None
@@ -20651,6 +21409,35 @@ def test_mapeo_usa_campo_nuevo_y_cae_al_viejo():
     # sin el campo nuevo, cae al viejo
     p2 = cal.senal_a_prob_cruda({"senal_media_lideres": -1.0}, modo="senal_ponderada")
     assert p2 == 0.0
+
+
+# ---------- GATING por fuerza de señal ----------
+
+def test_gating_fiable_solo_indice_con_senal_fuerte(monkeypatch):
+    monkeypatch.delenv("ENJAMBRE_MERCADOS_FIABLES", raising=False)
+    monkeypatch.delenv("ENJAMBRE_UMBRAL_FUERTE", raising=False)
+    # índice + señal fuerte (|0.5| ≥ 0.3) → fiable
+    c = sp.clasificar_conviccion(0.5, "indice")
+    assert c["nivel"] == "fuerte" and c["fiable_direccion"] is True
+    # cripto + señal fuerte → NO fiable (su dirección no está en el texto)
+    c2 = sp.clasificar_conviccion(0.5, "cripto")
+    assert c2["nivel"] == "fuerte" and c2["fiable_direccion"] is False
+
+
+def test_gating_niveles_por_umbral(monkeypatch):
+    monkeypatch.delenv("ENJAMBRE_UMBRAL_FUERTE", raising=False)
+    monkeypatch.delenv("ENJAMBRE_UMBRAL_MODERADA", raising=False)
+    assert sp.clasificar_conviccion(0.35, "indice")["nivel"] == "fuerte"
+    assert sp.clasificar_conviccion(0.25, "indice")["nivel"] == "moderada"
+    assert sp.clasificar_conviccion(0.1, "indice")["nivel"] == "debil"
+    # señal moderada en índice NO basta para fiable (solo la banda fuerte)
+    assert sp.clasificar_conviccion(0.25, "indice")["fiable_direccion"] is False
+
+
+def test_gating_env_override_mercados(monkeypatch):
+    monkeypatch.setenv("ENJAMBRE_MERCADOS_FIABLES", "indice,accion")
+    assert sp.clasificar_conviccion(0.5, "accion")["fiable_direccion"] is True
+    assert sp.clasificar_conviccion(0.5, "cripto")["fiable_direccion"] is False
 ```
 
 ## engine/validation/test_servidor.py
@@ -20686,6 +21473,54 @@ def test_salud():
     respuesta = cliente.get("/salud")
     assert respuesta.status_code == 200
     assert respuesta.json()["estado"] == "ok"
+
+
+def test_suscriptores_protegido_sin_secreto_en_codigo(monkeypatch):
+    """P0 (auditoría 4.1): el endpoint de suscriptores ya NO lleva clave
+    hardcodeada. Exige el token de admin del entorno; sin token, falla cerrado."""
+    cliente = TestClient(server.app)
+    # la vieja clave hardcodeada ya no abre nada
+    assert cliente.get("/api/pulso/suscriptores?clave=revisar-pulso-2026").status_code == 404
+    # sin token configurado: nadie pasa (falla cerrado)
+    monkeypatch.delenv("ENJAMBRE_PIPELINE_TOKEN", raising=False)
+    assert cliente.get("/api/pulso/suscriptores").status_code == 404
+    # con el token del entorno: pasa (por cabecera o por query)
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto-de-prueba-123")
+    r_cab = cliente.get("/api/pulso/suscriptores",
+                        headers={"X-Pipeline-Token": "secreto-de-prueba-123"})
+    assert r_cab.status_code == 200 and "registrados" in r_cab.json()
+    assert cliente.get("/api/pulso/suscriptores?clave=secreto-de-prueba-123").status_code == 200
+    # token equivocado: rechazado
+    assert cliente.get("/api/pulso/suscriptores?clave=otra-cosa").status_code == 404
+
+
+def test_cuerpo_chunked_grande_se_rechaza(monkeypatch):
+    """Auditoría 4.3: una subida sin Content-Length (chunked) también se corta al
+    superar el tope — antes solo se cubría el caso con Content-Length."""
+    monkeypatch.setattr(server, "MAX_CUERPO", 2000)
+    cliente = TestClient(server.app)
+
+    def cuerpo_enorme():
+        for _ in range(50):
+            yield b"x" * 1000  # 50 KB en trozos, sin Content-Length
+
+    # httpx envía un generador como chunked (sin Content-Length)
+    r = cliente.post("/api/suscribir", content=cuerpo_enorme())
+    assert r.status_code == 413
+
+
+def test_cuerpo_chunked_valido_llega_al_handler(monkeypatch):
+    """La re-inyección del cuerpo no rompe una petición chunked legítima."""
+    import json as _json
+    cliente = TestClient(server.app)
+
+    def cuerpo_ok():
+        yield _json.dumps({"email": "persona@ejemplo.com", "origen": "web"}).encode()
+
+    r = cliente.post("/api/suscribir", content=cuerpo_ok(),
+                     headers={"content-type": "application/json"})
+    assert r.status_code == 200
+    assert r.json()["estado"] in ("suscrito", "ya_suscrito")
 
 
 def test_flujo_completo_por_websocket():
@@ -20728,6 +21563,13 @@ def test_flujo_completo_por_websocket():
         reporte = fin["reporte"]
         assert reporte["direccion_pct"] < 2  # una quiebra no dispara el precio
         assert reporte["volatilidad_pct"] > 0
+        # Ventana A: el reporte expone la dirección de la señal y la del titular
+        assert reporte["direccion_senal"] in ("alza", "baja", "neutra")
+        assert reporte["direccion_titular"] in ("alza", "baja", "neutra")
+        assert reporte["conviccion"]["nivel"] in ("fuerte", "moderada", "debil")
+        # si la convicción es fiable, el titular sigue a la señal; si no, al precio
+        if reporte["conviccion"]["fiable_direccion"]:
+            assert reporte["direccion_titular"] == reporte["direccion_senal"]
         assert len(reporte["frases"]) == 3
         assert reporte["desglose"]  # hay actividad por tipo
 
@@ -20841,6 +21683,38 @@ def test_particionar_no_pierde_casos():
     assert not (set(id(c) for c in visible) & set(id(c) for c in holdout))
 
 
+def test_holdout_temporal_es_el_futuro():
+    """Auditoría 4.9: el holdout temporal son los casos MÁS RECIENTES; toda fecha
+    del holdout es >= que cualquiera del visible."""
+    casos = [{"sim_id": f"s{i}", "fecha": f"2026-01-{i+1:02d}"} for i in range(20)]
+    visible, holdout = verificador.particionar_temporal(casos, pct=30)
+    assert len(holdout) == 6  # 30% de 20
+    assert max(c["fecha"] for c in visible) <= min(c["fecha"] for c in holdout)
+
+
+def test_holdout_temporal_embargo_descarta_del_visible():
+    """El embargo quita casos del visible justo antes del corte (anti-solape)."""
+    casos = [{"sim_id": f"s{i}", "fecha": f"2026-01-{i+1:02d}"} for i in range(20)]
+    sin_emb, _ = verificador.particionar_temporal(casos, pct=30, embargo=0)
+    con_emb, hold = verificador.particionar_temporal(casos, pct=30, embargo=3)
+    assert len(con_emb) == len(sin_emb) - 3
+    assert len(hold) == 6  # el holdout no se toca
+
+
+def test_holdout_temporal_purga_por_grupo():
+    """Si un símbolo aparece en el holdout, sus casos del visible se PURGAN
+    (no contaminan train/holdout con el mismo evento/activo)."""
+    casos = []
+    for i in range(10):
+        casos.append({"sim_id": f"s{i}", "fecha": f"2026-01-{i+1:02d}",
+                      "simbolos": "BTC-USD" if i in (0, 9) else f"X{i}"})
+    visible, holdout = verificador.particionar_temporal(
+        casos, pct=20, clave_grupo="simbolos")
+    # BTC-USD está en el holdout (i=9) → el caso visible i=0 (BTC-USD) se purga
+    assert all(c["simbolos"] != "BTC-USD" for c in visible)
+    assert any(c["simbolos"] == "BTC-USD" for c in holdout)
+
+
 def test_baseline_carga_y_tiene_claves():
     base = verificador.cargar_baseline()
     assert base, "el baseline congelado debe existir"
@@ -20872,8 +21746,17 @@ def test_comparar_bloquea_si_degrada_un_regimen():
 
 import json
 import random
+from datetime import date, timedelta
 
 from calibration import walk_forward as wf
+
+INICIO = date(2026, 1, 1)
+
+
+def _fecha(i: int) -> str:
+    """Fecha ESTRICTAMENTE creciente con i (auditoría 4.8): el orden de generación
+    coincide con el cronológico, así el test no esconde un error de ordenamiento."""
+    return (INICIO + timedelta(days=i)).isoformat() + "T00:00:00"
 
 
 def _archivo(tmp_path, n=400, seed=5, senal_util=True):
@@ -20891,7 +21774,7 @@ def _archivo(tmp_path, n=400, seed=5, senal_util=True):
             if a in wf.CONTRARIANS and senal_util:
                 s = -base + rng.uniform(-0.2, 0.2)
             sa[a] = {"senal_media": s, "confianza_media": 0.7, "n": 10}
-        casos.append({"fecha": f"2026-08-{i % 28 + 1:02d}T{i%24:02d}:00:00",
+        casos.append({"fecha": _fecha(i),
                       "reaccion_real": {"pct_real": pct}, "senales_arquetipo": sa,
                       "direccion_pct": base * 2})
     ruta = tmp_path / "c.json"
@@ -20928,10 +21811,5813 @@ def test_ponderada_no_es_peor_que_simple(tmp_path):
     pon = wf.walk_forward(casos, "senal_ponderada", min_entrena=150, paso=20)
     sim = wf.walk_forward(casos, "senal_media", min_entrena=150, paso=20)
     assert pon["brier"] <= sim["brier"] + 0.01
+
+
+def test_senal_incluye_doomer_selectivo(tmp_path):
+    """Auditoría ampliada: la señal reconstruida offline debe incluir al
+    doomer_selectivo (9º arquetipo), igual que la señal de producción. Antes la
+    lista BASE de 8 lo ignoraba → se medía una señal distinta de la real."""
+    base_sa = {a: {"senal_media": 0.5, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
+    sin_ds = wf._senal(base_sa)
+    # el doomer_selectivo tira fuerte a la baja: debe mover la señal
+    con_ds = wf._senal({**base_sa,
+                        "doomer_selectivo": {"senal_media": -1.0, "confianza_media": 0.9, "n": 10}})
+    assert con_ds < sin_ds, "doomer_selectivo debe contribuir a la señal reconstruida"
+    assert "doomer_selectivo" in wf.VOCES and "doomer_selectivo" not in wf.BASE
+
+
+def test_walk_forward_con_embargo_sigue_funcionando(tmp_path):
+    """Auditoría 4.7/C: con embargo el walk-forward entrena excluyendo los casos
+    justo antes del test (anti-solape) y sigue produciendo métricas válidas."""
+    casos = wf.cargar(_archivo(tmp_path, senal_util=True))
+    r = wf.walk_forward(casos, "senal_ponderada", min_entrena=150, paso=20, embargo=5)
+    assert r["n_oos"] > 0 and 0.0 <= r["ece"] <= 1.0
+    # con señal útil, aun con embargo le gana a la base honesta
+    assert r["brier"] < r["brier_base"]
+
+
+def test_anidado_promueve_y_mide_en_holdout_congelado(tmp_path):
+    """Problema B (auditoría 4.6): la selección se hace en desarrollo y el veredicto
+    se mide en un holdout final que la selección nunca tocó."""
+    casos = wf.cargar(_archivo(tmp_path, n=500, senal_util=True))
+    rep = wf.promover_anidado(casos, min_entrena=150, paso=20, pct_holdout=20)
+    assert rep["promovido"] is True
+    assert rep["elegido"]["modo"] in ("senal_media", "senal_ponderada")
+    # el veredicto honesto vive en holdout_final, aparte de la métrica de selección
+    assert "holdout_final" in rep and rep["holdout_final"]["n"] == 100  # 20% de 500
+    assert rep["holdout_final"]["brier"] < rep["holdout_final"]["brier_base"]
+    assert "calibrador" in rep
+
+
+def test_anidado_no_promueve_sin_senal(tmp_path):
+    casos = wf.cargar(_archivo(tmp_path, n=500, senal_util=False))
+    rep = wf.promover_anidado(casos, min_entrena=150, paso=20, pct_holdout=20)
+    assert rep["promovido"] is False
+
+
+def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
+    """Auditoría 4.8: el contrato es que los casos se procesan en orden temporal.
+    Aunque lleguen desordenados, `cargar` los ordena por fecha."""
+    casos_raw = []
+    for i in (5, 0, 3, 1, 4, 2):  # fechas deliberadamente desordenadas
+        sa = {a: {"senal_media": 0.3, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
+        casos_raw.append({"fecha": _fecha(i), "reaccion_real": {"pct_real": 1.0},
+                          "senales_arquetipo": sa, "direccion_pct": 0.6})
+    ruta = tmp_path / "desord.json"
+    ruta.write_text(json.dumps({"casos": casos_raw}))
+    cargados = wf.cargar(str(ruta))
+    fechas = [c["fecha"] for c in cargados]
+    assert fechas == sorted(fechas), "cargar debe entregar los casos en orden temporal"
+
+
+def test_baseline_honesto_se_reporta_y_no_usa_el_futuro(tmp_path):
+    """Auditoría 4.5: el reporte trae la tasa base (solo-train) y la usa para el
+    skill. La base media queda en [0,1] y el Brier del baseline es finito."""
+    casos = wf.cargar(_archivo(tmp_path, senal_util=True))
+    r = wf.walk_forward(casos, "senal_ponderada", min_entrena=150, paso=20)
+    assert "base" in r and 0.0 <= r["base"] <= 1.0
+    assert r["brier_base"] > 0
+    # con señal útil, el modelo le gana a la base honesta
+    assert r["brier"] < r["brier_base"]
 ```
 
 ## engine/__init__.py
 ```python
 
+```
+
+
+---
+
+# PARTE 2 — EL FRONTEND (`web/`)
+
+## web/package.json
+```json
+{
+  "name": "enjambre-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "playwright": "^1.61.1",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.0.0"
+  }
+}
+```
+
+## web/vite.config.js
+```javascript
+import { resolve } from 'node:path'
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+  build: {
+    // dos entradas: la web principal y el widget embebible (build separado)
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        widget: resolve(__dirname, 'widget.html'),
+      },
+    },
+  },
+})
+```
+
+## web/vercel.json
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/archivo", "destination": "/" },
+    { "source": "/duelo/(.*)", "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https: wss:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+        },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" }
+      ]
+    }
+  ]
+}
+```
+
+## web/index.html
+```html
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- maximum-scale=1 evita el zoom automático de iOS al tocar un campo de
+         texto (el pellizco manual sigue funcionando); viewport-fit=cover
+         habilita env(safe-area-inset-*) en iPhone -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <title>El Enjambre — Rubicón Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- las tipografías NO bloquean el dibujado: en 4G débil, una hoja de
+         Google Fonts colgada dejaba la pantalla en negro. El truco
+         media="print" + onload la vuelve asíncrona; display=swap hace el
+         resto (la letra del sistema aparece primero y se cambia al llegar) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- señal de vida instantánea (estilos en línea: no depende de NINGUNA
+         descarga). main.js la retira al arrancar; si el JS no llega, el
+         visitante ve un mensaje en vez de una pantalla negra muda -->
+    <div id="cargando" style="position:fixed;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;background:#1b1916;color:#f3eee8;font-family:Georgia,serif;text-align:center;padding:24px;z-index:99">
+      <div style="font-size:1.5rem;letter-spacing:0.02em">El Enjambre</div>
+      <div style="font-size:0.85rem;opacity:0.65;font-family:system-ui,sans-serif">preparando la escena…</div>
+    </div>
+    <canvas id="escena"></canvas>
+    <aside id="muro" class="muro"></aside>
+    <div id="archivo" class="archivo" hidden></div>
+    <div id="duelo" class="duelo" hidden></div>
+    <div id="ui"></div>
+    <!-- distintivo permanente: herramienta educativa/recreativa en desarrollo.
+         Abre la guía (con el disclaimer completo) al tocarlo. -->
+    <button id="beta-badge" class="beta-badge" data-guia
+      aria-label="Herramienta educativa y recreativa en desarrollo — ver más">
+      <span aria-hidden="true">●</span> Beta · educativo · en desarrollo
+    </button>
+    <canvas id="grafico-estatico" hidden></canvas>
+    <p id="aviso-estatico" hidden>
+      Modo estático (movimiento reducido): la imagen muestra al enjambre tras leer la noticia.
+    </p>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+```
+
+## web/widget.html
+```html
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>El Enjambre — widget</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #1b1916; overflow: hidden;
+        font-family: system-ui, sans-serif; }
+      #widget { position: relative; width: 100%; height: 100%; }
+      #wcanvas { display: block; width: 100%; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="widget"><canvas id="wcanvas"></canvas></div>
+    <script type="module" src="/src/widget/widget.js"></script>
+  </body>
+</html>
+```
+
+## web/pulso/gracias.html
+```html
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¡Bienvenido a El Pulso Premium! 🐝</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600;700&display=swap">
+<style>
+  :root { --papel:#faf8f4; --tinta:#1e1b17; --tinta-2:#3c382f; --mute:#6f6a5f; --oro:#b0831a; --oro-claro:#d8a93e; --teal:#2f7a6f; --sube:#2f8f66; --linea:#eae5db; --ink:#12100d; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 20px;
+    background: radial-gradient(120% 120% at 50% -10%, #241f18 0%, var(--ink) 60%); color:#f4efe6;
+    font-family:'Jost',system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-align:center; }
+  .serif { font-family:'Cormorant Garamond',Georgia,serif; }
+  .tarjeta { max-width:520px; width:100%; background:rgba(255,255,255,0.03); border:1px solid #332e24; border-radius:18px; padding:44px 34px; }
+  .sello { width:74px; height:74px; margin:0 auto 8px; border-radius:50%; background:rgba(216,169,62,0.14); border:1px solid rgba(216,169,62,0.4); display:flex; align-items:center; justify-content:center; font-size:34px; }
+  .kicker { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--oro-claro); font-weight:700; margin-top:14px; }
+  h1 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; font-size:clamp(30px,6vw,42px); line-height:1.12; margin:10px 0 0; color:#fbf7ee; }
+  p { color:#cfc7b6; font-size:16px; line-height:1.6; margin:16px auto 0; max-width:42ch; }
+  .pasos { text-align:left; margin:26px auto 0; max-width:400px; display:flex; flex-direction:column; gap:14px; }
+  .paso { display:flex; gap:12px; align-items:flex-start; }
+  .paso .n { flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--oro); color:#fff; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .paso span { color:#e6ded0; font-size:15px; line-height:1.45; }
+  .cta { display:inline-block; margin-top:30px; background:var(--oro); color:#fff; text-decoration:none; font-weight:700; font-size:15px; padding:14px 30px; border-radius:10px; }
+  .cta:hover { background:#c8951e; }
+  .cmf { margin-top:26px; font-size:12px; color:#8a8272; font-style:italic; line-height:1.5; }
+  a.link { color:var(--oro-claro); }
+</style>
+</head>
+<body>
+  <div class="tarjeta">
+    <div class="sello">🐝</div>
+    <div class="kicker">Suscripción confirmada</div>
+    <h1 class="serif">¡Bienvenido a El Pulso Premium!</h1>
+    <p>Gracias por sumarte. Desde ahora recibes el análisis del domingo <b>completo</b> — la empresa, sus números, el debate de nuestros analistas IA y el “qué observar”.</p>
+
+    <div class="pasos">
+      <div class="paso"><span class="n">1</span><span>Revisa tu correo: si aún no estabas suscrito, te llegará una bienvenida.</span></div>
+      <div class="paso"><span class="n">2</span><span>Este domingo recibes tu primer análisis a fondo, sin cortes.</span></div>
+      <div class="paso"><span class="n">3</span><span>Puedes cancelar cuando quieras desde el portal de tu suscripción.</span></div>
+    </div>
+
+    <a class="cta" href="https://www.diarioelpulso.com">Volver a El Pulso</a>
+
+    <div class="cmf">El Pulso es contenido educativo. No es asesoría de inversión: informamos, no recomendamos.</div>
+  </div>
+</body>
+</html>
+```
+
+## web/pulso/index.html
+```html
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Pulso — el diario de mercado del enjambre</title>
+<meta name="description" content="Un enjambre de 10.000 inversionistas simulados con IA reacciona a los titulares del día. El diario de mercado de Rubicón Lab, en tu correo cada mañana. Gratis.">
+<meta property="og:title" content="El Pulso 🐝 — el diario de mercado del enjambre">
+<meta property="og:description" content="10.000 inversionistas simulados con IA reaccionan a las noticias del día. Léelo en dos minutos, con el café. Gratis.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Jost:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --papel: #faf8f4;
+    --blanco: #ffffff;
+    --tinta: #1e1b17;
+    --tinta-2: #3c382f;
+    --mute: #6f6a5f;
+    --oro: #b0831a;
+    --oro-claro: #d8a93e;
+    --teal: #2f7a6f;
+    --sube: #2f8f66;
+    --baja: #c0504d;
+    --linea: #eae5db;
+    --linea-2: #d8d1c4;
+    --ink: #12100d;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: 'Jost', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+  a { color: var(--teal); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .narrow { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- barra ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(250,248,244,0.88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--linea);
+  }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .brand { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 24px; color: var(--oro); text-decoration: none; letter-spacing: .3px; }
+  .nav-links { display: flex; gap: 22px; align-items: center; }
+  .nav-links a { color: var(--tinta-2); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--oro); }
+  .nav-cta { background: var(--tinta); color: var(--papel) !important; padding: 9px 18px; border-radius: 8px; font-weight: 600; }
+  .nav-cta:hover { background: #000; }
+  /* "en vivo": el punto late para que la barra se sienta despierta */
+  .envivo { display: inline-flex; align-items: center; gap: 7px; font-size: 10.5px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--mute); font-weight: 700; }
+  .envivo i { width: 7px; height: 7px; border-radius: 50%; background: var(--baja); animation: latido 2.4s ease-in-out infinite; }
+  @keyframes latido { 0%,100% { opacity: 1; } 50% { opacity: .28; } }
+  @media (max-width: 780px) { .nav-links a.only-wide, .envivo { display: none; } }
+
+  /* ---------- hero: la línea del pulso es el protagonista ---------- */
+  .hero { padding: 46px 0 0; text-align: center; }
+  .pulso { display: block; width: 100%; height: auto; max-width: 880px; margin: 0 auto; }
+  .kicker { font-size: 11px; letter-spacing: 3.4px; text-transform: uppercase; color: var(--oro); font-weight: 700; }
+  .hero h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(38px, 6.2vw, 62px); line-height: 1.04; margin: 16px auto 0; max-width: 16ch; color: var(--ink); }
+  .hero .sub { font-size: clamp(16px, 2.2vw, 19px); color: var(--tinta-2); max-width: 46ch; margin: 18px auto 0; line-height: 1.55; }
+
+  /* formulario email */
+  .signup { display: flex; gap: 10px; max-width: 470px; margin: 30px auto 0; }
+  .signup input {
+    flex: 1; min-width: 0; padding: 15px 18px; border-radius: 9px; border: 1px solid var(--linea-2);
+    background: var(--blanco); color: var(--tinta); font-size: 15px; font-family: inherit;
+  }
+  .signup input::placeholder { color: #9a927f; }
+  .signup input:focus { outline: none; border-color: var(--oro); box-shadow: 0 0 0 3px rgba(176,131,26,0.12); }
+  .btn-oro {
+    background: var(--oro); color: #fff; border: none; padding: 15px 26px; border-radius: 9px;
+    font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; white-space: nowrap; transition: background .15s;
+  }
+  .btn-oro:hover { background: #97700f; }
+  .btn-oro:disabled { opacity: .6; cursor: default; }
+  .fineprint { font-size: 12.5px; color: var(--mute); margin-top: 12px; }
+  .msg { margin-top: 14px; font-size: 14px; min-height: 20px; font-weight: 500; }
+  .msg.ok { color: #1f7a52; }
+  .msg.err { color: #a63c39; }
+  @media (max-width: 560px) { .signup { flex-direction: column; } }
+
+  /* ---------- tira de instrumentos ---------- */
+  .instrumentos {
+    margin-top: 44px; background: var(--blanco);
+    border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea);
+  }
+  .instrumentos .wrap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0 24px; }
+  .inst { padding: 20px 22px; border-right: 1px solid var(--linea); }
+  .inst:last-child { border-right: none; }
+  .inst .et { font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--mute); font-weight: 700; }
+  .inst .val { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(24px, 4vw, 32px); font-weight: 700; line-height: 1.1; margin-top: 4px; }
+  .v-baja { color: var(--baja); } .v-oro { color: var(--oro); } .v-ink { color: var(--ink); }
+  @media (max-width: 720px) {
+    .instrumentos .wrap { grid-template-columns: 1fr 1fr; }
+    .inst { border-bottom: 1px solid var(--linea); }
+    .inst:nth-child(2n) { border-right: none; }
+    .inst:nth-child(n+3) { border-bottom: none; }
+  }
+
+  /* ---------- secciones ---------- */
+  section.claro { padding: 66px 0; }
+  section.blanca { background: var(--blanco); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+  .eyebrow { font-size: 11px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--oro); font-weight: 700; text-align: center; }
+  .h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(29px, 4.4vw, 42px); line-height: 1.12; text-align: center; margin: 12px auto 0; max-width: 20ch; color: var(--ink); }
+  .lead { text-align: center; color: var(--mute); font-size: 17px; max-width: 52ch; margin: 15px auto 0; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 42px; }
+  @media (max-width: 860px) { .cards { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; } }
+  .card { background: var(--papel); border: 1px solid var(--linea); border-radius: 12px; padding: 26px 24px; }
+  section.claro:not(.blanca) .card { background: var(--blanco); }
+  .card h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-weight: 700; margin: 13px 0 8px; color: var(--ink); }
+  .card p { margin: 0; color: var(--tinta-2); font-size: 14.5px; line-height: 1.55; }
+  .ico { display: block; }
+
+  /* ---------- fin de semana ---------- */
+  .finde-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+  @media (max-width: 820px) { .finde-grid { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; } }
+  .finde-card { border-radius: 12px; padding: 28px 26px; border: 1px solid var(--linea); }
+  .finde-card .dia { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+  .finde-card h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 25px; font-weight: 700; margin: 8px 0 10px; line-height: 1.2; }
+  .finde-card p { margin: 0; font-size: 14.5px; line-height: 1.55; }
+  .fc-sab { background: var(--papel); }
+  .fc-sab .dia { color: var(--teal); } .fc-sab h3 { color: var(--ink); } .fc-sab p { color: var(--tinta-2); }
+  .fc-dom { background: var(--ink); border-color: var(--ink); }
+  .fc-dom .dia { color: var(--oro-claro); } .fc-dom h3 { color: #fbf7ee; } .fc-dom p { color: #cfc7b6; }
+  .badge-lock { display: inline-flex; align-items: center; gap: 6px; background: rgba(216,169,62,0.16); color: var(--oro-claro); font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .badge-free { display: inline-block; background: rgba(47,143,102,0.14); color: #1f7a52; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  /* ---------- planes ---------- */
+  .planes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 46px; align-items: stretch; max-width: 780px; margin-left: auto; margin-right: auto; }
+  @media (max-width: 760px) { .planes-grid { grid-template-columns: 1fr; max-width: 440px; gap: 28px; } }
+  .plan { border-radius: 14px; padding: 30px 26px; display: flex; flex-direction: column; }
+  .plan .tier { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+  .plan .precio { display: flex; align-items: baseline; gap: 7px; margin: 14px 0 4px; }
+  .plan .precio .num { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 46px; font-weight: 700; line-height: 1; }
+  .plan .precio .per { font-size: 13.5px; }
+  .plan .desc { font-size: 14px; margin: 0 0 18px; }
+  .plan ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+  .plan li { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45; }
+  .plan li .ck { flex-shrink: 0; margin-top: 3px; }
+  .plan li span { min-width: 0; }
+  .plan .cta { display: block; text-align: center; margin-top: 24px; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px; border-radius: 9px; cursor: pointer; border: none; width: 100%; font-family: inherit; transition: background .15s, border-color .15s, color .15s; }
+  .plan-free { background: var(--blanco); border: 1px solid var(--linea); }
+  .plan-free .tier { color: var(--mute); }
+  .plan-free .num { color: var(--ink); }
+  .plan-free .per, .plan-free .desc { color: var(--mute); }
+  .plan-free li { color: var(--tinta-2); }
+  .plan-free .cta { background: var(--blanco); color: var(--tinta); border: 1.5px solid var(--linea-2); }
+  .plan-free .cta:hover { border-color: var(--oro); color: var(--oro); }
+  .plan-prem { position: relative; background: var(--ink); box-shadow: 0 20px 46px rgba(30,27,23,0.22); }
+  .plan-prem .tier { color: var(--oro-claro); }
+  .plan-prem .num { color: #fbf7ee; }
+  .plan-prem .per, .plan-prem .desc { color: #a49b8a; }
+  .plan-prem li { color: #f3efe6; }
+  .plan-prem .cta { background: var(--oro); color: #fff; }
+  .plan-prem .cta:hover { background: #c8951e; }
+  .reco { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--oro); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+  .prem-nota { text-align: center; font-size: 12px; color: #8a8272; margin-top: 9px; }
+
+  /* ---------- cmf / franja enjambre / footer ---------- */
+  .cmf { text-align: center; margin: 38px auto 0; max-width: 640px; }
+  .cmf span { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; color: var(--mute); background: #fbf5e6; border: 1px solid #ecdcb4; border-radius: 20px; padding: 9px 18px; text-align: left; }
+  .franja { position: relative; overflow: hidden; background: var(--ink); padding: 62px 0; }
+  #enjambre { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: .6; }
+  .franja .narrow { position: relative; z-index: 2; text-align: center; }
+  footer { background: var(--ink); color: #a8a08f; padding: 46px 0 40px; text-align: center; border-top: 1px solid #2a251d; }
+  footer .brand { color: var(--oro-claro); display: inline-block; }
+  footer p { font-size: 13px; max-width: 60ch; margin: 14px auto; line-height: 1.6; }
+  footer a { color: #cfc7b6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #enjambre { display: none; }
+    html { scroll-behavior: auto; }
+    .envivo i { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ barra ═══════════ -->
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">El Pulso 🐝</a>
+    <div class="nav-links">
+      <span class="envivo"><i></i>En vivo</span>
+      <a class="only-wide" href="#que-es">Qué es</a>
+      <a class="only-wide" href="#semana">La semana</a>
+      <a class="only-wide" href="https://enjambre-ai-agents.vercel.app" target="_blank" rel="noopener">El Enjambre ↗</a>
+      <a class="nav-cta" href="#suscribirse">Suscribirse</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ hero: la línea del pulso ═══════════ -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <!-- El latido del mercado de ayer. La caída marcada en rojo es el pánico;
+         el repunte verde, el rebote. Dibujado en SVG: escala sin pesar nada. -->
+    <svg class="pulso" viewBox="0 0 812 186" fill="none" role="img" aria-label="La reacción del enjambre de ayer: una caída brusca a las 09:41 y un rebote parcial.">
+      <defs>
+        <linearGradient id="gPulso" x1="0" y1="0" x2="812" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#b0831a" stop-opacity="0"/>
+          <stop offset="0.18" stop-color="#b0831a" stop-opacity="0.75"/>
+          <stop offset="0.62" stop-color="#b0831a" stop-opacity="1"/>
+          <stop offset="1" stop-color="#2f8f66" stop-opacity="0.6"/>
+        </linearGradient>
+      </defs>
+      <path d="M0 138 L812 138" stroke="#eae5db" stroke-width="1"/>
+      <path d="M0 112 L112 112 L138 108 L162 116 L196 104 L228 118 L262 96 L286 100 L308 62 L330 148 L352 34 L374 128 L396 86 L430 92 L470 74 L512 96 L556 58 L602 88 L648 46 L700 72 L752 30 L812 54"
+            stroke="url(#gPulso)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="330" cy="148" r="5" fill="#c0504d"/>
+      <circle cx="352" cy="34" r="5" fill="#2f8f66"/>
+      <circle cx="812" cy="54" r="4.5" fill="#b0831a"/>
+      <text x="330" y="172" text-anchor="middle" fill="#c0504d"
+            style="font: 700 11px 'Jost', system-ui, sans-serif; letter-spacing: 1.4px; text-transform: uppercase;">Pánico 09:41</text>
+    </svg>
+
+    <div class="kicker">Diario de mercado · Rubicón Lab</div>
+    <h1 class="serif">El mercado tiene un pulso. Aquí lo ves latir.</h1>
+    <p class="sub">Diez mil inversionistas simulados con IA reaccionan al titular del día. El resultado llega a tu correo cada mañana, en dos minutos.</p>
+
+    <form class="signup" id="form-hero" novalidate>
+      <input type="email" id="email-hero" placeholder="tucorreo@ejemplo.com" autocomplete="email" required aria-label="Tu correo">
+      <button class="btn-oro" type="submit">Suscribirme</button>
+    </form>
+    <div class="fineprint">Gratis, todos los días · Un clic para darte de baja cuando quieras.</div>
+    <div class="msg" id="msg-hero" role="status"></div>
+  </div>
+</header>
+
+<!-- ═══════════ tira de instrumentos: la lectura de ayer ═══════════ -->
+<div class="instrumentos">
+  <div class="wrap">
+    <div class="inst"><div class="et">Sentimiento</div><div class="val serif v-baja">Miedo</div></div>
+    <div class="inst"><div class="et">Reacción</div><div class="val serif v-baja">−2,4%</div></div>
+    <div class="inst"><div class="et">Volatilidad</div><div class="val serif v-oro">Alta</div></div>
+    <div class="inst"><div class="et">Agentes</div><div class="val serif v-ink">10.000</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ qué llega a tu correo ═══════════ -->
+<section class="claro" id="que-es">
+  <div class="wrap">
+    <div class="eyebrow">Qué llega a tu correo</div>
+    <h2 class="h2">El mercado del día, contado en simple</h2>
+    <p class="lead">Sin jerga, sin gritos, sin humo. Los hechos verificados y lo que el enjambre observa — nunca lo que “deberías” hacer.</p>
+    <div class="cards">
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#b0831a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M6 20V11"/><path d="M12 20V5"/><path d="M18 20v-6"/></svg>
+        <h3>Lo que pasó</h3>
+        <p>Los hechos del día con su fuente. Verificados, no repetidos.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#b0831a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="8" r="2.2"/><circle cx="16" cy="6" r="2.2"/><circle cx="12" cy="14" r="2.2"/><circle cx="19" cy="16" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8.8 8.7 13.9 12.9M14.3 7.4 12.7 11.7M14.2 14.7 16.9 15.6M10.2 15.3 7.8 16.9"/></svg>
+        <h3>Qué hizo el enjambre</h3>
+        <p>Diez mil simulados reaccionan al titular. Ves la manada formarse, el miedo y la euforia.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#b0831a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.6-3.6"/><path d="M11 8.4v5.2M8.4 11h5.2"/></svg>
+        <h3>Qué observar hoy</h3>
+        <p>Dónde poner la atención. Nunca qué comprar ni vender.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ fin de semana ═══════════ -->
+<section class="claro blanca" id="semana">
+  <div class="wrap">
+    <div class="eyebrow">El fin de semana cambia de marcha</div>
+    <h2 class="h2">Sábado para respirar. Domingo para profundizar.</h2>
+    <div class="finde-grid">
+      <div class="finde-card fc-sab">
+        <span class="badge-free">Gratis</span>
+        <div class="dia">Sábado</div>
+        <h3 class="serif">El resumen de la semana</h3>
+        <p>Los cinco días en una página: qué movió al mercado, qué hizo el enjambre y qué quedó abierto.</p>
+      </div>
+      <div class="finde-card fc-dom">
+        <span class="badge-lock">🔒 Premium</span>
+        <div class="dia">Domingo</div>
+        <h3 class="serif">El análisis a fondo</h3>
+        <p>Un caso entero: el debate de los ocho perfiles, el enjambre contra la realidad y qué acertó de verdad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ planes ═══════════ -->
+<section class="claro" id="planes">
+  <div class="wrap">
+    <div class="eyebrow">Planes</div>
+    <h2 class="h2">Elige cómo leer el mercado</h2>
+    <p class="lead">Gratis todos los días. Premium cuando quieras ir a fondo el domingo.</p>
+
+    <div class="planes-grid">
+
+      <div class="plan plan-free">
+        <div class="tier">Gratis</div>
+        <div class="precio"><span class="num serif">$0</span><span class="per">para siempre</span></div>
+        <p class="desc">El ritual diario del mercado en tu correo.</p>
+        <ul>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#2f8f66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El Pulso diario (lunes a viernes)</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#2f8f66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El resumen del sábado</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#2f8f66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>Vista previa del análisis del domingo</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#2f8f66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El Enjambre: 1 simulación al día</span></li>
+        </ul>
+        <button class="cta" id="cta-free">Suscribirme gratis</button>
+      </div>
+
+      <div class="plan plan-prem">
+        <div class="reco">Recomendado</div>
+        <div class="tier">Premium</div>
+        <div class="precio"><span class="num serif">$6,99</span><span class="per">al mes</span></div>
+        <p class="desc">Todo lo gratis, más el domingo completo.</p>
+        <ul>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>Todo lo del plan gratis</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El análisis del domingo, completo</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El debate de los 8 perfiles sobre el caso</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El enjambre vs. la realidad: qué acertó</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>El Enjambre: <b>40 simulaciones al mes</b> (vs. 1 al día gratis)</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>Archivo completo + PDF de cada edición</span></li>
+          <li><svg class="ck" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#d8a93e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg><span>Sin publicidad · entrega anticipada</span></li>
+        </ul>
+        <button class="cta" id="cta-prem">Hazte Premium</button>
+        <div class="prem-nota">Cancela cuando quieras · sin permanencia</div>
+      </div>
+    </div>
+
+    <div class="cmf">
+      <span>
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#b0831a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><path d="M12 3.5 3.5 7v5.2c0 4.4 3.5 7.6 8.5 8.8 5-1.2 8.5-4.4 8.5-8.8V7Z"/><path d="M12 9v4"/><path d="M12 16.2v.1"/></svg>
+        No es asesoría de inversión · Herramienta educativa · El Pulso informa, no recomienda
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ suscripción final ═══════════ -->
+<section class="claro blanca" id="suscribirse">
+  <div class="narrow" style="text-align:center;">
+    <div class="eyebrow">Empieza hoy</div>
+    <h2 class="h2">Tómale el pulso al mercado mañana mismo</h2>
+    <p class="lead">Un correo, cada mañana, en dos minutos. Gratis.</p>
+    <form class="signup" id="form-pie" novalidate>
+      <input type="email" id="email-pie" placeholder="tucorreo@ejemplo.com" autocomplete="email" required aria-label="Tu correo">
+      <button class="btn-oro" type="submit">Suscribirme gratis</button>
+    </form>
+    <div class="fineprint">Gratis, todos los días · Un clic para darte de baja cuando quieras.</div>
+    <div class="msg" id="msg-pie" role="status"></div>
+  </div>
+</section>
+
+<!-- ═══════════ cross-promo El Enjambre ═══════════ -->
+<!-- Aquí vive el canvas de partículas: sobre tinta el dorado se ve; sobre
+     papel era invisible y además peleaba con la línea del pulso del hero. -->
+<section class="franja">
+  <canvas id="enjambre" aria-hidden="true"></canvas>
+  <div class="narrow">
+    <div style="font-size:11px; letter-spacing:2.6px; text-transform:uppercase; color:var(--oro-claro); font-weight:700;">🐝 También de Rubicón Lab</div>
+    <h2 class="serif" style="font-weight:700; font-size:clamp(28px,4.4vw,40px); line-height:1.15; color:#fbf7ee; margin:12px auto 0; max-width:18ch;">Mira al mercado entrar en pánico, en cámara lenta</h2>
+    <p style="color:#cfc7b6; font-size:17px; line-height:1.6; max-width:52ch; margin:16px auto 0;">El Enjambre es nuestra herramienta educativa: le sueltas un titular y 10.000 inversionistas simulados con IA reaccionan en vivo, en 3D. Ves formarse la manada, el miedo y la euforia — el comportamiento de las masas, hecho visible.</p>
+    <a href="https://enjambre-ai-agents.vercel.app" target="_blank" rel="noopener" style="display:inline-block; margin-top:26px; background:var(--oro-claro); color:#1b1410; text-decoration:none; font-weight:700; font-size:15px; padding:14px 30px; border-radius:9px;">Probar El Enjambre →</a>
+  </div>
+</section>
+
+<!-- ═══════════ footer ═══════════ -->
+<footer>
+  <div class="narrow">
+    <span class="brand serif">El Pulso 🐝</span>
+    <p>El Pulso es un producto de <b>Rubicón Lab</b>. Un simulador y una herramienta educativa: mostramos cómo se comportan las masas del mercado ante las noticias. <b>No entregamos recomendaciones ni asesoría de inversión</b> — informamos, no aconsejamos.</p>
+    <p style="font-size:12px;color:#7a7364;">© Rubicón Lab · El Enjambre · www.diarioelpulso.com</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  // ── configuración ──────────────────────────────────────────────
+  // El motor de El Pulso (FastAPI). En producción: la URL de Render.
+  // Recuerda: el dominio de esta landing debe estar en ENJAMBRE_ORIGENES
+  // (CORS) para que el alta funcione desde aquí.
+  var API = "https://enjambre-motor.onrender.com";
+  // Enlace de Checkout de Polar (producto "El Pulso Premium"). Al pagar,
+  // Polar avisa a POST /pulso/webhook/polar y se prende la llave Premium.
+  var CHECKOUT_URL = "https://buy.polar.sh/polar_cl_hy8qjPfruFrefdpCyLWJB043I99rOwHIcqE270kLphF";
+
+  var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+  function suscribir(email, origen) {
+    return fetch(API + "/api/suscribir", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, origen: "web" })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); });
+  }
+
+  function conectarForm(formId, inputId, msgId) {
+    var form = document.getElementById(formId);
+    if (!form) return;
+    var input = document.getElementById(inputId);
+    var msg = document.getElementById(msgId);
+    var btn = form.querySelector("button");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = (input.value || "").trim().toLowerCase();
+      msg.className = "msg";
+      if (!EMAIL_RE.test(email) || email.length > 200) {
+        msg.textContent = "Escribe un correo válido, por favor.";
+        msg.classList.add("err");
+        return;
+      }
+      btn.disabled = true;
+      var textoOrig = btn.textContent;
+      btn.textContent = "Enviando…";
+      suscribir(email).then(function (res) {
+        if (res.d && res.d.estado === "ya_suscrito") {
+          msg.textContent = "Ya estabas suscrito. ¡Gracias por leernos! 🐝";
+          msg.classList.add("ok");
+        } else if (res.ok || (res.d && res.d.estado === "pendiente")) {
+          msg.textContent = "¡Listo! Te enviamos un correo para confirmar. Revisa tu bandeja (y el spam).";
+          msg.classList.add("ok");
+          form.reset();
+        } else {
+          msg.textContent = (res.d && res.d.error) ? res.d.error : "No pudimos suscribirte. Intenta de nuevo.";
+          msg.classList.add("err");
+        }
+      }).catch(function () {
+        msg.textContent = "No pudimos conectar. Revisa tu internet e intenta de nuevo.";
+        msg.classList.add("err");
+      }).then(function () {
+        btn.disabled = false;
+        btn.textContent = textoOrig;
+      });
+    });
+  }
+
+  conectarForm("form-hero", "email-hero", "msg-hero");
+  conectarForm("form-pie", "email-pie", "msg-pie");
+
+  // botón "Suscribirme gratis" de la tarjeta → lleva al formulario
+  var ctaFree = document.getElementById("cta-free");
+  if (ctaFree) ctaFree.addEventListener("click", function () {
+    document.getElementById("suscribirse").scrollIntoView();
+    var i = document.getElementById("email-pie"); if (i) i.focus();
+  });
+
+  // botón "Hazte Premium"
+  var ctaPrem = document.getElementById("cta-prem");
+  if (ctaPrem) ctaPrem.addEventListener("click", function () {
+    if (CHECKOUT_URL) {
+      window.location.href = CHECKOUT_URL;
+    } else {
+      // Stripe aún no está activo: captamos el interés vía alta gratis.
+      document.getElementById("suscribirse").scrollIntoView();
+      var i = document.getElementById("email-pie");
+      var m = document.getElementById("msg-pie");
+      if (i) i.focus();
+      if (m) { m.className = "msg ok"; m.textContent = "El pago abre muy pronto. Suscríbete gratis y te avisamos el día uno de Premium. 🔓"; }
+    }
+  });
+
+  // ── el enjambre de fondo (partículas suaves, respeta reduced-motion) ──
+  var canvas = document.getElementById("enjambre");
+  if (canvas && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    var ctx = canvas.getContext("2d");
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var particulas = [];
+    var N = 70;
+    function medir() {
+      var r = canvas.getBoundingClientRect();
+      canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return r;
+    }
+    var caja = medir();
+    for (var i = 0; i < N; i++) {
+      particulas.push({
+        x: Math.random() * caja.width, y: Math.random() * caja.height,
+        vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 1.8 + 0.7
+      });
+    }
+    window.addEventListener("resize", function () { caja = medir(); });
+    (function animar() {
+      ctx.clearRect(0, 0, caja.width, caja.height);
+      for (var i = 0; i < N; i++) {
+        var p = particulas[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > caja.width) p.vx *= -1;
+        if (p.y < 0 || p.y > caja.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(216,169,62," + (0.18 + p.r * 0.12) + ")";
+        ctx.fill();
+      }
+      requestAnimationFrame(animar);
+    })();
+  }
+})();
+</script>
+</body>
+</html>
+```
+
+## web/pulso/vercel.json
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://enjambre-motor.onrender.com; base-uri 'self'; frame-ancestors 'none'; object-src 'none'"
+        },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" }
+      ]
+    }
+  ]
+}
+```
+
+## web/src/main.js
+```javascript
+// El Enjambre — Etapa 3: el enjambre 3D con datos falsos.
+// Un solo loop, tres draw calls, gobernador de fps para móvil.
+
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { abrirArchivo } from './archivo/archivo.js'
+import { abrirDuelo } from './duelo/duelo.js'
+import { ReproductorReplay, inicializarMuro } from './muro/muro.js'
+import { Enjambre } from './swarm/enjambre.js'
+import { MotorRemoto, guardarCorreo, urlApi } from './ui/conexion.js'
+import { pedirCorreo } from './ui/correo.js'
+import { montarGuia } from './ui/guia.js'
+import { montarPremium } from './ui/premium.js'
+import { montarNavegacion } from './ui/navegacion.js'
+import { iniciarTour, tourVisto } from './ui/tour.js'
+import { crearPanel, dibujarGraficoEstatico } from './ui/panel.js'
+
+// el JS llegó y va a arrancar: se retira la señal de vida de index.html
+// (si este módulo nunca llega — 4G débil, error — el mensaje queda visible
+// en vez de una pantalla negra muda)
+document.getElementById('cargando')?.remove()
+
+const canvas = document.getElementById('escena')
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setSize(window.innerWidth, window.innerHeight)
+
+const escena = new THREE.Scene()
+escena.background = new THREE.Color('#1b1916')
+// niebla contenida: da profundidad sin velar la escena (antes 0.022 la
+// dejaba "nublada" — observación de Giorgio en producción)
+escena.fog = new THREE.FogExp2('#1b1916', 0.014)
+
+const camara = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120)
+camara.position.set(0, 7, 30)
+camara.lookAt(0, 0, 0)
+
+// controles de cámara: arrastrar gira, rueda/pellizco acerca. Hasta que el
+// visitante toma el mando, la cámara sigue con su parallax sutil; doble
+// clic (o doble toque) devuelve el mando al parallax.
+const controles = new OrbitControls(camara, document.getElementById('escena'))
+controles.enablePan = false
+controles.enableDamping = true
+controles.dampingFactor = 0.08
+controles.minDistance = 14
+controles.maxDistance = 55
+controles.maxPolarAngle = 1.5 // nunca por debajo del "suelo" del enjambre
+let camaraManual = false
+controles.addEventListener('start', () => { camaraManual = true })
+document.getElementById('escena').addEventListener('dblclick', () => { camaraManual = false })
+
+const enjambre = new Enjambre(7)
+escena.add(enjambre.grupo)
+
+// ---------- estela de movimiento (afterimage) + tinte de pánico ----------
+// La estela es una realimentación de cuadro: cada frame mezcla el anterior
+// atenuado con el nuevo. En calma es sutil (hipnótica); en un shock fuerte
+// se alarga y el fondo se entibia hacia el rosa-arcilla (turbulencia).
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(escena, camara))
+// bloom contenido: brillan SOLO los faros dorados y las emociones fuertes.
+// (0.85/0.55/0.5 hacía brillar media escena: el origen de la "nubosidad")
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.5,   // fuerza
+  0.3,   // radio
+  0.72,  // umbral alto: el fondo y la masa gris quedan nítidos
+)
+composer.addPass(bloom)
+const estela = new AfterimagePass(0.82)
+composer.addPass(estela)
+composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+composer.setSize(window.innerWidth, window.innerHeight)
+
+const FONDO_CALMA = new THREE.Color('#1b1916')
+const FONDO_PANICO = new THREE.Color('#241216') // tinta cálida entintada de rosa
+const _fondo = new THREE.Color() // reutilizado por frame (nada nuevo en el loop)
+
+// ---------- interacción ----------
+
+const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// el motor real (WebSocket): configurable por entorno; en localhost se
+// asume el uvicorn de desarrollo; si no responde, demo local en el navegador
+const urlMotor =
+  import.meta.env.VITE_WS_URL ||
+  (['localhost', '127.0.0.1'].includes(location.hostname) ? 'ws://localhost:8000/ws' : null)
+let motor = urlMotor ? new MotorRemoto(urlMotor) : null
+let modo = 'demo local'
+
+let muroCtl = { recargar: async () => {}, detenerReplay: () => {} }
+let observatorio = null // el mando cuando el enjambre está "dejado corriendo"
+
+// ¿Los líderes respondieron con IA real o con el respaldo léxico? Se lee
+// del campo `fuente` que manda el motor — y se muestra en el HUD.
+function evaluarCerebros(lideres) {
+  const total = (lideres || []).length || 1
+  const ia = (lideres || []).filter((l) => l.fuente === 'api' || l.fuente === 'cache').length
+  return ia > total / 2
+}
+
+async function soltarTitular(titular, titularId = null) {
+  if (reducirMovimiento) {
+    correrEstatico(titular)
+    return
+  }
+  // si el observatorio está activo, la noticia se suelta ENCIMA (no reinicia)
+  if (observatorio) {
+    if (titular) {
+      panel.fijarLeyendo(true)
+      observatorio.soltarNoticia(titular)
+    }
+    return
+  }
+  muroCtl.detenerReplay() // la portada cede el escenario a la simulación en vivo
+  if (motor) {
+    try {
+      panel.fijarLeyendo(true) // los 100 líderes leen (~10-15 s con IA real)
+      await motor.simular(titular, {
+        alInicio: (mensaje) => {
+          panel.fijarLeyendo(false)
+          enjambre.fijarLideresRemotos(mensaje.lideres)
+          const conIA = evaluarCerebros(mensaje.lideres)
+          modo = conIA ? 'motor real · IA' : 'motor real · respaldo'
+          if (!conIA) {
+            panel.avisar('Los líderes respondieron con el cerebro de respaldo (sin IA). ' +
+              'Revisa la clave de Anthropic en Render: valor y saldo.')
+          }
+        },
+        alTick: (precio, _tick, sentimientos) => enjambre.aplicarEstadoRemoto(precio, sentimientos),
+        alFin: (reporte) => {
+          panel.mostrarReporte(reporte)
+          muroCtl.recargar() // la tarjeta recién simulada pasa a Estado A
+        },
+        alLimite: (mensaje) => {
+          panel.fijarLeyendo(false)
+          panel.avisar(mensaje)
+        },
+        alCorreo: async (mensaje) => {
+          // la puerta pide correo: se pide UNA vez, se guarda y se reintenta el
+          // MISMO titular (que ahora viaja con el correo → abre y suscribe gratis)
+          panel.fijarLeyendo(false)
+          const email = await pedirCorreo(mensaje)
+          if (email) {
+            guardarCorreo(email)
+            soltarTitular(titular, titularId)
+          }
+        },
+        alDespertar: () => panel.avisar(
+          'El motor estaba descansando y está despertando (hasta 1 minuto). El enjambre reaccionará en cuanto abra los ojos…'),
+      }, titularId ? { titular_id: titularId } : {})
+      enjambre.modoRemoto = true
+      return
+    } catch {
+      // el motor no respondió ESTA vez (dormido o redesplegando): esta corrida
+      // va en demo local, pero el próximo intento vuelve a buscar el motor
+      panel.fijarLeyendo(false)
+      panel.avisar('No se pudo alcanzar el motor; esta corrida es una demostración local. Vuelve a intentarlo en un momento.')
+    }
+  }
+  panel.fijarLeyendo(false)
+  enjambre.modoRemoto = false
+  modo = 'demo local'
+  enjambre.aplicarTitular(titular, reloj.getElapsedTime())
+}
+
+// Modo observatorio: el enjambre sigue vivo y recibe noticias encima.
+// El botón TOGGLEA: si ya está activo, cierra; si no, abre.
+async function alternarObservatorio(titular) {
+  if (observatorio) {
+    observatorio.detener()
+    observatorio = null
+    enjambre.modoRemoto = false
+    modo = 'demo local'
+    panel.fijarModoObservatorio(false)
+    return
+  }
+  abrirObservatorio(titular)
+}
+
+// Abre el observatorio. El estado "activo" (observatorio, modoRemoto, la UI) se
+// compromete SOLO cuando el servidor confirma (alInicio) — así, si la puerta
+// pide correo o el visitante cancela, no queda un falso "activo" sin latidos.
+async function abrirObservatorio(titular) {
+  if (reducirMovimiento || !motor) {
+    panel.avisar('El modo observatorio necesita el motor en vivo.')
+    return
+  }
+  try {
+    muroCtl.detenerReplay()
+    const control = await motor.observatorio(titular, {
+      alInicio: (m) => {
+        // el servidor aceptó: RECIÉN aquí se marca activo
+        observatorio = control
+        enjambre.modoRemoto = true
+        modo = evaluarCerebros(m.lideres) ? 'observatorio · IA' : 'observatorio · respaldo'
+        panel.fijarLeyendo(false)
+        enjambre.fijarLideresRemotos(m.lideres)
+        panel.fijarModoObservatorio(true)
+      },
+      alTick: (precio, _t, sent) => enjambre.aplicarEstadoRemoto(precio, sent),
+      alLimite: (m) => {
+        panel.fijarLeyendo(false)
+        panel.avisar(m)
+      },
+      alCorreo: async (m) => {
+        panel.fijarLeyendo(false)
+        const email = await pedirCorreo(m)
+        if (email) {
+          guardarCorreo(email)
+          abrirObservatorio(titular)   // REABRE (no togglea) con el correo guardado
+        }
+      },
+      alDespertar: () => panel.avisar(
+        'El motor estaba descansando y está despertando (hasta 1 minuto)…'),
+      alFin: () => {
+        observatorio = null
+        enjambre.modoRemoto = false
+        panel.fijarModoObservatorio(false)
+        panel.avisar('El observatorio descansó. Puedes reabrirlo cuando quieras.')
+      },
+    })
+  } catch {
+    observatorio = null
+    panel.avisar('No se pudo abrir el observatorio.')
+  }
+}
+
+const panel = crearPanel(soltarTitular, alternarObservatorio, {
+  // "⚔ Armar un duelo" desde el reporte: la hemeroteca abre lista para elegir
+  alDuelo: () => { cerrarOverlays(); mostrarArchivo({ enDuelo: true }) },
+})
+
+// la guía "¿Cómo funciona?": botón flotante + panel; se abre sola la 1ª visita
+montarGuia()
+
+// el chip de Premium: desbloquea 10 simulaciones/día para suscriptores del Pulso
+montarPremium()
+
+// ---------- el archivo + enlaces compartibles (?sim=<id>) ----------
+
+const reproductorArchivo = new ReproductorReplay(enjambre)
+
+/** Abre una simulación guardada: replay + reporte con las 8 voces y epílogo. */
+async function abrirSimulacion(id) {
+  const api = urlApi()
+  if (!api || !/^[0-9a-f]{16}$/.test(id)) return
+  muroCtl.detenerReplay()
+  reproductorArchivo.detener()
+  panel.avisar('Abriendo la simulación…') // estado de carga: nunca silencio
+  try {
+    const d = await (await fetch(`${api}/api/simulacion/${id}`)).json()
+    enjambre.fijarLideresRemotos(d.lideres || [])
+    panel.mostrarReporte(d.resumen, {
+      voces: d.voces, epilogo: d.epilogo, titular: d.titular, id: d.id,
+      simbolos: d.simbolos,  // habilita la comparación con el gráfico real
+    })
+    history.replaceState({}, '', `?sim=${id}`)
+    if (d.tiene_replay && !reducirMovimiento) {
+      await reproductorArchivo.cargar(`${api}/api/simulacion/${id}/replay`)
+      reproductorArchivo.reproducir({})
+    }
+  } catch {
+    panel.avisar('No se pudo cargar esa simulación.')
+  }
+}
+
+let archivoCtl = null
+let dueloCtl = null
+
+/** Cierra archivo y duelo (para que la navegación nunca deje atrapado a nadie). */
+function cerrarOverlays() {
+  try { archivoCtl?.cerrar() } catch { /* ya cerrado */ }
+  try { dueloCtl?.cerrar() } catch { /* ya cerrado */ }
+  archivoCtl = null
+  dueloCtl = null
+}
+
+async function mostrarArchivo({ enDuelo = false } = {}) {
+  history.pushState({}, '', '/archivo')
+  const control = await abrirArchivo({
+    enDuelo,
+    alAbrirSim: (id) => {
+      control?.cerrar()          // la hemeroteca cede el paso al reporte
+      abrirSimulacion(id)
+    },
+    alDuelo: (idA, idB) => {
+      control?.cerrar()
+      mostrarDuelo(idA, idB)
+    },
+    alCerrar: () => history.pushState({}, '', '/'),
+  })
+  archivoCtl = control
+}
+
+async function mostrarDuelo(idA, idB) {
+  if (!/^[0-9a-f]{16}$/.test(idA) || !/^[0-9a-f]{16}$/.test(idB)) return
+  muroCtl.detenerReplay()
+  reproductorArchivo.detener()
+  history.pushState({}, '', `/duelo/${idA}-vs-${idB}`)
+  dueloCtl = await abrirDuelo({
+    idA, idB, reducirMovimiento,
+    alCerrar: () => history.pushState({}, '', '/'),
+  })
+}
+
+// ---------- la barra de navegación ----------
+montarNavegacion({
+  inicio: () => {
+    cerrarOverlays()
+    muroCtl.plegar?.()           // el muro cede el escenario al enjambre
+    history.pushState({}, '', '/')
+  },
+  muro: () => {
+    cerrarOverlays()
+    muroCtl.abrir?.()
+    history.pushState({}, '', '/')
+  },
+  archivo: () => { cerrarOverlays(); mostrarArchivo() },
+  duelo: () => { cerrarOverlays(); mostrarArchivo({ enDuelo: true }) },
+  pulso: () => {
+    cerrarOverlays()
+    history.pushState({}, '', '/')
+    muroCtl.irAlPulso?.()
+  },
+})
+
+// el muro de noticias: la nueva portada (carga en paralelo, nunca bloquea)
+inicializarMuro({
+  enjambre,
+  panel,
+  correrTitular: soltarTitular,
+  reducirMovimiento,
+  fijarModo: (nuevo) => { modo = nuevo },
+  abrirArchivo: mostrarArchivo,
+})
+  .then((control) => { muroCtl = control })
+  .catch(() => {})
+  .finally(() => {
+    // el tour de bienvenida: primera visita, sin enlaces profundos, y con
+    // el muro plegado para que la escena sea la protagonista
+    const profundo = new URLSearchParams(location.search).get('sim') ||
+      location.pathname.startsWith('/duelo') || location.pathname.startsWith('/archivo')
+    if (!tourVisto() && !profundo && !reducirMovimiento) {
+      setTimeout(() => {
+        muroCtl.plegar?.()
+        iniciarTour()
+      }, 1100)
+    }
+  })
+
+// enrutamiento inicial: enlace compartible, duelo o la hemeroteca
+const paramsIniciales = new URLSearchParams(location.search)
+const dueloRuta = location.pathname.match(/^\/duelo\/([0-9a-f]{16})-vs-([0-9a-f]{16})/)
+if (paramsIniciales.get('sim')) {
+  abrirSimulacion(paramsIniciales.get('sim'))
+} else if (dueloRuta) {
+  mostrarDuelo(dueloRuta[1], dueloRuta[2])
+} else if (location.pathname.startsWith('/archivo')) {
+  mostrarArchivo()
+}
+
+// parallax sutil con el puntero (vectores reutilizados, nada nuevo por frame)
+const punteroMeta = new THREE.Vector2()
+const rayo = new THREE.Raycaster()
+const punteroNDC = new THREE.Vector2()
+let ultimoRaycast = 0
+
+/** Raycast contra los halos de líderes; muestra el tooltip si acierta. */
+function buscarLider(evento) {
+  punteroNDC.set(
+    (evento.clientX / window.innerWidth) * 2 - 1,
+    -((evento.clientY / window.innerHeight) * 2 - 1),
+  )
+  rayo.setFromCamera(punteroNDC, camara)
+  const impactos = rayo.intersectObject(enjambre.mallaHalos)
+  if (impactos.length > 0) {
+    const lider = enjambre.lideres[impactos[0].instanceId]
+    panel.mostrarTooltip(lider, evento.clientX, evento.clientY)
+    canvas.style.cursor = 'pointer'
+    return true
+  }
+  panel.ocultarTooltip()
+  canvas.style.cursor = 'default'
+  return false
+}
+
+window.addEventListener('pointermove', (evento) => {
+  punteroMeta.set(
+    (evento.clientX / window.innerWidth) * 2 - 1,
+    (evento.clientY / window.innerHeight) * 2 - 1,
+  )
+  // hover sobre líderes: raycast acotado (cada 80 ms, solo contra los halos)
+  const ahora = performance.now()
+  if (ahora - ultimoRaycast < 80) return
+  ultimoRaycast = ahora
+  buscarLider(evento)
+})
+
+// en pantallas táctiles el "hover" no existe: un toque sobre un faro dorado
+// muestra su frase (el tooltip se despide solo a los segundos)
+canvas.addEventListener('pointerdown', (evento) => {
+  if (evento.pointerType === 'touch') buscarLider(evento)
+})
+
+window.addEventListener('resize', () => {
+  camara.aspect = window.innerWidth / window.innerHeight
+  camara.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  composer.setSize(window.innerWidth, window.innerHeight)
+})
+
+// ---------- gobernador de fps: bajo 45 recorta partículas ----------
+
+let fpsSuavizado = 60
+let proporcion = 1
+let ultimoAjuste = 0
+
+function gobernarFps(dt, t) {
+  fpsSuavizado += (1 / Math.max(dt, 1e-4) - fpsSuavizado) * 0.05
+  if (t - ultimoAjuste < 1.5) return
+  if (fpsSuavizado < 45 && proporcion > 0.3) {
+    proporcion = Math.max(0.3, proporcion - 0.15)
+    enjambre.fijarProporcion(proporcion)
+    ultimoAjuste = t
+  } else if (fpsSuavizado > 57 && proporcion < 1) {
+    proporcion = Math.min(1, proporcion + 0.1)
+    enjambre.fijarProporcion(proporcion)
+    ultimoAjuste = t
+  }
+}
+
+// ---------- loop principal ----------
+
+const reloj = new THREE.Clock()
+let ultimoHud = 0
+
+function cuadro() {
+  const dt = Math.min(reloj.getDelta(), 0.05)
+  const t = reloj.getElapsedTime()
+
+  enjambre.actualizar(t, dt)
+  if (camaraManual) {
+    controles.update() // el visitante manda: damping suave de OrbitControls
+  } else {
+    // parallax sutil por defecto (y regreso elegante tras el doble clic)
+    camara.position.x += (punteroMeta.x * 2.5 - camara.position.x) * 0.03
+    camara.position.y += (7 - punteroMeta.y * 2 - camara.position.y) * 0.03
+    camara.position.z += (30 - camara.position.z) * 0.03
+    camara.lookAt(0, 0, 0)
+  }
+  gobernarFps(dt, t)
+
+  if (t - ultimoHud > 0.25) {
+    ultimoHud = t
+    panel.actualizarHUD(enjambre.precio, fpsSuavizado, enjambre.malla.count + enjambre.lideres.length, modo)
+    panel.dibujarSparkline(enjambre.seriePrecio)
+  }
+
+  // estela y tinte según el pánico de la masa (0..1). En calma es corta y
+  // la escena se ve despejada; solo el pánico la alarga (la ola dramática)
+  const panico = enjambre.panico || 0
+  estela.uniforms.damp.value = 0.55 + panico * 0.35 // 0.55 (nítida) → 0.90 (larga)
+  _fondo.copy(FONDO_CALMA).lerp(FONDO_PANICO, panico)
+  escena.background.copy(_fondo)
+  escena.fog.color.copy(_fondo)
+  // en equipos lentos, los efectos se apagan para recuperar cuadros
+  estela.enabled = fpsSuavizado > 38
+  bloom.enabled = fpsSuavizado > 38
+  composer.render()
+}
+
+// ---------- modo estático (prefers-reduced-motion) ----------
+
+function correrEstatico(titular) {
+  // simula 25 segundos "fuera de línea" y muestra una sola imagen + gráfico
+  if (titular) enjambre.aplicarTitular(titular, 0)
+  let t = 0
+  const paso = 1 / 30
+  for (let i = 0; i < 25 * 30; i++) {
+    t += paso
+    enjambre.actualizar(t, paso)
+  }
+  renderer.render(escena, camara)
+  panel.actualizarHUD(enjambre.precio, 0, enjambre.malla.count + enjambre.lideres.length)
+  dibujarGraficoEstatico(enjambre.seriePrecio)
+  document.getElementById('aviso-estatico').hidden = false
+}
+
+if (reducirMovimiento) {
+  correrEstatico(null)
+} else {
+  renderer.setAnimationLoop(cuadro)
+}
+```
+
+## web/src/style.css
+```css
+@import 'tailwindcss';
+
+/* Estética Rubicón Lab (aplicación "reverse": fondo tinta cálida, el teal
+   como único acento — "el río"). Paleta oficial del manual de marca §05. */
+:root {
+  --tinta: #1b1916;                          /* tinta profunda cálida — fondo inmersivo */
+  --teal: #6fa89e;                           /* el río — acento (teal claro para reverse) */
+  --teal-hondo: #3f7e74;                     /* teal profundo — bordes y trazos */
+  --crema: #f3eee8;                          /* crema — texto principal */
+  --crema-suave: rgba(243, 238, 232, 0.62);  /* crema atenuada — texto secundario */
+  --salvia: #93b3a3;                         /* salvia — compra/sube */
+  --rosa: #d99a9a;                           /* rosa — venta/baja */
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--tinta);
+  color: var(--crema);
+  font-family: 'Jost', sans-serif;
+  overflow: hidden;
+}
+
+#escena {
+  position: fixed;
+  inset: 0;
+  display: block;
+}
+
+/* ---------- marca ---------- */
+
+.marca {
+  position: fixed;
+  top: 22px;
+  left: 28px;
+  pointer-events: none;
+}
+.marca h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+.marca p {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--crema-suave);
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: fixed;
+  left: 28px;
+  bottom: 24px;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+#sparkline {
+  opacity: 0.9;
+}
+.hud-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+#hud-precio {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+#hud-detalle {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--crema-suave);
+}
+
+/* ---------- panel de noticia ---------- */
+
+.panel-noticia {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(620px, calc(100vw - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+#form-noticia {
+  display: flex;
+  width: 100%;
+  border: 1px solid rgba(111, 168, 158, 0.45);
+  background: rgba(27, 25, 22, 0.72);
+  backdrop-filter: blur(8px);
+}
+#campo-titular {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--crema);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  padding: 13px 16px;
+}
+#campo-titular::placeholder {
+  color: rgba(243, 238, 232, 0.35);
+}
+#form-noticia button {
+  background: var(--teal);
+  color: var(--tinta);
+  border: 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 22px;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+#form-noticia button:hover {
+  filter: brightness(1.12);
+}
+#form-noticia button:disabled {
+  opacity: 0.75;
+  cursor: progress;
+  animation: leyendo 1.6s ease-in-out infinite;
+}
+@keyframes leyendo {
+  50% { opacity: 0.45; }
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.chip {
+  background: transparent;
+  border: 1px solid rgba(243, 238, 232, 0.25);
+  color: var(--crema-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.chip:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+#btn-observatorio.activo {
+  border-color: var(--teal);
+  color: var(--tinta);
+  background: var(--teal);
+}
+.descargo {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(243, 238, 232, 0.3);
+}
+
+/* ---------- tooltip de líder ---------- */
+
+.tooltip {
+  position: fixed;
+  max-width: 260px;
+  background: rgba(27, 25, 22, 0.92);
+  border: 1px solid rgba(111, 168, 158, 0.6);
+  padding: 10px 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+.tooltip strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 3px;
+}
+.tooltip em {
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--crema);
+  line-height: 1.35;
+}
+
+/* ---------- la barra de navegación ---------- */
+
+.navegacion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px 0 20px;
+  background: rgba(27, 25, 22, 0.78);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(111, 168, 158, 0.25);
+  z-index: 48; /* sobre archivo (40) y duelo (45); bajo la guía modal (50) */
+}
+.nav-marca {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.nav-enlaces {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-enlaces::-webkit-scrollbar { display: none; }
+.nav-enlaces button {
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-enlaces button:hover,
+.nav-enlaces button.activo {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+}
+
+/* ---------- el muro de noticias (la portada) ---------- */
+
+.muro {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  bottom: 0;
+  width: min(430px, 100vw);
+  overflow-y: auto;
+  background: linear-gradient(to right, rgba(27, 25, 22, 0.93), rgba(27, 25, 22, 0.82));
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(111, 168, 158, 0.25);
+  padding: 22px 26px 90px;
+  transition: transform 0.35s ease;
+  z-index: 5;
+}
+body.muro-plegado .muro {
+  transform: translateX(calc(-100% + 46px));
+}
+body.con-muro .marca {
+  display: none; /* la marca vive en la cabecera del muro */
+}
+
+.muro-cabecera {
+  position: relative;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(111, 168, 158, 0.35);
+}
+.muro-cabecera h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0;
+}
+.muro-cabecera p {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--crema-suave);
+}
+.muro-cabecera time {
+  display: block;
+  margin-top: 6px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--crema-suave);
+}
+.plegar {
+  position: absolute;
+  top: 0;
+  right: -8px;
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.tarjeta {
+  padding: 16px 0 14px;
+  border-bottom: 1px solid rgba(243, 238, 232, 0.09);
+}
+.tarjeta.portada h3 {
+  font-size: 1.45rem;
+}
+.tarjeta .meta {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(243, 238, 232, 0.45);
+  margin-bottom: 5px;
+}
+.tarjeta .meta strong {
+  color: var(--teal);
+  font-weight: 500;
+}
+.tarjeta h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  color: var(--crema);
+}
+.tarjeta .resultado {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.tarjeta .flecha {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.tarjeta .flecha.sube { color: var(--salvia); }
+.tarjeta .flecha.baja { color: var(--rosa); }
+.tarjeta .flecha.plana { color: var(--teal); }
+.tarjeta .agitacion {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crema-suave);
+}
+.tarjeta .voz {
+  font-size: 0.82rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--crema);
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+.tarjeta .voz span {
+  color: var(--teal);
+  font-style: normal;
+  font-size: 0.75rem;
+}
+.accion {
+  background: transparent;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.accion:hover:not(:disabled) {
+  background: var(--teal);
+  color: var(--tinta);
+}
+.accion:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.ver-mas {
+  margin-top: 14px;
+  width: 100%;
+}
+/* bloque de suscripción al Pulso (la máquina de leads) */
+.pulso {
+  margin-top: 22px;
+  padding: 18px 0 8px;
+  border-top: 1px solid rgba(111, 168, 158, 0.3);
+}
+.pulso h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 4px;
+}
+.pulso p {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--crema-suave);
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+.pulso-form {
+  display: flex;
+  gap: 8px;
+}
+.pulso-form input {
+  flex: 1;
+  background: rgba(27, 25, 22, 0.6);
+  border: 1px solid rgba(243, 238, 232, 0.25);
+  color: var(--crema);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  padding: 9px 12px;
+  outline: none;
+}
+.pulso-form input:focus {
+  border-color: var(--teal);
+}
+.pulso-estado {
+  margin-top: 8px !important;
+  color: var(--teal) !important;
+  font-size: 0.78rem !important;
+}
+
+.muro-descargo,
+.muro-aviso {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: rgba(243, 238, 232, 0.35);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+.muro-aviso {
+  font-size: 0.85rem;
+  color: var(--crema-suave);
+  font-weight: 300;
+}
+
+/* ---------- el divisor "cruce" y la firma de autoría (manual §07 y §10) ---------- */
+
+.cruce {
+  position: relative;
+  height: 1px;
+  background: rgba(243, 238, 232, 0.12);
+  margin: 22px 0 16px;
+}
+.cruce::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -7px;
+  width: 2px;
+  height: 15px;
+  background: var(--teal);
+  border-radius: 2px;
+}
+.muro-firma {
+  color: var(--crema-suave); /* la firma hereda este color vía currentColor */
+  padding-top: 4px;
+}
+
+/* Firma "Creada por Rubicón Lab" — snippet oficial del manual §10.
+   Scopeado bajo .rl-*; hereda currentColor; sin teal; cae a isotipo ≤520px. */
+.rl-credit{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit;opacity:.85;transition:opacity .2s ease}
+.rl-credit:hover{opacity:1}
+.rl-pre{font-family:'Jost',sans-serif;font-weight:400;font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:.7}
+.rl-full{display:inline-flex;align-items:center;gap:.42em;font-size:18px;line-height:1;white-space:nowrap}
+.rl-name{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1em;letter-spacing:.004em}
+.rl-bar{width:.05em;min-width:1.5px;height:.84em;border-radius:2px;background:currentColor;flex:none}
+.rl-lab{font-family:'Jost',sans-serif;font-weight:400;font-size:.4em;letter-spacing:.3em;text-transform:uppercase}
+.rl-compact{display:none;align-items:center;gap:8px}
+.rl-iso{display:inline-flex;align-items:center;gap:.14em;font-size:22px;line-height:1}
+.rl-iso-text{font-family:'Jost',sans-serif;font-weight:400;font-size:12px;letter-spacing:.04em}
+@media (max-width:520px){ .rl-full,.rl-pre{display:none} .rl-compact{display:inline-flex} }
+
+/* ---------- la guía rápida "¿Cómo funciona?" ---------- */
+
+.guia-boton {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(27, 25, 22, 0.72);
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, color 0.2s;
+}
+.guia-boton span {
+  display: inline-grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 0.66rem;
+  font-weight: 500;
+}
+.guia-boton:hover {
+  background: var(--teal);
+  color: var(--tinta);
+}
+.guia-boton-texto {
+  font-style: normal;
+}
+/* en móvil el botón se compacta al círculo "?" (el HUD vive arriba) */
+@media (max-width: 700px) {
+  .guia-boton {
+    padding: 7px;
+    border-radius: 50%;
+  }
+  .guia-boton-texto {
+    display: none;
+  }
+}
+
+/* distintivo permanente: herramienta educativa/recreativa en desarrollo */
+.beta-badge {
+  position: fixed;
+  left: 16px;
+  bottom: 14px;
+  /* regla del proyecto: el aviso legal CMF nunca debe quedar tapado por un
+     elemento comercial (ej. el chip Premium). Su z-index va por encima de la UI
+     flotante normal. */
+  z-index: 41;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(27, 25, 22, 0.72);
+  color: #e9e2d6;
+  border: 1px solid rgba(227, 197, 101, 0.35);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font: 600 11px/1 system-ui, sans-serif;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+  opacity: 0.82;
+}
+.beta-badge:hover,
+.beta-badge:focus-visible {
+  opacity: 1;
+  border-color: rgba(227, 197, 101, 0.7);
+  outline: none;
+}
+.beta-badge span { color: #e3c565; font-size: 9px; }
+@media (max-width: 640px) {
+  .beta-badge { font-size: 10px; padding: 5px 10px; left: 12px; bottom: 10px; }
+}
+
+.guia {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(18, 16, 14, 0.9);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 6vh 20px 40px;
+}
+.guia-panel {
+  position: relative;
+  width: min(560px, 100%);
+  background: var(--tinta);
+  border: 1px solid rgba(111, 168, 158, 0.3);
+  padding: 30px 30px 26px;
+}
+.guia-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.guia-eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.guia-panel h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--crema);
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+.guia-intro {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--crema-suave);
+  margin: 0;
+}
+.guia-intro strong { color: var(--crema); font-weight: 400; }
+.guia-seccion { margin-top: 20px; }
+.guia-seccion h3 {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 0 0 10px;
+}
+.guia-seccion p {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--crema-suave);
+  margin: 0;
+}
+.guia-seccion p strong { color: var(--crema); font-weight: 400; }
+.guia-pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.guia-pasos li {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--crema-suave);
+}
+.guia-pasos li strong { color: var(--crema); font-weight: 400; }
+.guia-pasos li em { color: var(--crema); font-style: italic; }
+.guia-pasos .n {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-size: 0.72rem;
+  transform: translateY(1px);
+}
+.guia-colores {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.guia-colores li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--crema-suave);
+  line-height: 1.4;
+}
+.guia-colores b { color: var(--crema); font-weight: 500; }
+.guia-colores .pt {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  transform: translateY(1px);
+}
+.guia-numeros {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+}
+.guia-numeros dt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.02rem;
+  color: var(--teal);
+}
+.guia-numeros dd {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--crema-suave);
+}
+.guia-numeros dd strong { color: var(--crema); font-weight: 400; }
+.guia-numeros dd em { color: var(--crema); font-style: italic; }
+.guia-descargo {
+  margin: 22px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(243, 238, 232, 0.1);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: rgba(243, 238, 232, 0.4);
+}
+.guia-listo {
+  margin-top: 16px;
+  width: 100%;
+  background: var(--teal);
+  color: var(--tinta);
+  border: 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.guia-listo:hover { filter: brightness(1.12); }
+/* con el muro abierto en móvil, el botón flotante cede (hay enlace en el muro) */
+@media (max-width: 820px) {
+  body.con-muro:not(.muro-plegado) .guia-boton { display: none; }
+  .guia-panel { padding: 26px 20px 22px; }
+  .guia-panel h2 { font-size: 1.6rem; }
+}
+
+/* aviso flotante (límites, errores amables) */
+.aviso {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(27, 25, 22, 0.95);
+  border: 1px solid rgba(111, 168, 158, 0.6);
+  color: var(--crema);
+  font-size: 0.85rem;
+  font-weight: 300;
+  padding: 12px 20px;
+  z-index: 30;
+  max-width: min(480px, calc(100vw - 40px));
+  text-align: center;
+}
+
+/* en pantallas angostas el muro ocupa todo y el resto se corre */
+@media (max-width: 820px) {
+  .muro {
+    width: 100vw;
+    border-right: 0;
+  }
+  body.muro-plegado .muro {
+    transform: translateX(calc(-100% + 42px));
+  }
+  body:not(.muro-plegado) .panel-noticia,
+  body:not(.muro-plegado) .hud {
+    display: none; /* con el muro abierto, el muro manda */
+  }
+}
+/* en desktop, el panel de noticia se corre al espacio libre y el HUD
+   sube junto a la barra (abajo pisaba el texto legal del panel) */
+@media (min-width: 821px) {
+  body.con-muro:not(.muro-plegado) .panel-noticia {
+    left: calc(50% + 215px);
+  }
+  body.con-muro:not(.muro-plegado) .hud {
+    left: 456px;
+    top: 62px;
+    bottom: auto;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- el archivo / hemeroteca ---------- */
+
+.ver-archivo {
+  display: block;
+  margin-top: 10px;
+  background: none;
+  border: 0;
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+.ver-archivo:hover {
+  text-decoration: underline;
+}
+
+.archivo {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(18, 16, 14, 0.96);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+.arch-panel {
+  width: min(760px, 100%);
+  padding: 40px 28px 80px;
+}
+.arch-cab {
+  position: relative;
+  border-bottom: 1px solid rgba(111, 168, 158, 0.35);
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+}
+.arch-cab h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0;
+}
+.arch-cab p {
+  margin: 4px 0 0;
+  color: var(--crema-suave);
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+.arch-total {
+  color: var(--teal);
+}
+.arch-cerrar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.arch-filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.arch-filtros input {
+  background: rgba(27, 25, 22, 0.7);
+  border: 1px solid rgba(243, 238, 232, 0.2);
+  color: var(--crema);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  outline: none;
+}
+.arch-buscar { flex: 1; }
+.arch-ticker { width: 130px; }
+.arch-filtros input:focus { border-color: var(--teal); }
+.arch-meses {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.arch-chip {
+  background: transparent;
+  border: 1px solid rgba(243, 238, 232, 0.22);
+  color: var(--crema-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  padding: 5px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.arch-chip.activo {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+.arch-item {
+  display: block;
+  text-decoration: none;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(243, 238, 232, 0.09);
+}
+.arch-item h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--crema);
+  margin: 4px 0 8px;
+  line-height: 1.2;
+}
+.arch-item:hover h3 { color: var(--teal); }
+.arch-meta {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(243, 238, 232, 0.45);
+}
+.arch-epi { color: var(--teal); }
+.arch-res {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+.arch-vacio {
+  color: var(--crema-suave);
+  font-weight: 300;
+  padding: 40px 0;
+  text-align: center;
+}
+.arch-pag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  color: var(--crema-suave);
+  font-size: 0.85rem;
+}
+.arch-pag button {
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+}
+.arch-pag button:disabled { opacity: 0.35; cursor: default; }
+.arch-descargo {
+  margin-top: 28px;
+  font-size: 0.62rem;
+  color: rgba(243, 238, 232, 0.3);
+}
+body.archivo-abierto .muro { display: none; }
+
+/* modo duelo en el archivo */
+.arch-duelo-barra {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  color: var(--crema-suave);
+  font-size: 0.82rem;
+}
+.arch-panel.en-duelo .arch-item { cursor: copy; }
+.arch-item.elegido {
+  outline: 1px solid var(--teal);
+  background: rgba(111, 168, 158, 0.08);
+}
+
+/* ---------- el duelo de escenarios ---------- */
+.duelo {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: #1b1916;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+.duelo-cerrar {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 2;
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  color: var(--teal);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.duelo-titulares {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  width: min(1000px, 100%);
+  margin-bottom: 10px;
+}
+.duelo-lado {
+  flex: 1;
+  border-top: 3px solid var(--c);
+  padding-top: 8px;
+}
+.duelo-lado span {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--c);
+}
+.duelo-lado h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--crema);
+  margin: 2px 0 4px;
+  line-height: 1.2;
+}
+.duelo-dir { font-size: 0.85rem; color: var(--crema-suave); }
+.duelo-vs {
+  align-self: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--teal);
+}
+.duelo-escena {
+  width: min(1000px, 100%);
+  height: min(52vh, 460px);
+  display: block;
+  border: 1px solid rgba(111, 168, 158, 0.2);
+}
+.duelo-precios {
+  width: min(1000px, 100%);
+  height: 120px;
+  margin-top: 8px;
+}
+.duelo-barra {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+}
+.duelo-reel {
+  background: var(--teal);
+  color: var(--tinta);
+  border: 0;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  cursor: pointer;
+}
+.duelo-toggle {
+  background: transparent;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 9px 16px;
+  cursor: pointer;
+}
+.duelo-estado { color: var(--crema-suave); font-size: 0.8rem; }
+.duelo-descargo {
+  margin-top: 12px;
+  font-size: 0.62rem;
+  color: rgba(243, 238, 232, 0.3);
+  text-align: center;
+}
+.duelo-error { color: var(--crema-suave); padding: 40px; }
+@media (min-width: 821px) { .duelo-toggle { display: none; } }
+
+/* voces por arquetipo y epílogo en el reporte */
+.voz-arq span { color: var(--teal); font-style: normal; font-size: 0.72rem; }
+.rep-titular {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  color: var(--crema);
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+.epilogo {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-left: 2px solid var(--teal);
+  background: rgba(111, 168, 158, 0.06);
+}
+.epi-rotulo {
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 6px;
+}
+.epilogo p {
+  font-size: 0.85rem;
+  color: var(--crema);
+  line-height: 1.45;
+  margin: 0;
+}
+/* comparación educativa: el gráfico REAL del símbolo (TradingView) */
+.mercado-real {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-left: 2px solid var(--teal);
+  background: rgba(111, 168, 158, 0.06);
+}
+.mercado-real .mr-grafico { min-height: 190px; }
+.mercado-real .mr-nota {
+  font-size: 0.72rem;
+  color: var(--crema-suave);
+  line-height: 1.4;
+  margin: 8px 0 0;
+}
+.rep-compartir {
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ---------- reporte final ---------- */
+
+.reporte {
+  position: fixed;
+  top: 50%;
+  right: 28px;
+  transform: translateY(-50%);
+  width: min(340px, calc(100vw - 40px));
+  max-height: 80vh;
+  overflow-y: auto;
+  background: rgba(27, 25, 22, 0.94);
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  padding: 20px 22px;
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+.reporte h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 14px;
+}
+.reporte .cerrar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+.reporte .cifras {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+.reporte .cifras span {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+}
+.reporte .cifras label {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--crema-suave);
+}
+.reporte table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  font-weight: 300;
+  margin-bottom: 12px;
+}
+.reporte td {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(243, 238, 232, 0.08);
+  color: var(--crema-suave);
+}
+.reporte td:first-child {
+  color: var(--crema);
+}
+.reporte .voces p {
+  font-size: 0.8rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--crema);
+  margin: 6px 0;
+  line-height: 1.35;
+}
+.reporte .descargo {
+  margin-top: 12px;
+}
+.reporte td .cascada {
+  font-size: 0.72rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--dorado, #c9a15c);
+  opacity: 0.85;
+}
+
+/* ---------- modo estático (prefers-reduced-motion) ---------- */
+
+#grafico-estatico {
+  position: fixed;
+  left: 50%;
+  top: 96px;
+  transform: translateX(-50%);
+  background: rgba(27, 25, 22, 0.85);
+  border: 1px solid rgba(111, 168, 158, 0.35);
+  padding: 8px;
+}
+#aviso-estatico {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--crema-suave);
+  margin: 0;
+}
+
+/* ---------- móvil (≤700px): layout sin choques ---------- */
+@media (max-width: 700px) {
+  /* letra de 16px en TODO campo de texto: bajo eso, Safari iOS hace zoom
+     automático al enfocar y deja la página amplificada y corrida */
+  #campo-titular,
+  .pulso-form input,
+  .arch-filtros input {
+    font-size: 16px;
+  }
+
+  /* el HUD se muda arriba a la izquierda (despeja la pestaña del muro
+     plegado, ~46px): abajo ya no compite con la barra de noticia.
+     max-width le deja aire al botón "?" de la esquina derecha */
+  .hud {
+    top: calc(14px + env(safe-area-inset-top));
+    bottom: auto;
+    left: 60px;
+    align-items: flex-start;
+    max-width: calc(100vw - 135px);
+  }
+  #sparkline {
+    width: 110px;
+    height: 28px;
+  }
+  #hud-precio {
+    font-size: 1.25rem;
+  }
+  #hud-detalle {
+    font-size: 0.6rem;
+  }
+  .marca h1 {
+    font-size: 1.4rem;
+  }
+
+  /* la barra de noticia usa el ancho completo y respeta la franja segura
+     del iPhone (home bar) */
+  .panel-noticia {
+    width: calc(100vw - 20px);
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  /* con el muro plegado queda su pestaña de 46px a la izquierda:
+     la barra se corre para que no la tape */
+  body.con-muro.muro-plegado .panel-noticia {
+    left: calc(50% + 23px);
+    width: calc(100vw - 62px);
+  }
+  #campo-titular {
+    padding: 12px 12px;
+    min-width: 0; /* sin esto, el ancho mínimo intrínseco del input empuja
+                     el botón fuera del formulario */
+  }
+  #form-noticia button {
+    font-size: 0.7rem;
+    padding: 0 14px;
+    white-space: nowrap; /* el botón nunca se parte en dos líneas */
+    flex-shrink: 0;
+  }
+  .chip {
+    font-size: 0.7rem;
+    padding: 5px 11px;
+  }
+  .panel-noticia .descargo {
+    font-size: 0.55rem;
+  }
+}
+
+/* ---------- ajustes por la barra de navegación (al final: ganan) ---------- */
+
+/* lo fijado arriba baja para dejarle sitio a la barra (46px) */
+.marca { top: 60px; }
+.guia-boton { top: 56px; }
+.aviso { top: 62px; }
+.archivo,
+.duelo { top: 46px; }
+
+@media (max-width: 700px) {
+  /* el HUD móvil vive bajo la barra */
+  .hud { top: calc(56px + env(safe-area-inset-top)); }
+  .guia-boton { top: 56px; }
+  .navegacion { padding: 0 10px; justify-content: center; }
+  /* la marca cede su lugar: los 5 enlaces caben sin scroll (la marca
+     sigue viva en el muro y en la escena) */
+  .nav-marca { display: none; }
+  .nav-enlaces button { font-size: 0.7rem; padding: 6px 8px; letter-spacing: 0.06em; }
+}
+
+/* ---------- tooltip enriquecido del líder ---------- */
+
+.tooltip .tt-datos {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--crema-suave);
+}
+.tooltip .tt-datos b { font-weight: 500; }
+.tooltip .tt-datos b.sube { color: var(--salvia); }
+.tooltip .tt-datos b.baja { color: var(--rosa); }
+.tooltip .tt-datos b.plana { color: var(--crema-suave); }
+
+/* ---------- acciones al pie del reporte ---------- */
+
+.rep-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+.rep-acciones button {
+  background: none;
+  border: 1px solid rgba(111, 168, 158, 0.5);
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.rep-acciones button:hover {
+  background: var(--teal);
+  color: var(--tinta);
+}
+
+/* ---------- pie de página del muro ---------- */
+
+.pie {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(243, 238, 232, 0.12);
+  font-size: 0.68rem;
+  color: rgba(243, 238, 232, 0.45);
+}
+.pie-enlace {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--teal);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-decoration: none;
+}
+.pie-enlace:hover { text-decoration: underline; }
+
+/* ---------- el tour de bienvenida ---------- */
+
+.tour-halo {
+  position: fixed;
+  border: 1px solid var(--teal);
+  border-radius: 6px;
+  box-shadow: 0 0 0 9999px rgba(18, 16, 14, 0.55), 0 0 18px rgba(111, 168, 158, 0.35);
+  pointer-events: none;
+  z-index: 60;
+  transition: all 0.3s ease;
+}
+.tour-carta {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(170px, calc(150px + env(safe-area-inset-bottom)));
+  width: min(360px, calc(100vw - 32px));
+  background: rgba(27, 25, 22, 0.96);
+  border: 1px solid rgba(111, 168, 158, 0.55);
+  padding: 16px 18px 14px;
+  z-index: 61;
+}
+.tour-carta.arriba {
+  bottom: auto;
+  top: 64px;
+}
+.tour-paso {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--teal);
+}
+.tour-carta h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--crema);
+  margin: 4px 0 6px;
+}
+.tour-carta p {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--crema-suave);
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+.tour-botones {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.tour-saltar {
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 8px 0;
+}
+.tour-sigue {
+  background: var(--teal);
+  border: 0;
+  color: var(--tinta);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.tour-sigue:hover { filter: brightness(1.12); }
+
+/* ---------- organizaciones (el canal B2B, tono educativo) ---------- */
+
+.organizaciones {
+  margin-top: 22px;
+  padding: 18px 0 8px;
+  border-top: 1px solid rgba(111, 168, 158, 0.3);
+}
+.organizaciones h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 4px;
+}
+.organizaciones p {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--crema-suave);
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+.org-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.org-form input,
+.org-form textarea {
+  background: rgba(27, 25, 22, 0.6);
+  border: 1px solid rgba(243, 238, 232, 0.25);
+  color: var(--crema);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  padding: 9px 12px;
+  outline: none;
+  resize: vertical;
+}
+.org-form input:focus,
+.org-form textarea:focus {
+  border-color: var(--teal);
+}
+.org-form .accion {
+  align-self: flex-start;
+}
+.org-estado {
+  margin-top: 8px !important;
+  color: var(--teal) !important;
+  font-size: 0.78rem !important;
+}
+@media (max-width: 700px) {
+  .org-form input,
+  .org-form textarea { font-size: 16px; } /* sin zoom automático de iOS */
+}
+
+/* ---------- accesibilidad: foco visible en toda la interfaz ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- tipo de mercado detectado en el reporte ---------- */
+.rep-mercado {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+  border: 1px solid rgba(111, 168, 158, 0.4);
+  border-radius: 999px;
+}
+
+/* ---- Badge de CONVICCIÓN (Ventana A / gating) ---- */
+.rep-conviccion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+.rep-conviccion .conv-icono {
+  font-size: 1.25rem;
+  flex: 0 0 auto;
+}
+.rep-conviccion .conv-nivel {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 7px;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+/* "confiable": el enjambre muy convencido en un mercado con señal real (índice) */
+.rep-conviccion.conv-fiable {
+  color: #e7c98a;
+  background: rgba(201, 161, 92, 0.12);
+  border: 1px solid rgba(201, 161, 92, 0.55);
+  box-shadow: 0 0 18px rgba(201, 161, 92, 0.18);
+}
+.rep-conviccion.conv-fiable .conv-nivel {
+  color: var(--tinta);
+  background: var(--dorado, #c9a15c);
+}
+/* "visualización": convicción parcial o mercado sin señal direccional */
+.rep-conviccion.conv-visual {
+  color: var(--crema-suave);
+  background: rgba(243, 238, 232, 0.04);
+  border: 1px solid rgba(243, 238, 232, 0.14);
+}
+.rep-conviccion.conv-visual .conv-nivel {
+  color: var(--crema-suave);
+  border: 1px solid rgba(243, 238, 232, 0.28);
+}
+
+/* ---- Entrevistar a un líder (chat en personaje) ---- */
+.entrevista {
+  position: fixed;
+  top: 76px;                 /* bajo el encabezado/nav */
+  bottom: 180px;             /* ancla también abajo: deja libre la barra de titular */
+  left: 28px;
+  width: min(360px, calc(100vw - 40px));
+  display: flex;
+  flex-direction: column;
+  background: rgba(27, 25, 22, 0.96);
+  border: 1px solid rgba(227, 197, 101, 0.5);  /* borde dorado: es el "faro" */
+  padding: 20px 22px;
+  backdrop-filter: blur(10px);
+  z-index: 22;               /* por encima del reporte (20) y del tooltip */
+}
+.entrevista h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #e3c565;
+  margin: 0 0 6px;
+}
+.entrevista .cerrar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: 0;
+  color: var(--crema-suave);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+.entrevista .ent-frase {
+  font-style: italic;
+  color: var(--crema-suave);
+  margin: 0 0 12px;
+  font-size: 0.92rem;
+}
+.entrevista .ent-hilo {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 80px;
+  max-height: 46vh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.entrevista .ent-msg {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.entrevista .ent-yo {
+  align-self: flex-end;
+  background: var(--teal-hondo);
+  color: var(--crema);
+}
+.entrevista .ent-lider {
+  align-self: flex-start;
+  background: rgba(227, 197, 101, 0.14);
+  border: 1px solid rgba(227, 197, 101, 0.3);
+  color: var(--crema);
+}
+.entrevista .ent-form {
+  display: flex;
+  gap: 8px;
+}
+.entrevista .ent-input {
+  flex: 1;
+  background: rgba(243, 238, 232, 0.06);
+  border: 1px solid rgba(243, 238, 232, 0.2);
+  color: var(--crema);
+  padding: 9px 11px;
+  font-size: 0.92rem;
+}
+.entrevista .ent-form button {
+  background: #e3c565;
+  color: var(--tinta);
+  border: 0;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.voz-chat {
+  background: none;
+  border: 1px solid rgba(227, 197, 101, 0.45);
+  color: #e3c565;
+  font-size: 0.74rem;
+  padding: 2px 8px;
+  margin-left: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.voz-chat:hover {
+  background: rgba(227, 197, 101, 0.15);
+}
+@media (max-width: 760px) {
+  .entrevista {
+    top: 64px;
+    bottom: 220px;   /* en móvil la barra de titular + chips ocupan más */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 32px);
+  }
+}
+```
+
+## web/src/swarm/datos.js
+```javascript
+// Datos falsos de la Etapa 3: la misma mezcla de 10.000 agentes del motor
+// (engine/config/agentes.json), generada en el navegador. En vivo, el frame
+// binario del WebSocket trae un sentimiento por agente EN ESTE MISMO ORDEN
+// (tipos 1-12 y al final los 1000 líderes), así que estos conteos DEBEN
+// coincidir con engine/config/agentes.json o el mapeo por índice se rompe.
+
+export const TIPOS = [
+  { id: 'fundamentalista', nombre: 'Fundamentalista', cantidad: 370, capital: 50, social: false, sensibilidad: 0.25 },
+  { id: 'quant',           nombre: 'Quant institucional', cantidad: 220, capital: 40, social: false, sensibilidad: 0.3 },
+  { id: 'pasivo',          nombre: 'Fondo pasivo', cantidad: 150, capital: 60, social: false, sensibilidad: 0.0 },
+  { id: 'market_maker',    nombre: 'Market maker', cantidad: 9, capital: 100, social: false, sensibilidad: 0.15 },
+  { id: 'twap',            nombre: 'Ejecutor TWAP', cantidad: 28, capital: 30, social: false, sensibilidad: 0.05 },
+  { id: 'arbitrajista',    nombre: 'Arbitrajista', cantidad: 55, capital: 20, social: false, sensibilidad: 0.2 },
+  { id: 'noise',           nombre: 'Noise trader', cantidad: 3670, capital: 1, social: true, sensibilidad: 0.45 },
+  { id: 'manada',          nombre: 'Manada', cantidad: 1650, capital: 1, social: true, sensibilidad: 1.0 },
+  { id: 'fomo',            nombre: 'FOMO retail', cantidad: 1100, capital: 1, social: true, sensibilidad: 1.1 },
+  { id: 'miedoso',         nombre: 'Miedoso', cantidad: 920, capital: 1, social: true, sensibilidad: 1.2 },
+  { id: 'contrarian',      nombre: 'Contrarian', cantidad: 460, capital: 1.5, social: true, sensibilidad: 0.7 },
+  { id: 'buyhold',         nombre: 'Buy & hold', cantidad: 368, capital: 2, social: false, sensibilidad: 0.1 },
+]
+
+export const ARQUETIPOS = [
+  { id: 'institucional_frio', nombre: 'El Institucional Frío', cantidad: 150, sigue: ['buyhold', 'contrarian'] },
+  { id: 'quant_esceptico',    nombre: 'El Quant Escéptico', cantidad: 100, sigue: ['contrarian', 'noise'] },
+  { id: 'fomo_evangelista',   nombre: 'El FOMO Evangelista', cantidad: 150, sigue: ['fomo', 'manada'] },
+  { id: 'doomer',             nombre: 'El Doomer', cantidad: 150, sigue: ['miedoso'] },
+  { id: 'contrarian_sabio',   nombre: 'El Contrarian Sabio', cantidad: 100, sigue: ['contrarian'] },
+  { id: 'macro_trader',       nombre: 'El Macro Trader', cantidad: 100, sigue: ['manada', 'noise'] },
+  { id: 'influencer_optimista', nombre: 'El Influencer Optimista', cantidad: 150, sigue: ['manada', 'noise'] },
+  { id: 'value_paciente',     nombre: 'El Value Paciente', cantidad: 100, sigue: ['buyhold'] },
+]
+
+// generador determinístico simple (mulberry32) para poder repetir demos
+export function crearRng(semilla) {
+  let a = semilla >>> 0
+  return function () {
+    a |= 0; a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+/** Genera los 9.000 agentes de reglas + 1.000 líderes con sus posiciones de cluster. */
+export function generarEnjambre(semilla = 7) {
+  const rng = crearRng(semilla)
+  const agentes = []
+  const indicePorTipo = {}
+
+  TIPOS.forEach((tipo, t) => {
+    indicePorTipo[tipo.id] = []
+    for (let i = 0; i < tipo.cantidad; i++) {
+      indicePorTipo[tipo.id].push(agentes.length)
+      agentes.push({
+        tipo: t,
+        tipoId: tipo.id,
+        capital: tipo.capital * (0.7 + rng() * 0.6),
+        social: tipo.social,
+        sensibilidad: tipo.sensibilidad * (0.7 + rng() * 0.6),
+        lider: -1,          // índice del líder que sigue (si es social)
+        sent: 0,            // sentimiento actual ∈ [-1, 1]
+        sentObjetivo: 0,
+        tLlegada: Infinity, // cuándo le llega el rumor (segundos de escena)
+      })
+    }
+  })
+
+  // líderes: cada uno anclado al cluster de su tipo de seguidor principal
+  const lideres = []
+  ARQUETIPOS.forEach((arq) => {
+    for (let i = 0; i < arq.cantidad; i++) {
+      lideres.push({
+        arquetipo: arq.id,
+        nombre: arq.nombre,
+        tipoAncla: arq.sigue[Math.floor(rng() * arq.sigue.length)],
+        senal: 0,
+        confianza: 0.7,
+        frase: '',
+      })
+    }
+  })
+
+  // seguidores: cada agente social sigue a un líder cuyo arquetipo lo incluye
+  const lideresPorTipo = {}
+  lideres.forEach((lider, li) => {
+    const arq = ARQUETIPOS.find((a) => a.id === lider.arquetipo)
+    for (const tipoId of arq.sigue) {
+      ;(lideresPorTipo[tipoId] ??= []).push(li)
+    }
+  })
+  for (const agente of agentes) {
+    const candidatos = lideresPorTipo[agente.tipoId]
+    if (agente.social && candidatos) {
+      agente.lider = candidatos[Math.floor(rng() * candidatos.length)]
+    }
+  }
+
+  return { agentes, lideres, rng }
+}
+```
+
+## web/src/swarm/enjambre.js
+```javascript
+// El enjambre 3D: 5.000 inversionistas + 100 líderes en 3 draw calls
+// (instanced rendering). Geometrías y materiales se crean UNA vez;
+// nada de objetos nuevos dentro del loop de animación.
+
+import * as THREE from 'three'
+import { TIPOS, generarEnjambre } from './datos.js'
+import { analizarTitular } from './escenario.js'
+
+// paleta Rubicón Lab aplicada al enjambre (versión "seria" para público B2B,
+// nada de colores puros saturados): reposo en grafito cálido, compra en verde
+// viridiano, venta en rosa-arcilla; los líderes conservan su DORADO como faros
+// —el único acento cálido, se distingue del teal de la interfaz (la fachada) y
+// deja claro quién guía a la manada.
+const NEUTRO = new THREE.Color('#5c574f')   // grafito cálido en calma
+const COMPRA = new THREE.Color('#4f9e86')   // verde viridiano (compra/asciende)
+const VENTA = new THREE.Color('#c47b7b')    // rosa-arcilla (venta/se hunde)
+const LIDER = new THREE.Color('#e3c565')    // dorado — los líderes como faros
+
+const _dummy = new THREE.Object3D()
+const _color = new THREE.Color()
+
+export class Enjambre {
+  constructor(semilla = 7) {
+    const { agentes, lideres, rng } = generarEnjambre(semilla)
+    this.agentes = agentes
+    this.lideres = lideres
+    this.rng = rng
+    this.grupo = new THREE.Group()
+    this.precio = 100
+    this.seriePrecio = [100]
+    this._ultimaMuestra = 0
+    this.sentimientoGlobal = 0
+    this.modoRemoto = false  // true: el motor real manda por WebSocket
+    this.panico = 0          // 0..1: cuánto se hunde la masa (estela + tinte)
+
+    this._construirClusters()
+    this._construirParticulas()
+    this._construirLideres()
+  }
+
+  // ---------- construcción ----------
+
+  _construirClusters() {
+    // cada tipo vive en un cluster; centros en espiral de ángulo áureo
+    this.clusters = TIPOS.map((tipo, i) => {
+      const angulo = i * 2.39996
+      const radio = 4.5 + 9 * Math.sqrt(i / TIPOS.length)
+      return {
+        centro: new THREE.Vector3(
+          Math.cos(angulo) * radio,
+          (this.rng() - 0.5) * 3,
+          Math.sin(angulo) * radio,
+        ),
+        radio: 1.0 + 3.4 * Math.sqrt(tipo.cantidad / 2000),
+      }
+    })
+  }
+
+  _construirParticulas() {
+    const n = this.agentes.length
+    const geometria = new THREE.IcosahedronGeometry(0.06, 0)
+    const material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9 })
+    this.malla = new THREE.InstancedMesh(geometria, material, n)
+    this.malla.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+
+    // orden de dibujo barajado: al recortar instancias (gobernador de fps)
+    // se pierde una muestra pareja del enjambre, no un tipo completo
+    this.orden = [...Array(n).keys()]
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(this.rng() * (i + 1))
+      ;[this.orden[i], this.orden[j]] = [this.orden[j], this.orden[i]]
+    }
+
+    // parámetros de órbita por partícula (planos: rápido de leer por frame)
+    this.p = {
+      centro: new Float32Array(n * 3),
+      ejeU: new Float32Array(n * 3),
+      ejeV: new Float32Array(n * 3),
+      radioA: new Float32Array(n),
+      radioB: new Float32Array(n),
+      velocidad: new Float32Array(n),
+      fase: new Float32Array(n),
+      escala: new Float32Array(n),
+    }
+
+    for (let i = 0; i < n; i++) {
+      const agente = this.agentes[i]
+      const cluster = this.clusters[agente.tipo]
+      // plano orbital propio: dos ejes ortogonales aleatorios
+      const normal = new THREE.Vector3(this.rng() - 0.5, (this.rng() - 0.5) * 2.2, this.rng() - 0.5).normalize()
+      const u = new THREE.Vector3(1, 0, 0).cross(normal).normalize()
+      if (u.lengthSq() < 0.01) u.set(0, 0, 1)
+      const v = normal.clone().cross(u).normalize()
+      const r = cluster.radio * (0.25 + 0.75 * Math.sqrt(this.rng()))
+
+      this.p.centro.set([cluster.centro.x, cluster.centro.y, cluster.centro.z], i * 3)
+      this.p.ejeU.set([u.x, u.y, u.z], i * 3)
+      this.p.ejeV.set([v.x, v.y, v.z], i * 3)
+      this.p.radioA[i] = r
+      this.p.radioB[i] = r * (0.55 + this.rng() * 0.45)
+      this.p.velocidad[i] = (0.05 + this.rng() * 0.12) * (this.rng() < 0.5 ? 1 : -1)
+      this.p.fase[i] = this.rng() * Math.PI * 2
+      // tamaño = capital (escala logarítmica para que los 100x no tapen todo)
+      this.p.escala[i] = 0.65 + 0.55 * Math.log10(1 + agente.capital)
+
+      this.malla.setColorAt(i, _variarColor(NEUTRO, this.rng, 0.08))
+    }
+    this.malla.instanceColor.needsUpdate = true
+    this.grupo.add(this.malla)
+  }
+
+  _construirLideres() {
+    const n = this.lideres.length
+    const geoLider = new THREE.IcosahedronGeometry(0.17, 1)
+    const matLider = new THREE.MeshBasicMaterial()
+    this.mallaLideres = new THREE.InstancedMesh(geoLider, matLider, n)
+    this.mallaLideres.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+
+    const geoHalo = new THREE.IcosahedronGeometry(0.34, 1)
+    const matHalo = new THREE.MeshBasicMaterial({
+      color: LIDER, transparent: true, opacity: 0.22,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+    this.mallaHalos = new THREE.InstancedMesh(geoHalo, matHalo, n)
+    this.mallaHalos.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+
+    this.pl = { centro: new Float32Array(n * 3), fase: new Float32Array(n), velocidad: new Float32Array(n) }
+    const tipoIndice = Object.fromEntries(TIPOS.map((t, i) => [t.id, i]))
+    for (let i = 0; i < n; i++) {
+      const cluster = this.clusters[tipoIndice[this.lideres[i].tipoAncla]]
+      // el líder flota sobre su cluster de seguidores, como un faro
+      const angulo = this.rng() * Math.PI * 2
+      const r = cluster.radio * (0.4 + this.rng() * 0.5)
+      this.pl.centro.set([
+        cluster.centro.x + Math.cos(angulo) * r,
+        cluster.centro.y + 0.8 + this.rng() * 1.2,
+        cluster.centro.z + Math.sin(angulo) * r,
+      ], i * 3)
+      this.pl.fase[i] = this.rng() * Math.PI * 2
+      this.pl.velocidad[i] = 0.3 + this.rng() * 0.4
+      this.mallaLideres.setColorAt(i, LIDER.clone())
+    }
+    this.mallaLideres.instanceColor.needsUpdate = true
+    this.grupo.add(this.mallaLideres, this.mallaHalos)
+  }
+
+  // ---------- la noticia ----------
+
+  /** El enjambre lee un titular: los líderes forman señal y la ola se agenda. */
+  aplicarTitular(titular, ahora) {
+    const sentimiento = analizarTitular(titular, this.lideres, this.rng)
+    this.sentimientoGlobal = sentimiento
+    for (const agente of this.agentes) {
+      if (agente.lider >= 0) {
+        const lider = this.lideres[agente.lider]
+        // retardo 1er salto + a veces 2º salto (el rumor de par en par),
+        // atenuación 0.7 por salto — la ola, no un salto feo
+        const segundoSalto = this.rng() < 0.4
+        agente.tLlegada = ahora + 0.4 + this.rng() * 2.0 + (segundoSalto ? 0.9 + this.rng() * 1.5 : 0)
+        const atenuacion = segundoSalto ? 0.49 : 0.7
+        const cruda = lider.senal * lider.confianza * atenuacion * agente.sensibilidad
+        agente.sentObjetivo = Math.max(-1, Math.min(1, cruda + (this.rng() - 0.5) * 0.12))
+      } else if (agente.sensibilidad > 0) {
+        // institucionales: no escuchan rumores; reaccionan tarde, al precio
+        agente.tLlegada = ahora + 2.5 + this.rng() * 3.5
+        agente.sentObjetivo = sentimiento * agente.sensibilidad * 0.5
+      }
+    }
+    return sentimiento
+  }
+
+  /** El motor real dicta el estado: sentimiento por agente + precio. */
+  aplicarEstadoRemoto(precio, sentimientos) {
+    const nReglas = this.agentes.length
+    for (let i = 0; i < nReglas; i++) {
+      const agente = this.agentes[i]
+      agente.sentObjetivo = sentimientos[i] / 127
+      agente.tLlegada = -1 // ya llegó: el retardo lo puso el motor
+    }
+    for (let l = 0; l < this.lideres.length; l++) {
+      this.lideres[l].senal = sentimientos[nReglas + l] / 127
+    }
+    this.precio = precio
+  }
+
+  /** Las opiniones de los líderes reales (para el hover). */
+  fijarLideresRemotos(lideres) {
+    lideres.forEach((datos, i) => {
+      if (i >= this.lideres.length) return
+      this.lideres[i].senal = datos.senal
+      this.lideres[i].confianza = datos.confianza
+      this.lideres[i].frase = datos.frase
+    })
+  }
+
+  // ---------- animación ----------
+
+  actualizar(t, dt) {
+    const n = this.malla.count
+    const respiracion = 1 + 0.045 * Math.sin(t * 0.35)
+
+    // MATH POLISH: dt es constante dentro del frame, así que estos valores son
+    // iguales para los ~10.000 agentes. Se calculan UNA vez aquí en vez de
+    // dentro del bucle → se ahorran ~n Math.min/Math.exp por frame (móvil feliz).
+    const acerca = Math.min(1, dt * 2.5)      // rapidez con que el sent. alcanza su objetivo
+    const decaeObjetivo = Math.exp(-dt / 9)   // agotamiento del objetivo (solo modo local)
+
+    // _dummy y _color: mutables REUTILIZADOS cada iteración (nunca `new … ` en el
+    // bucle). Cero basura para el recolector = fps estables.
+    for (let d = 0; d < n; d++) {
+      const i = this.orden[d]
+      const agente = this.agentes[i]
+
+      // el rumor llega, el sentimiento se acerca a su objetivo y luego se agota
+      if (t >= agente.tLlegada) {
+        agente.sent += (agente.sentObjetivo - agente.sent) * acerca
+        // en modo remoto el motor refresca el objetivo; aquí no se decae
+        if (!this.modoRemoto) agente.sentObjetivo *= decaeObjetivo
+      }
+      const s = agente.sent
+      const intensidad = Math.abs(s)
+
+      // órbita elíptica propia; la emoción acelera el vuelo
+      const angulo = this.p.fase[i] + t * this.p.velocidad[i] * (1 + 1.6 * intensidad)
+      const cosA = Math.cos(angulo) * this.p.radioA[i] * respiracion
+      const sinA = Math.sin(angulo) * this.p.radioB[i] * respiracion
+      const o = i * 3
+      _dummy.position.set(
+        this.p.centro[o] + this.p.ejeU[o] * cosA + this.p.ejeV[o] * sinA,
+        // compra = asciende · venta = se hunde
+        this.p.centro[o + 1] + this.p.ejeU[o + 1] * cosA + this.p.ejeV[o + 1] * sinA + s * 1.5,
+        this.p.centro[o + 2] + this.p.ejeU[o + 2] * cosA + this.p.ejeV[o + 2] * sinA,
+      )
+      const escala = this.p.escala[i] * (1 + 0.25 * intensidad)
+      _dummy.scale.setScalar(escala)
+      _dummy.updateMatrix()
+      this.malla.setMatrixAt(d, _dummy.matrix)
+
+      // color = sentimiento (verde compra ← neutro → rojo venta)
+      _color.copy(NEUTRO).lerp(s > 0 ? COMPRA : VENTA, Math.pow(intensidad, 0.7))
+      this.malla.setColorAt(d, _color)
+    }
+    this.malla.instanceMatrix.needsUpdate = true
+    this.malla.instanceColor.needsUpdate = true
+
+    // líderes: flotan y pulsan según su convicción
+    const decaeLider = Math.exp(-dt / 14) // constante del frame, fuera del bucle
+    for (let i = 0; i < this.lideres.length; i++) {
+      const lider = this.lideres[i]
+      if (!this.modoRemoto) lider.senal *= decaeLider // su opinión se apaga
+      const o = i * 3
+      const bob = Math.sin(t * this.pl.velocidad[i] + this.pl.fase[i]) * 0.25
+      _dummy.position.set(this.pl.centro[o], this.pl.centro[o + 1] + bob + lider.senal * 1.2, this.pl.centro[o + 2])
+      _dummy.scale.setScalar(1)
+      _dummy.updateMatrix()
+      this.mallaLideres.setMatrixAt(i, _dummy.matrix)
+
+      const pulso = 1 + 0.18 * Math.sin(t * 2.2 + this.pl.fase[i]) + 0.9 * Math.abs(lider.senal)
+      _dummy.scale.setScalar(pulso)
+      _dummy.updateMatrix()
+      this.mallaHalos.setMatrixAt(i, _dummy.matrix)
+
+      _color.copy(LIDER).lerp(lider.senal > 0 ? COMPRA : VENTA, Math.abs(lider.senal) * 0.55)
+      this.mallaLideres.setColorAt(i, _color)
+    }
+    this.mallaLideres.instanceMatrix.needsUpdate = true
+    this.mallaHalos.instanceMatrix.needsUpdate = true
+    this.mallaLideres.instanceColor.needsUpdate = true
+
+    // precio: en modo remoto lo dicta el motor; en local emerge del
+    // sentimiento promedio del enjambre (demo sin backend)
+    let suma = 0
+    for (const a of this.agentes) suma += a.sent
+    const sentMedio = suma / this.agentes.length
+    if (!this.modoRemoto) {
+      this.precio *= 1 + sentMedio * dt * 0.09 + (this.rng() - 0.5) * dt * 0.004
+    }
+    if (t - this._ultimaMuestra > 0.15) {
+      this._ultimaMuestra = t
+      this.seriePrecio.push(this.precio)
+      if (this.seriePrecio.length > 400) this.seriePrecio.shift()
+    }
+    this.sentimientoMedio = sentMedio
+
+    // pánico visual: sube con el hundimiento de la masa, decae suave. Alimenta
+    // la estela (más larga) y el tinte del fondo (hacia el rosa-arcilla).
+    const objetivoPanico = Math.min(1, Math.max(0, -sentMedio) * 1.9)
+    this.panico += (objetivoPanico - this.panico) * Math.min(1, dt * 2.2)
+
+    // rotación lenta de todo el enjambre: hipnosis
+    this.grupo.rotation.y = t * 0.03
+  }
+
+  /** Gobernador de fps: recorta o restaura partículas dibujadas. */
+  fijarProporcion(proporcion) {
+    this.malla.count = Math.max(1200, Math.round(this.agentes.length * proporcion))
+  }
+}
+
+function _variarColor(base, rng, cuanto) {
+  return base.clone().offsetHSL((rng() - 0.5) * cuanto, (rng() - 0.5) * cuanto, (rng() - 0.5) * cuanto)
+}
+```
+
+## web/src/swarm/escenario.js
+```javascript
+// Escenarios falsos de la Etapa 3: un mini-analizador léxico (espejo
+// simplificado de engine/brains/fallback.py) convierte el titular en
+// señales por arquetipo. En la Etapa 4 esto lo hará el motor real.
+
+const FRASES_CLAVE = [
+  ['sube las tasas', -0.7], ['alza de tasas', -0.7], ['recorta las tasas', 0.6],
+  ['baja las tasas', 0.6], ['guerra comercial', -0.7], ['supera expectativas', 0.7],
+]
+
+const PALABRAS = [
+  ['desploma', -0.9], ['quiebra', -0.9], ['colapso', -0.9], ['crash', -0.9],
+  ['crisis', -0.8], ['recesión', -0.8], ['pánico', -0.8], ['fraude', -0.8],
+  ['guerra', -0.7], ['cae', -0.6], ['despidos', -0.6], ['pérdidas', -0.6],
+  ['inflación', -0.5], ['riesgo', -0.4], ['máximo histórico', 0.8], ['récord', 0.7],
+  ['sube', 0.6], ['alza', 0.6], ['ganancias', 0.6], ['estímulo', 0.6],
+  ['recuperación', 0.6], ['crece', 0.5], ['gana', 0.5], ['acuerdo', 0.4],
+]
+
+const MACRO = ['fed', 'banco', 'tasas', 'inflación', 'empleo', 'dólar', 'pib', 'recesión', 'liquidez', 'guerra']
+
+export function sentimientoLexico(titular) {
+  let texto = titular.toLowerCase()
+  let puntaje = 0
+  for (const [frase, peso] of FRASES_CLAVE) {
+    if (texto.includes(frase)) { puntaje += peso; texto = texto.replaceAll(frase, ' ') }
+  }
+  if (titular.toLowerCase().includes('tasa') || titular.toLowerCase().includes('interés')) {
+    texto = texto.replaceAll('sube', ' ').replaceAll('alza', ' ')
+  }
+  for (const [palabra, peso] of PALABRAS) {
+    if (texto.includes(palabra)) puntaje += peso
+  }
+  return Math.max(-1, Math.min(1, puntaje / 1.5))
+}
+
+const clip = (x, lo = -1, hi = 1) => Math.max(lo, Math.min(hi, x))
+
+// cómo transforma cada arquetipo el sentimiento del titular en su señal,
+// y qué frase dice (negativa / neutra / positiva)
+const PERSONALIDADES = {
+  institucional_frio: {
+    senal: (s) => clip(0.4 * s, -0.5, 0.5),
+    frases: [
+      'Ajustamos flujos de caja proyectados; sin dramatismos.',
+      'Sin impacto material en fundamentales. Seguimos.',
+      'Mejora marginal en márgenes; posición sin grandes cambios.',
+    ],
+  },
+  quant_esceptico: {
+    senal: (s) => clip(-0.5 * s, -0.6, 0.6),
+    frases: [
+      'El pánico está sobrevendido; apuesto a la reversión.',
+      'Ruido estadístico. Nada que operar.',
+      'La euforia ya está en el precio; me pongo del otro lado.',
+    ],
+  },
+  fomo_evangelista: {
+    senal: (s) => clip(1.6 * s),
+    frases: [
+      '🚨 Para mí esto se derrumba. Yo ya habría corrido.',
+      'Atentos: siento que algo grande se cocina. Yo no me duermo.',
+      '🚀 Para MÍ esto es EL momento de la década. Así lo veo yo.',
+    ],
+  },
+  doomer: {
+    senal: (s) => clip(0.6 * s - 0.35, -1, 0.1),
+    frases: [
+      'Lo vengo advirtiendo desde 2008: esto es el principio del fin.',
+      'Demasiada calma. Justo así se veía antes del colapso.',
+      'Trampa alcista de manual. El riesgo sistémico sigue ahí.',
+    ],
+  },
+  contrarian_sabio: {
+    senal: (s) => clip(-0.7 * s, -0.8, 0.8),
+    frases: [
+      'Sangre en las calles: el momento favorito de los pacientes.',
+      'La masa aún no decide; yo tampoco. Paciencia.',
+      'Todos codiciosos a la vez: mi señal favorita para retirarme.',
+    ],
+  },
+  macro_trader: {
+    senal: (s, macro) => clip((macro ? 1.2 : 0.1) * s),
+    frases: [
+      'Menos liquidez global: se viene rotación a refugio.',
+      'Sin lectura macro. Las acciones son un derivado de las tasas.',
+      'Más liquidez en el sistema: viento a favor para el riesgo.',
+    ],
+  },
+  influencer_optimista: {
+    senal: (s) => (s < -0.5 ? 0.4 : clip(0.5 * s + 0.25, 0, 0.6)),
+    frases: [
+      'Calma: el mercado siempre premia al que aguanta. ¡Rebajas!',
+      'Sigan aportando todos los meses. El tiempo hace el resto.',
+      'El interés compuesto trabajando: seguimos acumulando.',
+    ],
+  },
+  value_paciente: {
+    senal: (s) => (Math.abs(s) > 0.6 ? clip(0.5 * s, -0.7, 0.7) : 0),
+    frases: [
+      'Si el negocio vale menos hoy, revisaré la tesis. Si no, teatro.',
+      'Ruido de corto plazo. Mi horizonte se mide en décadas.',
+      'El precio sube, el valor no. No confundir las dos cosas.',
+    ],
+  },
+}
+
+/** Los 100 líderes "leen" el titular: fija señal y frase de cada uno. */
+export function analizarTitular(titular, lideres, rng) {
+  const s = sentimientoLexico(titular)
+  const esMacro = MACRO.some((p) => titular.toLowerCase().includes(p))
+  for (const lider of lideres) {
+    const p = PERSONALIDADES[lider.arquetipo]
+    const base = p.senal(s, esMacro)
+    lider.senal = clip(base + (rng() - 0.5) * 0.16)
+    lider.confianza = clip(0.7 + (rng() - 0.5) * 0.2, 0, 1)
+    lider.frase = p.frases[lider.senal < -0.15 ? 0 : lider.senal > 0.15 ? 2 : 1]
+  }
+  return s
+}
+
+export const ESCENARIOS = [
+  { etiqueta: 'Quiebra bancaria', titular: 'Quiebra el segundo banco más grande del país; pánico en los mercados' },
+  { etiqueta: 'La Fed sube tasas', titular: 'La Fed sube las tasas 50 puntos base y anticipa más alzas' },
+  { etiqueta: 'Máximo histórico', titular: 'La bolsa alcanza un máximo histórico tras ganancias récord' },
+]
+```
+
+## web/src/swarm/replay-frame.js
+```javascript
+// Medidas del replay 3D, robustas al tamaño de la mezcla.
+//
+// El motor guarda SIEMPRE `TICKS_REPLAY` frames por simulación
+// (engine/server.py: TICKS_PREVIOS 10 + TICKS_POSTERIORES 140). Ese número es
+// una constante del producto: NO cambia aunque la mezcla de agentes crezca.
+// El tamaño de cada frame, en cambio, es 8 + N_agentes, y N sí puede cambiar
+// (p. ej. la mezcla pasó de 10.000 a 10.150 al sumar un arquetipo).
+//
+// Por eso derivamos N por-buffer desde el conteo fijo de frames en vez de
+// hardcodearlo: así el replay lee bien tanto los replays HISTÓRICOS ya guardados
+// (10.000 agentes, que sobreviven en el disco persistente de Render) como los
+// nuevos (10.150) — sin romperse cuando la mezcla vuelve a cambiar.
+export const TICKS_REPLAY = 150            // TICKS_PREVIOS + TICKS_POSTERIORES
+export const N_AGENTES_VIGENTE = 10150     // tamaño de la mezcla actual (fallback)
+
+/**
+ * Dado el buffer crudo de un replay, deduce cuántos agentes trae cada frame.
+ * Devuelve { nAgentes, tamanoFrame, total }.
+ */
+export function medidasReplay(byteLength) {
+  const tamanoFrame = Math.round(byteLength / TICKS_REPLAY)
+  const nAgentes = tamanoFrame - 8
+  // el buffer debe ser un múltiplo EXACTO de (8 + N) × TICKS_REPLAY
+  if (nAgentes > 0 && tamanoFrame * TICKS_REPLAY === byteLength) {
+    return { nAgentes, tamanoFrame, total: TICKS_REPLAY }
+  }
+  // buffer con forma inesperada: degradamos al tamaño vigente sin reventar
+  const tamanoVigente = 8 + N_AGENTES_VIGENTE
+  return {
+    nAgentes: N_AGENTES_VIGENTE,
+    tamanoFrame: tamanoVigente,
+    total: Math.floor(byteLength / tamanoVigente),
+  }
+}
+```
+
+## web/src/ui/conexion.js
+```javascript
+// Conexión con el motor real (engine/server.py) por WebSocket.
+// Si el motor no está disponible, main.js degrada al modo demo local.
+
+/** La base HTTP del motor (para los endpoints /api del muro). */
+export function urlApi() {
+  const ws =
+    import.meta.env.VITE_WS_URL ||
+    (['localhost', '127.0.0.1'].includes(location.hostname) ? 'ws://localhost:8000/ws' : null)
+  if (!ws) return null
+  return ws.replace(/^ws/, 'http').replace(/\/ws$/, '')
+}
+
+/** La clave de pruebas privadas: llega en la URL (?acceso=…) y se recuerda
+ * en el navegador. Durante las pruebas cerradas, solo quien la trae puede
+ * soltar titulares (que gastan IA). El muro y el archivo quedan abiertos. */
+export function claveAcceso() {
+  try {
+    const enUrl = new URLSearchParams(location.search).get('acceso')
+    if (enUrl) localStorage.setItem('enjambre-acceso', enUrl)
+    return localStorage.getItem('enjambre-acceso') || ''
+  } catch {
+    return ''
+  }
+}
+
+/** El correo del visitante (la "puerta de crecimiento"): en público se pide UNA
+ * vez para soltar tu propio titular, y de paso quedas suscrito gratis al Pulso.
+ * Sin contraseñas, sin cuenta — solo un dato, recordado en el navegador. */
+export function correoUsuario() {
+  try {
+    return localStorage.getItem('enjambre-correo') || ''
+  } catch {
+    return ''
+  }
+}
+
+export function guardarCorreo(email) {
+  try {
+    localStorage.setItem('enjambre-correo', String(email || '').trim().toLowerCase())
+  } catch {
+    /* modo privado del navegador: da igual */
+  }
+}
+
+/** El TOKEN Premium desbloqueado (secreto del enlace mágico): eleva el cupo a 40
+ * simulaciones/mes. Se recuerda en el navegador y viaja con cada simulación; el
+ * motor lo verifica en vivo (si canceló, vuelve a 1/día). Es un token, no el
+ * correo: solo lo tiene quien recibió el enlace en su buzón. */
+export function tokenPremium() {
+  try {
+    return localStorage.getItem('enjambre-premium-token') || ''
+  } catch {
+    return ''
+  }
+}
+
+export function guardarTokenPremium(token) {
+  try {
+    localStorage.setItem('enjambre-premium-token', String(token || '').trim())
+  } catch {
+    /* da igual */
+  }
+}
+
+export function borrarTokenPremium() {
+  try {
+    localStorage.removeItem('enjambre-premium-token')
+  } catch {
+    /* da igual */
+  }
+}
+
+/** Huella suave del navegador: un id aleatorio, propio de este dispositivo, para
+ * que el cupo gratis se cuente por dispositivo y no por IP (una red móvil o una
+ * oficina no comparte 1/día). Se crea la primera vez y se recuerda. */
+export function clienteId() {
+  try {
+    let id = localStorage.getItem('enjambre-cid')
+    if (!id) {
+      id = (crypto?.randomUUID?.() || String(Math.random()).slice(2) + Date.now().toString(36))
+      localStorage.setItem('enjambre-cid', id)
+    }
+    return id
+  } catch {
+    return ''
+  }
+}
+
+/** Pide el enlace mágico de desbloqueo para un correo. Respuesta neutra del
+ * motor (no revela si es Premium). Devuelve true si la petición salió. */
+export async function pedirDesbloqueo(email) {
+  const base = urlApi()
+  if (!base) return false
+  try {
+    const r = await fetch(`${base}/api/pulso/desbloqueo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+    return r.ok
+  } catch {
+    return false
+  }
+}
+
+/** Canjea un token del enlace mágico por el nivel Premium. {premium, limite,
+ * periodo} o null si no se pudo verificar. NO consume cupo. */
+export async function verificarToken(token) {
+  const base = urlApi()
+  if (!base) return null
+  try {
+    const r = await fetch(`${base}/api/pulso/enjambre/verificar?token=${encodeURIComponent(token)}`)
+    if (!r.ok) return null
+    return await r.json()
+  } catch {
+    return null
+  }
+}
+
+export class MotorRemoto {
+  constructor(url) {
+    this.url = url
+    this.ws = null
+  }
+
+  _conectar(esperaMs = 8000) {
+    return new Promise((resolver, rechazar) => {
+      const ws = new WebSocket(this.url)
+      ws.binaryType = 'arraybuffer'
+      const temporizador = setTimeout(() => {
+        ws.close()
+        rechazar(new Error('el motor no respondió a tiempo'))
+      }, esperaMs)
+      ws.onopen = () => {
+        clearTimeout(temporizador)
+        resolver(ws)
+      }
+      ws.onerror = () => {
+        clearTimeout(temporizador)
+        rechazar(new Error('no se pudo conectar con el motor'))
+      }
+    })
+  }
+
+  /**
+   * Conecta con paciencia: el motor gratuito de Render se duerme con la
+   * inactividad y tarda ~50 s en despertar. Reintenta hasta ~75 s y avisa
+   * (alLento) para que la UI diga "despertando el motor…" en vez de caer
+   * al demo a los 3 segundos.
+   */
+  async _conectarConPaciencia(alLento = null) {
+    const inicio = Date.now()
+    let avisado = false
+    for (;;) {
+      try {
+        return await this._conectar(8000)
+      } catch (error) {
+        if (!avisado) {
+          avisado = true
+          alLento?.()
+        }
+        if (Date.now() - inicio > 75000) throw error
+        await new Promise((r) => setTimeout(r, 4000))
+      }
+    }
+  }
+
+  /** Envía el titular y entrega los eventos: alInicio, alTick, alFin, alLimite.
+   * La semilla es aleatoria por corrida: dos corridas del mismo titular dan
+   * reacciones y voces distintas — el enjambre nunca suena a loro. */
+  async simular(titular, { alInicio, alTick, alFin, alLimite, alDespertar, alCorreo }, extras = {}) {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      this.ws = await this._conectarConPaciencia(alDespertar)
+    }
+    this.ws.onmessage = (evento) => {
+      if (typeof evento.data === 'string') {
+        const mensaje = JSON.parse(evento.data)
+        if (mensaje.tipo === 'inicio') alInicio(mensaje)
+        else if (mensaje.tipo === 'fin') alFin(mensaje.reporte, mensaje.sim_id)
+        else if (mensaje.tipo === 'limite') alLimite?.(mensaje.mensaje)
+        else if (mensaje.tipo === 'privado') alLimite?.(mensaje.mensaje)
+        else if (mensaje.tipo === 'correo') alCorreo?.(mensaje.mensaje)   // la puerta pide correo
+      } else {
+        const vista = new DataView(evento.data)
+        alTick(
+          vista.getFloat32(0, true),                 // precio
+          vista.getUint32(4, true),                  // tick
+          new Int8Array(evento.data, 8),             // sentimiento por agente
+        )
+      }
+    }
+    const seed = Math.floor(Math.random() * 2_000_000_000)
+    this.ws.send(JSON.stringify({
+      tipo: 'simular', titular, seed,
+      acceso: claveAcceso(), email: correoUsuario(),
+      premium_token: tokenPremium(), cid: clienteId(), ...extras,
+    }))
+  }
+
+  /**
+   * Modo observatorio: abre una sesión continua donde el enjambre sigue
+   * vivo. Devuelve un mando con soltarNoticia(titular) y detener().
+   */
+  async observatorio(titular, { alInicio, alTick, alLimite, alFin, alDespertar, alCorreo }) {
+    const ws = await this._conectarConPaciencia(alDespertar)
+    this.wsObs = ws
+    ws.onmessage = (evento) => {
+      if (typeof evento.data === 'string') {
+        const m = JSON.parse(evento.data)
+        if (m.tipo === 'inicio') alInicio?.(m)
+        else if (m.tipo === 'limite') alLimite?.(m.mensaje)
+        else if (m.tipo === 'privado') alLimite?.(m.mensaje)
+        else if (m.tipo === 'correo') alCorreo?.(m.mensaje)
+        else if (m.tipo === 'observatorio-fin') alFin?.()
+      } else {
+        const v = new DataView(evento.data)
+        alTick(v.getFloat32(0, true), v.getUint32(4, true), new Int8Array(evento.data, 8))
+      }
+    }
+    ws.send(JSON.stringify({
+      tipo: 'observatorio', titular, seed: Math.floor(Math.random() * 2_000_000_000),
+      acceso: claveAcceso(), email: correoUsuario(),
+      premium_token: tokenPremium(), cid: clienteId(),
+    }))
+    return {
+      soltarNoticia(t) {
+        if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'noticia', titular: t }))
+      },
+      detener() {
+        if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ tipo: 'detener' }))
+        try { ws.close() } catch { /* ya cerrado */ }
+      },
+    }
+  }
+}
+```
+
+## web/src/ui/correo.js
+```javascript
+// La puerta de correo (gancho de crecimiento): en público se pide UNA vez para
+// soltar tu propio titular al enjambre, y de paso quedas suscrito gratis a El
+// Pulso. Sin login, sin contraseñas. Devuelve el correo (string) o null si el
+// visitante cierra. La estética sigue la del enjambre (tinta + dorado).
+
+const _EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+
+export function pedirCorreo(mensaje) {
+  return new Promise((resolver) => {
+    let resuelto = false
+    const capa = document.createElement('div')
+    capa.setAttribute('role', 'dialog')
+    capa.setAttribute('aria-modal', 'true')
+    capa.setAttribute('aria-label', 'Deja tu correo para soltar un titular')
+    Object.assign(capa.style, {
+      position: 'fixed', inset: '0', background: 'rgba(11,14,20,0.72)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      zIndex: '9999', padding: '20px', boxSizing: 'border-box',
+    })
+    capa.innerHTML = `
+      <div style="position:relative;background:#1b1916;border:1px solid rgba(227,197,101,0.3);
+        border-radius:10px;max-width:420px;width:100%;padding:28px;color:#f3eee8;
+        font-family:system-ui,-apple-system,sans-serif;box-shadow:0 30px 80px -30px rgba(0,0,0,0.8);">
+        <button type="button" data-cerrar aria-label="cerrar"
+          style="position:absolute;top:12px;right:14px;background:none;border:none;color:#8a867e;
+          font-size:22px;line-height:1;cursor:pointer;">×</button>
+        <div style="font-family:Georgia,serif;font-size:24px;color:#e3c565;font-weight:bold;margin-bottom:6px;">Suéltalo al enjambre 🐝</div>
+        <p style="font-size:14px;line-height:1.5;color:#cfc9bd;margin:0 0 16px;"></p>
+        <form>
+          <input type="email" required placeholder="tu@correo.com" autocomplete="email" inputmode="email"
+            style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:6px;
+            border:1px solid rgba(243,238,232,0.2);background:#14120f;color:#f3eee8;font-size:15px;" />
+          <div data-err style="color:#d99a9a;font-size:12px;min-height:16px;margin:6px 2px 0;"></div>
+          <button type="submit"
+            style="width:100%;margin-top:6px;background:#e3c565;color:#1b1916;border:none;border-radius:6px;
+            padding:13px;font-weight:bold;font-size:15px;cursor:pointer;">Ver el enjambre reaccionar →</button>
+        </form>
+        <p style="font-size:11px;color:#8a867e;line-height:1.5;margin:14px 0 0;">
+          Un solo dato, sin contraseñas. Puedes darte de baja en un clic.
+          No es asesoría ni recomendación de inversión.</p>
+      </div>`
+
+    capa.querySelector('p').textContent = mensaje ||
+      'Deja tu correo para soltar tu propio titular. De paso te suscribes gratis a El Pulso, el diario del enjambre.'
+
+    const input = capa.querySelector('input')
+    const err = capa.querySelector('[data-err]')
+    const form = capa.querySelector('form')
+    const focoPrevio = document.activeElement   // para devolverlo al cerrar
+
+    function cerrar(valor) {
+      if (resuelto) return
+      resuelto = true
+      document.removeEventListener('keydown', alTecla)
+      capa.remove()
+      focoPrevio?.focus?.()                      // accesibilidad: devuelve el foco
+      resolver(valor)
+    }
+
+    function alTecla(e) {
+      if (e.key === 'Escape') { cerrar(null); return }
+      if (e.key !== 'Tab') return
+      // atrapa el Tab dentro del modal (contrato aria-modal)
+      const focos = [...capa.querySelectorAll('button, input')].filter((n) => !n.disabled)
+      if (!focos.length) return
+      const primero = focos[0]
+      const ultimo = focos[focos.length - 1]
+      if (e.shiftKey && document.activeElement === primero) {
+        e.preventDefault(); ultimo.focus()
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault(); primero.focus()
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const email = input.value.trim().toLowerCase()
+      if (!_EMAIL.test(email) || email.length > 200) {
+        err.textContent = 'Escribe un correo válido (ej: tu@correo.com).'
+        input.focus()
+        return
+      }
+      cerrar(email)
+    })
+    capa.querySelector('[data-cerrar]').addEventListener('click', () => cerrar(null))
+    capa.addEventListener('click', (e) => { if (e.target === capa) cerrar(null) })
+    document.addEventListener('keydown', alTecla)
+
+    document.body.appendChild(capa)
+    input.focus()
+  })
+}
+```
+
+## web/src/ui/guia.js
+```javascript
+// La guía rápida: "¿Cómo funciona El Enjambre?" — para el visitante que
+// llega sin contexto (retail curioso). Lenguaje llano, con analogías, y bajo
+// la línea CMF: es una simulación educativa, NUNCA asesoría ni predicción.
+//
+// Se abre desde cualquier elemento con [data-guia] (el botón flotante y el
+// enlace del muro) y, la primera vez que alguien entra, se muestra sola.
+
+const CLAVE_VISTA = 'enjambre_guia_vista'
+
+const CONTENIDO = `
+  <button class="guia-cerrar" aria-label="cerrar la guía">×</button>
+  <p class="guia-eyebrow">Guía rápida · 1 minuto</p>
+  <h2 id="guia-titulo">¿Cómo funciona El Enjambre?</h2>
+  <p class="guia-intro">
+    El Enjambre es un <strong>simulador</strong>: 10.000 inversionistas de mentira
+    —hechos con inteligencia artificial— leen una noticia y reaccionan como lo
+    haría una multitud real. No adivina el futuro del mercado: te muestra
+    <strong>cómo se comporta una manada</strong> cuando llega una noticia.
+  </p>
+
+  <div class="cruce" aria-hidden="true"></div>
+
+  <section class="guia-seccion">
+    <h3>Cómo usarlo</h3>
+    <ol class="guia-pasos">
+      <li><span class="n">1</span><span class="t">Escribe un titular abajo (o toca uno de los ejemplos). Ej: <em>«la Fed sube las tasas»</em>.</span></li>
+      <li><span class="n">2</span><span class="t">Toca <strong>«Soltar al enjambre»</strong>.</span></li>
+      <li><span class="n">3</span><span class="t">Mira reaccionar a los 10.000 en vivo. Al terminar, aparece un pequeño reporte.</span></li>
+    </ol>
+  </section>
+
+  <section class="guia-seccion">
+    <h3>Qué significan los colores</h3>
+    <ul class="guia-colores">
+      <li><span class="pt" style="background:#4f9e86"></span><span><b>Verde</b> — está comprando (optimismo).</span></li>
+      <li><span class="pt" style="background:#c47b7b"></span><span><b>Rosa</b> — está vendiendo (miedo).</span></li>
+      <li><span class="pt" style="background:#5c574f"></span><span><b>Grafito</b> — en calma, sin decidir.</span></li>
+      <li><span class="pt" style="background:#e3c565"></span><span><b>Dorado</b> — los 100 <b>líderes de opinión</b>. Pasa el cursor (o toca) uno para leer qué dijo.</span></li>
+    </ul>
+  </section>
+
+  <section class="guia-seccion">
+    <h3>Qué significa el movimiento</h3>
+    <p>Las partículas que <strong>suben</strong> están comprando; las que
+    <strong>se hunden</strong>, vendiendo. Cuando la manada se asusta, verás
+    <strong>estelas largas</strong> y el fondo se tiñe de rosa: es turbulencia.</p>
+  </section>
+
+  <section class="guia-seccion">
+    <h3>Qué significan los números</h3>
+    <dl class="guia-numeros">
+      <dt>Precio</dt>
+      <dd>Arriba a la izquierda. Empieza en <strong>100</strong> (el punto de partida). Emerge de todas las compras y ventas: si suben los compradores, sube; si mandan los vendedores, baja.</dd>
+      <dt>Dirección</dt>
+      <dd>Cuánto se movió el precio en total (ej: <em>−3%</em>).</dd>
+      <dt>Mínimo</dt>
+      <dd>Qué tan abajo llegó en el peor momento del susto.</dd>
+      <dt>Agitación / volatilidad</dt>
+      <dd>Qué tan nerviosa estuvo la manada: bajo, medio o alto.</dd>
+      <dt>fps</dt>
+      <dd>Solo un dato técnico (qué tan fluida va tu pantalla). Puedes ignorarlo.</dd>
+    </dl>
+  </section>
+
+  <section class="guia-seccion">
+    <h3>Las voces del enjambre</h3>
+    <p>Los dorados son 8 personalidades distintas —el pesimista, el eufórico, el
+    que va contra la corriente…—. Cada uno interpreta la misma noticia a su
+    manera y contagia a sus seguidores. Ahí nace el contagio que ves. Pasa el
+    cursor por un dorado para leer su frase.</p>
+  </section>
+
+  <p class="guia-descargo"><strong>Herramienta educativa y recreativa, en proceso de creación y mejora.</strong> Simula el comportamiento de masas con agentes de IA; no constituye asesoría ni recomendación de inversión.</p>
+  <button class="guia-listo">Entendido — quiero probar</button>
+`
+
+/** Monta el botón flotante y el panel de la guía. Devuelve { abrir, cerrar }. */
+export function montarGuia() {
+  const boton = document.createElement('button')
+  boton.className = 'guia-boton'
+  boton.setAttribute('data-guia', '')
+  boton.setAttribute('aria-haspopup', 'dialog')
+  boton.setAttribute('aria-label', '¿Cómo funciona?')
+  // el texto va en su propio nodo para poder ocultarlo en móvil (queda el ?)
+  boton.innerHTML = '<span aria-hidden="true">?</span><em class="guia-boton-texto">¿Cómo funciona?</em>'
+
+  const capa = document.createElement('div')
+  capa.id = 'guia'
+  capa.className = 'guia'
+  capa.hidden = true
+  capa.setAttribute('role', 'dialog')
+  capa.setAttribute('aria-modal', 'true')
+  capa.setAttribute('aria-labelledby', 'guia-titulo')
+  capa.innerHTML = `<div class="guia-panel">${CONTENIDO}</div>`
+
+  document.body.append(boton, capa)
+
+  let ultimoFoco = null
+
+  function abrir() {
+    ultimoFoco = document.activeElement
+    capa.hidden = false
+    document.body.classList.add('guia-abierta')
+    capa.querySelector('.guia-cerrar')?.focus()
+    try { localStorage.setItem(CLAVE_VISTA, '1') } catch { /* modo privado: da igual */ }
+  }
+
+  function cerrar({ alCampo = false } = {}) {
+    capa.hidden = true
+    document.body.classList.remove('guia-abierta')
+    // devuelve el foco a donde estaba (accesibilidad); o al campo si van a probar
+    const campo = document.getElementById('campo-titular')
+    if (alCampo && campo) campo.focus()
+    else ultimoFoco?.focus?.()
+  }
+
+  // abrir desde cualquier [data-guia]; cerrar con ×, "entendido", fondo o Esc
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-guia]')) { abrir(); return }
+    if (e.target.closest('.guia-cerrar')) { cerrar(); return }
+    if (e.target.closest('.guia-listo')) { cerrar({ alCampo: true }); return }
+    if (e.target === capa) cerrar() // clic en el fondo oscuro
+  })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !capa.hidden) cerrar()
+  })
+
+  // primera visita: la guía saluda sola (salvo enlaces profundos a contenido)
+  const params = new URLSearchParams(location.search)
+  // la guía ya no se abre sola: la primera visita la recibe el TOUR
+  // (ui/tour.js), que es de la mano y no interrumpe; la guía queda en el "?"
+
+  return { abrir, cerrar }
+}
+```
+
+## web/src/ui/navegacion.js
+```javascript
+// La barra de navegación — editorial y discreta, siempre a mano.
+// Vive por encima de los overlays (archivo, duelo) para que el visitante
+// nunca quede "atrapado" en una sección; solo la guía modal la cubre.
+
+export function montarNavegacion(acciones) {
+  const barra = document.createElement('nav')
+  barra.className = 'navegacion'
+  barra.setAttribute('aria-label', 'principal')
+  barra.innerHTML = `
+    <button class="nav-marca" data-nav="inicio" aria-label="El Enjambre — inicio">El Enjambre</button>
+    <div class="nav-enlaces">
+      <button data-nav="inicio">Inicio</button>
+      <button data-nav="muro">Muro</button>
+      <button data-nav="archivo">Archivo</button>
+      <button data-nav="duelo">Duelo</button>
+      <button data-nav="pulso">El Pulso</button>
+    </div>`
+  barra.addEventListener('click', (evento) => {
+    const destino = evento.target.closest('[data-nav]')?.dataset.nav
+    if (destino && acciones[destino]) {
+      barra.querySelectorAll('[data-nav]').forEach((b) =>
+        b.classList.toggle('activo', b.dataset.nav === destino && b.className !== 'nav-marca'))
+      acciones[destino]()
+    }
+  })
+  document.body.appendChild(barra)
+  return barra
+}
+```
+
+## web/src/ui/panel.js
+```javascript
+// UI de El Enjambre: entrada de noticia, tooltip de líderes y HUD.
+// Estética editorial Rubicón Lab: tinta cálida, el teal como acento — "el río".
+
+import { ESCENARIOS } from '../swarm/escenario.js'
+import { urlApi } from './conexion.js'
+
+const DESCARGO_ENTREVISTA =
+  'Es un personaje de una simulación educativa. No es asesoría ni recomendación de inversión.'
+
+/** Controlador del chat "entrevistar a un líder": clic en una voz → conversas
+ * con ese personaje. Usa /api/entrevista (modelo barato) y NUNCA rompe la UI:
+ * si el motor no responde, muestra un aviso en vez de caerse. */
+function crearEntrevista(raiz) {
+  const panel = raiz.querySelector('#entrevista')
+  let voz = null
+  let titular = ''
+  let historial = []
+  let ocupado = false
+
+  function burbuja(rol, texto) {
+    const hilo = panel.querySelector('.ent-hilo')
+    if (!hilo) return null
+    const div = document.createElement('div')
+    div.className = `ent-msg ent-${rol === 'user' ? 'yo' : 'lider'}`
+    div.innerHTML = `<span>${esc(texto)}</span>`
+    hilo.appendChild(div)
+    hilo.scrollTop = hilo.scrollHeight
+    return div
+  }
+
+  async function enviar(pregunta) {
+    if (ocupado || !pregunta.trim()) return
+    ocupado = true
+    burbuja('user', pregunta)
+    historial.push({ rol: 'user', texto: pregunta })
+    const pensando = burbuja('lider', '…')
+    const base = urlApi()
+    let datos
+    try {
+      if (!base) throw new Error('sin-motor')
+      const r = await fetch(`${base}/api/entrevista`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          arquetipo: voz.arquetipo, titular, pregunta,
+          senal: voz.senal, frase: voz.frase, historial: historial.slice(0, -1),
+        }),
+      })
+      if (!r.ok) throw new Error(String(r.status))
+      datos = await r.json()
+    } catch (_e) {
+      datos = { respuesta: '(No pude conectar con el líder ahora. Intenta de nuevo en un momento.)' }
+    }
+    if (pensando) pensando.querySelector('span').textContent = datos.respuesta || '(sin respuesta)'
+    historial.push({ rol: 'assistant', texto: datos.respuesta || '' })
+    ocupado = false
+  }
+
+  function render() {
+    panel.innerHTML = `
+      <button class="cerrar" aria-label="cerrar">×</button>
+      <h3>Conversa con ${esc(voz.nombre)}</h3>
+      <p class="ent-frase">«${esc(voz.frase)}»</p>
+      <div class="ent-hilo" aria-live="polite"></div>
+      <form class="ent-form">
+        <input class="ent-input" type="text" maxlength="300" autocomplete="off"
+          placeholder="¿Por qué reaccionaste así?" aria-label="tu pregunta" />
+        <button type="submit">Enviar</button>
+      </form>
+      <p class="descargo">${esc(DESCARGO_ENTREVISTA)}</p>`
+    panel.querySelector('.cerrar').addEventListener('click', () => { panel.hidden = true })
+    const form = panel.querySelector('.ent-form')
+    const input = panel.querySelector('.ent-input')
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const q = input.value.trim()
+      if (!q) return
+      input.value = ''
+      enviar(q)
+    })
+    input.focus()
+  }
+
+  return {
+    abrir(v, t) {
+      if (!v || !v.arquetipo) return
+      voz = v
+      titular = t || ''
+      historial = []
+      ocupado = false
+      render()
+      panel.hidden = false
+    },
+  }
+}
+
+// escape para todo texto de datos (LLM/Alpaca) que va a innerHTML
+const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+const esc = (valor) => String(valor ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
+
+// el ticker viaja hasta la config del widget de TradingView: lista blanca
+// estricta (solo letras, números, punto, dos puntos y guion), nunca crudo
+const tickerSeguro = (v) =>
+  String(v ?? '').split(',')[0].trim().toUpperCase().replace(/[^A-Z0-9.:\-]/g, '').slice(0, 12)
+
+/** Monta el mini-gráfico REAL del símbolo (widget oficial de TradingView).
+ * El <script> se crea programáticamente porque innerHTML no ejecuta scripts. */
+function montarGraficoReal(contenedor, simbolo) {
+  if (!contenedor || !simbolo) return
+  const caja = document.createElement('div')
+  caja.className = 'tradingview-widget-container'
+  const script = document.createElement('script')
+  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js'
+  script.async = true
+  script.textContent = JSON.stringify({
+    symbol: simbolo,
+    width: '100%',
+    height: 190,
+    locale: 'es',
+    dateRange: '1M',
+    colorTheme: 'dark',
+    isTransparent: true,
+    autosize: false,
+  })
+  caja.appendChild(script)
+  contenedor.appendChild(caja)
+}
+
+export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
+  const raiz = document.getElementById('ui')
+
+  raiz.innerHTML = `
+    <header class="marca">
+      <h1>El Enjambre</h1>
+      <p>el focus group sintético del mercado</p>
+    </header>
+
+    <div class="hud" aria-live="polite">
+      <canvas id="sparkline" width="180" height="44"></canvas>
+      <div class="hud-datos">
+        <span id="hud-precio">100.00</span>
+        <span id="hud-detalle">10.000 inversionistas · 60 fps</span>
+      </div>
+    </div>
+
+    <div class="panel-noticia">
+      <form id="form-noticia">
+        <input id="campo-titular" type="text" autocomplete="off"
+          placeholder="Escribe un titular… ej: la Fed sube las tasas 50 puntos base" />
+        <button type="submit" id="btn-soltar">Soltar al enjambre</button>
+      </form>
+      <div class="chips">
+        ${ESCENARIOS.map((e, i) => `<button class="chip" data-i="${i}">${e.etiqueta}</button>`).join('')}
+        <button class="chip" id="btn-observatorio">🔭 Dejar corriendo</button>
+      </div>
+      <p class="descargo">Herramienta educativa y recreativa en proceso de creación y mejora. Simula el comportamiento de masas con agentes de IA; no constituye asesoría ni recomendación de inversión.</p>
+    </div>
+
+    <div id="tooltip" class="tooltip" hidden></div>
+    <aside id="reporte" class="reporte" hidden></aside>
+    <aside id="entrevista" class="entrevista" hidden></aside>
+    <div id="aviso" class="aviso" hidden></div>
+  `
+
+  const entrevista = crearEntrevista(raiz)
+
+  const campo = raiz.querySelector('#campo-titular')
+  raiz.querySelector('#form-noticia').addEventListener('submit', (evento) => {
+    evento.preventDefault()
+    if (campo.value.trim()) alEnviarTitular(campo.value.trim())
+  })
+  raiz.querySelectorAll('.chip[data-i]').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const escenario = ESCENARIOS[Number(chip.dataset.i)]
+      campo.value = escenario.titular
+      alEnviarTitular(escenario.titular)
+    })
+  })
+  const btnObs = raiz.querySelector('#btn-observatorio')
+  const btnSoltar = raiz.querySelector('#btn-soltar')
+  btnObs.addEventListener('click', () => alObservatorio?.(campo.value.trim()))
+
+  const tooltip = raiz.querySelector('#tooltip')
+  const precioEl = raiz.querySelector('#hud-precio')
+  const detalleEl = raiz.querySelector('#hud-detalle')
+  const lienzo = raiz.querySelector('#sparkline')
+  const ctx = lienzo.getContext('2d')
+
+  let enObservatorio = false
+
+  return {
+    fijarModoObservatorio(activo) {
+      enObservatorio = activo
+      btnObs.textContent = activo ? '⏹ Detener observatorio' : '🔭 Dejar corriendo'
+      btnObs.classList.toggle('activo', activo)
+      btnSoltar.textContent = activo ? 'Soltar noticia encima' : 'Soltar al enjambre'
+    },
+    // los 100 líderes tardan ~10-15 s leyendo con IA real: la espera se
+    // muestra como parte del show, no como una pantalla colgada
+    fijarLeyendo(activo) {
+      btnSoltar.disabled = activo
+      if (activo) btnSoltar.textContent = 'Los 1.000 líderes están leyendo…'
+      else btnSoltar.textContent = enObservatorio ? 'Soltar noticia encima' : 'Soltar al enjambre'
+    },
+    mostrarTooltip(lider, x, y) {
+      // nombre y frase provienen del LLM/datos: se escapan antes de innerHTML
+      const senal = Number(lider.senal)
+      const confianza = Number(lider.confianza)
+      const conDatos = lider.frase && Number.isFinite(senal)
+      const flecha = senal > 0.05 ? '▲' : senal < -0.05 ? '▼' : '◆'
+      const clase = senal > 0.05 ? 'sube' : senal < -0.05 ? 'baja' : 'plana'
+      tooltip.innerHTML = `<strong>${esc(lider.nombre)}</strong>${
+        lider.frase ? `<em>«${esc(lider.frase)}»</em>` : '<em>aún no opina</em>'
+      }${conDatos
+        ? `<span class="tt-datos"><b class="${clase}">${flecha} ${senal > 0 ? '+' : ''}${senal.toFixed(2)}</b>` +
+          (Number.isFinite(confianza) ? ` · convicción ${Math.round(confianza * 100)}%` : '') + '</span>'
+        : ''
+      }`
+      tooltip.style.left = `${Math.min(x + 14, window.innerWidth - 280)}px`
+      tooltip.style.top = `${y + 14}px`
+      tooltip.hidden = false
+      // en pantallas táctiles no hay "salir del hover": se despide solo
+      clearTimeout(tooltip._temporizador)
+      tooltip._temporizador = setTimeout(() => { tooltip.hidden = true }, 6000)
+    },
+    ocultarTooltip() {
+      tooltip.hidden = true
+    },
+    enfocarEntrada() {
+      const reporte = raiz.querySelector('#reporte')
+      if (reporte) reporte.hidden = true
+      campo.focus()
+    },
+    actualizarHUD(precio, fps, particulas, modo = '') {
+      precioEl.textContent = precio.toFixed(2)
+      detalleEl.textContent =
+        `${particulas.toLocaleString('es-CL')} inversionistas · ${Math.round(fps)} fps${modo ? ` · ${modo}` : ''}`
+    },
+    avisar(mensaje) {
+      const aviso = raiz.querySelector('#aviso')
+      aviso.textContent = mensaje
+      aviso.hidden = false
+      clearTimeout(aviso._temporizador)
+      aviso._temporizador = setTimeout(() => { aviso.hidden = true }, 6000)
+    },
+    mostrarReporte(reporte, extras = {}) {
+      const panelReporte = raiz.querySelector('#reporte')
+      const desglose = Object.entries(reporte.desglose || {}).slice(0, 6)
+      const num = (v) => Number(v) || 0
+
+      // las 8 voces (archivo) o las 3 frases del reporte en vivo, NORMALIZADAS
+      // a {arquetipo, nombre, frase, senal} para poder conversar con cada líder
+      const voces = extras.voces
+        ? extras.voces.map((v) => ({ arquetipo: v.arquetipo, nombre: v.nombre, frase: v.frase, senal: num(v.senal_media) }))
+        : (reporte.frases || []).map((f) => ({ arquetipo: f.arquetipo, nombre: f.nombre || 'un líder', frase: f.frase, senal: num(f.senal) }))
+      const titularReporte = extras.titular || reporte.titular || ''
+      const vocesHtml = voces.map((v, i) =>
+        `<p class="voz-arq">«${esc(v.frase)}» <span>— ${esc(v.nombre)} (${v.senal > 0 ? '+' : ''}${v.senal})</span>${
+          v.arquetipo ? ` <button class="voz-chat" data-voz="${i}" title="Conversar con ${esc(v.nombre)}">💬 Conversar</button>` : ''
+        }</p>`).join('')
+
+      const epilogoHtml = extras.epilogo
+        ? `<div class="epilogo"><div class="epi-rotulo">Comparación educativa · ¿y qué pasó después?</div>
+           <p>${esc(extras.epilogo)}</p></div>`
+        : ''
+
+      // el gráfico REAL del símbolo (TradingView) junto a la reacción simulada:
+      // el ejercicio educativo central — enjambre vs mercado de verdad
+      const simbolo = tickerSeguro(extras.simbolos)
+      const mercadoRealHtml = simbolo
+        ? `<div class="mercado-real"><div class="epi-rotulo">Comparación educativa · el mercado real (${esc(simbolo)})</div>
+           <div class="mr-grafico"></div>
+           <p class="mr-nota">El enjambre simula el comportamiento de una masa de inversionistas; arriba, el precio real del símbolo (TradingView). Compararlos es un ejercicio educativo — no una predicción ni una validación.</p></div>`
+        : ''
+
+      const cabecera = extras.titular
+        ? `<div class="rep-titular">${esc(extras.titular)}</div>` : ''
+      // el tipo de mercado que el enjambre razonó (índice, oro, cripto…)
+      const mercadoEt = reporte.mercado_etiqueta || extras.mercado_etiqueta
+      const mercadoHtml = mercadoEt
+        ? `<div class="rep-mercado">Mercado detectado · ${esc(mercadoEt)}</div>` : ''
+      // Badge de CONVICCIÓN (Ventana A / gating): cuando el enjambre está muy
+      // convencido en un mercado con señal real (índice), lo marca "confiable";
+      // si no, "visualización". El texto honesto viene del backend (conviccion.nota).
+      const conv = reporte.conviccion
+      const convHtml = conv
+        ? `<div class="rep-conviccion ${conv.fiable_direccion ? 'conv-fiable' : 'conv-visual'}">
+             <span class="conv-icono">${conv.fiable_direccion ? '🎯' : '👁'}</span>
+             <span class="conv-texto"><span class="conv-nivel">convicción ${esc(conv.nivel || '')}</span>${esc(conv.nota || '')}</span>
+           </div>` : ''
+      const compartir = extras.id
+        ? `<button class="rep-compartir" data-id="${String(extras.id).replace(/[^0-9a-f]/g, '')}">Copiar enlace</button>` : ''
+      // qué hacer después: el reporte nunca es un callejón sin salida
+      const accionesHtml = `
+        <div class="rep-acciones">
+          <button class="rep-otra">Probar otro titular</button>
+          <button class="rep-duelo">⚔ Armar un duelo</button>
+          ${compartir}
+        </div>`
+
+      panelReporte.innerHTML = `
+        <button class="cerrar" aria-label="cerrar">×</button>
+        <h2>Reporte del enjambre</h2>
+        ${cabecera}
+        ${mercadoHtml}
+        ${convHtml}
+        <div class="cifras">
+          <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
+          <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>
+          <div><span>${num(reporte.volatilidad_pct)}%</span><label>volatilidad/tick</label></div>
+          ${Number.isFinite(Number(reporte.confianza))
+            ? `<div><span>${Math.round(Number(reporte.confianza) * 100)}%</span><label>confianza</label></div>` : ''}
+        </div>
+        <table>${desglose.map(([tipo, d]) => {
+          // cuando un tipo solo vendió (0 compras), el "0" pelado se lee como
+          // guionado. No es guion: es una venta en cascada, típica del pánico —
+          // lo explicamos en una micro-nota (sin tocar las cifras).
+          const nota = (num(d.compras) === 0 && num(d.ventas) > 0)
+            ? ` <span class="cascada">· venta en cascada, recompra casi nula</span>` : ''
+          return `<tr><td>${esc(tipo)}</td><td>${num(d.compras)} compras</td><td>${num(d.ventas)} ventas${nota}</td></tr>`
+        }).join('')}
+        </table>
+        <div class="voces">${vocesHtml}</div>
+        ${epilogoHtml}
+        ${mercadoRealHtml}
+        ${accionesHtml}
+        <p class="descargo">${esc(reporte.descargo)}</p>
+      `
+      if (simbolo) montarGraficoReal(panelReporte.querySelector('.mr-grafico'), simbolo)
+      panelReporte.hidden = false
+      panelReporte.querySelector('.cerrar').addEventListener('click', () => {
+        panelReporte.hidden = true
+      })
+      panelReporte.querySelectorAll('.voz-chat').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const v = voces[Number(btn.dataset.voz)]
+          if (v) entrevista.abrir(v, titularReporte)
+        })
+      })
+      panelReporte.querySelector('.rep-otra')?.addEventListener('click', () => {
+        panelReporte.hidden = true
+        campo.focus()
+      })
+      panelReporte.querySelector('.rep-duelo')?.addEventListener('click', () => {
+        panelReporte.hidden = true
+        acciones.alDuelo?.()
+      })
+      const botonCompartir = panelReporte.querySelector('.rep-compartir')
+      botonCompartir?.addEventListener('click', () => {
+        const url = `${location.origin}${location.pathname}?sim=${botonCompartir.dataset.id}`
+        navigator.clipboard?.writeText(url)
+        botonCompartir.textContent = '¡Enlace copiado!'
+      })
+    },
+    // sparkline del precio: una serie, línea 2px, sin adornos —
+    // el texto va en tinta, nunca en el color de la serie
+    dibujarSparkline(serie) {
+      const ancho = lienzo.width, alto = lienzo.height
+      ctx.clearRect(0, 0, ancho, alto)
+      if (serie.length < 2) return
+      const minimo = Math.min(...serie), maximo = Math.max(...serie)
+      const rango = Math.max(maximo - minimo, 0.5)
+      ctx.beginPath()
+      serie.forEach((v, i) => {
+        const x = (i / (serie.length - 1)) * (ancho - 4) + 2
+        const y = alto - 5 - ((v - minimo) / rango) * (alto - 10)
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+      })
+      ctx.strokeStyle = '#6fa89e'
+      ctx.lineWidth = 2
+      ctx.lineJoin = 'round'
+      ctx.stroke()
+    },
+  }
+}
+
+/** Modo estático (prefers-reduced-motion): gráfico 2D del precio en grande. */
+export function dibujarGraficoEstatico(serie) {
+  const lienzo = document.getElementById('grafico-estatico')
+  lienzo.hidden = false
+  const dpr = Math.min(window.devicePixelRatio, 2)
+  const ancho = Math.min(window.innerWidth - 48, 720), alto = 220
+  lienzo.width = ancho * dpr
+  lienzo.height = alto * dpr
+  lienzo.style.width = `${ancho}px`
+  lienzo.style.height = `${alto}px`
+  const ctx = lienzo.getContext('2d')
+  ctx.scale(dpr, dpr)
+
+  const minimo = Math.min(...serie), maximo = Math.max(...serie)
+  const rango = Math.max(maximo - minimo, 0.5)
+  const margen = { arriba: 14, abajo: 22, izq: 8, der: 54 }
+  const aX = (i) => margen.izq + (i / (serie.length - 1)) * (ancho - margen.izq - margen.der)
+  const aY = (v) => alto - margen.abajo - ((v - minimo) / rango) * (alto - margen.arriba - margen.abajo)
+
+  // rejilla recesiva: dos líneas de referencia apenas visibles
+  ctx.strokeStyle = 'rgba(243,238,232,0.12)'
+  ctx.lineWidth = 1
+  for (const v of [minimo, maximo]) {
+    ctx.beginPath(); ctx.moveTo(margen.izq, aY(v)); ctx.lineTo(ancho - margen.der, aY(v)); ctx.stroke()
+  }
+
+  ctx.beginPath()
+  serie.forEach((v, i) => (i === 0 ? ctx.moveTo(aX(i), aY(v)) : ctx.lineTo(aX(i), aY(v))))
+  ctx.strokeStyle = '#6fa89e'
+  ctx.lineWidth = 2
+  ctx.lineJoin = 'round'
+  ctx.stroke()
+
+  // etiquetas en tinta (no en el color de la serie)
+  ctx.fillStyle = 'rgba(243,238,232,0.75)'
+  ctx.font = '12px Jost, sans-serif'
+  ctx.fillText(maximo.toFixed(1), ancho - margen.der + 6, aY(maximo) + 4)
+  ctx.fillText(minimo.toFixed(1), ancho - margen.der + 6, aY(minimo) + 4)
+  ctx.fillText('evolución del precio simulado', margen.izq, alto - 6)
+}
+```
+
+## web/src/ui/premium.js
+```javascript
+// Desbloqueo Premium en El Enjambre: un chip discreto que deja al suscriptor de
+// pago de El Pulso elevar su cupo de 1/día a 40 simulaciones al mes. Sin cuentas
+// ni contraseñas: escribe su correo, el motor le envía un ENLACE MÁGICO al buzón,
+// y al hacer clic el navegador guarda un token firmado (no el correo). Así solo
+// desbloquea quien de verdad tiene acceso a ese correo — el que pagó.
+// Autónomo — inyecta su propio estilo y DOM.
+
+import { borrarTokenPremium, guardarTokenPremium, pedirDesbloqueo, tokenPremium, verificarToken } from './conexion.js'
+
+const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+
+const ESTILO = `
+.pz-chip{position:fixed;right:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;gap:7px;
+  background:rgba(18,16,13,.82);backdrop-filter:blur(6px);border:1px solid #4a3f22;color:#e3c565;
+  font:600 12px/1 'Jost',system-ui,sans-serif;letter-spacing:.3px;padding:9px 14px;border-radius:22px;
+  cursor:pointer;transition:border-color .15s,transform .15s}
+.pz-chip:hover{border-color:#e3c565;transform:translateY(-1px)}
+.pz-chip.on{color:#f4efe6;border-color:#2f7a6f}
+.pz-pop{position:fixed;right:16px;bottom:60px;z-index:41;width:290px;max-width:calc(100vw - 32px);
+  background:#161009;border:1px solid #4a3f22;border-radius:14px;padding:18px;color:#f4efe6;
+  font-family:'Jost',system-ui,sans-serif;box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.pz-pop h4{margin:0 0 4px;font-family:'Cormorant Garamond',Georgia,serif;font-size:19px;color:#fbf7ee;font-weight:700}
+.pz-pop p{margin:0 0 12px;font-size:13px;line-height:1.5;color:#c7bfb2}
+.pz-pop input{width:100%;box-sizing:border-box;padding:11px 13px;border-radius:9px;border:1px solid #4a3f22;
+  background:rgba(255,255,255,.05);color:#fbf7ee;font:400 14px 'Jost',sans-serif}
+.pz-pop input:focus{outline:none;border-color:#e3c565}
+.pz-pop .row{display:flex;gap:8px;margin-top:10px}
+.pz-btn{flex:1;border:none;border-radius:9px;padding:11px;font:700 14px 'Jost',sans-serif;cursor:pointer}
+.pz-go{background:#e3c565;color:#1b1410}
+.pz-x{background:transparent;color:#a8a291;border:1px solid #4a3f22;flex:0 0 auto;padding:11px 14px}
+.pz-msg{margin-top:10px;font-size:12.5px;min-height:16px;line-height:1.4}
+.pz-msg.ok{color:#7fd6a8}.pz-msg.err{color:#e89b98}
+.pz-link{background:none;border:none;color:#a8a291;font:500 12px 'Jost',sans-serif;text-decoration:underline;
+  cursor:pointer;padding:0;margin-top:10px}
+@media (prefers-reduced-motion: reduce){.pz-chip{transition:none}}
+`
+
+function inyectarEstilo() {
+  if (document.getElementById('pz-estilo')) return
+  const s = document.createElement('style')
+  s.id = 'pz-estilo'
+  s.textContent = ESTILO
+  document.head.appendChild(s)
+}
+
+/** Monta el chip de Premium. Idempotente. */
+export function montarPremium() {
+  inyectarEstilo()
+  if (document.querySelector('.pz-chip')) return
+
+  const chip = document.createElement('button')
+  chip.className = 'pz-chip'
+  chip.type = 'button'
+  document.body.appendChild(chip)
+
+  let pop = null
+  let premiumActivo = false
+  let temporizadorCierre = null
+
+  function pintarChip() {
+    if (premiumActivo) {
+      chip.classList.add('on')
+      chip.innerHTML = '⭐ Premium · 40/mes'
+      chip.title = '40 simulaciones al mes desbloqueadas'
+    } else {
+      chip.classList.remove('on')
+      chip.innerHTML = '🔓 ¿Eres Premium?'
+      chip.title = 'Desbloquea 40 simulaciones al mes'
+    }
+  }
+
+  function cerrar() {
+    if (temporizadorCierre) { clearTimeout(temporizadorCierre); temporizadorCierre = null }
+    pop?.remove()
+    pop = null
+  }
+
+  function abrir() {
+    if (pop) return cerrar()
+    pop = document.createElement('div')
+    pop.className = 'pz-pop'
+    pop.innerHTML = premiumActivo
+      ? `<h4>Premium activo ⭐</h4>
+         <p>Tienes <b>40 simulaciones al mes</b> desbloqueadas en este dispositivo.</p>
+         <button class="pz-link" data-salir>Cerrar sesión Premium aquí</button>`
+      : `<h4>Desbloquea tu Premium</h4>
+         <p>Suscriptor de El Pulso Premium: escribe tu correo y te enviamos un <b>enlace</b> para desbloquear <b>40 simulaciones al mes</b> (el free es 1 al día).</p>
+         <input type="email" inputmode="email" placeholder="tu@correo.com" aria-label="Tu correo Premium">
+         <div class="row">
+           <button class="pz-btn pz-go" data-go>Enviarme el enlace</button>
+           <button class="pz-btn pz-x" data-x>Cerrar</button>
+         </div>
+         <div class="pz-msg" role="status"></div>`
+    document.body.appendChild(pop)
+
+    if (premiumActivo) {
+      pop.querySelector('[data-salir]').addEventListener('click', () => {
+        borrarTokenPremium(); premiumActivo = false; pintarChip(); cerrar()
+      })
+      return
+    }
+
+    const input = pop.querySelector('input')
+    const msg = pop.querySelector('.pz-msg')
+    const go = pop.querySelector('[data-go]')
+    input.focus()
+    pop.querySelector('[data-x]').addEventListener('click', cerrar)
+
+    async function pedir() {
+      const correo = (input.value || '').trim().toLowerCase()
+      msg.className = 'pz-msg'
+      if (!EMAIL.test(correo) || correo.length > 200) {
+        msg.textContent = 'Escribe un correo válido.'; msg.classList.add('err'); return
+      }
+      go.disabled = true; go.textContent = 'Enviando…'
+      const ok = await pedirDesbloqueo(correo)
+      go.disabled = false; go.textContent = 'Enviarme el enlace'
+      if (ok) {
+        // respuesta neutra a propósito: no revela si el correo es Premium
+        msg.innerHTML = 'Si ese correo es Premium, te llegó un enlace. Ábrelo desde tu correo para desbloquear. 🐝'
+        msg.classList.add('ok')
+      } else {
+        msg.textContent = 'No pudimos enviar ahora. Intenta en un momento.'; msg.classList.add('err')
+      }
+    }
+    go.addEventListener('click', pedir)
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') pedir() })
+  }
+
+  chip.addEventListener('click', abrir)
+  pintarChip()
+
+  // 1) ¿llegamos desde el enlace mágico? (?premium_token=…) → canjear y guardar
+  let tokenUrl = ''
+  try {
+    const params = new URLSearchParams(location.search)
+    tokenUrl = params.get('premium_token') || ''
+  } catch { /* sin URL válida */ }
+
+  if (tokenUrl) {
+    verificarToken(tokenUrl).then((e) => {
+      if (e && e.premium) {
+        guardarTokenPremium(tokenUrl)
+        premiumActivo = true
+        pintarChip()
+      }
+      // limpia el token de la URL en cualquier caso (no dejarlo a la vista)
+      try {
+        const url = new URL(location.href)
+        url.searchParams.delete('premium_token')
+        history.replaceState(null, '', url.toString())
+      } catch { /* da igual */ }
+    })
+  } else {
+    // 2) ¿había un token guardado? revalídalo en silencio (si canceló, vuelve a 1/día)
+    const guardado = tokenPremium()
+    if (guardado) {
+      verificarToken(guardado).then((e) => {
+        premiumActivo = !!(e && e.premium)
+        if (e && !e.premium) borrarTokenPremium()
+        pintarChip()
+      })
+    }
+  }
+}
+```
+
+## web/src/ui/tour.js
+```javascript
+// El tour de bienvenida — cinco pasos de la mano, solo la primera visita.
+// Distinto de la guía (el "?"): el tour señala las piezas EN la pantalla.
+
+const CLAVE = 'enjambre-tour-visto'
+
+const PASOS = [
+  { sel: '#form-noticia', titulo: 'Escribe una noticia',
+    texto: 'Cualquier titular del mercado. Los 10.000 inversionistas simulados la leerán y reaccionarán en vivo.' },
+  { sel: '.chips', titulo: 'O usa un ejemplo listo',
+    texto: 'Escenarios preparados para soltar con un toque.' },
+  { sel: '.hud', titulo: 'El pulso del mercado',
+    texto: 'El precio simulado late aquí, con su mini-gráfico.' },
+  { sel: '#escena', titulo: 'Los faros dorados', centrado: true,
+    texto: 'Son los 1.000 líderes de opinión con IA. Toca uno para leer su frase. Puedes girar la escena arrastrando y acercarte con dos dedos (o la rueda).' },
+  { sel: '.navegacion', titulo: 'Y para moverte',
+    texto: 'El muro trae las noticias del día ya simuladas; el archivo guarda la historia; el duelo enfrenta dos escenarios.' },
+]
+
+export function tourVisto() {
+  try { return localStorage.getItem(CLAVE) === '1' } catch { return true }
+}
+
+export function iniciarTour() {
+  const capa = document.createElement('div')
+  capa.className = 'tour'
+  capa.innerHTML = `
+    <div class="tour-halo" hidden></div>
+    <div class="tour-carta" role="dialog" aria-label="tour de bienvenida">
+      <div class="tour-paso"></div>
+      <h3></h3>
+      <p></p>
+      <div class="tour-botones">
+        <button class="tour-saltar">Saltar</button>
+        <button class="tour-sigue">Siguiente →</button>
+      </div>
+    </div>`
+  document.body.appendChild(capa)
+
+  const halo = capa.querySelector('.tour-halo')
+  const carta = capa.querySelector('.tour-carta')
+  let indice = 0
+
+  function pintar() {
+    const paso = PASOS[indice]
+    const objetivo = document.querySelector(paso.sel)
+    capa.querySelector('.tour-paso').textContent = `${indice + 1} / ${PASOS.length}`
+    capa.querySelector('h3').textContent = paso.titulo
+    capa.querySelector('p').textContent = paso.texto
+    capa.querySelector('.tour-sigue').textContent =
+      indice === PASOS.length - 1 ? '¡A jugar!' : 'Siguiente →'
+
+    if (paso.centrado || !objetivo) {
+      halo.hidden = true
+    } else {
+      const caja = objetivo.getBoundingClientRect()
+      halo.hidden = false
+      halo.style.left = `${caja.left - 8}px`
+      halo.style.top = `${caja.top - 8}px`
+      halo.style.width = `${caja.width + 16}px`
+      halo.style.height = `${caja.height + 16}px`
+    }
+    // la tarjeta se pone donde el objetivo no está (arriba o abajo)
+    const enAbajo = objetivo && objetivo.getBoundingClientRect().top > window.innerHeight / 2
+    carta.classList.toggle('arriba', Boolean(enAbajo))
+  }
+
+  function terminar() {
+    try { localStorage.setItem(CLAVE, '1') } catch { /* modo privado */ }
+    capa.remove()
+    window.removeEventListener('resize', pintar)
+    document.removeEventListener('keydown', alTeclado)
+  }
+
+  function alTeclado(e) {
+    if (e.key === 'Escape') terminar()
+  }
+
+  capa.querySelector('.tour-saltar').addEventListener('click', terminar)
+  capa.querySelector('.tour-sigue').addEventListener('click', () => {
+    indice += 1
+    if (indice >= PASOS.length) terminar()
+    else pintar()
+  })
+  window.addEventListener('resize', pintar)
+  document.addEventListener('keydown', alTeclado)
+  pintar()
+}
+```
+
+## web/src/muro/muro.js
+```javascript
+// El muro de noticias — la nueva portada (CONTENIDO.md sección 4).
+// Columna editorial tipo periódico sobre el enjambre; las destacadas del
+// día ya vienen simuladas (Estado A, con replay 3D), el resto se puede
+// soltar al enjambre en vivo (Estado B). Todo desde caché: el costo
+// marginal de cada visitante es cero.
+
+import { claveAcceso, urlApi } from '../ui/conexion.js'
+import { medidasReplay } from '../swarm/replay-frame.js'
+
+// Debe coincidir con el motor (engine/config/agentes.json): un sentimiento
+// i8 por agente. Los frames viven en el disco PERSISTENTE de Render, así que
+// los replays históricos (10.000 agentes) conviven con los nuevos (10.150):
+// el tamaño de cada buffer se deduce por-frame (ver swarm/replay-frame.js), no
+// se hardcodea, para que ambos se lean bien.
+const TARJETAS_VISIBLES = 12
+
+// La firma de autoría "Creada por Rubicón Lab" (manual de marca §10).
+// TODO Giorgio: confirmar el destino real (dominio del estudio o Instagram).
+const URL_ESTUDIO = 'https://instagram.com/rubiconlab'
+const FIRMA_RUBICON = `
+  <div class="cruce" aria-hidden="true"></div>
+  <div class="muro-firma">
+    <a href="${URL_ESTUDIO}" target="_blank" rel="noopener noreferrer"
+       class="rl-credit" aria-label="Sitio creado por Rubicón Lab">
+      <span class="rl-pre">Creada por</span>
+      <span class="rl-full">
+        <span class="rl-name">Rubicón</span><span class="rl-bar"></span><span class="rl-lab">Lab</span>
+      </span>
+      <span class="rl-compact" aria-hidden="true">
+        <span class="rl-iso"><span class="rl-name">R</span><span class="rl-bar"></span></span>
+        <span class="rl-iso-text">Rubicón Lab</span>
+      </span>
+    </a>
+  </div>`
+
+/** Reproduce los frames binarios de una simulación guardada sobre el enjambre. */
+export class ReproductorReplay {
+  constructor(enjambre) {
+    this.enjambre = enjambre
+    this.temporizador = null
+    this.buffer = null
+  }
+
+  async cargar(url) {
+    const respuesta = await fetch(url)
+    if (!respuesta.ok) throw new Error('sin replay')
+    this.buffer = await respuesta.arrayBuffer()
+    const medidas = medidasReplay(this.buffer.byteLength)
+    this.nAgentes = medidas.nAgentes
+    this.tamanoFrame = medidas.tamanoFrame
+    this.total = medidas.total
+  }
+
+  reproducir({ bucle = false, alTerminar } = {}) {
+    this.detener()
+    if (!this.buffer || this.total === 0) return
+    this.enjambre.modoRemoto = true
+    let cuadro = 0
+    this.temporizador = setInterval(() => {
+      if (cuadro >= this.total) {
+        if (bucle) {
+          cuadro = 0
+        } else {
+          this.detener()
+          this.enjambre.modoRemoto = false // el enjambre vuelve a su calma
+          alTerminar?.()
+          return
+        }
+      }
+      const base = cuadro * this.tamanoFrame
+      const vista = new DataView(this.buffer, base, 8)
+      const sentimientos = new Int8Array(this.buffer, base + 8, this.nAgentes)
+      this.enjambre.aplicarEstadoRemoto(vista.getFloat32(0, true), sentimientos)
+      cuadro++
+    }, 80)
+  }
+
+  detener() {
+    if (this.temporizador) clearInterval(this.temporizador)
+    this.temporizador = null
+  }
+}
+
+const HORA = new Intl.DateTimeFormat('es-CL', { hour: '2-digit', minute: '2-digit' })
+
+// Escapa todo lo que provenga de datos (titulares de Alpaca, frases del
+// LLM, tickers): estos textos NO son de confianza y se pintan con
+// innerHTML. Sin esto, un titular con <img onerror> sería XSS almacenado.
+const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+function esc(valor) {
+  return String(valor ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
+}
+// para atributos que además usamos como selectores: solo hex del id
+const idSeguro = (valor) => String(valor ?? '').replace(/[^0-9a-f]/g, '')
+
+function plantillaTarjeta(tarjeta) {
+  const hora = tarjeta.fecha ? HORA.format(new Date(tarjeta.fecha)) : ''
+  const simbolos = (tarjeta.simbolos || '').split(',').filter(Boolean).slice(0, 3).join(' · ')
+  const meta = [hora, tarjeta.fuente, simbolos].filter(Boolean).map(esc).join(' · ')
+
+  let cuerpo
+  if (tarjeta.estado === 'simulada' && tarjeta.resumen) {
+    const r = tarjeta.resumen
+    const clase = r.direccion === '▲' ? 'sube' : r.direccion === '▼' ? 'baja' : 'plana'
+    const pct = Number(r.direccion_pct) || 0
+    cuerpo = `
+      <div class="resultado">
+        <span class="flecha ${clase}">${esc(r.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="agitacion">agitación ${esc(r.agitacion)}</span>
+      </div>
+      ${r.frase ? `<p class="voz">«${esc(r.frase.frase)}» — <span>${esc(r.frase.arquetipo)}</span></p>` : ''}
+      <button class="accion ver-simulacion" data-sim="${idSeguro(tarjeta.sim_id)}">Ver la simulación</button>`
+  } else {
+    cuerpo = `<button class="accion ver-reaccion" data-id="${idSeguro(tarjeta.id)}">Ver reacción del enjambre</button>`
+  }
+
+  return `
+    <article class="tarjeta ${tarjeta.destacada ? 'portada' : ''}" data-id="${idSeguro(tarjeta.id)}">
+      <div class="meta">${meta}${tarjeta.destacada ? ' · <strong>destacada del día</strong>' : ''}</div>
+      <h3>${esc(tarjeta.titular)}</h3>
+      ${cuerpo}
+    </article>`
+}
+
+/**
+ * Monta el muro. Devuelve {recargar, detenerReplay} para coordinarse
+ * con las simulaciones en vivo que dispara main.js.
+ */
+export async function inicializarMuro({ enjambre, panel, correrTitular, reducirMovimiento, fijarModo, abrirArchivo }) {
+  const api = urlApi()
+  const contenedor = document.getElementById('muro')
+  const replay = new ReproductorReplay(enjambre)
+  let visibles = TARJETAS_VISIBLES
+
+  async function cargarDatos() {
+    const respuesta = await fetch(`${api}/api/muro`)
+    if (!respuesta.ok) throw new Error('motor sin respuesta')
+    return respuesta.json()
+  }
+
+  // El bloque de suscripción a El Pulso: se muestra SIEMPRE (con o sin muro
+  // cargado). Es el gancho de crecimiento; no puede desaparecer si el motor
+  // tiene un hipo. Antes vivía solo dentro de render() y se esfumaba en el
+  // estado de aviso — nadie podía suscribirse.
+  function bloquePulso() {
+    return `
+      <section class="pulso">
+        <h2>El Pulso del Enjambre</h2>
+        <p>Cada mañana, la reacción del enjambre a los titulares del día. Un correo, sin ruido.</p>
+        <form class="pulso-form">
+          <input type="email" name="email" placeholder="tu@correo.cl" autocomplete="email" required />
+          <button type="submit" class="accion">Suscribirme</button>
+        </form>
+        <p class="pulso-estado" hidden></p>
+      </section>`
+  }
+
+  function renderAviso(mensaje) {
+    contenedor.innerHTML = `
+      <header class="muro-cabecera"><h1>El Enjambre</h1>
+        <p>el focus group sintético del mercado</p></header>
+      <p class="muro-aviso">${mensaje}</p>
+      ${bloquePulso()}
+      ${FIRMA_RUBICON}`
+    document.body.classList.add('con-muro')
+    conectarPulso()   // el formulario funciona aunque el muro no haya cargado
+  }
+
+  function render(datos) {
+    const tarjetas = datos.tarjetas.slice(0, visibles)
+    const fecha = new Intl.DateTimeFormat('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })
+      .format(new Date())
+    contenedor.innerHTML = `
+      <header class="muro-cabecera">
+        <button class="plegar" aria-label="plegar el muro">⟨</button>
+        <h1>El Enjambre</h1>
+        <p>el focus group sintético del mercado</p>
+        <time>${fecha}</time>
+        <button class="ver-archivo" data-guia>¿Cómo funciona? · Guía rápida</button>
+        <button class="ver-archivo">El archivo · «El Enjambre dijo» →</button>
+      </header>
+      <div class="muro-lista">${tarjetas.map(plantillaTarjeta).join('')}</div>
+      ${datos.tarjetas.length > visibles
+        ? '<button class="accion ver-mas">Ver más titulares</button>' : ''}
+      ${bloquePulso()}
+      <section class="organizaciones">
+        <h2>El Enjambre para tu organización</h2>
+        <p>Educación financiera, medios y fintechs: demos guiadas, el widget
+        embebible para tu sitio y escenarios a medida para tus cursos o
+        coberturas. Herramienta educativa de simulación — cuéntanos tu caso.</p>
+        <form class="org-form">
+          <input type="text" name="nombre" placeholder="Tu nombre" autocomplete="name" required aria-label="Tu nombre" />
+          <input type="text" name="organizacion" placeholder="Organización (opcional)" autocomplete="organization" aria-label="Organización" />
+          <input type="email" name="email" placeholder="tu@correo.cl" autocomplete="email" required aria-label="Tu correo" />
+          <textarea name="mensaje" rows="3" maxlength="800" placeholder="¿Qué te gustaría hacer con El Enjambre?" aria-label="Mensaje"></textarea>
+          <button type="submit" class="accion">Conversemos</button>
+        </form>
+        <p class="org-estado" role="status" hidden></p>
+      </section>
+      <p class="muro-descargo">${esc(datos.descargo)}</p>
+      <footer class="pie">
+        <span>© ${new Date().getFullYear()} · El Enjambre</span>
+        <button class="pie-enlace" data-guia>Guía rápida</button>
+        <button class="pie-enlace pie-archivo">El archivo</button>
+        <button class="pie-enlace pie-org">Organizaciones</button>
+      </footer>
+      ${FIRMA_RUBICON}`
+    document.body.classList.add('con-muro')
+    conectarEventos(datos)
+  }
+
+  /** Pliega o despliega el muro manteniendo la flecha sincronizada. */
+  function fijarPlegado(plegado) {
+    document.body.classList.toggle('muro-plegado', plegado)
+    const boton = contenedor.querySelector('.plegar')
+    if (boton) boton.textContent = plegado ? '⟩' : '⟨'
+  }
+
+  function conectarPulso() {
+    const form = contenedor.querySelector('.pulso-form')
+    const estado = contenedor.querySelector('.pulso-estado')
+    if (!form) return
+    form.addEventListener('submit', async (evento) => {
+      evento.preventDefault()
+      const email = form.email.value.trim()
+      estado.hidden = false
+      estado.textContent = 'Enviando…'
+      try {
+        const r = await (await fetch(`${api}/api/suscribir`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, origen: 'web' }),
+        })).json()
+        estado.textContent = r.mensaje || 'Listo.'
+        if (r.estado === 'pendiente' || r.estado === 'ya_suscrito') form.reset()
+      } catch {
+        estado.textContent = 'No se pudo completar. Intenta más tarde.'
+      }
+    })
+  }
+
+  function conectarOrganizaciones() {
+    const form = contenedor.querySelector('.org-form')
+    const estado = contenedor.querySelector('.org-estado')
+    if (!form) return
+    form.addEventListener('submit', async (evento) => {
+      evento.preventDefault()
+      estado.hidden = false
+      estado.textContent = 'Enviando…'
+      try {
+        const r = await (await fetch(`${api}/api/contacto`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: form.nombre.value.trim(),
+            organizacion: form.organizacion.value.trim(),
+            email: form.email.value.trim(),
+            mensaje: form.mensaje.value.trim(),
+          }),
+        })).json()
+        estado.textContent = r.mensaje || r.error || 'Listo.'
+        if (r.estado === 'recibido') form.reset()
+      } catch {
+        estado.textContent = 'No se pudo enviar. Intenta más tarde.'
+      }
+    })
+  }
+
+  function conectarEventos(datos) {
+    conectarPulso()
+    conectarOrganizaciones()
+    contenedor.querySelector('.ver-archivo')?.addEventListener('click', () => abrirArchivo?.())
+    contenedor.querySelector('.pie-archivo')?.addEventListener('click', () => abrirArchivo?.())
+    contenedor.querySelector('.pie-org')?.addEventListener('click', () =>
+      contenedor.querySelector('.organizaciones')?.scrollIntoView({ behavior: 'smooth', block: 'center' }))
+    contenedor.querySelector('.plegar')?.addEventListener('click', () =>
+      fijarPlegado(!document.body.classList.contains('muro-plegado')))
+    contenedor.querySelector('.ver-mas')?.addEventListener('click', () => {
+      visibles += TARJETAS_VISIBLES
+      render(datos)
+    })
+
+    // Estado A: re-ver la simulación cacheada (costo cero)
+    contenedor.querySelectorAll('.ver-simulacion').forEach((boton) => {
+      boton.addEventListener('click', async () => {
+        replay.detener()
+        try {
+          const detalle = await (await fetch(`${api}/api/simulacion/${boton.dataset.sim}`)).json()
+          enjambre.fijarLideresRemotos(detalle.lideres || [])
+          panel.mostrarReporte(detalle.resumen)
+          if (detalle.tiene_replay && !reducirMovimiento) {
+            await replay.cargar(`${api}/api/simulacion/${boton.dataset.sim}/replay`)
+            replay.reproducir({})
+          }
+        } catch {
+          panel.avisar('No se pudo cargar esa simulación.')
+        }
+      })
+    })
+
+    // Estado B: soltar el titular al enjambre EN VIVO (el espectáculo es la espera)
+    contenedor.querySelectorAll('.ver-reaccion').forEach((boton) => {
+      boton.addEventListener('click', async () => {
+        boton.disabled = true
+        boton.textContent = 'El enjambre está leyendo…'
+        try {
+          const respuesta = await (await fetch(`${api}/api/simular-titular`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: boton.dataset.id, acceso: claveAcceso() }),
+          })).json()
+          if (respuesta.estado === 'adelante') {
+            replay.detener()
+            correrTitular(respuesta.titular, respuesta.titular_id)
+          } else if (respuesta.estado === 'limite' || respuesta.estado === 'privado') {
+            panel.avisar(respuesta.mensaje)
+            boton.disabled = false
+            boton.textContent = 'Ver reacción del enjambre'
+          } else if (respuesta.estado === 'simulada') {
+            await recargar()
+          }
+        } catch {
+          boton.disabled = false
+          boton.textContent = 'Ver reacción del enjambre'
+          panel.avisar('El motor no respondió. Intenta de nuevo.')
+        }
+      })
+    })
+  }
+
+  async function recargar() {
+    try {
+      render(await cargarDatos())
+    } catch {
+      /* el muro anterior sigue en pantalla: nunca una página en blanco */
+    }
+  }
+
+  // el mando del muro para la navegación (abrir, plegar, ir al Pulso)
+  const mando = {
+    recargar,
+    detenerReplay: () => replay.detener(),
+    abrir: () => fijarPlegado(false),
+    plegar: () => fijarPlegado(true),
+    irAlPulso: () => {
+      fijarPlegado(false)
+      contenedor.querySelector('.pulso')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    },
+  }
+
+  // ---------- arranque ----------
+  if (!api) {
+    renderAviso('Modo demo local: escribe un titular abajo y suéltalo al enjambre.')
+    return { ...mando, recargar: async () => {} }
+  }
+  try {
+    const datos = await cargarDatos()
+    render(datos)
+    fijarModo?.('motor real') // el muro viene de la caché del motor
+    // la portada del día se anima en loop suave detrás del muro
+    const portada = datos.tarjetas.find((t) => t.destacada && t.sim_id)
+    if (portada && !reducirMovimiento) {
+      try {
+        await replay.cargar(`${api}/api/simulacion/${portada.sim_id}/replay`)
+        replay.reproducir({ bucle: true })
+      } catch { /* sin replay: el enjambre queda en su calma dorada */ }
+    }
+  } catch {
+    renderAviso('El motor descansa en este momento. Mostrando el enjambre en modo demo — escribe un titular abajo.')
+  }
+
+  return mando
+}
+```
+
+## web/src/archivo/archivo.js
+```javascript
+// El Archivo — la hemeroteca (CONTENIDO.md sección 5).
+// "El Enjambre dijo": toda simulación destacada queda para siempre,
+// navegable por mes, buscable por titular y filtrable por ticker. Cada
+// una tiene URL propia y compartible (?sim=<id>).
+
+import { urlApi } from '../ui/conexion.js'
+
+const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
+const idSeguro = (v) => String(v ?? '').replace(/[^0-9a-f]/g, '')
+
+const FECHA = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric' })
+const MES = new Intl.DateTimeFormat('es-CL', { month: 'long', year: 'numeric' })
+
+function nombreMes(mes) {
+  const [a, m] = mes.split('-')
+  return MES.format(new Date(Number(a), Number(m) - 1, 1))
+}
+
+function tarjetaArchivo(item) {
+  const t = item.tarjeta || {}
+  const clase = t.direccion === '▲' ? 'sube' : t.direccion === '▼' ? 'baja' : 'plana'
+  const simbolos = (item.simbolos || '').split(',').filter(Boolean).slice(0, 4).map(esc).join(' · ')
+  const pct = Number(t.direccion_pct) || 0
+  return `
+    <a class="arch-item" href="?sim=${idSeguro(item.id)}">
+      <div class="arch-meta">${FECHA.format(new Date(item.fecha))}${simbolos ? ' · ' + simbolos : ''}
+        ${item.tiene_epilogo ? '· <span class="arch-epi">¿y qué pasó?</span>' : ''}</div>
+      <h3>${esc(item.titular)}</h3>
+      <div class="arch-res">
+        <span class="flecha ${clase}">${esc(t.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="agitacion">agitación ${esc(t.agitacion)}</span>
+      </div>
+    </a>`
+}
+
+/**
+ * Monta la hemeroteca como overlay. `alAbrirSim(id)` la cierra y abre esa
+ * simulación. Devuelve { cerrar }.
+ */
+export async function abrirArchivo({ alAbrirSim, alDuelo, alCerrar, enDuelo = false }) {
+  const api = urlApi()
+  const capa = document.getElementById('archivo')
+  capa.hidden = false
+  document.body.classList.add('archivo-abierto')
+
+  const estado = { mes: '', q: '', ticker: '', pagina: 0 }
+  let modoDuelo = false
+  const elegidos = []  // ids seleccionados para el duelo (máx 2)
+
+  function cerrar() {
+    capa.hidden = true
+    document.body.classList.remove('archivo-abierto')
+    alCerrar?.()
+  }
+
+  async function cargar() {
+    const params = new URLSearchParams()
+    if (estado.mes) params.set('mes', estado.mes)
+    if (estado.q) params.set('q', estado.q)
+    if (estado.ticker) params.set('ticker', estado.ticker)
+    params.set('pagina', estado.pagina)
+    try {
+      const r = await fetch(`${api}/api/archivo?${params}`)
+      if (!r.ok) throw new Error('archivo')
+      return await r.json()
+    } catch {
+      return null
+    }
+  }
+
+  function render(datos) {
+    if (!datos) {
+      capa.querySelector('.arch-lista').innerHTML =
+        '<p class="arch-vacio">El archivo descansa. Vuelve cuando el enjambre haya reaccionado.</p>'
+      return
+    }
+    const chips = datos.meses.map((m) =>
+      `<button class="arch-chip ${m === estado.mes ? 'activo' : ''}" data-mes="${m}">${nombreMes(m)}</button>`
+    ).join('')
+    const lista = datos.items.length
+      ? datos.items.map(tarjetaArchivo).join('')
+      : '<p class="arch-vacio">Sin resultados para esa búsqueda.</p>'
+    const totalPaginas = Math.ceil(datos.total / datos.por_pagina)
+    const paginador = totalPaginas > 1
+      ? `<div class="arch-pag">
+          <button class="arch-prev" ${estado.pagina === 0 ? 'disabled' : ''}>‹ anteriores</button>
+          <span>${estado.pagina + 1} / ${totalPaginas}</span>
+          <button class="arch-next" ${estado.pagina + 1 >= totalPaginas ? 'disabled' : ''}>siguientes ›</button>
+        </div>` : ''
+
+    capa.querySelector('.arch-meses').innerHTML =
+      `<button class="arch-chip ${!estado.mes ? 'activo' : ''}" data-mes="">Todos</button>${chips}`
+    capa.querySelector('.arch-lista').innerHTML = lista + paginador
+    capa.querySelector('.arch-total').textContent =
+      `${datos.total} ${datos.total === 1 ? 'reacción archivada' : 'reacciones archivadas'}`
+
+    conectar()
+  }
+
+  function conectar() {
+    capa.querySelectorAll('.arch-chip').forEach((b) =>
+      b.addEventListener('click', () => { estado.mes = b.dataset.mes; estado.pagina = 0; recargar() }))
+    capa.querySelector('.arch-prev')?.addEventListener('click', () => { estado.pagina--; recargar() })
+    capa.querySelector('.arch-next')?.addEventListener('click', () => { estado.pagina++; recargar() })
+    capa.querySelectorAll('.arch-item').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault()
+        const id = idSeguro(new URL(a.href).searchParams.get('sim'))
+        if (modoDuelo) alternarEleccion(id, a)
+        else alAbrirSim(id)
+      }))
+    capa.querySelector('.arch-duelo-btn')?.addEventListener('click', () => {
+      modoDuelo = !modoDuelo
+      elegidos.length = 0
+      capa.querySelector('.arch-panel').classList.toggle('en-duelo', modoDuelo)
+      pintarBarraDuelo()
+    })
+    capa.querySelector('.arch-duelo-ir')?.addEventListener('click', () => {
+      if (elegidos.length === 2 && alDuelo) alDuelo(elegidos[0], elegidos[1])
+    })
+  }
+
+  function alternarEleccion(id, nodo) {
+    const i = elegidos.indexOf(id)
+    if (i >= 0) { elegidos.splice(i, 1); nodo.classList.remove('elegido') }
+    else if (elegidos.length < 2) { elegidos.push(id); nodo.classList.add('elegido') }
+    pintarBarraDuelo()
+  }
+
+  function pintarBarraDuelo() {
+    const barra = capa.querySelector('.arch-duelo-barra')
+    if (!barra) return
+    barra.hidden = !modoDuelo
+    const ir = capa.querySelector('.arch-duelo-ir')
+    if (ir) ir.disabled = elegidos.length !== 2
+    const info = capa.querySelector('.arch-duelo-info')
+    if (info) info.textContent = modoDuelo
+      ? `Elige dos simulaciones para enfrentarlas (${elegidos.length}/2)` : ''
+  }
+
+  async function recargar() {
+    render(await cargar())
+  }
+
+  capa.innerHTML = `
+    <div class="arch-panel">
+      <header class="arch-cab">
+        <button class="arch-cerrar" aria-label="cerrar">×</button>
+        <h1>El Enjambre dijo</h1>
+        <p>La hemeroteca de las reacciones del enjambre. <span class="arch-total"></span></p>
+      </header>
+      <div class="arch-filtros">
+        <input class="arch-buscar" type="search" placeholder="Buscar en los titulares…" />
+        <input class="arch-ticker" type="text" placeholder="Ticker (ej: SPY)" />
+        <button class="arch-duelo-btn accion">⚔ Duelo</button>
+      </div>
+      <div class="arch-duelo-barra" hidden>
+        <span class="arch-duelo-info"></span>
+        <button class="arch-duelo-ir accion" disabled>Ver el duelo →</button>
+      </div>
+      <div class="arch-meses"></div>
+      <div class="arch-lista"></div>
+      <p class="arch-descargo"></p>
+    </div>`
+
+  capa.querySelector('.arch-cerrar').addEventListener('click', cerrar)
+  let debounce
+  capa.querySelector('.arch-buscar').addEventListener('input', (e) => {
+    clearTimeout(debounce)
+    debounce = setTimeout(() => { estado.q = e.target.value.trim(); estado.pagina = 0; recargar() }, 300)
+  })
+  capa.querySelector('.arch-ticker').addEventListener('input', (e) => {
+    clearTimeout(debounce)
+    debounce = setTimeout(() => { estado.ticker = e.target.value.trim(); estado.pagina = 0; recargar() }, 300)
+  })
+
+  const datos = await cargar()
+  render(datos)
+  if (datos) capa.querySelector('.arch-descargo').textContent = datos.descargo
+  // navegación directa al duelo: la hemeroteca abre lista para elegir dos
+  if (enDuelo) capa.querySelector('.arch-duelo-btn')?.click()
+
+  return { cerrar }
+}
+```
+
+## web/src/duelo/duelo.js
+```javascript
+// El Duelo de Escenarios (CONTENIDO.md sección 8).
+// Dos titulares lado a lado, dos enjambres reaccionando en paralelo,
+// sincronizados tick a tick, con sus curvas de precio superpuestas.
+// Botón "exportar Reel": graba 12 s verticales (9:16) para redes.
+
+import * as THREE from 'three'
+import { Enjambre } from '../swarm/enjambre.js'
+import { urlApi } from '../ui/conexion.js'
+import { medidasReplay } from '../swarm/replay-frame.js'
+
+const COLOR_A = '#6fa89e' // teal — el río (primer enjambre)
+const COLOR_B = '#d99a9a' // rosa — para distinguir el segundo enjambre
+
+const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
+
+function framesDe(buffer) {
+  const { nAgentes, tamanoFrame, total } = medidasReplay(buffer.byteLength)
+  return {
+    total,
+    en(i) {
+      const base = Math.min(i, total - 1) * tamanoFrame
+      return {
+        precio: new DataView(buffer, base, 8).getFloat32(0, true),
+        sent: new Int8Array(buffer, base + 8, nAgentes),
+      }
+    },
+  }
+}
+
+/** Monta el duelo. Devuelve { cerrar }. */
+export async function abrirDuelo({ idA, idB, reducirMovimiento, alCerrar }) {
+  const api = urlApi()
+  const capa = document.getElementById('duelo')
+  capa.hidden = false
+  document.body.classList.add('duelo-abierto')
+
+  let anim = null
+  let reloj = null
+  let grabadora = null
+
+  function cerrar() {
+    if (anim) cancelAnimationFrame(anim)
+    if (reloj) clearInterval(reloj)
+    if (grabadora && grabadora.state === 'recording') grabadora.stop()
+    capa.hidden = true
+    capa.innerHTML = ''
+    document.body.classList.remove('duelo-abierto')
+    alCerrar?.()
+  }
+
+  let datos
+  try {
+    datos = await (await fetch(`${api}/api/duelo/${idA}/${idB}`)).json()
+  } catch {
+    capa.innerHTML = `<div class="duelo-panel"><p class="duelo-error">No se pudo cargar el duelo.</p>
+      <button class="duelo-cerrar">×</button></div>`
+    capa.querySelector('.duelo-cerrar').addEventListener('click', cerrar)
+    return { cerrar }
+  }
+
+  capa.innerHTML = `
+    <button class="duelo-cerrar" aria-label="cerrar">×</button>
+    <div class="duelo-titulares">
+      <div class="duelo-lado" style="--c:${COLOR_A}"><span>A</span><h3>${esc(datos.a.titular)}</h3>
+        <div class="duelo-dir">${esc(datos.a.tarjeta.direccion)} ${datos.a.resumen.direccion_pct}%</div></div>
+      <div class="duelo-vs">vs</div>
+      <div class="duelo-lado" style="--c:${COLOR_B}"><span>B</span><h3>${esc(datos.b.titular)}</h3>
+        <div class="duelo-dir">${esc(datos.b.tarjeta.direccion)} ${datos.b.resumen.direccion_pct}%</div></div>
+    </div>
+    <canvas class="duelo-escena"></canvas>
+    <canvas class="duelo-precios" width="720" height="120"></canvas>
+    <div class="duelo-barra">
+      <button class="duelo-toggle">Alternar A / B</button>
+      <button class="duelo-reel">● Exportar Reel (12s)</button>
+      <span class="duelo-estado"></span>
+    </div>
+    <p class="duelo-descargo">${esc(datos.descargo)}</p>`
+
+  capa.querySelector('.duelo-cerrar').addEventListener('click', cerrar)
+
+  // modo estático (reduce-motion): solo las curvas de precio, sin 3D
+  const canvas = capa.querySelector('.duelo-escena')
+  if (reducirMovimiento) {
+    canvas.style.display = 'none'
+    dibujarPrecios(capa.querySelector('.duelo-precios'), datos.a.serie_precios, datos.b.serie_precios)
+    return { cerrar }
+  }
+
+  // ---------- escena con los dos enjambres ----------
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true })
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  const escena = new THREE.Scene()
+  escena.background = new THREE.Color('#1b1916')
+  escena.fog = new THREE.FogExp2('#1b1916', 0.02)
+  const camara = new THREE.PerspectiveCamera(55, 2, 0.1, 200)
+
+  const enjA = new Enjambre(11)
+  const enjB = new Enjambre(23)
+  enjA.modoRemoto = enjB.modoRemoto = true
+  enjA.fijarProporcion(0.5)
+  enjB.fijarProporcion(0.5) // dos enjambres: cada uno con la mitad de partículas
+  enjA.grupo.position.x = -11
+  enjB.grupo.position.x = 11
+  escena.add(enjA.grupo, enjB.grupo)
+  enjA.fijarLideresRemotos(datos.a.lideres || [])
+  enjB.fijarLideresRemotos(datos.b.lideres || [])
+
+  // frames (replay) de cada lado
+  let fA = null
+  let fB = null
+  try {
+    fA = framesDe(await (await fetch(`${api}/api/simulacion/${idA}/replay`)).arrayBuffer())
+    fB = framesDe(await (await fetch(`${api}/api/simulacion/${idB}/replay`)).arrayBuffer())
+  } catch {
+    /* sin replay: los enjambres quedan en su calma, igual se ve el duelo */
+  }
+
+  let movil = window.innerWidth < 820
+  let mostrandoA = true
+  function encuadrar() {
+    movil = window.innerWidth < 820
+    const w = canvas.clientWidth || window.innerWidth
+    const h = canvas.clientHeight || 420
+    renderer.setSize(w, h, false)
+    camara.aspect = w / h
+    if (movil) {
+      // móvil: uno a la vez (dos canvas 3D rompen el presupuesto de fps)
+      enjA.grupo.visible = mostrandoA
+      enjB.grupo.visible = !mostrandoA
+      enjA.grupo.position.x = enjB.grupo.position.x = 0
+      camara.position.set(0, 6, 26)
+    } else {
+      enjA.grupo.visible = enjB.grupo.visible = true
+      enjA.grupo.position.x = -11
+      enjB.grupo.position.x = 11
+      camara.position.set(0, 7, 40)
+    }
+    camara.lookAt(0, 0, 0)
+    camara.updateProjectionMatrix()
+  }
+  encuadrar()
+  window.addEventListener('resize', encuadrar)
+
+  capa.querySelector('.duelo-toggle').addEventListener('click', () => {
+    mostrandoA = !mostrandoA
+    encuadrar()
+  })
+
+  // ---------- replay sincronizado ----------
+  const serieA = [datos.a.serie_precios[0]]
+  const serieB = [datos.b.serie_precios[0]]
+  const lienzoPrecios = capa.querySelector('.duelo-precios')
+  let cuadro = 0
+  const totalCuadros = Math.max(fA?.total || 1, fB?.total || 1)
+  reloj = setInterval(() => {
+    if (fA) { const f = fA.en(cuadro); enjA.aplicarEstadoRemoto(f.precio, f.sent); serieA.push(f.precio) }
+    if (fB) { const f = fB.en(cuadro); enjB.aplicarEstadoRemoto(f.precio, f.sent); serieB.push(f.precio) }
+    dibujarPrecios(lienzoPrecios, serieA, serieB)
+    cuadro = (cuadro + 1) % totalCuadros
+    if (cuadro === 0) { serieA.length = 1; serieB.length = 1 } // vuelve a empezar en bucle
+  }, 80)
+
+  // ---------- loop de render ----------
+  const relojThree = new THREE.Clock()
+  function frame() {
+    const dt = Math.min(relojThree.getDelta(), 0.05)
+    const t = relojThree.getElapsedTime()
+    enjA.actualizar(t, dt)
+    enjB.actualizar(t, dt)
+    renderer.render(escena, camara)
+    anim = requestAnimationFrame(frame)
+  }
+  frame()
+
+  // ---------- exportar Reel (9:16) ----------
+  capa.querySelector('.duelo-reel').addEventListener('click', () =>
+    exportarReel(renderer, datos, capa.querySelector('.duelo-estado')))
+
+  return { cerrar }
+}
+
+// ---------- curvas de precio superpuestas ----------
+
+function dibujarPrecios(lienzo, serieA, serieB) {
+  const ctx = lienzo.getContext('2d')
+  const W = lienzo.width, H = lienzo.height
+  ctx.clearRect(0, 0, W, H)
+  const todos = [...serieA, ...serieB]
+  const min = Math.min(...todos), max = Math.max(...todos)
+  const rango = Math.max(max - min, 0.5)
+  const curva = (serie, color) => {
+    ctx.beginPath()
+    serie.forEach((v, i) => {
+      const x = (i / Math.max(serie.length - 1, 1)) * (W - 8) + 4
+      const y = H - 6 - ((v - min) / rango) * (H - 12)
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
+    })
+    ctx.strokeStyle = color
+    ctx.lineWidth = 2
+    ctx.lineJoin = 'round'
+    ctx.stroke()
+  }
+  curva(serieA, COLOR_A)
+  curva(serieB, COLOR_B)
+}
+
+// ---------- el Reel vertical para redes ----------
+
+async function exportarReel(renderer, datos, estado) {
+  if (!window.MediaRecorder) { estado.textContent = 'Tu navegador no permite grabar.'; return }
+  const comp = document.createElement('canvas')
+  comp.width = 1080; comp.height = 1920
+  const ctx = comp.getContext('2d')
+  const flujo = comp.captureStream(30)
+  const tipos = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm']
+  const mime = tipos.find((t) => MediaRecorder.isTypeSupported(t)) || 'video/webm'
+  const trozos = []
+  const rec = new MediaRecorder(flujo, { mimeType: mime, videoBitsPerSecond: 6_000_000 })
+  rec.ondataavailable = (e) => e.data.size && trozos.push(e.data)
+  rec.onstop = () => {
+    const blob = new Blob(trozos, { type: 'video/webm' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'enjambre-duelo.webm'
+    a.click()
+    estado.textContent = '¡Reel listo! (video/webm)'
+  }
+
+  const gl = renderer.domElement
+  let t0 = null
+  function pinta(ts) {
+    if (t0 === null) t0 = ts
+    const seg = (ts - t0) / 1000
+    ctx.fillStyle = '#1b1916'; ctx.fillRect(0, 0, 1080, 1920)
+    // el enjambre (recuadro central)
+    ctx.drawImage(gl, 0, 420, 1080, 1080)
+    // titulares
+    ctx.fillStyle = COLOR_A; ctx.font = 'bold 40px Georgia, serif'
+    ctx.fillText('A', 60, 200)
+    ctx.fillStyle = '#f3eee8'; ctx.font = '34px Georgia, serif'
+    envolver(ctx, datos.a.titular, 130, 175, 900, 40)
+    ctx.fillStyle = COLOR_B; ctx.font = 'bold 40px Georgia, serif'
+    ctx.fillText('B', 60, 360)
+    ctx.fillStyle = '#f3eee8'; ctx.font = '34px Georgia, serif'
+    envolver(ctx, datos.b.titular, 130, 335, 900, 40)
+    // marca de agua + disclaimer
+    ctx.fillStyle = '#6fa89e'; ctx.font = 'bold 30px Georgia, serif'
+    ctx.fillText('El Enjambre · Rubicón Lab', 60, 1600)
+    ctx.fillStyle = 'rgba(243,238,232,0.6)'; ctx.font = '22px sans-serif'
+    envolver(ctx, datos.descargo, 60, 1660, 960, 28)
+    if (seg < 12) requestAnimationFrame(pinta)
+    else if (rec.state === 'recording') rec.stop()
+  }
+  rec.start()
+  estado.textContent = 'Grabando 12 s…'
+  requestAnimationFrame(pinta)
+}
+
+function envolver(ctx, texto, x, y, ancho, alto) {
+  const palabras = String(texto).split(' ')
+  let linea = '', yy = y
+  for (const p of palabras) {
+    const prueba = `${linea}${p} `
+    if (ctx.measureText(prueba).width > ancho && linea) {
+      ctx.fillText(linea, x, yy); linea = `${p} `; yy += alto
+    } else linea = prueba
+  }
+  ctx.fillText(linea, x, yy)
+}
+```
+
+## web/src/widget/widget.js
+```javascript
+// El Widget embebible (CONTENIDO.md sección 9).
+// Un iframe del enjambre reaccionando, que un medio incrusta en sus notas.
+// - Solo LEE simulaciones cacheadas; JAMÁS dispara simulaciones nuevas.
+// - Firma + link a la web + disclaimer CMF SIEMPRE visible.
+// - Parámetros: ?sim=<id> (fija) o ?modo=hoy (la destacada del día).
+// - Dominio fuera de la lista blanca (CORS lo bloquea) → versión con CTA.
+
+import * as THREE from 'three'
+import { Enjambre } from '../swarm/enjambre.js'
+import { urlApi } from '../ui/conexion.js'
+import { medidasReplay } from '../swarm/replay-frame.js'
+
+const DISCLAIMER =
+  'Simulación educativa de comportamiento de masas con agentes de IA. No constituye asesoría ni recomendación de inversión.'
+const WEB = (urlApi() || '').replace(/\/$/, '') && (import.meta.env.VITE_WEB_URL || 'https://enjambre-ai-agents.vercel.app')
+
+const raiz = document.getElementById('widget')
+const canvas = document.getElementById('wcanvas')
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+
+const params = new URLSearchParams(location.search)
+const api = urlApi()
+
+function superponer(html) {
+  const capa = document.createElement('div')
+  capa.innerHTML = html
+  Object.assign(capa.style, {
+    position: 'absolute', inset: '0', pointerEvents: 'none',
+    display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+    padding: '14px 16px', boxSizing: 'border-box', color: '#f3eee8',
+    fontFamily: 'system-ui, sans-serif',
+  })
+  raiz.appendChild(capa)
+  return capa
+}
+
+const ESTILO_LINK = 'color:#6fa89e;text-decoration:none;pointer-events:auto;'
+const ESTILO_DISCLAIMER = 'font-size:10px;line-height:1.4;color:rgba(243,238,232,0.55);'
+const ESTILO_FIRMA = 'font-size:12px;color:#f3eee8;font-weight:600;'
+
+function pie(extra = '') {
+  return `<div>${extra}
+    <div style="${ESTILO_FIRMA}">El Enjambre <span style="opacity:.7;font-weight:400">by Rubicón Lab</span>
+      &nbsp;·&nbsp;<a href="${WEB}" target="_blank" rel="noopener" style="${ESTILO_LINK}">ver en vivo →</a></div>
+    <div style="${ESTILO_DISCLAIMER}">${DISCLAIMER}</div>
+  </div>`
+}
+
+function mostrarCTA() {
+  canvas.style.display = 'none'
+  superponer(`
+    <div></div>
+    <div style="pointer-events:auto;text-align:center;">
+      <div style="font-family:Georgia,serif;font-size:22px;color:#6fa89e;font-weight:bold;">El Enjambre</div>
+      <p style="font-size:14px;color:#f3eee8;max-width:320px;margin:8px auto;">
+        El focus group sintético del mercado, para tu medio.</p>
+      <a href="${WEB}" target="_blank" rel="noopener"
+        style="display:inline-block;background:#6fa89e;color:#1b1916;text-decoration:none;font-weight:bold;
+        padding:10px 20px;font-size:13px;pointer-events:auto;">Consigue el widget para tu medio</a>
+    </div>
+    ${pie()}`)
+}
+
+// ---------- carga de la simulación (solo cacheada) ----------
+
+async function idDelDia() {
+  const muro = await (await fetch(`${api}/api/muro`)).json()
+  const dest = muro.tarjetas.find((t) => t.destacada && t.sim_id)
+  return dest ? dest.sim_id : null
+}
+
+async function iniciar() {
+  if (!api) return mostrarCTA()
+  let id = params.get('sim')
+  if (!/^[0-9a-f]{16}$/.test(id || '')) id = params.get('modo') === 'hoy' ? null : id
+  try {
+    if (!id) id = await idDelDia()
+    if (!/^[0-9a-f]{16}$/.test(id || '')) return mostrarCTA()
+    const sim = await (await fetch(`${api}/api/simulacion/${id}`)).json()
+    let frames = null
+    if (sim.tiene_replay) {
+      frames = await (await fetch(`${api}/api/simulacion/${id}/replay`)).arrayBuffer()
+    }
+    render(sim, frames)
+  } catch {
+    // dominio no permitido (CORS) o motor caído → la versión con CTA
+    mostrarCTA()
+  }
+}
+
+// ---------- render minimal del enjambre ----------
+
+function render(sim, buffer) {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  const escena = new THREE.Scene()
+  escena.background = new THREE.Color('#1b1916')
+  escena.fog = new THREE.FogExp2('#1b1916', 0.02)
+  const camara = new THREE.PerspectiveCamera(55, 1, 0.1, 120)
+
+  const enjambre = new Enjambre(7)
+  enjambre.modoRemoto = true
+  enjambre.fijarProporcion(0.6)
+  enjambre.fijarLideresRemotos(sim.lideres || [])
+  escena.add(enjambre.grupo)
+
+  function encuadrar() {
+    const w = raiz.clientWidth || 480, h = raiz.clientHeight || 360
+    renderer.setSize(w, h, false)
+    camara.aspect = w / h
+    camara.position.set(0, 6, 30)
+    camara.lookAt(0, 0, 0)
+    camara.updateProjectionMatrix()
+  }
+  encuadrar()
+  window.addEventListener('resize', encuadrar)
+
+  // replay en bucle (si hay frames)
+  if (buffer) {
+    const { nAgentes, tamanoFrame, total } = medidasReplay(buffer.byteLength)
+    let c = 0
+    setInterval(() => {
+      const base = Math.min(c, total - 1) * tamanoFrame
+      const precio = new DataView(buffer, base, 8).getFloat32(0, true)
+      enjambre.aplicarEstadoRemoto(precio, new Int8Array(buffer, base + 8, nAgentes))
+      c = (c + 1) % total
+    }, 80)
+  }
+
+  const reloj = new THREE.Clock()
+  renderer.setAnimationLoop(() => {
+    const dt = Math.min(reloj.getDelta(), 0.05)
+    enjambre.actualizar(reloj.getElapsedTime(), dt)
+    renderer.render(escena, camara)
+  })
+
+  superponer(`
+    <div style="pointer-events:none;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(243,238,232,0.5);">
+        El enjambre reaccionó a</div>
+      <div style="font-family:Georgia,serif;font-size:16px;font-weight:bold;line-height:1.2;max-width:80%;">
+        ${esc(sim.titular)}</div>
+    </div>
+    ${pie()}`)
+}
+
+iniciar()
 ```
 

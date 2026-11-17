@@ -75,26 +75,33 @@ def walk_forward(casos, modo, min_entrena=200, paso=20, metodo="platt"):
     predicciones fuera de muestra y las evalúa en conjunto."""
     scores = [_score(c, modo) for c in casos]
     ys = [c["y"] for c in casos]
-    preds_oos, ys_oos = [], []
+    preds_oos, ys_oos, preds_base = [], [], []
     t = min_entrena
     while t < len(scores):
         s_tr, y_tr = scores[:t], ys[:t]
         fin = min(t + paso, len(scores))
+        # Baseline HONESTO (auditoría 4.5): la tasa base de esta ventana se calcula
+        # SOLO con el train disponible hasta el corte `t`, nunca con las etiquetas
+        # OOS [t:fin] (que no se conocen al momento de predecir). Antes se usaba
+        # cal.tasa_base(ys_oos) — el baseline "veía" el balance de clases del futuro.
+        base_t = cal.tasa_base(y_tr)
         try:
             calib = cal.ajustar_calibrador(s_tr, y_tr, metodo=metodo)
             preds_oos.extend(calib.predict(scores[t:fin]))
         except Exception:
             preds_oos.extend(scores[t:fin])  # si falla, crudo (conservador)
+        preds_base.extend([base_t] * (fin - t))
         ys_oos.extend(ys[t:fin])
         t = fin
     if not preds_oos:
         return {"error": "no hay suficientes datos para walk-forward"}
-    base = cal.tasa_base(ys_oos)
+    base = round(sum(preds_base) / len(preds_base), 4)  # base media (solo-train)
     brier_modelo = cal.brier(preds_oos, ys_oos)
-    brier_base = cal.brier([base] * len(ys_oos), ys_oos)
+    brier_base = cal.brier(preds_base, ys_oos)
     return {
         "modo": modo, "metodo": metodo,
         "n_oos": len(preds_oos),
+        "base": base,  # tasa base media (solo-train), para transparencia
         "brier": round(brier_modelo, 4),
         "brier_base": round(brier_base, 4),
         "skill": round(cal.skill_score(brier_modelo, brier_base), 4),

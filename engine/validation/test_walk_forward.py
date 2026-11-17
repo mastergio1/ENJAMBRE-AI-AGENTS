@@ -2,8 +2,17 @@
 
 import json
 import random
+from datetime import date, timedelta
 
 from calibration import walk_forward as wf
+
+INICIO = date(2026, 1, 1)
+
+
+def _fecha(i: int) -> str:
+    """Fecha ESTRICTAMENTE creciente con i (auditoría 4.8): el orden de generación
+    coincide con el cronológico, así el test no esconde un error de ordenamiento."""
+    return (INICIO + timedelta(days=i)).isoformat() + "T00:00:00"
 
 
 def _archivo(tmp_path, n=400, seed=5, senal_util=True):
@@ -21,7 +30,7 @@ def _archivo(tmp_path, n=400, seed=5, senal_util=True):
             if a in wf.CONTRARIANS and senal_util:
                 s = -base + rng.uniform(-0.2, 0.2)
             sa[a] = {"senal_media": s, "confianza_media": 0.7, "n": 10}
-        casos.append({"fecha": f"2026-08-{i % 28 + 1:02d}T{i%24:02d}:00:00",
+        casos.append({"fecha": _fecha(i),
                       "reaccion_real": {"pct_real": pct}, "senales_arquetipo": sa,
                       "direccion_pct": base * 2})
     ruta = tmp_path / "c.json"
@@ -58,3 +67,29 @@ def test_ponderada_no_es_peor_que_simple(tmp_path):
     pon = wf.walk_forward(casos, "senal_ponderada", min_entrena=150, paso=20)
     sim = wf.walk_forward(casos, "senal_media", min_entrena=150, paso=20)
     assert pon["brier"] <= sim["brier"] + 0.01
+
+
+def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
+    """Auditoría 4.8: el contrato es que los casos se procesan en orden temporal.
+    Aunque lleguen desordenados, `cargar` los ordena por fecha."""
+    casos_raw = []
+    for i in (5, 0, 3, 1, 4, 2):  # fechas deliberadamente desordenadas
+        sa = {a: {"senal_media": 0.3, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
+        casos_raw.append({"fecha": _fecha(i), "reaccion_real": {"pct_real": 1.0},
+                          "senales_arquetipo": sa, "direccion_pct": 0.6})
+    ruta = tmp_path / "desord.json"
+    ruta.write_text(json.dumps({"casos": casos_raw}))
+    cargados = wf.cargar(str(ruta))
+    fechas = [c["fecha"] for c in cargados]
+    assert fechas == sorted(fechas), "cargar debe entregar los casos en orden temporal"
+
+
+def test_baseline_honesto_se_reporta_y_no_usa_el_futuro(tmp_path):
+    """Auditoría 4.5: el reporte trae la tasa base (solo-train) y la usa para el
+    skill. La base media queda en [0,1] y el Brier del baseline es finito."""
+    casos = wf.cargar(_archivo(tmp_path, senal_util=True))
+    r = wf.walk_forward(casos, "senal_ponderada", min_entrena=150, paso=20)
+    assert "base" in r and 0.0 <= r["base"] <= 1.0
+    assert r["brier_base"] > 0
+    # con señal útil, el modelo le gana a la base honesta
+    assert r["brier"] < r["brier_base"]

@@ -34,6 +34,38 @@ def test_particionar_no_pierde_casos():
     assert not (set(id(c) for c in visible) & set(id(c) for c in holdout))
 
 
+def test_holdout_temporal_es_el_futuro():
+    """Auditoría 4.9: el holdout temporal son los casos MÁS RECIENTES; toda fecha
+    del holdout es >= que cualquiera del visible."""
+    casos = [{"sim_id": f"s{i}", "fecha": f"2026-01-{i+1:02d}"} for i in range(20)]
+    visible, holdout = verificador.particionar_temporal(casos, pct=30)
+    assert len(holdout) == 6  # 30% de 20
+    assert max(c["fecha"] for c in visible) <= min(c["fecha"] for c in holdout)
+
+
+def test_holdout_temporal_embargo_descarta_del_visible():
+    """El embargo quita casos del visible justo antes del corte (anti-solape)."""
+    casos = [{"sim_id": f"s{i}", "fecha": f"2026-01-{i+1:02d}"} for i in range(20)]
+    sin_emb, _ = verificador.particionar_temporal(casos, pct=30, embargo=0)
+    con_emb, hold = verificador.particionar_temporal(casos, pct=30, embargo=3)
+    assert len(con_emb) == len(sin_emb) - 3
+    assert len(hold) == 6  # el holdout no se toca
+
+
+def test_holdout_temporal_purga_por_grupo():
+    """Si un símbolo aparece en el holdout, sus casos del visible se PURGAN
+    (no contaminan train/holdout con el mismo evento/activo)."""
+    casos = []
+    for i in range(10):
+        casos.append({"sim_id": f"s{i}", "fecha": f"2026-01-{i+1:02d}",
+                      "simbolos": "BTC-USD" if i in (0, 9) else f"X{i}"})
+    visible, holdout = verificador.particionar_temporal(
+        casos, pct=20, clave_grupo="simbolos")
+    # BTC-USD está en el holdout (i=9) → el caso visible i=0 (BTC-USD) se purga
+    assert all(c["simbolos"] != "BTC-USD" for c in visible)
+    assert any(c["simbolos"] == "BTC-USD" for c in holdout)
+
+
 def test_baseline_carga_y_tiene_claves():
     base = verificador.cargar_baseline()
     assert base, "el baseline congelado debe existir"

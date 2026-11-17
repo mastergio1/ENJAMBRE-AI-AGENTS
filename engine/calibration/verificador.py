@@ -36,10 +36,43 @@ def es_holdout(sim_id: str, pct: int = PORCENTAJE_HOLDOUT) -> bool:
 
 
 def particionar(casos: list[dict]) -> tuple[list, list]:
-    """Separa casos (cada uno con 'sim_id') en (visible, held_out)."""
+    """Separa casos (cada uno con 'sim_id') en (visible, held_out) por hash.
+
+    ⚠️ DEPRECADO para validar de verdad: el reparto por hash puede meter en el
+    holdout casos ANTERIORES en el tiempo o partir un mismo evento entre train y
+    holdout (auditoría 4.9). Para una validación honesta usa
+    `particionar_temporal`. Se conserva por compatibilidad."""
     visible, holdout = [], []
     for c in casos:
         (holdout if es_holdout(c.get("sim_id", "")) else visible).append(c)
+    return visible, holdout
+
+
+def particionar_temporal(casos: list[dict], pct: int = PORCENTAJE_HOLDOUT,
+                         embargo: int = 0, clave_fecha: str = "fecha",
+                         clave_grupo: str | None = None) -> tuple[list, list]:
+    """Holdout TEMPORAL con embargo y purga por grupo (auditoría 4.9 y 4.7).
+
+    El `pct`% MÁS RECIENTE por fecha se reserva para validar; el resto es visible
+    —como en vivo, se valida sobre el FUTURO, no sobre casos sorteados por hash—.
+      - `embargo`: nº de casos justo antes del corte que se DESCARTAN del visible,
+        para que ventanas de resultado solapadas no filtren info al holdout.
+      - `clave_grupo` (p.ej. 'simbolos'): PURGA del visible todo caso cuyo grupo
+        aparezca también en el holdout, evitando contaminación por evento/activo.
+    Devuelve (visible, holdout). El holdout queda intacto (es el futuro);
+    la purga y el embargo solo quitan casos del visible.
+    """
+    ordenados = sorted(casos, key=lambda c: c.get(clave_fecha) or "")
+    n = len(ordenados)
+    n_hold = round(n * pct / 100)
+    if n_hold <= 0:
+        return list(ordenados), []
+    corte = n - n_hold
+    holdout = ordenados[corte:]
+    visible = ordenados[:max(0, corte - max(0, embargo))]
+    if clave_grupo:
+        grupos_hold = {c.get(clave_grupo) for c in holdout if c.get(clave_grupo)}
+        visible = [c for c in visible if c.get(clave_grupo) not in grupos_hold]
     return visible, holdout
 
 

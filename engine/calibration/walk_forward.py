@@ -27,8 +27,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
 from contenido import calibracion as cal
 
+# los 8 arquetipos clásicos que TODOS los casos traen (se exige su presencia).
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# VOCES = las que SUMAN a la señal. Incluye doomer_selectivo (9º arquetipo): la
+# señal de PRODUCCIÓN (senal_media_ponderada) lo incorpora, así que las
+# herramientas offline deben medir la MISMA señal, no una de 8 que lo ignora
+# (auditoría ampliada). Se suma solo cuando está presente (los casos viejos,
+# cosechados antes de activarlo, simplemente no lo traen y no se descartan).
+VOCES = BASE + ["doomer_selectivo"]
 CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
 MODOS = ("senal_media", "senal_ponderada", "direccion")
 MARGEN_PROMOCION = 0.005  # el Brier WF debe ganarle a la base por al menos esto
@@ -36,9 +43,9 @@ MARGEN_PROMOCION = 0.005  # el Brier WF debe ganarle a la base por al menos esto
 
 def _senal(sa, peso_contr=1.0):
     num = sum(sa[a]["senal_media"] * sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
-              for a in BASE if a in sa)
+              for a in VOCES if a in sa)
     den = sum(sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
-              for a in BASE if a in sa)
+              for a in VOCES if a in sa)
     return num / den if den else 0.0
 
 

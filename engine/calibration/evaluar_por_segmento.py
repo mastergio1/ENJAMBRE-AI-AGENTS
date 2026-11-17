@@ -25,13 +25,16 @@ from contenido.backtest import _mercado_de_caso
 
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# incluye doomer_selectivo (9º) para medir la MISMA señal que usa producción, no
+# una de 8 que lo ignora (auditoría ampliada). Se suma solo cuando está presente.
+VOCES = BASE + ["doomer_selectivo"]
 CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
 
 
 def _senal_ponderada(sa, peso_contr=0.3) -> float:
     """senal_media_ponderada reconstruida desde senales_arquetipo (contrarians×0.3)."""
     num = den = 0.0
-    for a in BASE:
+    for a in VOCES:
         if a in sa:
             w = sa[a]["n"] * (peso_contr if a in CONTRARIANS else 1.0)
             num += sa[a]["senal_media"] * w
@@ -61,7 +64,7 @@ def _consenso(caso) -> float:
     trae `confianza`): media ponderada por confianza×n sobre los 8 arquetipos."""
     sa = caso.get("senales_arquetipo") or {}
     num = den = 0.0
-    for a in BASE:
+    for a in VOCES:
         if a in sa:
             w = sa[a]["confianza_media"] * sa[a]["n"]
             num += sa[a]["senal_media"] * w

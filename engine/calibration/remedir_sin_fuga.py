@@ -28,12 +28,14 @@ from contenido.backtest import _mercado_de_caso
 URL = "https://query1.finance.yahoo.com/v8/finance/chart/{simbolo}"
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
         "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente"]
+# incluye doomer_selectivo (9º) para medir la MISMA señal que usa producción.
+VOCES = BASE + ["doomer_selectivo"]
 CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
 
 
 def _pond(sa, w=0.3):
-    num = sum(sa[a]["senal_media"] * sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in BASE if a in sa)
-    den = sum(sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in BASE if a in sa)
+    num = sum(sa[a]["senal_media"] * sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in VOCES if a in sa)
+    den = sum(sa[a]["n"] * (w if a in CONTRARIANS else 1) for a in VOCES if a in sa)
     return num / den if den else 0.0
 
 

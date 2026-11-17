@@ -69,6 +69,19 @@ def test_ponderada_no_es_peor_que_simple(tmp_path):
     assert pon["brier"] <= sim["brier"] + 0.01
 
 
+def test_senal_incluye_doomer_selectivo(tmp_path):
+    """Auditoría ampliada: la señal reconstruida offline debe incluir al
+    doomer_selectivo (9º arquetipo), igual que la señal de producción. Antes la
+    lista BASE de 8 lo ignoraba → se medía una señal distinta de la real."""
+    base_sa = {a: {"senal_media": 0.5, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
+    sin_ds = wf._senal(base_sa)
+    # el doomer_selectivo tira fuerte a la baja: debe mover la señal
+    con_ds = wf._senal({**base_sa,
+                        "doomer_selectivo": {"senal_media": -1.0, "confianza_media": 0.9, "n": 10}})
+    assert con_ds < sin_ds, "doomer_selectivo debe contribuir a la señal reconstruida"
+    assert "doomer_selectivo" in wf.VOCES and "doomer_selectivo" not in wf.BASE
+
+
 def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
     """Auditoría 4.8: el contrato es que los casos se procesan en orden temporal.
     Aunque lleguen desordenados, `cargar` los ordena por fecha."""

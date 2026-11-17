@@ -31,6 +31,25 @@ def test_salud():
     assert respuesta.json()["estado"] == "ok"
 
 
+def test_suscriptores_protegido_sin_secreto_en_codigo(monkeypatch):
+    """P0 (auditoría 4.1): el endpoint de suscriptores ya NO lleva clave
+    hardcodeada. Exige el token de admin del entorno; sin token, falla cerrado."""
+    cliente = TestClient(server.app)
+    # la vieja clave hardcodeada ya no abre nada
+    assert cliente.get("/api/pulso/suscriptores?clave=revisar-pulso-2026").status_code == 404
+    # sin token configurado: nadie pasa (falla cerrado)
+    monkeypatch.delenv("ENJAMBRE_PIPELINE_TOKEN", raising=False)
+    assert cliente.get("/api/pulso/suscriptores").status_code == 404
+    # con el token del entorno: pasa (por cabecera o por query)
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto-de-prueba-123")
+    r_cab = cliente.get("/api/pulso/suscriptores",
+                        headers={"X-Pipeline-Token": "secreto-de-prueba-123"})
+    assert r_cab.status_code == 200 and "registrados" in r_cab.json()
+    assert cliente.get("/api/pulso/suscriptores?clave=secreto-de-prueba-123").status_code == 200
+    # token equivocado: rechazado
+    assert cliente.get("/api/pulso/suscriptores?clave=otra-cosa").status_code == 404
+
+
 def test_flujo_completo_por_websocket():
     cliente = TestClient(server.app)
     with cliente.websocket_connect("/ws") as ws:
@@ -71,6 +90,13 @@ def test_flujo_completo_por_websocket():
         reporte = fin["reporte"]
         assert reporte["direccion_pct"] < 2  # una quiebra no dispara el precio
         assert reporte["volatilidad_pct"] > 0
+        # Ventana A: el reporte expone la dirección de la señal y la del titular
+        assert reporte["direccion_senal"] in ("alza", "baja", "neutra")
+        assert reporte["direccion_titular"] in ("alza", "baja", "neutra")
+        assert reporte["conviccion"]["nivel"] in ("fuerte", "moderada", "debil")
+        # si la convicción es fiable, el titular sigue a la señal; si no, al precio
+        if reporte["conviccion"]["fiable_direccion"]:
+            assert reporte["direccion_titular"] == reporte["direccion_senal"]
         assert len(reporte["frases"]) == 3
         assert reporte["desglose"]  # hay actividad por tipo
 

@@ -651,6 +651,17 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
     # el reporte para no sobre-afirmar. Umbrales/mercados overridables por entorno.
     senal_pond = senal_prediccion.senal_media_ponderada(lideres, respuestas)
     conviccion = senal_prediccion.clasificar_conviccion(senal_pond, mercado)
+    # Ventana A (Propuesta 3): la SEÑAL de los líderes predice la dirección mejor
+    # que el PRECIO simulado (índice sin fuga: ~63% vs ~57%). Exponemos la dirección
+    # de la señal para que el producto la use como titular CUANDO la convicción es
+    # fiable (gating); el precio sigue siendo el movimiento visual del enjambre.
+    direccion_senal = "alza" if senal_pond > 0 else "baja" if senal_pond < 0 else "neutra"
+    # La dirección que conviene mostrar como titular: la de la señal si es fiable,
+    # si no la del precio (mantiene coherencia con lo que se ve y no sobre-afirma).
+    if conviccion["fiable_direccion"]:
+        direccion_titular = direccion_senal
+    else:
+        direccion_titular = "alza" if direccion > 0 else "baja" if direccion < 0 else "neutra"
 
     return {
         "direccion_pct": direccion,
@@ -662,6 +673,8 @@ def _generar_reporte(modelo, precio_previo, respuestas, lideres, contador) -> di
         "confianza": fuerza_consenso,
         "fuerza_consenso": fuerza_consenso,
         "conviccion": conviccion,
+        "direccion_senal": direccion_senal,
+        "direccion_titular": direccion_titular,
         "senal_media_lideres": round(sum(r["senal"] for r in respuestas) / len(respuestas), 2),
         "senal_media_ponderada": senal_pond,
         "desglose": {
@@ -1541,11 +1554,14 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
 
 
 @app.get("/api/pulso/suscriptores")
-def pulso_suscriptores(clave: str = "", email: str = ""):
+def pulso_suscriptores(clave: str = "", email: str = "",
+                       x_pipeline_token: str = Header(default="")):
     """Conteo de suscriptores (solo números, sin correos): registrados, activos
     (confirmados), sin confirmar (double opt-in pendiente) y bajas. Con `email`,
-    reporta el estado de ESE correo. De solo lectura; protegido con clave."""
-    if clave != "revisar-pulso-2026":
+    reporta el estado de ESE correo. De solo lectura; protegido con el token de
+    admin (cabecera X-Pipeline-Token, o `?clave=` por compatibilidad). Sin token
+    configurado, nadie pasa (falla cerrado). No hay secreto en el código."""
+    if not _token_admin_ok(x_pipeline_token or clave):
         return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
     try:

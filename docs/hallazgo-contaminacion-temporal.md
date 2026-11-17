@@ -90,3 +90,63 @@ Para cerrar esto hacen falta **más casos de índice recientes y post-corte**:
 
 Eso requiere llamadas a la IA (corre en Render, no desde la sesión de análisis).
 Es la primera tarea a ejecutar con presupuesto de IA.
+
+---
+
+## Actualización — Intervalos de confianza y bancos por magnitud
+
+*Segunda pieza de la Fase 0. Herramienta: `engine/calibration/intervalos.py`
+(con tests). Pone barras de error (bootstrap 95% AGRUPADO POR ACTIVO, para no
+tratar varias noticias del mismo símbolo como independientes) sobre los mismos
+616 casos.*
+
+### Acierto de la señal con IC del 95%
+
+| Corte | Acierto | IC 95% | n casos | nº activos |
+|---|---:|:---:|---:|---:|
+| TODOS los mercados | 50.6 % | **[45.3 – 56.0]** | 577 | 71 |
+| ÍNDICE | 63.1 % | **[52.5 – 71.4]** | 141 | 4 |
+| ÍNDICE, |señal|≥0.3 | 80.0 % | **[69.6 – 85.7]** | 30 | 4 |
+
+### Acierto por banco de magnitud del movimiento (ÍNDICE)
+
+| Movimiento posterior | Acierto | IC 95% | n |
+|---|---:|:---:|---:|
+| Chico (<1%) | 57.1 % | [54.5 – 59.1] | 42 |
+| Medio (1–3%) | 64.9 % | [50.0 – 76.2] | 74 |
+| Grande (>3%) | 68.0 % | [50.0 – 81.6] | 25 |
+
+### Qué nos dicen las barras de error (honestidad fina)
+
+1. **El agregado de todos los mercados es azar, confirmado:** 50.6 % con IC
+   [45.3–56.0] — cruza el 50 %. No hay señal fuera de índice. (Ya lo sabíamos;
+   ahora con barra de error.)
+
+2. **Corrección honesta a lo que dije ayer:** el "80 % con convicción" **NO es
+   n=3**. Ese n=3 era solo del corte RECIENTE. Sobre TODO el histórico, la señal
+   fuerte en índice es **n=30 con IC [69.6–85.7]**, que **excluye el 50 %**. O
+   sea: en los datos que tenemos, el 80 % es un resultado estadísticamente real,
+   más sólido de lo que te dije. Me pasé de pesimista; te lo corrijo.
+
+3. **Pero el límite honesto son los activos, no los casos:** índice se apoya en
+   **solo 4 instrumentos** distintos (4 "activos"). El bootstrap agrupado por
+   activo ya lo refleja —por eso el IC de índice es ancho—, pero con 4 grupos la
+   medición sigue siendo frágil. Nuestra evidencia de índice es "real pero
+   estrecha": pocos instrumentos, muchas noticias sobre ellos.
+
+4. **El sesgo de selección existe pero es moderado:** el acierto sube con el
+   tamaño del movimiento (chico 57 % → grande 68 %), así que parte del acierto
+   vive en los extremos (que el cosechador eligió). PERO incluso en movimientos
+   chicos el acierto es 57 % (IC [54.5–59.1], excluye 50 %): hay señal también en
+   lo ordinario, no solo en los días dramáticos.
+
+### Veredicto refinado
+
+La señal direccional de índice es **real** (base ~63 %, fuerte ~80 %, ambas
+excluyen el azar en muestra), **no se cae en noticias recientes** (sección
+anterior), y **no vive solo en los extremos** (banco chico 57 %). La debilidad
+honesta: descansa en **~4 instrumentos**, y la confirmación definitiva contra
+memoria necesita más casos recientes. Historia defendible hoy: *"en índices
+medimos una ventaja direccional real, del 60 % de base y ~80 % cuando el enjambre
+está muy convencido, con la salvedad de que hasta ahora se apoya en pocos
+instrumentos y la seguimos ampliando."*

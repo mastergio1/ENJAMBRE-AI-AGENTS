@@ -44,7 +44,7 @@ def recolectar_con_fecha(ruta, fetch=obtener_barras, pausa=0.02, cache=None):
         if pc is None:
             continue
         m = _mercado_de_caso({"simbolos": c.get("simbolos"), "mercado": c.get("mercado")})
-        filas.append({"fecha": fb, "anio": int(fb[:4]), "mercado": m,
+        filas.append({"fecha": fb, "anio": int(fb[:4]), "mercado": m, "simbolo": sim,
                       "direccion_pct": c.get("direccion_pct"),
                       "senal": _pond(c.get("senales_arquetipo") or {}),
                       "pct_corr": pc})

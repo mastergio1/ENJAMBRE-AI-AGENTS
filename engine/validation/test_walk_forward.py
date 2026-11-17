@@ -92,6 +92,25 @@ def test_walk_forward_con_embargo_sigue_funcionando(tmp_path):
     assert r["brier"] < r["brier_base"]
 
 
+def test_anidado_promueve_y_mide_en_holdout_congelado(tmp_path):
+    """Problema B (auditoría 4.6): la selección se hace en desarrollo y el veredicto
+    se mide en un holdout final que la selección nunca tocó."""
+    casos = wf.cargar(_archivo(tmp_path, n=500, senal_util=True))
+    rep = wf.promover_anidado(casos, min_entrena=150, paso=20, pct_holdout=20)
+    assert rep["promovido"] is True
+    assert rep["elegido"]["modo"] in ("senal_media", "senal_ponderada")
+    # el veredicto honesto vive en holdout_final, aparte de la métrica de selección
+    assert "holdout_final" in rep and rep["holdout_final"]["n"] == 100  # 20% de 500
+    assert rep["holdout_final"]["brier"] < rep["holdout_final"]["brier_base"]
+    assert "calibrador" in rep
+
+
+def test_anidado_no_promueve_sin_senal(tmp_path):
+    casos = wf.cargar(_archivo(tmp_path, n=500, senal_util=False))
+    rep = wf.promover_anidado(casos, min_entrena=150, paso=20, pct_holdout=20)
+    assert rep["promovido"] is False
+
+
 def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
     """Auditoría 4.8: el contrato es que los casos se procesan en orden temporal.
     Aunque lleguen desordenados, `cargar` los ordena por fecha."""

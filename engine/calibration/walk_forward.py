@@ -153,6 +153,76 @@ def promover(casos, min_entrena=200, paso=20):
     return salida
 
 
+def promover_anidado(casos, min_entrena=150, paso=20, pct_holdout=20, embargo=0):
+    """Promoción con holdout final CONGELADO (auditoría 4.6 y 'congelar holdout').
+
+    Evita el sesgo de selección múltiple: `promover` elige el mejor de 6 configs
+    mirando el MISMO OOS que luego reporta (optimismo). Aquí:
+      1. Se parte temporalmente: desarrollo (lo viejo) y holdout final (el pct%
+         más reciente), con un `embargo` de separación. Los casos ya vienen
+         ordenados por fecha desde `cargar`.
+      2. La elección de (modo, método) se hace SOLO con el desarrollo (walk-forward
+         interno). El holdout NO participa en la selección.
+      3. El calibrador elegido se ajusta con TODO el desarrollo y se evalúa UNA vez
+         sobre el holdout congelado. Ese número es el veredicto honesto.
+      4. Promueve solo si le gana a la base (del desarrollo) EN EL HOLDOUT.
+    """
+    n = len(casos)
+    n_hold = round(n * pct_holdout / 100)
+    corte = n - n_hold
+    if corte - embargo < min_entrena or n_hold < 20:
+        return {"promovido": False, "motivo": "datos insuficientes para anidar",
+                "n": n, "n_holdout": n_hold}
+    desarrollo = casos[:corte - embargo] if embargo else casos[:corte]
+    holdout = casos[corte:]
+
+    # 1) selección SOLO en desarrollo (walk-forward interno)
+    candidatos = []
+    for modo in MODOS:
+        for metodo in ("platt", "isotonic"):
+            r = walk_forward(desarrollo, modo, min_entrena, paso, metodo, embargo=embargo)
+            if "error" not in r:
+                candidatos.append(r)
+    if not candidatos:
+        return {"promovido": False, "motivo": "sin candidatos", "candidatos": []}
+    candidatos.sort(key=lambda r: r["brier"])
+    elegido = candidatos[0]
+
+    # 2) ajustar el elegido con TODO el desarrollo y evaluar UNA vez en el holdout
+    s_dev = [_score(c, elegido["modo"]) for c in desarrollo]
+    y_dev = [c["y"] for c in desarrollo]
+    calib = cal.ajustar_calibrador(s_dev, y_dev, metodo=elegido["metodo"])
+    s_hold = [_score(c, elegido["modo"]) for c in holdout]
+    y_hold = [c["y"] for c in holdout]
+    preds_hold = calib.predict(s_hold)
+    base_dev = cal.tasa_base(y_dev)  # base HONESTA: solo-desarrollo, no ve el holdout
+    brier_hold = cal.brier(preds_hold, y_hold)
+    brier_base_hold = cal.brier([base_dev] * len(y_hold), y_hold)
+    gana = brier_base_hold - brier_hold
+    holdout_metricas = {
+        "n": len(y_hold), "brier": round(brier_hold, 4),
+        "brier_base": round(brier_base_hold, 4),
+        "skill": round(cal.skill_score(brier_hold, brier_base_hold), 4),
+        "log_loss": round(cal.log_loss(preds_hold, y_hold), 4),
+        "ece": round(cal.ece(preds_hold, y_hold, n_tramos=5), 4),
+    }
+    promovido = gana >= MARGEN_PROMOCION
+    salida = {"promovido": promovido, "margen_requerido": MARGEN_PROMOCION,
+              "ganancia_vs_base_holdout": round(gana, 4),
+              "elegido": {"modo": elegido["modo"], "metodo": elegido["metodo"]},
+              "seleccion_desarrollo": elegido,  # su métrica de desarrollo (optimista)
+              "holdout_final": holdout_metricas,  # el veredicto honesto
+              "candidatos": candidatos}
+    if promovido:
+        # calibrador final con TODOS los datos (dev+holdout), ya validado
+        scores = [_score(c, elegido["modo"]) for c in casos]
+        ys = [c["y"] for c in casos]
+        final = cal.ajustar_calibrador(scores, ys, metodo=elegido["metodo"])
+        salida["calibrador"] = {"modo": elegido["modo"], "metodo": elegido["metodo"],
+                                "params": _serializar(final)}
+    return salida
+
+
 def _serializar(calib) -> dict:
     """Parámetros del calibrador en JSON, para que el motor lo reconstruya."""
     if hasattr(calib, "a") and hasattr(calib, "b"):   # Platt

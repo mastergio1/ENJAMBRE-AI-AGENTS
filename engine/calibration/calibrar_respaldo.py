@@ -56,7 +56,10 @@ def evaluar(filas, frac_prueba=0.3):
     s_te = [_prob(d) for _, d, _ in te]; y_te = [y for _, _, y in te]
     platt = cal.ajustar_calibrador(s_tr, y_tr, "platt")
     iso = cal.ajustar_calibrador(s_tr, y_tr, "isotonic")
-    base = cal.brier([cal.tasa_base(y_te)] * len(te), y_te)
+    # Baseline HONESTO (auditoría predictiva P5): la tasa base del predictor
+    # constante se estima con y_tr (lo conocido ANTES de predecir el test), no con
+    # y_te. Usar y_te dejaba que el baseline "viera" el balance de clases del test.
+    base = cal.brier([cal.tasa_base(y_tr)] * len(te), y_te)
     b_platt = cal.brier(platt.predict(s_te), y_te)
     b_iso = cal.brier(iso.predict(s_te), y_te)
     return {

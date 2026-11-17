@@ -279,6 +279,15 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
       const mercadoEt = reporte.mercado_etiqueta || extras.mercado_etiqueta
       const mercadoHtml = mercadoEt
         ? `<div class="rep-mercado">Mercado detectado · ${esc(mercadoEt)}</div>` : ''
+      // Badge de CONVICCIÓN (Ventana A / gating): cuando el enjambre está muy
+      // convencido en un mercado con señal real (índice), lo marca "confiable";
+      // si no, "visualización". El texto honesto viene del backend (conviccion.nota).
+      const conv = reporte.conviccion
+      const convHtml = conv
+        ? `<div class="rep-conviccion ${conv.fiable_direccion ? 'conv-fiable' : 'conv-visual'}">
+             <span class="conv-icono">${conv.fiable_direccion ? '🎯' : '👁'}</span>
+             <span class="conv-texto"><span class="conv-nivel">convicción ${esc(conv.nivel || '')}</span>${esc(conv.nota || '')}</span>
+           </div>` : ''
       const compartir = extras.id
         ? `<button class="rep-compartir" data-id="${String(extras.id).replace(/[^0-9a-f]/g, '')}">Copiar enlace</button>` : ''
       // qué hacer después: el reporte nunca es un callejón sin salida
@@ -294,6 +303,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
         <h2>Reporte del enjambre</h2>
         ${cabecera}
         ${mercadoHtml}
+        ${convHtml}
         <div class="cifras">
           <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
           <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>

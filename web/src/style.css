@@ -1561,6 +1561,53 @@ body.archivo-abierto .muro { display: none; }
   border-radius: 999px;
 }
 
+/* ---- Badge de CONVICCIÓN (Ventana A / gating) ---- */
+.rep-conviccion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+.rep-conviccion .conv-icono {
+  font-size: 1.25rem;
+  flex: 0 0 auto;
+}
+.rep-conviccion .conv-nivel {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 7px;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+/* "confiable": el enjambre muy convencido en un mercado con señal real (índice) */
+.rep-conviccion.conv-fiable {
+  color: #e7c98a;
+  background: rgba(201, 161, 92, 0.12);
+  border: 1px solid rgba(201, 161, 92, 0.55);
+  box-shadow: 0 0 18px rgba(201, 161, 92, 0.18);
+}
+.rep-conviccion.conv-fiable .conv-nivel {
+  color: var(--tinta);
+  background: var(--dorado, #c9a15c);
+}
+/* "visualización": convicción parcial o mercado sin señal direccional */
+.rep-conviccion.conv-visual {
+  color: var(--crema-suave);
+  background: rgba(243, 238, 232, 0.04);
+  border: 1px solid rgba(243, 238, 232, 0.14);
+}
+.rep-conviccion.conv-visual .conv-nivel {
+  color: var(--crema-suave);
+  border: 1px solid rgba(243, 238, 232, 0.28);
+}
+
 /* ---- Entrevistar a un líder (chat en personaje) ---- */
 .entrevista {
   position: fixed;

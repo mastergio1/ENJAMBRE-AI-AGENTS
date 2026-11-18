@@ -108,6 +108,18 @@ de calidad después de la Fase 0.
 
 ## FASE 2 — Mejor agregación: de consenso a predicción
 
+> **⚠️ Aprendizaje (2026-11-18): la "confianza efectiva" para la DIRECCIÓN quedó
+> DESCARTADA tras medirla.** Reponderar el consenso por el acierto histórico de
+> cada arquetipo da el MISMO acierto direccional que la ponderada actual (0/37
+> casos cambian de signo fuera de muestra): la mayoría de voces fija el signo y
+> bajar el peso de las malas no lo voltea. Ver
+> `docs/hallazgo-confianza-efectiva.md`. Conclusión: **el lastre está en los
+> INSUMOS (Fase 1), no en los pesos.** Por eso la Fase 1 (evidencia) pasa a ser la
+> palanca #1. De esta fase solo sobreviven las piezas que NO son reponderación de
+> dirección: la separación consenso↔predicción (ya iniciada con el gating), la
+> abstención, el detector de consenso engañoso, y —como pregunta abierta menor— si
+> la confianza efectiva ayuda a la CALIBRACIÓN (Brier), no a la dirección.
+
 **Objetivo:** dejar de confundir "lo que piensa el enjambre" con "lo que creemos
 que pasará".
 

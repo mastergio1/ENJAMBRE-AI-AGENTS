@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "events": [
+    {
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "event_type": "cpi_release",
+      "primary_source": {
+        "url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm",
+        "publisher": "U.S. Bureau of Labor Statistics"
+      },
+      "timestamp": "2024-09-11T08:30:00-04:00",
+      "timezone": "America/New_York",
+      "available_at": "2024-09-11T08:30:00-04:00",
+      "known_before": [],
+      "known_before_missing_reason": "Pendiente incorporar una publicación anterior archivada con su timestamp. Las referencias al pasado dentro del comunicado actual se conocen aquí al publicarse el anuncio.",
+      "expected": null,
+      "expected_missing_reason": "La fuente primaria no publica consenso de mercado previo. Falta una fuente fechada anterior al anuncio.",
+      "released": [
+        {
+          "name": "cpi_all_items_mom_seasonally_adjusted",
+          "value": 0.2,
+          "unit": "percent",
+          "available_at": "2024-09-11T08:30:00-04:00",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+        },
+        {
+          "name": "cpi_all_items_yoy_unadjusted",
+          "value": 2.5,
+          "unit": "percent",
+          "available_at": "2024-09-11T08:30:00-04:00",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+        },
+        {
+          "name": "cpi_core_mom_seasonally_adjusted",
+          "value": 0.3,
+          "unit": "percent",
+          "available_at": "2024-09-11T08:30:00-04:00",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+        },
+        {
+          "name": "cpi_core_yoy_unadjusted",
+          "value": 3.2,
+          "unit": "percent",
+          "available_at": "2024-09-11T08:30:00-04:00",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+        }
+      ],
+      "headline": "El BLS publica el CPI de agosto de 2024: 0,2% mensual y 2,5% interanual; subyacente 0,3% mensual.",
+      "instruments": [
+        {
+          "symbol": "SPY",
+          "market": "indice",
+          "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad."
+        },
+        {
+          "symbol": "QQQ",
+          "market": "indice",
+          "exposure_reason": "Renta variable del Nasdaq-100 expuesta a tasas de descuento y expectativas de crecimiento."
+        },
+        {
+          "symbol": "DIA",
+          "market": "indice",
+          "exposure_reason": "Renta variable de grandes empresas estadounidenses expuesta al ciclo económico y al costo de financiación."
+        },
+        {
+          "symbol": "IWM",
+          "market": "indice",
+          "exposure_reason": "Renta variable estadounidense de pequeña capitalización expuesta al costo de financiación y a la actividad doméstica."
+        }
+      ],
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window"
+      },
+      "provenance": {
+        "extractor_version": "macro-manual-v1",
+        "retrieved_at": "2026-11-18T22:32:58Z",
+        "snapshot_path": "sources/cpi_20240911.txt",
+        "snapshot_sha256": "2a68a4061993c9e3562f41d821b0766e3f8f212099d97ec909d77941604c7963",
+        "retrieval_method": "firecrawl_scrape_markdown_excerpt",
+        "source_cached_at": "2026-11-17T19:27:08.886Z",
+        "scrape_id": "01a1f0c9-8149-76fc-a1dc-b12eb9705c38",
+        "snapshot_scope": "Extracto textual del comunicado que conserva fecha, hora y cifras utilizadas. No es una captura contemporánea de 2024."
+      },
+      "validation_status": "source_verified"
+    },
+    {
+      "event_id": "us-fomc-2024-09-18",
+      "correlation_group": "us-fomc-2024-09-18",
+      "event_type": "fomc_rate_decision",
+      "primary_source": {
+        "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20240918a.htm",
+        "publisher": "Board of Governors of the Federal Reserve System"
+      },
+      "timestamp": "2024-09-18T14:00:00-04:00",
+      "timezone": "America/New_York",
+      "available_at": "2024-09-18T14:00:00-04:00",
+      "known_before": [],
+      "known_before_missing_reason": "Pendiente incorporar una publicación anterior archivada con su timestamp. Las referencias al pasado dentro del comunicado actual se conocen aquí al publicarse el anuncio.",
+      "expected": null,
+      "expected_missing_reason": "La fuente primaria no publica consenso de mercado previo. Falta una fuente fechada anterior al anuncio.",
+      "released": [
+        {
+          "name": "federal_funds_target_lower",
+          "value": 4.75,
+          "unit": "percent",
+          "available_at": "2024-09-18T14:00:00-04:00",
+          "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20240918a.htm"
+        },
+        {
+          "name": "federal_funds_target_upper",
+          "value": 5,
+          "unit": "percent",
+          "available_at": "2024-09-18T14:00:00-04:00",
+          "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20240918a.htm"
+        },
+        {
+          "name": "federal_funds_target_change",
+          "value": -0.5,
+          "unit": "percentage_point",
+          "available_at": "2024-09-18T14:00:00-04:00",
+          "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20240918a.htm"
+        }
+      ],
+      "headline": "La Reserva Federal reduce el rango objetivo de tasas en 0,5 puntos porcentuales hasta 4,75–5,00%.",
+      "instruments": [
+        {
+          "symbol": "SPY",
+          "market": "indice",
+          "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad."
+        },
+        {
+          "symbol": "QQQ",
+          "market": "indice",
+          "exposure_reason": "Renta variable del Nasdaq-100 expuesta a tasas de descuento y expectativas de crecimiento."
+        },
+        {
+          "symbol": "DIA",
+          "market": "indice",
+          "exposure_reason": "Renta variable de grandes empresas estadounidenses expuesta al ciclo económico y al costo de financiación."
+        },
+        {
+          "symbol": "IWM",
+          "market": "indice",
+          "exposure_reason": "Renta variable estadounidense de pequeña capitalización expuesta al costo de financiación y a la actividad doméstica."
+        }
+      ],
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "regular",
+        "interpretation": "descriptive_event_window"
+      },
+      "provenance": {
+        "extractor_version": "macro-manual-v1",
+        "retrieved_at": "2026-11-18T22:32:58Z",
+        "snapshot_path": "sources/fomc_20240918.txt",
+        "snapshot_sha256": "1c64a1200c1b978d28d90819b6394ee760b05d89611d8e15c714228b4326141d",
+        "retrieval_method": "firecrawl_scrape_markdown_excerpt",
+        "source_cached_at": "2026-11-18T09:11:17.220Z",
+        "scrape_id": "01a1f0c9-81a9-72cb-99c8-ad16eab142e4",
+        "snapshot_scope": "Extracto textual del comunicado que conserva fecha, hora y cifras utilizadas. No es una captura contemporánea de 2024."
+      },
+      "validation_status": "source_verified"
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "mode": "offline_summary",
+  "input": "engine/validation/fixtures/macro/events.json",
+  "counts": {
+    "events": 2,
+    "candidates": 8,
+    "accepted": 8,
+    "rejected": 0,
+    "existing": 0,
+    "staged": 8,
+    "correlation_groups": 2,
+    "evaluation_ready": 0
+  },
+  "candidates": [
+    {
+      "input_index": 0,
+      "event_id": "us-cpi-2024-09-11",
+      "case_id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+      "symbol": "SPY"
+    },
+    {
+      "input_index": 0,
+      "event_id": "us-cpi-2024-09-11",
+      "case_id": "macro-0a386b7c1be0d911169d5604e456d276fc18c07adb741c12089ad672cf057d4a",
+      "symbol": "QQQ"
+    },
+    {
+      "input_index": 0,
+      "event_id": "us-cpi-2024-09-11",
+      "case_id": "macro-4ce61f97486a1df46c5c0621ea2b741489f7883865db32dbd60dcbbd3c06d881",
+      "symbol": "DIA"
+    },
+    {
+      "input_index": 0,
+      "event_id": "us-cpi-2024-09-11",
+      "case_id": "macro-b18c4829a83de4aa28fdbb7647a39cdbb9d455d3fb4fbbe150d1e6f771b9957f",
+      "symbol": "IWM"
+    },
+    {
+      "input_index": 1,
+      "event_id": "us-fomc-2024-09-18",
+      "case_id": "macro-f02e8338c5234049864f5214f3fee2d1ebe70f7f0a8e02b18a63e3d854ae0a76",
+      "symbol": "SPY"
+    },
+    {
+      "input_index": 1,
+      "event_id": "us-fomc-2024-09-18",
+      "case_id": "macro-3be4cb2a0a4de5b9ea56b76d4788a608e390ebb54a6865908c5e9b850167aa7a",
+      "symbol": "QQQ"
+    },
+    {
+      "input_index": 1,
+      "event_id": "us-fomc-2024-09-18",
+      "case_id": "macro-079183642f56a15e34e8bf6b7119d78375814b7177cb650c703fd43c7ba5880a",
+      "symbol": "DIA"
+    },
+    {
+      "input_index": 1,
+      "event_id": "us-fomc-2024-09-18",
+      "case_id": "macro-b85e5c5eaf3a1a68391824e886667dedf71a2537887562c4c2ed8db06988fa8d",
+      "symbol": "IWM"
+    }
+  ],
+  "accepted": [
+    {
+      "case_id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "symbol": "SPY",
+      "market": "indice",
+      "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-11T12:29:00Z",
+        "end_at": "2024-09-11T12:35:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-0a386b7c1be0d911169d5604e456d276fc18c07adb741c12089ad672cf057d4a",
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "symbol": "QQQ",
+      "market": "indice",
+      "exposure_reason": "Renta variable del Nasdaq-100 expuesta a tasas de descuento y expectativas de crecimiento.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-11T12:29:00Z",
+        "end_at": "2024-09-11T12:35:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-4ce61f97486a1df46c5c0621ea2b741489f7883865db32dbd60dcbbd3c06d881",
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "symbol": "DIA",
+      "market": "indice",
+      "exposure_reason": "Renta variable de grandes empresas estadounidenses expuesta al ciclo económico y al costo de financiación.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-11T12:29:00Z",
+        "end_at": "2024-09-11T12:35:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-b18c4829a83de4aa28fdbb7647a39cdbb9d455d3fb4fbbe150d1e6f771b9957f",
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "symbol": "IWM",
+      "market": "indice",
+      "exposure_reason": "Renta variable estadounidense de pequeña capitalización expuesta al costo de financiación y a la actividad doméstica.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-11T12:29:00Z",
+        "end_at": "2024-09-11T12:35:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-f02e8338c5234049864f5214f3fee2d1ebe70f7f0a8e02b18a63e3d854ae0a76",
+      "event_id": "us-fomc-2024-09-18",
+      "correlation_group": "us-fomc-2024-09-18",
+      "symbol": "SPY",
+      "market": "indice",
+      "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "regular",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-18T17:59:00Z",
+        "end_at": "2024-09-18T18:05:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-3be4cb2a0a4de5b9ea56b76d4788a608e390ebb54a6865908c5e9b850167aa7a",
+      "event_id": "us-fomc-2024-09-18",
+      "correlation_group": "us-fomc-2024-09-18",
+      "symbol": "QQQ",
+      "market": "indice",
+      "exposure_reason": "Renta variable del Nasdaq-100 expuesta a tasas de descuento y expectativas de crecimiento.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "regular",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-18T17:59:00Z",
+        "end_at": "2024-09-18T18:05:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-079183642f56a15e34e8bf6b7119d78375814b7177cb650c703fd43c7ba5880a",
+      "event_id": "us-fomc-2024-09-18",
+      "correlation_group": "us-fomc-2024-09-18",
+      "symbol": "DIA",
+      "market": "indice",
+      "exposure_reason": "Renta variable de grandes empresas estadounidenses expuesta al ciclo económico y al costo de financiación.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "regular",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-18T17:59:00Z",
+        "end_at": "2024-09-18T18:05:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    },
+    {
+      "case_id": "macro-b85e5c5eaf3a1a68391824e886667dedf71a2537887562c4c2ed8db06988fa8d",
+      "event_id": "us-fomc-2024-09-18",
+      "correlation_group": "us-fomc-2024-09-18",
+      "symbol": "IWM",
+      "market": "indice",
+      "exposure_reason": "Renta variable estadounidense de pequeña capitalización expuesta al costo de financiación y a la actividad doméstica.",
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "regular",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-18T17:59:00Z",
+        "end_at": "2024-09-18T18:05:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ]
+    }
+  ],
+  "rejected": [],
+  "reimport": {
+    "counts": {
+      "events": 2,
+      "candidates": 8,
+      "accepted": 0,
+      "rejected": 8,
+      "existing": 8,
+      "staged": 8,
+      "correlation_groups": 2,
+      "evaluation_ready": 0
+    },
+    "rejected": [
+      {
+        "input_index": 0,
+        "event_id": "us-cpi-2024-09-11",
+        "case_id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+        "symbol": "SPY",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 0,
+        "event_id": "us-cpi-2024-09-11",
+        "case_id": "macro-0a386b7c1be0d911169d5604e456d276fc18c07adb741c12089ad672cf057d4a",
+        "symbol": "QQQ",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 0,
+        "event_id": "us-cpi-2024-09-11",
+        "case_id": "macro-4ce61f97486a1df46c5c0621ea2b741489f7883865db32dbd60dcbbd3c06d881",
+        "symbol": "DIA",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 0,
+        "event_id": "us-cpi-2024-09-11",
+        "case_id": "macro-b18c4829a83de4aa28fdbb7647a39cdbb9d455d3fb4fbbe150d1e6f771b9957f",
+        "symbol": "IWM",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 1,
+        "event_id": "us-fomc-2024-09-18",
+        "case_id": "macro-f02e8338c5234049864f5214f3fee2d1ebe70f7f0a8e02b18a63e3d854ae0a76",
+        "symbol": "SPY",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 1,
+        "event_id": "us-fomc-2024-09-18",
+        "case_id": "macro-3be4cb2a0a4de5b9ea56b76d4788a608e390ebb54a6865908c5e9b850167aa7a",
+        "symbol": "QQQ",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 1,
+        "event_id": "us-fomc-2024-09-18",
+        "case_id": "macro-079183642f56a15e34e8bf6b7119d78375814b7177cb650c703fd43c7ba5880a",
+        "symbol": "DIA",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      },
+      {
+        "input_index": 1,
+        "event_id": "us-fomc-2024-09-18",
+        "case_id": "macro-b85e5c5eaf3a1a68391824e886667dedf71a2537887562c4c2ed8db06988fa8d",
+        "symbol": "IWM",
+        "code": "duplicate_case",
+        "reason": "Acontecimiento, instrumento y horizonte ya presentes"
+      }
+    ]
+  }
+}

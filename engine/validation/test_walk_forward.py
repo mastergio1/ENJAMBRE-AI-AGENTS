@@ -4,6 +4,8 @@ import json
 import random
 from datetime import date, timedelta
 
+import pytest
+
 from calibration import walk_forward as wf
 
 INICIO = date(2026, 1, 1)
@@ -124,6 +126,48 @@ def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
     cargados = wf.cargar(str(ruta))
     fechas = [c["fecha"] for c in cargados]
     assert fechas == sorted(fechas), "cargar debe entregar los casos en orden temporal"
+
+
+@pytest.mark.parametrize("mode", ["offline_staging", "offline_summary", "offline_partition_preview"])
+def test_cargar_rechaza_informes_macro_antes_de_leer_casos(tmp_path, mode):
+    route = tmp_path / "informe.json"
+    route.write_text(json.dumps({"schema_version": 1, "mode": mode,
+                                 "casos": [{"reaccion_real": None}]}), encoding="utf-8")
+    with pytest.raises(ValueError, match="protocolo agrupado"):
+        wf.cargar(str(route))
+
+
+@pytest.mark.parametrize("wrapped", [False, True])
+@pytest.mark.parametrize("marker", [
+    {"id": "macro-" + "a" * 64},
+    {"case_id": "macro-" + "B" * 64},
+    {"observation_id": "macro-" + "c" * 64},
+    {"event_group_id": "cpi-test"},
+    {"event_group_id": ""},
+    {"correlation_group": "cpi-test"},
+    {"origin": "historical_reconstruction"},
+])
+def test_cargar_prevalida_todo_el_lote_antes_de_leer_etiquetas(tmp_path, wrapped, marker):
+    # Leer la etiqueta de la primera fila fallaría antes de detectar el grupo.
+    cases = [{"reaccion_real": None}, marker]
+    document = {"casos": cases} if wrapped else cases
+    route = tmp_path / "casos.json"
+    route.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match="protocolo agrupado"):
+        wf.cargar(str(route))
+
+
+def test_cargar_preserva_datos_legacy_con_grupos_nulos(tmp_path):
+    route = _archivo(tmp_path, n=3)
+    expected = wf.cargar(route)
+    with open(route, encoding="utf-8") as source:
+        document = json.load(source)
+    for case in document["casos"]:
+        case.update(event_group_id=None, correlation_group=None, id="macro-economia-historica",
+                    observation_id="observacion-externa")
+    with open(route, "w", encoding="utf-8") as target:
+        json.dump(document, target)
+    assert wf.cargar(route) == expected
 
 
 def test_baseline_honesto_se_reporta_y_no_usa_el_futuro(tmp_path):

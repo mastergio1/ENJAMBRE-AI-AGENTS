@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
 from contenido import calibracion as cal
+from contenido.backtest import reject_grouped_input
 
 # los 8 arquetipos clásicos que TODOS los casos traen (se exige su presencia).
 BASE = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
@@ -50,8 +51,13 @@ def _senal(sa, peso_contr=1.0):
 
 
 def cargar(ruta: str) -> list[dict]:
-    datos = json.load(open(ruta))
+    with open(ruta, encoding="utf-8") as archivo:
+        datos = json.load(archivo)
+    reject_grouped_input(datos)
     casos = datos.get("casos", datos) if isinstance(datos, dict) else datos
+    # Revisar el lote completo antes de leer la primera etiqueta de resultado.
+    for caso in casos:
+        reject_grouped_input(caso)
     out = []
     for c in casos:
         r = c["reaccion_real"]

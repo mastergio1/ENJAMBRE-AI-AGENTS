@@ -5,7 +5,9 @@ JAMÁS son destacadas (no contaminan el muro ni la hemeroteca), reintento
 sin datos, libreta separando en vivo vs histórico, y respaldo automático.
 """
 
+import json
 import re
+from unittest.mock import Mock
 
 import pytest
 
@@ -50,6 +52,105 @@ def test_eventos_estan_bien_formados_y_balanceados():
     assert conteo["negativa"] >= 10
     assert conteo["positiva"] >= 10
     assert conteo["neutra"] >= 5
+
+
+@pytest.mark.parametrize("source", ["local", "remote"])
+@pytest.mark.parametrize("marker", [
+    {"id": "macro-" + "a" * 64},
+    {"case_id": "macro-" + "B" * 64},
+    {"observation_id": "macro-" + "c" * 64},
+    {"event_group_id": "fomc-test"},
+    {"correlation_group": "fomc-test"},
+    {"origin": "historical_reconstruction"},
+])
+def test_tanda_rechaza_casos_agrupados_antes_de_operar(monkeypatch, tmp_path, source, marker):
+    # La categoría incluso está presente para comprobar el rechazo por contrato.
+    legacy = {"id": "historico-valido", "fecha": "2024-01-01", "simbolo": "SPY",
+              "mercado": "indice", "titular": "Noticia sintética", "categoria": "neutra"}
+    grouped = {**legacy, "id": "nuevo-evento", **marker}
+    local = [legacy, grouped] if source == "local" else [legacy]
+    route = tmp_path / "eventos.json"
+    route.write_text(json.dumps({"eventos": local}), encoding="utf-8")
+    monkeypatch.setattr(backtest, "RUTA_EVENTOS", route)
+    remote = [grouped] if source == "remote" else []
+    monkeypatch.setattr(respaldo, "cosecha_remota", lambda: remote)
+    simulate = Mock(side_effect=AssertionError("No debe simular"))
+    prices = Mock(side_effect=AssertionError("No debe consultar precios"))
+    save = Mock(side_effect=AssertionError("No debe guardar"))
+    monkeypatch.setattr(persistencia, "guardar_simulacion", save)
+
+    connection = persistencia.conectar()
+    try:
+        with pytest.raises(ValueError, match="protocolo agrupado"):
+            backtest.cargar_eventos()
+        with pytest.raises(ValueError, match="protocolo agrupado"):
+            backtest.correr_tanda(connection, tamano=1, simular=simulate,
+                                 obtener_variacion=prices)
+        assert connection.execute("SELECT COUNT(*) FROM simulaciones").fetchone()[0] == 0
+    finally:
+        connection.close()
+    simulate.assert_not_called()
+    prices.assert_not_called()
+    save.assert_not_called()
+
+
+def test_evento_local_no_oculta_grupo_del_mismo_id_remoto(monkeypatch):
+    legacy = backtest.cargar_eventos()[0]
+    monkeypatch.setattr(respaldo, "cosecha_remota",
+                        lambda: [{**legacy, "event_group_id": "grupo-remoto"}])
+    with pytest.raises(ValueError, match="protocolo agrupado"):
+        backtest.cargar_eventos()
+
+
+def test_catalogo_legacy_con_grupos_nulos_se_conserva(monkeypatch, tmp_path):
+    legacy = {"id": "macro-economia-historica", "fecha": "2024-01-01", "simbolo": "SPY",
+              "mercado": "indice", "titular": "Noticia sintética", "categoria": "neutra",
+              "event_group_id": None, "correlation_group": None}
+    route = tmp_path / "eventos.json"
+    route.write_text(json.dumps({"eventos": [legacy]}), encoding="utf-8")
+    monkeypatch.setattr(backtest, "RUTA_EVENTOS", route)
+    assert backtest.cargar_eventos() == [legacy]
+    connection = persistencia.conectar()
+    try:
+        report = backtest.correr_tanda(connection, tamano=1, simular=_simulador_falso,
+                                      obtener_variacion=_variacion_falsa)
+        assert [case["id"] for case in report["hechas"]] == [legacy["id"]]
+    finally:
+        connection.close()
+
+
+def test_fallo_remoto_conserva_catalogo_local(monkeypatch):
+    expected = backtest.cargar_eventos()
+    monkeypatch.setattr(respaldo, "cosecha_remota", Mock(side_effect=OSError("sin red")))
+    assert backtest.cargar_eventos() == expected
+
+
+@pytest.mark.parametrize("remote", [None, {}, [None], ["invalido"]])
+def test_remoto_malformado_conserva_catalogo_local(monkeypatch, remote):
+    expected = backtest.cargar_eventos()
+    monkeypatch.setattr(respaldo, "cosecha_remota", lambda: remote)
+    assert backtest.cargar_eventos() == expected
+
+
+def test_fila_remota_malformada_no_oculta_grupo_posterior(monkeypatch):
+    monkeypatch.setattr(respaldo, "cosecha_remota",
+                        lambda: [None, {"event_group_id": "grupo-posterior"}])
+    with pytest.raises(ValueError, match="protocolo agrupado"):
+        backtest.cargar_eventos()
+
+
+@pytest.mark.parametrize("source", ["local", "remote"])
+@pytest.mark.parametrize("mode", ["offline_staging", "offline_summary", "offline_partition_preview"])
+def test_catalogo_rechaza_informe_agrupado_con_error_explicito(monkeypatch, tmp_path, source, mode):
+    document = {"mode": mode}
+    if source == "local":
+        route = tmp_path / "informe.json"
+        route.write_text(json.dumps(document), encoding="utf-8")
+        monkeypatch.setattr(backtest, "RUTA_EVENTOS", route)
+    else:
+        monkeypatch.setattr(respaldo, "cosecha_remota", lambda: document)
+    with pytest.raises(ValueError, match="protocolo agrupado"):
+        backtest.cargar_eventos()
 
 
 # ---------- la tanda ----------

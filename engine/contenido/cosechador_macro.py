@@ -19,7 +19,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 HORIZON = "event_minus_1m_to_plus_5m"
 BLOCKERS = ["missing_intraday_prices", "grouped_evaluation_protocol_pending",
             "missing_expectations"]
@@ -113,6 +113,10 @@ def _validate_event(event, fixture_root):
         raise ValidationError("event: contenido JSON inválido o número no finito") from error
     for field in ("event_id", "correlation_group", "event_type", "headline"):
         _text(event.get(field), field)
+    if "event_group_id" in event and event["event_group_id"] != event["correlation_group"]:
+        raise ValidationError("event_group_id: incompatible con correlation_group")
+    if {"observation_id", "case_id", "simulation_id"}.intersection(event):
+        raise ValidationError("event: las identidades de observación y simulación pertenecen al caso")
     source = _object(event.get("primary_source"), "primary_source")
     _url(source.get("url"), "primary_source.url")
     _text(source.get("publisher"), "primary_source.publisher")
@@ -145,13 +149,16 @@ def _validate_event(event, fixture_root):
     symbols = set()
     for instrument in instruments:
         _object(instrument, "instrument")
+        if {"event_id", "event_group_id", "correlation_group", "observation_id",
+                "case_id", "simulation_id"}.intersection(instrument):
+            raise ValidationError("instrument: las identidades se derivan del acontecimiento")
         symbol = _text(instrument.get("symbol"), "instrument.symbol")
         if not re.fullmatch(r"[A-Z0-9][A-Z0-9.^=-]{0,19}", symbol):
             raise ValidationError("instrument.symbol: símbolo canónico inválido")
         if symbol in symbols:
             raise ValidationError(f"instruments: símbolo repetido {symbol}")
         symbols.add(symbol)
-        if instrument.get("market") not in {"indice", "accion", "cripto", "oro", "petroleo"}:
+        if instrument.get("market") not in ("indice", "accion", "cripto", "oro", "petroleo"):
             raise ValidationError("instrument.market: mercado desconocido")
         _text(instrument.get("exposure_reason"), "instrument.exposure_reason")
 
@@ -165,7 +172,7 @@ def _validate_event(event, fixture_root):
     if ("price_provider" not in measurement or measurement["price_provider"] is not None
             or measurement.get("price_status") != "missing"):
         raise ValidationError("measurement: este piloto admite únicamente precios pendientes")
-    if measurement.get("session") not in {"regular", "extended"}:
+    if measurement.get("session") not in ("regular", "extended"):
         raise ValidationError("measurement.session: sesión inválida")
     if measurement.get("interpretation") != "descriptive_event_window":
         raise ValidationError("measurement.interpretation: se requiere ventana descriptiva")
@@ -179,7 +186,10 @@ def _validate_event(event, fixture_root):
         raise ValidationError("provenance.retrieved_at: anterior a la disponibilidad")
     relative = Path(_text(provenance.get("snapshot_path"), "provenance.snapshot_path"))
     root = Path(fixture_root).resolve()
-    snapshot = (root / relative).resolve()
+    try:
+        snapshot = (root / relative).resolve()
+    except (OSError, ValueError) as error:
+        raise ValidationError("provenance.snapshot_path: ruta inválida") from error
     if relative.is_absolute() or not snapshot.is_relative_to(root):
         raise ValidationError("provenance.snapshot_path: fuera del directorio de fixtures")
     digest = provenance.get("snapshot_sha256")
@@ -205,8 +215,8 @@ def _case_key(case):
 def _event_metadata(event):
     """Congela el contenido común del anuncio al incorporar más instrumentos."""
     metadata = deepcopy(event)
-    for field in ("event_id", "correlation_group", "instruments"):
-        metadata.pop(field)
+    for field in ("event_id", "correlation_group", "event_group_id", "instruments"):
+        metadata.pop(field, None)
     metadata["primary_source"]["url"] = _url(metadata["primary_source"]["url"], "source")
     for field in ("timestamp", "available_at"):
         metadata[field] = _utc(_timestamp(metadata[field], field))
@@ -217,18 +227,24 @@ def _event_metadata(event):
     return metadata
 
 
-def _make_case(event, instrument):
+def observation_id(event_id, symbol, horizon):
+    """Identidad estable de una observación, independiente de su ejecución."""
+    for field, value in (("event_id", event_id), ("symbol", symbol), ("horizon", horizon)):
+        _text(value, field)
+    identity = json.dumps([event_id, symbol, horizon], ensure_ascii=False, separators=(",", ":"))
+    return "macro-" + hashlib.sha256(identity.encode("utf-8")).hexdigest()
+
+
+def _make_case(event, instrument, schema_version=SCHEMA_VERSION):
     event_time = _timestamp(event["timestamp"], "timestamp")
     measurement = deepcopy(event["measurement"])
     measurement["start_at"] = _utc(event_time + timedelta(seconds=-60))
     measurement["end_at"] = _utc(event_time + timedelta(seconds=300))
-    identity = json.dumps([event["event_id"], instrument["symbol"], HORIZON],
-                          ensure_ascii=False, separators=(",", ":"))
-    case_id = "macro-" + hashlib.sha256(identity.encode("utf-8")).hexdigest()
+    case_id = observation_id(event["event_id"], instrument["symbol"], HORIZON)
     blockers = list(BLOCKERS)
     if not event["known_before"]:
         blockers.append("missing_prior_context")
-    return {
+    case = {
         "case_id": case_id,
         "event_id": event["event_id"],
         "correlation_group": event["correlation_group"],
@@ -247,21 +263,41 @@ def _make_case(event, instrument):
             "mercado": instrument["market"],
         },
     }
+    if schema_version == 2:
+        case.update(observation_id=case_id, event_group_id=event["correlation_group"],
+                    simulation_id=None)
+    return case
 
 
-def _existing_cases(existing, fixture_root):
-    if existing is None:
-        return []
+def staged_observations(existing, fixture_root):
+    """Lee un informe completo v1/v2 y devuelve observaciones v2 verificadas.
+
+    Valida todos los campos de cada caso según su versión antes de añadir las
+    identidades nuevas. Los enlaces a ejecuciones requieren otro contrato y se
+    rechazan aquí. El objeto recibido y sus identificadores se conservan.
+    """
     _object(existing, "existing")
     if (type(existing.get("schema_version")) is not int
-            or existing["schema_version"] != SCHEMA_VERSION
+            or existing["schema_version"] not in (1, SCHEMA_VERSION)
             or existing.get("mode") != "offline_staging"
             or not isinstance(existing.get("staged"), list)):
         raise ValidationError("existing: formato de informe incompatible")
+    counts = _object(existing.get("counts"), "existing.counts")
+    for field in ("staged", "existing", "accepted"):
+        if type(counts.get(field)) is not int or counts[field] < 0:
+            raise ValidationError(f"existing.counts.{field}: se requiere un entero no negativo")
+    if (counts["staged"] != len(existing["staged"])
+            or counts["existing"] + counts["accepted"] != counts["staged"]):
+        raise ValidationError("existing.counts: acumulado incoherente")
+    accepted = existing.get("accepted")
+    if (not isinstance(accepted, list) or len(accepted) != counts["accepted"]
+            or accepted != existing["staged"][counts["existing"]:]):
+        raise ValidationError("existing.accepted: no coincide con el final del acumulado")
     result = []
     keys = set()
     case_ids = set()
     event_ids = {}
+    canonical_ids = {}
     event_groups = {}
     event_metadata = {}
     for case in existing["staged"]:
@@ -271,7 +307,8 @@ def _existing_cases(existing, fixture_root):
         instruments = {item["symbol"]: item for item in event["instruments"]}
         symbol = _text(case.get("symbol"), "existing.symbol")
         instrument = instruments.get(symbol)
-        if instrument is None or case != _make_case(event, instrument):
+        if (instrument is None or case.get("evaluation_ready") is not False
+                or case != _make_case(event, instrument, existing["schema_version"])):
             raise ValidationError("existing: registro inconsistente o alterado")
         key = _case_key(case)
         if key in keys or case["case_id"] in case_ids:
@@ -279,17 +316,20 @@ def _existing_cases(existing, fixture_root):
         event_key = _event_key(event)
         if event["event_id"] in event_ids and event_ids[event["event_id"]] != event_key:
             raise ValidationError("existing: event_id reutilizado")
+        if event_key in canonical_ids and canonical_ids[event_key] != event["event_id"]:
+            raise ValidationError("existing: varios event_id para el mismo acontecimiento")
         if event_key in event_groups and event_groups[event_key] != event["correlation_group"]:
             raise ValidationError("existing: correlation_group incompatible")
         metadata = _event_metadata(event)
         if event_key in event_metadata and event_metadata[event_key] != metadata:
             raise ValidationError("existing: versiones incompatibles del mismo acontecimiento")
         event_ids[event["event_id"]] = event_key
+        canonical_ids[event_key] = event["event_id"]
         event_groups[event_key] = event["correlation_group"]
         event_metadata[event_key] = metadata
         keys.add(key)
         case_ids.add(case["case_id"])
-        result.append(deepcopy(case))
+        result.append(_make_case(event, instrument))
     return result
 
 
@@ -305,10 +345,11 @@ def build_report(document, fixture_root, existing=None):
     events = document.get("events")
     if not isinstance(events, list):
         raise ValidationError("events: se requiere una lista")
-    previous = _existing_cases(existing, fixture_root)
+    previous = [] if existing is None else staged_observations(existing, fixture_root)
     accepted, rejected, candidates = [], [], []
     seen_cases = {_case_key(case) for case in previous}
     event_ids = {case["event_id"]: _event_key(case["event"]) for case in previous}
+    canonical_ids = {_event_key(case["event"]): case["event_id"] for case in previous}
     event_groups = {_event_key(case["event"]): case["correlation_group"] for case in previous}
     event_metadata = {_event_key(case["event"]): _event_metadata(case["event"]) for case in previous}
     for index, event in enumerate(events):
@@ -329,12 +370,21 @@ def build_report(document, fixture_root, existing=None):
             candidates.append(label)
             rejected.append({**label, "code": "invalid_event", "reason": str(error)})
             continue
+        if event_key in canonical_ids and canonical_ids[event_key] != event["event_id"]:
+            candidates.append(label)
+            rejected.append({**label, "code": "event_alias_conflict",
+                             "canonical_event_id": canonical_ids[event_key],
+                             "reason": "La fuente y el instante ya tienen un event_id canónico"})
+            continue
         event_ids[event["event_id"]] = event_key
+        canonical_ids[event_key] = event["event_id"]
         event_groups[event_key] = event["correlation_group"]
         event_metadata[event_key] = metadata
         for instrument in event["instruments"]:
             case = _make_case(event, instrument)
-            candidate = {**label, "case_id": case["case_id"], "symbol": case["symbol"]}
+            candidate = {**label, "case_id": case["case_id"], "symbol": case["symbol"],
+                         "observation_id": case["observation_id"],
+                         "event_group_id": case["event_group_id"], "simulation_id": None}
             candidates.append(candidate)
             key = _case_key(case)
             if key in seen_cases:

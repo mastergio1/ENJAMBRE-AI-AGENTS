@@ -88,6 +88,35 @@ CREATE TABLE IF NOT EXISTS eventos_correo (
   ts         TEXT NOT NULL,
   UNIQUE(fecha_ed, email, tipo)
 );
+CREATE TABLE IF NOT EXISTS predicciones (
+  -- REGISTRO PROSPECTIVO (Fase 7-mínima): cada predicción se guarda ANTES de
+  -- conocer el resultado. Es INMUTABLE: los campos de la predicción nunca
+  -- cambian; solo se rellenan los de resolución, una vez, cuando llega el
+  -- resultado futuro. Datos inmunes a contaminación y sesgo de selección.
+  id             TEXT PRIMARY KEY,   -- sha256(simbolo|as_of|horizonte|titular)
+  sim_id         TEXT,               -- simulación que la originó (si aplica)
+  creada_iso     TEXT NOT NULL,      -- cuándo se registró (≈ as_of)
+  titular        TEXT NOT NULL,
+  simbolo        TEXT NOT NULL,
+  mercado        TEXT,
+  as_of_iso      TEXT NOT NULL,      -- info disponible hasta este instante
+  horizonte      INTEGER NOT NULL,   -- ruedas hasta resolver
+  direccion      TEXT NOT NULL,      -- alza/baja/neutra (lo que predijo)
+  probabilidad   REAL,               -- prob. calibrada de subida (si hay)
+  consenso       REAL,               -- señal media ponderada
+  conviccion     TEXT,               -- fuerte/moderada/debil
+  fiable         INTEGER DEFAULT 0,  -- 1 si el gating la marcó fiable
+  abstenido      INTEGER DEFAULT 0,  -- 1 si el sistema decidió no predecir
+  versiones_json TEXT,               -- {modelo, prompt, codigo, agregador, evidencia}
+  fuentes_json   TEXT,               -- {api, cache, fallback, ...} por simulación
+  -- resolución (se rellena una sola vez, después):
+  resuelto       INTEGER DEFAULT 0,
+  pct_real       REAL,               -- movimiento real sin fuga (%)
+  direccion_real TEXT,
+  acierto        INTEGER,            -- 1/0; NULL si neutra o abstenido
+  resuelto_iso   TEXT,
+  evaluador_ver  TEXT
+);
 """
 
 
@@ -905,4 +934,117 @@ def estadisticas(conexion, dias: int = 30, ediciones_correo: int = 14) -> dict:
             "tasa_clic": round(sum_cl / sum_env, 3) if sum_env else None,
             "por_edicion": correo,
         },
+    }
+
+
+# ---------- registro prospectivo de predicciones (Fase 7-mínima) ----------
+
+def id_prediccion(simbolo: str, as_of_iso: str, horizonte: int, titular: str) -> str:
+    """Id estable de una predicción (una por símbolo+as_of+horizonte+titular)."""
+    crudo = f"{simbolo}|{as_of_iso}|{horizonte}|{titular}"
+    return hashlib.sha256(crudo.encode()).hexdigest()[:16]
+
+
+def registrar_prediccion(
+    conexion, *, titular: str, simbolo: str, horizonte: int, direccion: str,
+    as_of_iso: str | None = None, mercado: str | None = None, sim_id: str | None = None,
+    probabilidad: float | None = None, consenso: float | None = None,
+    conviccion: str | None = None, fiable: bool = False, abstenido: bool = False,
+    versiones: dict | None = None, fuentes: dict | None = None,
+) -> str:
+    """Registra una predicción ANTES de conocer el resultado (inmutable).
+
+    Devuelve su id. Si ya existe (mismo símbolo+as_of+horizonte+titular), NO la
+    sobrescribe: la primera predicción manda (así el registro no se puede
+    "mejorar" a posteriori). Devuelve el id existente."""
+    as_of = as_of_iso or ahora_iso()
+    pid = id_prediccion(simbolo, as_of, horizonte, titular)
+    conexion.execute(
+        """INSERT OR IGNORE INTO predicciones
+           (id, sim_id, creada_iso, titular, simbolo, mercado, as_of_iso, horizonte,
+            direccion, probabilidad, consenso, conviccion, fiable, abstenido,
+            versiones_json, fuentes_json)
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+        (pid, sim_id, ahora_iso(), titular, simbolo, mercado, as_of, horizonte,
+         direccion, probabilidad, consenso, conviccion, 1 if fiable else 0,
+         1 if abstenido else 0,
+         json.dumps(versiones or {}, ensure_ascii=False),
+         json.dumps(fuentes or {}, ensure_ascii=False)),
+    )
+    conexion.commit()
+    return pid
+
+
+def resolver_prediccion(conexion, pid: str, pct_real: float, *,
+                        zona: float = 0.3, evaluador_ver: str = "v1") -> bool:
+    """Rellena el resultado de una predicción UNA sola vez. `pct_real` es el
+    movimiento real sin fuga (%). Calcula dirección real y acierto (NULL si el
+    movimiento es neutro —|pct|<zona— o si la predicción fue abstención).
+    Devuelve True si resolvió, False si no existía o ya estaba resuelta."""
+    fila = conexion.execute(
+        "SELECT direccion, abstenido, resuelto FROM predicciones WHERE id = ?", (pid,)
+    ).fetchone()
+    if fila is None or fila["resuelto"]:
+        return False
+    if pct_real > zona:
+        dir_real = "alza"
+    elif pct_real < -zona:
+        dir_real = "baja"
+    else:
+        dir_real = "neutra"
+    if fila["abstenido"] or dir_real == "neutra":
+        acierto = None  # no se puntúa
+    else:
+        acierto = 1 if fila["direccion"] == dir_real else 0
+    conexion.execute(
+        """UPDATE predicciones SET resuelto = 1, pct_real = ?, direccion_real = ?,
+           acierto = ?, resuelto_iso = ?, evaluador_ver = ? WHERE id = ?""",
+        (pct_real, dir_real, acierto, ahora_iso(), evaluador_ver, pid),
+    )
+    conexion.commit()
+    return True
+
+
+def predicciones_por_resolver(conexion, hasta_iso: str | None = None) -> list[dict]:
+    """Predicciones aún sin resultado cuyo as_of ya quedó atrás (listas para
+    resolver). `hasta_iso`: solo las con as_of anterior a esa fecha (por defecto,
+    todas las no resueltas)."""
+    if hasta_iso:
+        filas = conexion.execute(
+            "SELECT * FROM predicciones WHERE resuelto = 0 AND as_of_iso <= ? ORDER BY as_of_iso",
+            (hasta_iso,)).fetchall()
+    else:
+        filas = conexion.execute(
+            "SELECT * FROM predicciones WHERE resuelto = 0 ORDER BY as_of_iso").fetchall()
+    return [dict(f) for f in filas]
+
+
+def listar_predicciones(conexion, *, resueltas: bool | None = None,
+                        mercado: str | None = None, limite: int = 500) -> list[dict]:
+    cond, args = [], []
+    if resueltas is not None:
+        cond.append("resuelto = ?"); args.append(1 if resueltas else 0)
+    if mercado:
+        cond.append("mercado = ?"); args.append(mercado)
+    where = (" WHERE " + " AND ".join(cond)) if cond else ""
+    args.append(limite)
+    filas = conexion.execute(
+        f"SELECT * FROM predicciones{where} ORDER BY creada_iso DESC LIMIT ?", args
+    ).fetchall()
+    return [dict(f) for f in filas]
+
+
+def resumen_predicciones(conexion, mercado: str | None = None) -> dict:
+    """Tablero mínimo: cobertura y acierto sobre las predicciones RESUELTAS (y no
+    abstenidas, movimiento no neutro). Honesto: reporta n junto a cada cifra."""
+    puntuables = [p for p in listar_predicciones(conexion, resueltas=True, mercado=mercado)
+                  if p["acierto"] is not None]
+    total = len(listar_predicciones(conexion, mercado=mercado))
+    resueltas = len(listar_predicciones(conexion, resueltas=True, mercado=mercado))
+    n = len(puntuables)
+    aciertos = sum(p["acierto"] for p in puntuables)
+    return {
+        "total": total, "resueltas": resueltas, "puntuables": n,
+        "acierto": round(100 * aciertos / n, 1) if n else None,
+        "cobertura": round(100 * n / resueltas, 1) if resueltas else None,
     }

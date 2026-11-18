@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "mode": "offline_staging",
+  "counts": {
+    "events": 1,
+    "candidates": 1,
+    "accepted": 1,
+    "rejected": 0,
+    "existing": 0,
+    "staged": 1,
+    "correlation_groups": 1,
+    "evaluation_ready": 0
+  },
+  "candidates": [
+    {
+      "input_index": 0,
+      "event_id": "us-cpi-2024-09-11",
+      "case_id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+      "symbol": "SPY"
+    }
+  ],
+  "accepted": [
+    {
+      "case_id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "symbol": "SPY",
+      "market": "indice",
+      "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad.",
+      "event": {
+        "event_id": "us-cpi-2024-09-11",
+        "correlation_group": "us-cpi-2024-09-11",
+        "event_type": "cpi_release",
+        "primary_source": {
+          "url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm",
+          "publisher": "U.S. Bureau of Labor Statistics"
+        },
+        "timestamp": "2024-09-11T08:30:00-04:00",
+        "timezone": "America/New_York",
+        "available_at": "2024-09-11T08:30:00-04:00",
+        "known_before": [],
+        "known_before_missing_reason": "Pendiente incorporar una publicación anterior archivada con su timestamp. Las referencias al pasado dentro del comunicado actual se conocen aquí al publicarse el anuncio.",
+        "expected": null,
+        "expected_missing_reason": "La fuente primaria no publica consenso de mercado previo. Falta una fuente fechada anterior al anuncio.",
+        "released": [
+          {
+            "name": "cpi_all_items_mom_seasonally_adjusted",
+            "value": 0.2,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          },
+          {
+            "name": "cpi_all_items_yoy_unadjusted",
+            "value": 2.5,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          },
+          {
+            "name": "cpi_core_mom_seasonally_adjusted",
+            "value": 0.3,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          },
+          {
+            "name": "cpi_core_yoy_unadjusted",
+            "value": 3.2,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          }
+        ],
+        "headline": "El BLS publica el CPI de agosto de 2024: 0,2% mensual y 2,5% interanual; subyacente 0,3% mensual.",
+        "instruments": [
+          {
+            "symbol": "SPY",
+            "market": "indice",
+            "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad."
+          }
+        ],
+        "measurement": {
+          "horizon": "event_minus_1m_to_plus_5m",
+          "start_offset_seconds": -60,
+          "end_offset_seconds": 300,
+          "price_provider": null,
+          "price_status": "missing",
+          "session": "extended",
+          "interpretation": "descriptive_event_window"
+        },
+        "provenance": {
+          "extractor_version": "macro-manual-v1",
+          "retrieved_at": "2026-11-18T22:32:58Z",
+          "snapshot_path": "sources/cpi_20240911.txt",
+          "snapshot_sha256": "2a68a4061993c9e3562f41d821b0766e3f8f212099d97ec909d77941604c7963",
+          "retrieval_method": "firecrawl_scrape_markdown_excerpt",
+          "source_cached_at": "2026-11-17T19:27:08.886Z",
+          "scrape_id": "01a1f0c9-8149-76fc-a1dc-b12eb9705c38",
+          "snapshot_scope": "Extracto textual del comunicado que conserva fecha, hora y cifras utilizadas. No es una captura contemporánea de 2024."
+        },
+        "validation_status": "source_verified"
+      },
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-11T12:29:00Z",
+        "end_at": "2024-09-11T12:35:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ],
+      "legacy_candidate": {
+        "id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+        "fecha": "2024-09-11",
+        "titular": "El BLS publica el CPI de agosto de 2024: 0,2% mensual y 2,5% interanual; subyacente 0,3% mensual.",
+        "simbolo": "SPY",
+        "mercado": "indice"
+      }
+    }
+  ],
+  "rejected": [],
+  "staged": [
+    {
+      "case_id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+      "event_id": "us-cpi-2024-09-11",
+      "correlation_group": "us-cpi-2024-09-11",
+      "symbol": "SPY",
+      "market": "indice",
+      "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad.",
+      "event": {
+        "event_id": "us-cpi-2024-09-11",
+        "correlation_group": "us-cpi-2024-09-11",
+        "event_type": "cpi_release",
+        "primary_source": {
+          "url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm",
+          "publisher": "U.S. Bureau of Labor Statistics"
+        },
+        "timestamp": "2024-09-11T08:30:00-04:00",
+        "timezone": "America/New_York",
+        "available_at": "2024-09-11T08:30:00-04:00",
+        "known_before": [],
+        "known_before_missing_reason": "Pendiente incorporar una publicación anterior archivada con su timestamp. Las referencias al pasado dentro del comunicado actual se conocen aquí al publicarse el anuncio.",
+        "expected": null,
+        "expected_missing_reason": "La fuente primaria no publica consenso de mercado previo. Falta una fuente fechada anterior al anuncio.",
+        "released": [
+          {
+            "name": "cpi_all_items_mom_seasonally_adjusted",
+            "value": 0.2,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          },
+          {
+            "name": "cpi_all_items_yoy_unadjusted",
+            "value": 2.5,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          },
+          {
+            "name": "cpi_core_mom_seasonally_adjusted",
+            "value": 0.3,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          },
+          {
+            "name": "cpi_core_yoy_unadjusted",
+            "value": 3.2,
+            "unit": "percent",
+            "available_at": "2024-09-11T08:30:00-04:00",
+            "source_url": "https://www.bls.gov/news.release/archives/cpi_09112024.htm"
+          }
+        ],
+        "headline": "El BLS publica el CPI de agosto de 2024: 0,2% mensual y 2,5% interanual; subyacente 0,3% mensual.",
+        "instruments": [
+          {
+            "symbol": "SPY",
+            "market": "indice",
+            "exposure_reason": "Renta variable estadounidense de gran capitalización expuesta a inflación, tasas de descuento y expectativas de actividad."
+          }
+        ],
+        "measurement": {
+          "horizon": "event_minus_1m_to_plus_5m",
+          "start_offset_seconds": -60,
+          "end_offset_seconds": 300,
+          "price_provider": null,
+          "price_status": "missing",
+          "session": "extended",
+          "interpretation": "descriptive_event_window"
+        },
+        "provenance": {
+          "extractor_version": "macro-manual-v1",
+          "retrieved_at": "2026-11-18T22:32:58Z",
+          "snapshot_path": "sources/cpi_20240911.txt",
+          "snapshot_sha256": "2a68a4061993c9e3562f41d821b0766e3f8f212099d97ec909d77941604c7963",
+          "retrieval_method": "firecrawl_scrape_markdown_excerpt",
+          "source_cached_at": "2026-11-17T19:27:08.886Z",
+          "scrape_id": "01a1f0c9-8149-76fc-a1dc-b12eb9705c38",
+          "snapshot_scope": "Extracto textual del comunicado que conserva fecha, hora y cifras utilizadas. No es una captura contemporánea de 2024."
+        },
+        "validation_status": "source_verified"
+      },
+      "measurement": {
+        "horizon": "event_minus_1m_to_plus_5m",
+        "start_offset_seconds": -60,
+        "end_offset_seconds": 300,
+        "price_provider": null,
+        "price_status": "missing",
+        "session": "extended",
+        "interpretation": "descriptive_event_window",
+        "start_at": "2024-09-11T12:29:00Z",
+        "end_at": "2024-09-11T12:35:00Z"
+      },
+      "origin": "historical_reconstruction",
+      "validation_status": "accepted_staging",
+      "evaluation_ready": false,
+      "blockers": [
+        "missing_intraday_prices",
+        "grouped_evaluation_protocol_pending",
+        "missing_expectations",
+        "missing_prior_context"
+      ],
+      "legacy_candidate": {
+        "id": "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6",
+        "fecha": "2024-09-11",
+        "titular": "El BLS publica el CPI de agosto de 2024: 0,2% mensual y 2,5% interanual; subyacente 0,3% mensual.",
+        "simbolo": "SPY",
+        "mercado": "indice"
+      }
+    }
+  ]
+}

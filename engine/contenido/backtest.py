@@ -20,6 +20,7 @@ import gc
 import json
 import os
 from pathlib import Path
+import re
 
 from contenido import persistencia
 
@@ -32,19 +33,52 @@ TANDA_MAXIMA = 40   # freno duro por corrida. Con Starter (no se duerme) + disco
 RUEDAS = 2          # misma ventana de medición que el corrector en vivo
 
 
+class GroupedInputError(ValueError):
+    """El contrato heredado no puede preservar la identidad de estos casos."""
+
+
+def reject_grouped_input(record) -> None:
+    """Impide perder grupos o ejecutar candidatos macro en el contrato heredado."""
+    if not isinstance(record, dict):
+        return
+    macro_id = any(
+        isinstance(value, str) and re.fullmatch(r"macro-[0-9a-fA-F]{64}", value)
+        for value in (record.get("id"), record.get("case_id"), record.get("observation_id"))
+    )
+    if (macro_id or record.get("event_group_id") is not None
+            or record.get("correlation_group") is not None
+            or record.get("origin") == "historical_reconstruction"
+            or record.get("mode") in ("offline_staging", "offline_summary", "offline_partition_preview")):
+        raise GroupedInputError(
+            "Los candidatos macro y los casos con grupos requieren un protocolo agrupado. "
+            "La entrada heredada no admite estos registros."
+        )
+
+
 def cargar_eventos() -> list[dict]:
     """El banco de exámenes: los curados a mano (backtest_eventos.json) MÁS
     los que el cosechador fue sumando en GitHub (datos/cosecha.json). Se
     fusiona por `id` (lo local manda si hay choque) para que el catálogo
     crezca solo sin depender del disco efímero ni de un redeploy."""
     with open(RUTA_EVENTOS, encoding="utf-8") as archivo:
-        locales = json.load(archivo)["eventos"]
+        document = json.load(archivo)
+    reject_grouped_input(document)
+    locales = document["eventos"]
+    for evento in locales:
+        reject_grouped_input(evento)
     por_id = {}
     try:
         from contenido import respaldo
-        for evento in respaldo.cosecha_remota():
+        remotos = respaldo.cosecha_remota()
+        reject_grouped_input(remotos)
+        for evento in remotos:
+            # Revisar incluso un remoto que sería tapado por el catálogo local.
+            reject_grouped_input(evento)
+        for evento in remotos:
             if evento.get("id") and evento.get("titular") and evento.get("simbolo"):
                 por_id[evento["id"]] = evento
+    except GroupedInputError:
+        raise  # Un error de contrato no es un fallo transitorio del proveedor.
     except Exception:
         pass  # sin red o sin cosecha: el banco es solo lo local
     for evento in locales:  # lo curado a mano tiene prioridad sobre lo cosechado

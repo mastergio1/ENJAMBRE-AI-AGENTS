@@ -288,7 +288,9 @@ def test_informe_previo_con_ids_contradictorios_aborta(document):
     second["events"][0]["event_id"] = first["events"][0]["event_id"]
     previous = build_report(first, FIXTURES)
     previous["staged"] += build_report(second, FIXTURES)["staged"]
-    with pytest.raises(ValidationError):
+    previous["accepted"] = deepcopy(previous["staged"])
+    previous["counts"].update(staged=8, accepted=8, existing=0)
+    with pytest.raises(ValidationError, match="duplicados|event_id"):
         build_report(document, FIXTURES, existing=previous)
 
 
@@ -302,7 +304,9 @@ def test_informe_previo_no_puede_dividir_un_evento_en_dos_grupos(document):
     second["events"][0]["correlation_group"] += "-otro"
     previous = build_report(first, FIXTURES)
     previous["staged"] += build_report(second, FIXTURES)["staged"]
-    with pytest.raises(ValidationError):
+    previous["accepted"] = deepcopy(previous["staged"])
+    previous["counts"].update(staged=2, accepted=2, existing=0)
+    with pytest.raises(ValidationError, match="correlation_group"):
         build_report(document, FIXTURES, existing=previous)
 
 
@@ -382,3 +386,140 @@ def test_cli_rechaza_numeros_no_finitos_con_error_json(
     assert result.returncode == exit_code
     assert json.loads(result.stdout)[error_field]
     assert "Traceback" not in result.stderr
+
+
+@pytest.fixture
+def legacy_report():
+    # Salida auténtica de build_report en 8d8053e, CPI y un instrumento.
+    return json.loads((FIXTURES / "report_v1.json").read_text(encoding="utf-8"))
+
+
+def test_identidad_v2_separa_observacion_grupo_y_simulacion(document):
+    report = build_report(document, FIXTURES)
+    assert report["schema_version"] == 2
+    observations = {case["observation_id"]: case for case in report["staged"]}
+    assert len(observations) == 8
+    for event in document["events"]:
+        cases = [case for case in observations.values() if case["event_id"] == event["event_id"]]
+        assert {case["symbol"] for case in cases} == {"SPY", "QQQ", "DIA", "IWM"}
+        assert {case["event_group_id"] for case in cases} == {event["correlation_group"]}
+        assert all(case["case_id"] == case["observation_id"] for case in cases)
+        assert all(case["simulation_id"] is None for case in cases)
+
+
+def test_otro_horizonte_tiene_otra_identidad_sin_habilitarlo_en_piloto(document):
+    from contenido.cosechador_macro import observation_id
+
+    event = document["events"][0]
+    current = build_report(document, FIXTURES)["accepted"][0]
+    same = observation_id(event["event_id"], "SPY", event["measurement"]["horizon"])
+    other = observation_id(event["event_id"], "SPY", "event_minus_1m_to_plus_30m")
+    assert same == current["observation_id"]
+    assert other != same
+
+    document["events"] = [event]
+    event["measurement"]["horizon"] = "event_minus_1m_to_plus_30m"
+    event["measurement"]["end_offset_seconds"] = 1800
+    report = build_report(document, FIXTURES)
+    assert not report["accepted"]
+    assert report["rejected"]
+
+
+def test_informe_v1_autentico_migra_sin_perder_identidad(legacy_report):
+    original = deepcopy(legacy_report)
+    report = build_report({"schema_version": 1, "events": []}, FIXTURES, existing=legacy_report)
+    assert report["schema_version"] == 2
+    assert report["counts"]["existing"] == 1
+    case = report["staged"][0]
+    old = legacy_report["staged"][0]
+    assert case["observation_id"] == "macro-4fe8ffe75e0f0fa81778caa473ee20cdb4fd1dcab7f4f4b1e605898b419c7fc6"
+    assert case["event_group_id"] == old["correlation_group"]
+    assert case["simulation_id"] is None
+    assert all(case[key] == value for key, value in old.items())
+    assert legacy_report == original
+
+
+def test_migracion_v1_y_reintentos_v2_conservan_las_ocho_observaciones(document, legacy_report):
+    migrated = build_report(document, FIXTURES, existing=legacy_report)
+    assert migrated["counts"]["accepted"] == 7
+    assert migrated["counts"]["rejected"] == 1
+    assert migrated["counts"]["staged"] == 8
+    repeated = build_report(document, FIXTURES, existing=migrated)
+    assert repeated["counts"]["accepted"] == 0
+    assert repeated["counts"]["rejected"] == 8
+    assert repeated["staged"] == migrated["staged"]
+
+
+@pytest.mark.parametrize("field", ["case_id", "exposure_reason", "simulation_id"])
+def test_informe_v1_adulterado_se_rechaza(legacy_report, field):
+    legacy_report["staged"][0][field] = "valor-adulterado"
+    legacy_report["accepted"][0][field] = "valor-adulterado"
+    with pytest.raises(ValidationError, match="registro inconsistente"):
+        build_report({"schema_version": 1, "events": []}, FIXTURES, existing=legacy_report)
+
+
+def test_alias_de_evento_no_crea_identidad_distinta_al_agregar_etf(document):
+    first = deepcopy(document)
+    first["events"] = [first["events"][0]]
+    first["events"][0]["instruments"] = first["events"][0]["instruments"][:1]
+    previous = build_report(first, FIXTURES)
+    event = document["events"][0]
+    document["events"] = [event]
+    canonical_id = event["event_id"]
+    event["event_id"] += "-alias"
+    event["instruments"] = event["instruments"][1:]
+    report = build_report(document, FIXTURES, existing=previous)
+    assert not report["accepted"]
+    assert report["staged"] == previous["staged"]
+    assert report["rejected"][0]["code"] == "event_alias_conflict"
+    assert report["rejected"][0]["canonical_event_id"] == canonical_id
+
+
+def test_colision_real_del_sim_id_legado_entre_cuatro_observaciones(document, monkeypatch):
+    from contenido import backtest, persistencia
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("La demostración solo utiliza funciones puras")
+
+    monkeypatch.setattr(persistencia, "conectar", forbidden)
+    document["events"] = [document["events"][0]]
+    document["events"][0]["headline"] = "Comunicado ficticio para prueba de identidad"
+    cases = build_report(document, FIXTURES)["accepted"]
+    legacy_events = [case["legacy_candidate"] for case in cases]
+
+    assert {event["simbolo"] for event in legacy_events} == {"SPY", "QQQ", "DIA", "IWM"}
+    legacy_ids = {backtest._sim_id(event) for event in legacy_events}
+    assert len(legacy_ids) == 1
+    assert legacy_ids == {persistencia.id_simulacion(
+        "Comunicado ficticio para prueba de identidad", 20240911,
+    )}
+    assert len({case["observation_id"] for case in cases}) == 4
+    assert all(case["simulation_id"] is None for case in cases)
+
+
+@pytest.mark.parametrize("version", [1, 2])
+def test_informe_previo_no_puede_perder_el_acumulado(document, legacy_report, version):
+    previous = legacy_report if version == 1 else build_report(document, FIXTURES)
+    previous["staged"] = []
+    with pytest.raises(ValidationError, match="counts"):
+        build_report(document, FIXTURES, existing=previous)
+
+
+@pytest.mark.parametrize("version", [1, 2])
+def test_informe_previo_exige_la_lista_de_aceptados(document, legacy_report, version):
+    previous = legacy_report if version == 1 else build_report(document, FIXTURES)
+    del previous["accepted"]
+    with pytest.raises(ValidationError, match="accepted"):
+        build_report(document, FIXTURES, existing=previous)
+
+
+@pytest.mark.parametrize("version", [1, 2])
+def test_reintentos_sin_nuevos_casos_preservan_informes_v1_y_v2(document, legacy_report, version):
+    previous = legacy_report if version == 1 else build_report(document, FIXTURES)
+    empty = {"schema_version": 1, "events": []}
+    first = build_report(empty, FIXTURES, existing=previous)
+    repeated = build_report(empty, FIXTURES, existing=first)
+    assert repeated["schema_version"] == 2
+    assert repeated["counts"]["accepted"] == 0
+    assert repeated["counts"]["existing"] == len(previous["staged"])
+    assert repeated["staged"] == first["staged"]

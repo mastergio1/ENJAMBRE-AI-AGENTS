@@ -1498,6 +1498,26 @@ def panel_estado(x_pipeline_token: str = Header(default="")) -> dict:
     }
 
 
+@app.get("/api/predicciones/resumen")
+def predicciones_resumen(x_pipeline_token: str = Header(default="")) -> dict:
+    """Tablero del registro prospectivo (Fase 7-mínima): acierto y cobertura de las
+    predicciones ya resueltas, global y por mercado. Protegido por token admin."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        return {
+            "global": persistencia.resumen_predicciones(conexion),
+            "por_mercado": {
+                m: persistencia.resumen_predicciones(conexion, m)
+                for m in ("indice", "accion", "cripto", "oro", "petroleo")
+            },
+            "pendientes": len(persistencia.predicciones_por_resolver(conexion)),
+        }
+    finally:
+        conexion.close()
+
+
 @app.get("/api/panel/ediciones")
 def panel_ediciones(x_pipeline_token: str = Header(default=""), limite: int = 30) -> dict:
     if not _token_admin_ok(x_pipeline_token):

@@ -16,6 +16,40 @@ from contenido.fuentes import alpaca
 MAXIMO_DIARIO = 3  # presupuesto de CONTENIDO.md — no negociable
 
 
+def _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos, sim_id, seed):
+    """Registra la predicción del día ANTES de conocer el resultado (Fase 7-mínima).
+
+    Es el momento prospectivo: noticia REAL de hoy, resultado futuro desconocido →
+    dato inmune a contaminación y sesgo de selección. BLINDADO: si algo falla, NO
+    rompe el ritual (la predicción es secundaria al contenido del día)."""
+    try:
+        simbolos = (elegido.get("simbolos") or "").strip()
+        simbolo = next((s.strip() for s in simbolos.split(",") if s.strip()), "")
+        if not simbolo:
+            return  # sin instrumento no se puede resolver después
+        from contenido.backtest import _mercado_de_caso
+        mercado = _mercado_de_caso({"simbolos": simbolos})
+        conv = reporte.get("conviccion") or {}
+        direccion = reporte.get("direccion_titular", "neutra")
+        fuentes: dict[str, int] = {}
+        for lider in lideres_datos:
+            f = lider.get("fuente", "?")
+            fuentes[f] = fuentes.get(f, 0) + 1
+        try:
+            from brains.cerebro import MODELO
+        except Exception:
+            MODELO = None
+        persistencia.registrar_prediccion(
+            conexion, titular=elegido["titular"], simbolo=simbolo, mercado=mercado,
+            horizonte=2, direccion=direccion, abstenido=(direccion == "neutra"),
+            consenso=reporte.get("senal_media_ponderada"),
+            conviccion=conv.get("nivel"), fiable=bool(conv.get("fiable_direccion")),
+            fuentes=fuentes, versiones={"modelo": MODELO, "seed": seed}, sim_id=sim_id,
+        )
+    except Exception:
+        pass  # el registro prospectivo nunca debe tumbar el ritual
+
+
 def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
     """Corre una simulación completa fuera del WebSocket (para el pipeline).
 
@@ -131,6 +165,9 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
                 destacada=True,
             )
             persistencia.vincular_simulacion(conexion, persistencia.id_titular(elegido["titular"]), sim_id)
+            # Fase 7-mínima: registrar la predicción de hoy ANTES de conocer el
+            # resultado (prospectivo, imposible de contaminar). Blindado.
+            _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos, sim_id, seed)
             publicadas.append({"sim_id": sim_id, "titular": elegido["titular"], "impacto": elegido["impacto"]})
 
         return {"origen": origen, "publicadas": publicadas, "log": resultado["log"]}
@@ -161,6 +198,13 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
     try:
+        # Fase 7-mínima: resolver las predicciones que ya maduraron (mide el
+        # resultado real SIN FUGA con Yahoo). Blindado: nunca tumba el ritual.
+        try:
+            from contenido import resolver_predicciones
+            resolver_predicciones.resolver_pendientes(conexion)
+        except Exception:
+            pass
         # ¿qué día es? (hora local del lector). El fin de semana El Pulso cambia
         # de marcha: SÁBADO = resumen de la semana; DOMINGO = deep-dive de una
         # mid/small-cap o sector. `cuando` se puede inyectar (tests).

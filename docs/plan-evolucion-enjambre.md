@@ -1,291 +1,289 @@
-# Plan de evolución de El Enjambre
+# Plan de evolución de El Enjambre — v2
 
-*Rubicón Lab · El Enjambre · 2026-11-17. Hoja de ruta completa para evolucionar
-el motor de un "experimento convincente" a un sistema predictivo **demostrable**.
-Integra los hallazgos salvageables de las cuatro auditorías externas, nuestro
-propio roadmap diferido (infraestructura, microestructura, modularización) y la
-disciplina metodológica que lo hace ciencia y no teatro.*
+*Rubicón Lab · El Enjambre · v2, 2026-11-18. Hoja de ruta para llevar el motor de
+"experimento convincente" a sistema predictivo **demostrable**. v2 integra los
+refinamientos de la auditoría integral (18-11): contrato de evaluación, holdout
+congelado con manifiesto, bootstrap multiway, registro prospectivo desde ya,
+baselines fuertes, abstención y guía de comunicación. Compañero:
+`docs/resumen-avances-enjambre.md` y `docs/analisis-auditoria-integral.md`.*
 
 ---
 
 ## La estrella polar
 
-> **No queremos que el Enjambre parezca más inteligente. Queremos demostrar, con
-> resultados fuera de muestra, que realmente acierta más que un modelo simple.**
+> **No queremos que El Enjambre parezca más inteligente. Queremos demostrar, con
+> resultados fuera de muestra, que aporta valor frente a un modelo simple.**
 
-Todo en este plan se subordina a eso. Y hay una verdad incómoda que define la
-prioridad: **hoy no sabemos con certeza cuánto de nuestro "~63% en índice" es
-señal real y cuánto es memoria del modelo.** Hasta resolver eso (Fase 0), toda
-mejora se construye sobre arena.
+### La regla de oro (de la auditoría integral)
 
-### Tres reglas de disciplina (no negociables)
+> Ninguna cifra sin denominador. Ninguna predicción sin timestamp. Ninguna
+> promoción sin holdout. Ninguna mejora sin comparación. Ningún consenso sin medir
+> su independencia.
 
-1. **Medir antes de cambiar.** Ninguna mejora se promueve sin número.
-2. **Una variable a la vez.** Si cambiamos cinco cosas y mejora, no sabemos cuál
-   funcionó. Si empeora, tampoco.
-3. **Holdout congelado.** Un conjunto de datos final que NUNCA se usa para
-   ajustar nada. Es el juez. Si una mejora gana ahí, es real. Si solo gana en los
-   datos con los que la afinamos, es autoengaño.
+### Tres reglas de disciplina
 
-### Dos posibles verdades sobre el Enjambre (Fase 0 nos dice cuál)
+1. **Medir antes de cambiar** (hipótesis, métrica, comparación, criterio de promoción).
+2. **Una variable a la vez.**
+3. **Holdout congelado** — no se usa para ajustar nada; cada evaluación se registra.
 
-- **Verdad A — "Predictor":** si la señal del enjambre aguanta en noticias que el
-  modelo no pudo conocer, tenemos un sistema con valor predictivo real. El plan
-  completo aplica.
-- **Verdad B — "Simulador":** si el acierto se desploma sin la memoria del
-  modelo, el valor defendible del Enjambre es ser **el focus group sintético**
-  (simulación, visualización, educación — el posicionamiento de CLAUDE.md, que
-  nunca fue "asesoría financiera"). Eso **también es un gran producto**, pero la
-  historia y el pitch cambian.
+### Las dos tesis (las decide la evidencia, no la intuición)
 
-**No sabremos cuál es la verdad hasta la Fase 0. Por eso es lo primero.**
+- **Verdad A — Predictor:** si la señal sobrevive a datos temporalmente válidos,
+  más instrumentos y comparaciones fuera de muestra → capacidad predictiva acotada
+  y demostrable.
+- **Verdad B — Simulador / focus group sintético:** si la ventaja se debilita al
+  controlar memoria, selección y correlación → el producto sigue siendo valioso
+  (simulación, visualización, educación), pero la comunicación comercial no vende
+  predicción no demostrada.
 
 ---
 
-## Dos vías en paralelo
+## Dónde estamos (18-11-2026)
 
-- **Vía CIENCIA** (Fases 0→4 + 7): ¿el Enjambre aporta valor predictivo? Es la
-  prioridad absoluta.
-- **Vía INGENIERÍA** (Fases 5, 6, 8): robustez, escala y mantenibilidad. Puede
-  avanzar en paralelo porque no depende de los resultados de la ciencia, pero no
-  tiene sentido escalar algo cuyo valor aún no demostramos.
+- **Fase 0:** esencialmente completa en lo medible sin IA. Hecho y verificado:
+  contaminación (la señal de índice NO es memoria), intervalos de confianza, aporte
+  por arquetipo, arreglo del baseline (`calibrar_respaldo.py` y `walk_forward.py`),
+  P5. Pendiente: **ampliar muestra** y **cerrar controles formales** (contrato de
+  etiqueta, holdout con manifiesto, bancos).
+- **Fase 2:** probada y **redirigida** — reponderar por acierto histórico NO mejora
+  la dirección (0/37 cambios de signo). Queda como pregunta de calibración.
+- **Resto:** pendiente.
+
+Números actuales (en muestra, ~4 instrumentos de índice correlacionados): todos
+50.6% [45–56] (azar); índice 63.1% [52.5–71.4]; índice fuerte 80.0% [69.6–85.7].
+**Límite honesto:** pocos instrumentos; confirmación real = más datos + prospectivo.
+
+---
+
+## Dos vías
+
+- **CIENCIA** (Fases 0,1,2,3,4,7): ¿aporta valor predictivo fuera de muestra?
+- **INGENIERÍA** (Fases 5,6,8): robustez, escala, mantenibilidad. En paralelo, pero
+  no se escala a ciegas un sistema cuya ventaja aún se evalúa.
 
 ---
 
 # VÍA CIENCIA
 
-## FASE 0 — La verdad estadística *(fundacional · bloqueante)*
+## FASE 0 — Verdad estadística y línea base *(cerrar)*
 
-**Objetivo:** tener un número honesto en el que podamos confiar, por mercado, con
-barras de error, congelado como punto de partida.
+**Objetivo:** línea base honesta por mercado, instrumento, tipo de noticia y
+horizonte, con incertidumbre explícita y holdout congelado.
 
-**Por qué importa:** es el cimiento. Sin esto, cada mejora posterior se mide
-contra una referencia dudosa.
+- **0.1 Ampliar datos de índice** — `docs/runbook-ampliar-datos-indice.md`
+  (cosechar + backtest + exportar por botón). Buscar más instrumentos y períodos,
+  no solo más noticias de los mismos 4 ETF.
+- **0.2 Contrato de evaluación (NUEVO, hacer ANTES de medir):** fijar momento de
+  publicación, precio de referencia, horizonte exacto, regla subida/bajada/neutral,
+  trato de movimientos pequeños, sesiones cerradas, eventos solapados, ventana de
+  reacción. Una predicción no es reproducible si su etiqueta/horizonte cambian
+  después de ver el resultado.
+- **0.3 Tres bancos:** ordinario / extraordinario / difícil. Reportar cada uno por
+  separado y el agregado transparente.
+- **0.4 Holdout congelado (formalizar):** partición temporal, congelar con **hash +
+  manifiesto**, no usarlo para ajustar nada, **registrar cada evaluación**, una sola
+  evaluación de promoción.
+- **0.5 Intervalos — bootstrap multiway:** agrupar por **evento × instrumento ×
+  período** (no solo por activo), para no tratar 4 ETF correlacionados ni 10
+  noticias de un mismo evento como independientes. Documentar la unidad de remuestreo.
+- **0.6 Instrumentación por simulación:** % API fresca / caché / fallback, errores,
+  JSON inválidos, timeouts, latencia p50/p95/p99, modelo+versión, hash de prompt,
+  nº de cerebros únicos y % de respuestas compartidas — **cruzable con cada resultado.**
+- **0.7 Limpieza menor:** que el CLI de `walk_forward.py` imprima `promover_anidado`
+  como veredicto autoritativo (hoy imprime `promover()`, que es diagnóstico).
 
-**Qué se hace:**
-1. **Resolver la contaminación temporal (P4) — EL PRIMER EXPERIMENTO.**
-   - Pasar la **fecha histórica** a los cerebros y restringir el contexto a "lo
-     que se sabía en ese momento".
-   - Correr el benchmark sobre **noticias recientes que el modelo no pudo
-     conocer** (posteriores a su corte de conocimiento).
-   - Comparar ese acierto con el histórico. La diferencia = cuánto venía de
-     memoria.
-2. Arreglo trivial del baseline (`calibrar_respaldo.py`: `y_te` → `y_tr`).
-3. **Congelar un holdout final** que no se toca para ajustar nada.
-4. **Tres bancos separados** (P3): ordinario / extraordinario / difícil, cada uno
-   con su acierto, en vez de una cifra global dominada por extremos.
-5. **Instrumentación por simulación:** % IA / % caché / % fallback / errores API /
-   latencia p50-p95. Distingue "mal modelo" de "degradación técnica".
-6. **Intervalos de confianza** por bootstrap agrupado por evento (no tratar diez
-   noticias de la misma empresa como diez observaciones independientes).
+**Gate:** no afirmar ventaja consolidada hasta tener etiqueta/horizonte estables,
+baseline solo-train, holdout protegido, métricas por segmento, incertidumbre con
+dependencia bien tratada y datos no dominados por pocos instrumentos.
 
-**Entregable:** un informe de baseline honesto y congelado.
-**Gate:** un número por mercado en el que confiamos, con incertidumbre explícita.
-**Esfuerzo honesto:** 1-2 semanas de trabajo enfocado. **Alto valor de
-información** (el experimento P4 puede redefinir la tesis entera del proyecto).
+## FASE 7-mínima — Registro prospectivo *(EMPEZAR YA, en paralelo)*
 
----
+> **La joya de la auditoría integral.** Los datos prospectivos (predicción
+> registrada ANTES de conocer el resultado) son inmunes a contaminación y selección.
+> Empezar a acumularlos hoy es casi gratis y resuelve de raíz la duda "predictor vs
+> simulador". Por eso sube a prioridad inmediata, antes que refinar el bootstrap.
 
-## FASE 1 — Mejores insumos: evidencia y validez temporal
+**Objetivo:** registro inmutable de cada predicción con todo su contexto, que se
+resuelve solo cuando llega el resultado futuro.
 
-**Objetivo:** que los agentes analicen con contexto, no un titular desnudo.
+Cada registro: id, evento, activo, fecha de noticia, `as_of_timestamp`, horizonte,
+dirección, probabilidad, consenso, convicción, decisión de abstención, modelo LLM,
+versión de prompt/código/agregador/evidencia, fuente de cada respuesta
+(API/caché/fallback), resultado futuro + timestamp de resolución, versión del
+evaluador.
 
-**Por qué importa:** el paper WorldReasoner (2026) concluye que recuperar
-evidencia temporalmente válida es **uno de los factores más determinantes** de la
-precisión. Un titular sin contexto es la mitad de la historia.
+**Entregable:** primera cohorte prospectiva + panel mínimo (acierto, cobertura,
+Brier). **Gate:** poder responder, cualquier día, "qué predijo, con qué info, qué
+versión, cuántos casos cubrió y cómo le fue vs baseline".
 
-**Qué se hace:** un módulo "especialista en evidencia" que, antes de que opinen
-los agentes, extraiga: qué pasó, qué activo, cuándo, qué es información nueva, qué
-se esperaba antes, qué ya estaba descontado, qué fuentes lo confirman, y qué parte
-es hecho vs. interpretación. Todo con timestamps verificables.
+## FASE 1 — Capa de evidencia temporalmente válida *(prioridad científica #1)*
 
-**Entregable:** un contexto estructurado que acompaña cada noticia.
-**Gate:** mejora el acierto fuera de muestra vs. Fase 0.
-**Esfuerzo honesto:** 2-3 semanas. Sustancial, pero probablemente el mayor salto
-de calidad después de la Fase 0.
+> La palanca real: el lastre está en los INSUMOS, no en los pesos (lo demostró el
+> resultado negativo de la confianza efectiva).
 
----
+**Objetivo:** dejar de entregar un titular desnudo; entregar un paquete estructurado
+que represente lo que se sabía en el momento del evento.
 
-## FASE 2 — Mejor agregación: de consenso a predicción
+- Módulo central `engine/evidence/` (no que cada agente busque por su cuenta):
+  identifica activo/entidad/tipo de evento, recupera info disponible a la fecha de
+  corte, extrae hechos y expectativas, marca qué es nuevo, estima qué estaba
+  descontado, contrasta fuentes, detecta contradicciones, marca incertidumbre, y
+  produce un **objeto estructurado versionado** (esquema JSON con `as_of_timestamp`,
+  `facts`, `expectations`, `priced_in_assessment`, `sources`, `contradictions`,
+  `uncertainties`, `evidence_version`).
+- **Reglas temporales estrictas:** no incorporar nada posterior al `as_of`;
+  distinguir fecha de publicación/hecho/recuperación; snapshots de fuentes; rechazar
+  fuentes sin timestamp; el LLM no inventa hechos ausentes.
+- **Separar** hecho / expectativa previa / resultado / diferencia vs expectativa /
+  interpretación / inferencia / info faltante.
+- **Modo sombra primero:** producir la evidencia sin alterar las predicciones.
 
-> **⚠️ Aprendizaje (2026-11-18): la "confianza efectiva" para la DIRECCIÓN quedó
-> DESCARTADA tras medirla.** Reponderar el consenso por el acierto histórico de
-> cada arquetipo da el MISMO acierto direccional que la ponderada actual (0/37
-> casos cambian de signo fuera de muestra): la mayoría de voces fija el signo y
-> bajar el peso de las malas no lo voltea. Ver
-> `docs/hallazgo-confianza-efectiva.md`. Conclusión: **el lastre está en los
-> INSUMOS (Fase 1), no en los pesos.** Por eso la Fase 1 (evidencia) pasa a ser la
-> palanca #1. De esta fase solo sobreviven las piezas que NO son reponderación de
-> dirección: la separación consenso↔predicción (ya iniciada con el gating), la
-> abstención, el detector de consenso engañoso, y —como pregunta abierta menor— si
-> la confianza efectiva ayuda a la CALIBRACIÓN (Brier), no a la dirección.
+**Experimento:** B (motor actual congelado) vs D (mismo motor + evidencia), mismos
+eventos/horizonte/holdout. **Gate:** se promueve solo si mejora métricas fuera de
+muestra, no por mejor narrativa.
 
-**Objetivo:** dejar de confundir "lo que piensa el enjambre" con "lo que creemos
-que pasará".
+## FASE 2 — Agregación, probabilidad y abstención *(selectiva)*
 
-**Por qué importa:** hoy el consenso se pondera por la **confianza declarada** del
-LLM — que no es su probabilidad real de acertar. Podemos estar amplificando el
-error más convencido.
+> Aprendizaje: la reponderación direccional por confianza efectiva quedó
+> **descartada** (0/37 cambios de signo). Sobreviven las piezas que no son eso.
 
-**Qué se hace:**
-1. **Confianza efectiva (P2):** `C_efectiva = α·C_declarada + (1-α)·C_histórica`,
-   donde la histórica se mide por arquetipo / mercado / tipo de noticia / régimen.
-2. **Memoria de errores por arquetipo:** cada arquetipo lleva un historial de
-   cuándo acierta y cuándo se equivoca.
-3. **Separar consenso de predicción:** un motor que transforma el consenso en una
-   probabilidad usando evidencia, régimen de mercado e historial. (Ya empezamos
-   esto con el gating de convicción / Ventana A — esto lo lleva más lejos.)
-4. **Abstención:** cuando la evidencia es insuficiente, el sistema puede decir "no
-   predigo" en vez de inventar. (Métrica de cobertura.)
-5. **Detector de consenso engañoso:** avisa cuando la unanimidad es sospechosa
-   (p. ej. todos repiten el mismo cerebro, o la noticia ya estaba descontada).
+- **Separar 4 salidas:** consenso · dirección · **probabilidad calibrada** · cobertura.
+- **Abstención:** el sistema puede decir "no predigo" (evidencia insuficiente,
+  fuentes contradictorias, consenso dependiente de un cerebro, baja convicción,
+  régimen fuera de distribución). Medir acierto condicionado, cobertura y **curva
+  riesgo-cobertura** (nunca acierto selectivo sin cobertura).
+- **Detector de consenso engañoso:** alerta cuando muchas voces derivan de pocos
+  cerebros, hay duplicación de fuentes, o la noticia ya era conocida.
+- **Confianza efectiva (pregunta residual):** evaluar si ayuda a la CALIBRACIÓN
+  (Brier/Log Loss/ECE), no a la dirección.
 
-**Entregable:** un agregador alternativo que compite contra el actual.
-**Gate:** gana en Brier **y** en acierto direccional en el holdout congelado.
-**Esfuerzo honesto:** 2-3 semanas.
+**Gate:** ganar al agregador actual en el holdout en las métricas predefinidas, sin
+reducir cobertura de forma engañosa.
 
----
+## FASE 3 — Diversidad e independencia
 
-## FASE 3 — Diversidad e independencia *(el experimento de P1)*
+**Objetivo:** medir cuánta información independiente aportan las voces y qué tamaño
+de población es eficiente.
 
-**Objetivo:** medir cuánta diversidad REALMENTE aporta información.
+- Experimentar 110 / 220 / 400 cerebros (todo lo demás constante). Medir correlación
+  de señales y respuestas, diversidad semántica, información marginal por
+  cerebro/arquetipo, rendimiento y costo.
+- **Distribución adaptativa** solo DESPUÉS de medir aporte.
+- **Agentes detectores** (abogado del diablo, causalidad débil, info descontada,
+  verificador de fuentes) en **modo sombra** primero: diagnostican sin influir;
+  medir si sus alertas predicen errores antes de darles voz.
 
-**Por qué importa:** la intuición "más agentes = mejor" hay que probarla, no
-asumirla. Mi predicción en frío: rendimientos decrecientes rápidos, porque son el
-mismo modelo con el mismo prompt. Pero hay que medirlo.
+**Gate:** más diversidad solo si mejora fuera de muestra o reduce costo a igual
+rendimiento.
 
-**Qué se hace:**
-1. Medir la **correlación real** entre cerebros (¿qué tan parecidas son sus
-   respuestas?).
-2. Experimentar **110 / 220 / 400 cerebros** (ahora sí, sin tope de costo).
-3. **Distribución adaptativa:** más cerebros a los arquetipos que demuestran
-   capacidad predictiva, menos a los que repiten; más diversidad ante noticias
-   ambiguas.
-4. **Agentes detectores de error** (experimentales): abogado del diablo, detector
-   de causalidad, detector de información descontada, verificador de fuentes. **No
-   se les da influencia automáticamente** — primero se mide si mejoran la
-   predicción.
+## FASE 4 — Experimento A/B/C/D *(la prueba de valor)*
 
-**Entregable:** una curva de "cuánta diversidad aporta información".
-**Gate:** ¿más diversidad mejora el holdout? Si no, no se promueve.
-**Esfuerzo honesto:** 1-2 semanas (es sobre todo medición).
-
----
-
-## FASE 4 — El experimento A/B/C/D *(la prueba de valor)*
-
-**Objetivo:** demostrar, de una vez, si el enjambre vale más que un modelo simple.
-
-**Qué se hace:** comparar cuatro sistemas sobre exactamente los mismos eventos y
-el mismo holdout temporal, por mercado, con intervalos de confianza:
-
-| | Sistema | Pregunta que responde |
+| | Sistema | Pregunta |
 |---|---|---|
-| **A** | Baseline simple (tasa histórica de subidas/bajadas) | El piso a superar |
-| **B** | Enjambre actual | ¿El enjambre aporta sobre el azar informado? |
-| **C** | Enjambre optimizado (Fases 2-3) | ¿La mejor agregación funciona? |
-| **D** | C + evidencia (Fase 1) | ¿La evidencia adicional aporta? |
+| **A** | Baseline(s) simple(s) | ¿El piso a superar? |
+| **B** | Enjambre actual congelado | ¿Aporta sobre el baseline? |
+| **C** | B + agregación/abstención/diversidad validadas | ¿La optimización añade? |
+| **D** | C + capa de evidencia | ¿La evidencia añade? |
 
-**Regla de promoción:** B>A, C>B, D>C — cada uno **fuera de muestra**. El que
-empeora, no se promueve.
+- **Baselines fuertes (no débiles a propósito):** tasa histórica, clase mayoritaria,
+  momentum simple, sentimiento del titular básico, clasificador simple con variables
+  a la fecha.
+- Mismos eventos/timestamps/horizonte/etiquetas/holdout; predicciones registradas
+  antes de revelar etiquetas; comparación pareada por evento; intervalos por clúster;
+  métricas por mercado/instrumento/tipo.
+- **Promoción pre-registrada:** métrica primaria, secundarias, margen mínimo
+  relevante, tolerancia de degradación por segmento, método de incertidumbre,
+  corrección por comparaciones múltiples. Si C no supera B, no se promueve C; si D no
+  supera C, no se afirma que la evidencia mejoró la predicción (aunque mejore la
+  trazabilidad).
 
-**Entregable:** el veredicto honesto sobre el valor del Enjambre.
-**Gate:** este experimento ES el gate de todo el proyecto.
-**Esfuerzo honesto:** 1 semana (una vez que las fases anteriores existen).
-
----
-
-## FASE 7 — Producción, monitoreo y aprendizaje continuo
-
-*(numerada 7 porque cierra la vía ciencia, pero se construye junto a la Fase 5)*
-
-**Objetivo:** que las mejoras sobrevivan en vivo y el sistema demuestre cuándo
-mejora y cuándo empeora.
-
-**Qué se hace:** registrar cada predicción **antes** de conocer su resultado;
-tablero de rendimiento por horizonte y mercado; vigilancia de degradación;
-rollback automático de experimentos; versionado de modelos y prompts.
-
-**Entregable:** un Enjambre que se audita a sí mismo en producción.
-**Gate:** podemos decir, cualquier día, "esta semana acertamos X ± Y".
-**Esfuerzo honesto:** 2 semanas.
+**Entregable:** veredicto de valor predictivo por mercado y segmento, con límites.
 
 ---
 
-# VÍA INGENIERÍA *(puede avanzar en paralelo)*
+# VÍA INGENIERÍA *(en paralelo, según demanda)*
 
-## FASE 5 — Infraestructura durable *(nuestra Fase 1 diferida)*
+## FASE 5 — Infraestructura durable
+Sacar la simulación del request web: API crea un `simulation_job` durable → cola →
+workers con lease → persistencia de progreso → reintentos/idempotencia/backpressure/
+dead-letter. **Gate:** prueba de carga (concurrencia, cola, error, recuperación de
+worker, sin duplicar jobs ni gasto). Fijar objetivo de carga y presupuesto antes.
 
-**Objetivo:** que el motor aguante carga real y los rituales diarios no se caigan.
+## FASE 6 — Microestructura y realismo *(baja por ahora)*
+Profundidad del libro, impacto, slippage, liquidez, spread. Separar dos preguntas:
+¿parece realista? (valor de simulación) vs ¿mejora la predicción? (otro experimento).
+No invertir fuerte sin hipótesis concreta de valor.
 
-**Por qué importa:** hoy la simulación corre dentro del request web. Eso funciona
-para un demo, no para muchos usuarios simultáneos ni para los procesos de
-madrugada (El Pulso, La Redacción).
-
-**Qué se hace:** cola durable + workers (sacar la simulación del request);
-reintentos, idempotencia, backpressure; separar el motor de simulación del
-servidor web para escalarlos por separado.
-
-**Entregable:** el motor soporta N simulaciones concurrentes sin degradar.
-**Gate:** prueba de carga superada.
-**Esfuerzo honesto:** 2-3 semanas.
-
-## FASE 6 — Microestructura y realismo *(nuestra Fase 3 diferida)*
-
-**Objetivo:** profundizar el realismo del mercado simulado.
-
-**Qué se hace:** más realismo en el libro de órdenes (impacto, profundidad,
-latencia); afinar los hechos estilizados; medir contra microestructura real.
-
-**Entregable:** una simulación aún más creíble para un ojo técnico.
-**Esfuerzo honesto:** 2-4 semanas (es un pozo tan profundo como se quiera).
-
-## FASE 8 — Modularización *(nuestra Fase 5 diferida)*
-
-**Objetivo:** que el sistema sea mantenible y reutilizable en otros dominios de
-predicción (no solo mercados).
-
-**Qué se hace:** separar en módulos limpios con interfaces claras (motor,
-cerebros, evidencia, agregación, evaluación).
-
-**Entregable:** una arquitectura que otro equipo podría extender.
-**Esfuerzo honesto:** 1-2 semanas, mejor hacerlo después de que la ciencia
-estabilice las interfaces.
+## FASE 8 — Modularización *(al final)*
+Módulos con interfaces explícitas y esquemas versionados (motor, agentes, cerebros,
+evidencia, agregación, evaluación, datos, API, frontend). Después de estabilizar los
+contratos, para no refactorizar en círculos.
 
 ---
 
-## Orden recomendado
+## Orden de ejecución
 
 ```
-AHORA ─► FASE 0 (la verdad) ──────────────────────────► decide la tesis
-                 │
-                 ├─► FASE 1 (evidencia) ─► FASE 2 (agregación) ─► FASE 3 (diversidad)
-                 │                                   │
-                 │                                   ▼
-                 │                            FASE 4 (A/B/C/D) ─► veredicto
-                 │
-                 └─► (en paralelo) FASE 5 (infra) ─► FASE 7 (monitoreo)
-                                   FASE 6 (microestructura)
-                                   FASE 8 (modularización, al final)
+AHORA
+ ├─ 0.1 Ampliar datos de índice (runbook, acción de Giorgio)
+ ├─ 0.2 Contrato de evaluación   0.4 Holdout congelado (hash+manifiesto)
+ ├─ 7-mínima: registro prospectivo  ◀── empezar ya, resuelve la duda de raíz
+ └─ 0.5 bootstrap multiway   0.6 instrumentación   0.7 limpieza CLI
+        │
+        └─ FASE 1 evidencia (rama experimental, modo sombra) ─ B vs D
+               └─ FASE 2 probabilidad/abstención
+                      └─ FASE 3 diversidad
+                             └─ FASE 4 A/B/C/D ─ veredicto
+En paralelo: FASE 5 infra (según demanda) · Después: 6 y 8
 ```
 
-**Si tuviera que elegir UNA sola cosa para empezar:** la Fase 0, y dentro de ella,
-el experimento de contaminación temporal (P4). Es barato, es rápido, y su
-resultado decide si el Enjambre es un "predictor" o un "simulador" — y eso cambia
-todo lo demás.
+## Primeros sprints
 
-## Una nota honesta sobre el esfuerzo y el dinero
+- **Sprint 0 — Línea base auditable:** correr el runbook; conservar crudos; validar
+  duplicados/solapamientos/timestamps; fijar etiqueta y horizonte (0.2); congelar
+  holdout con hash; guardar versión B; bootstrap multiway; informe por instrumento y
+  banco.
+- **Sprint 1 — Registro prospectivo:** esquema inmutable; registrar cada salida antes
+  del resultado; panel mínimo (acierto/cobertura/Brier); guardar API/caché/fallback.
+- **Sprint 2 — Prototipo de evidencia (sombra):** JSON Schema; adaptador de fuentes;
+  filtros temporales; hechos/expectativas; citas; contradicciones; validar; correr
+  sin influir.
+- **Sprint 3 — Experimento de evidencia:** B vs B+evidencia, mismo conjunto;
+  comparación pareada; decidir por resultados, no por narrativa.
 
-Este plan completo es **varios meses** de trabajo enfocado. La buena noticia: casi
-todo lo ejecuto yo (Claude) dirigido por ti; tu gasto principal es el costo de las
-llamadas LLM de los experimentos (que ahora, sin el tope del presupuesto de demo,
-podemos subir deliberadamente para las fases de medición). No necesitas un equipo
-de ingenieros para avanzar — necesitas decidir el orden y financiar los
-experimentos. Eso lo puedes hacer con tu plata, a tu ritmo, sin depender del
-sábado.
+---
 
-**Y lo más importante:** si la Fase 0 dice "Verdad B" (es más simulador que
-predictor), **eso no es un fracaso** — es claridad. El focus group sintético del
-mercado, con esta visualización, es algo que nadie más tiene. Prefiero que sepas
-la verdad y construyas sobre roca, a venderte un 90% que se evapore frente al
-primer inversionista que sepa de estadística.
+## Qué cuenta como "mejora" (y qué no)
+
+**NO basta:** más agentes, más tokens, respuestas más largas, explicaciones más
+convincentes, más realismo visual, más consenso, más confianza declarada.
+
+**SÍ cuenta (fuera de muestra):** mejor acierto, mejor Brier/Log Loss, mejor
+calibración (ECE/MCE), más cobertura a igual riesgo, menor costo a igual
+rendimiento, menos degradación entre regímenes, menos errores técnicos, más
+reproducibilidad.
+
+## Cómo comunicar las cifras (para inversionistas)
+
+**Correcto:** *"En la muestra histórica evaluada, el sistema obtuvo X% en índices,
+IC Y–Z, bajo el horizonte y la etiqueta especificados; concentrado en ciertos
+instrumentos y pendiente de confirmación con muestra más amplia."*
+
+**Evitar:** "El Enjambre acierta el 80%" · "10.150 agentes predicen el mercado" ·
+"la IA supera al mercado". El 80% es un subconjunto de 30 casos con convicción
+fuerte: siempre con cobertura, instrumento, período, horizonte e intervalo.
+
+## Ficha de experimento (plantilla)
+
+`experiment_id, hypothesis, baseline_version(B), candidate_version(D), dataset_hash,
+code_commit, prompt_hash, llm_model_version, evidence_version, universe, period,
+horizon, label_definition, primary_metric, secondary_metrics, holdout_manifest_hash,
+train/validation_window, embargo, bootstrap_unit, min_effect_size, coverage_floor,
+segments, exclusions, promotion_rule, rollback_rule, result`.
+
+## La pregunta que guía el próximo ciclo
+
+> Si entregamos a los mismos agentes información más completa, verificable y
+> temporalmente correcta, ¿mejora su capacidad de anticipar lo que hará el mercado?
+
+Esa es la hipótesis que merece ahora el dinero, el tiempo y la ingeniería.

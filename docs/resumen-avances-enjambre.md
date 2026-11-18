@@ -127,6 +127,21 @@ desplegado.
 
 ---
 
+## 5b. Lo último (18-11, tarde): registro prospectivo DESPLEGADO
+
+- 🏆 **Registro prospectivo construido y DESPLEGADO en producción** (versión
+  `60daa77`). Cada día el ritual guarda las predicciones ANTES de conocer el
+  resultado, resuelve las maduras (sin fuga) y lleva un tablero
+  (`/api/predicciones/resumen`). Datos imposibles de contaminar, que se acumulan
+  solos. 15 tests, 416 en verde antes de desplegar.
+- 📥 **Datos de índice ampliados (runbook) y re-analizados.** El resultado:
+  la muestra casi no creció (165 vs 163 casos, **sigue en 4 instrumentos**) porque
+  las noticias solo titulan los 4 índices grandes (SPY/QQQ/DIA/IWM). Los números
+  se **confirman estables**: índice 62.7% [52.5–70.4]; fuerte 77.4% [69.6–81.0];
+  sin contaminación (viejas 62.5% vs recientes 61.9%).
+- **Lección:** el camino histórico está **confirmado y topado**; el prospectivo
+  (ya corriendo) es el camino bueno de aquí en adelante.
+
 ## 6. Dónde estamos y qué sigue
 
 **Estado:** Fase 0 (la verdad) esencialmente completa en todo lo medible sin gastar

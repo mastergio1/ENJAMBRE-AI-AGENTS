@@ -39,6 +39,7 @@ ZONA = 0.3  # zona muerta: solo casos con movimiento real |pct_corr| ≥ 0.3%
 ESCALONES = [
     ("A0_mayoria", "piso tonto (clase mayoritaria)"),
     ("A1_lexico", "léxico del titular (sin IA)"),
+    ("A2_un_llm", "un solo LLM neutral (sin arquetipos ni ABM)"),
     ("A3_consenso", "consenso LLM, sin ABM (senal)"),
     ("A4_abm", "ABM completo 10.150 agentes (direccion_pct)"),
 ]
@@ -58,6 +59,8 @@ def pred_de(fila, escalon, signo_mayoria):
         return signo_mayoria
     if escalon == "A1_lexico":
         return fila.get("lexico")
+    if escalon == "A2_un_llm":
+        return fila.get("a2")
     if escalon == "A3_consenso":
         return fila.get("senal")
     if escalon == "A4_abm":
@@ -65,9 +68,10 @@ def pred_de(fila, escalon, signo_mayoria):
     return None
 
 
-def cargar(ruta_con_fecha, ruta_raw=None):
-    """Carga las filas sin fuga. Si se da el export crudo, añade `lexico` (A1)
-    emparejando por (reaccion_real.fecha_base, reaccion_real.simbolo)."""
+def cargar(ruta_con_fecha, ruta_raw=None, ruta_a2=None):
+    """Carga las filas sin fuga. Si se da el export crudo, añade `titular` y
+    `lexico` (A1) emparejando por (reaccion_real.fecha_base, ….simbolo). Si se da
+    `ruta_a2` (un {titular: senal} que produce `un_llm.py`), añade `a2` (A2)."""
     filas = json.loads(Path(ruta_con_fecha).read_text())
     if ruta_raw:
         from brains.fallback import sentimiento_lexico
@@ -84,6 +88,11 @@ def cargar(ruta_con_fecha, ruta_raw=None):
             if tit:
                 f["titular"] = tit
                 f["lexico"] = sentimiento_lexico(tit)
+    if ruta_a2:
+        a2 = json.loads(Path(ruta_a2).read_text())
+        for f in filas:
+            if f.get("titular") in a2:
+                f["a2"] = a2[f["titular"]]
     return filas
 
 
@@ -171,8 +180,14 @@ def imprimir(filas, mercados=("indice", None)):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    a2 = next((a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--a2=")), None)
+    if a2 is None and "--a2" in sys.argv:  # forma "--a2 ruta"
+        i = sys.argv.index("--a2")
+        a2 = sys.argv[i + 1] if i + 1 < len(sys.argv) else None
+        args = [a for a in args if a != a2]
+    if not args:
         print(__doc__)
         sys.exit(1)
-    raw = sys.argv[2] if len(sys.argv) > 2 else None
-    imprimir(cargar(sys.argv[1], raw))
+    raw = args[1] if len(args) > 1 else None
+    imprimir(cargar(args[0], raw, a2))

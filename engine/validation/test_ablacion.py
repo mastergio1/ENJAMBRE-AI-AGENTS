@@ -47,7 +47,7 @@ def test_gate_cuenta_aciertos_del_abm_al_cambiar():
 def test_evaluar_trae_todos_los_escalones():
     filas = [_f(2.0, 0.5, 0.5, lexico=0.3), _f(-2.0, -0.5, -0.5, lexico=-0.3)]
     res = ab.evaluar(filas, n_boot=200)
-    assert set(res) == {"A0_mayoria", "A1_lexico", "A3_consenso", "A4_abm"}
+    assert set(res) == {"A0_mayoria", "A1_lexico", "A2_un_llm", "A3_consenso", "A4_abm"}
     assert res["A3_consenso"]["punto"] == 100.0  # consenso perfecto en el juguete
 
 

@@ -1,9 +1,19 @@
 # El despertador del ritual — llena el muro cada madrugada sin manos.
 #
-# Todas las madrugadas de lunes a viernes (6:00 en Chile), este robot:
+# Todas las madrugadas, este robot:
 #   1. despierta el motor de Render (el plan free lo duerme), y
 #   2. dispara POST /api/pipeline: recolectar titulares → el portero elige
 #      las 3 del día → se simulan con IA → el muro amanece lleno.
+#   3. VERIFICA que la edición de hoy quedó lista y, si no, REINTENTA.
+#
+# Auto-sanador (23-nov-2026): antes el ritual podía quedar a medias si un deploy
+# de Render reiniciaba el proceso web (el ritual corre como tarea en segundo plano
+# del motor) o si GitHub se saltaba el cron. Ahora el job no termina hasta
+# confirmar la edición del día contra /api/panel/estado, y reintenta una vez; un
+# segundo cron de RED DE SEGURIDAD (~2 h después) repite el intento. Como el ritual
+# es IDEMPOTENTE (si el día ya está preparado, no gasta de nuevo), repetirlo es
+# seguro. Para un disparo 100% garantizado pese a GitHub, usar además un cron
+# EXTERNO (p. ej. cron-job.org) que haga el mismo POST: el endpoint lo soporta.
 #
 # Requisito ÚNICO: el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub
 # (Settings → Secrets and variables → Actions), con el MISMO valor que la
@@ -15,30 +25,21 @@
 name: El ritual del día
 
 on:
-  # ▶️ REACTIVADO (14 de agosto de 2026): ya es SEGURO correrlo en automático.
-  # El ritual ahora GENERA y RETIENE la edición (estado 'pendiente') y le manda
-  # a Giorgio un correo de REVISIÓN; NO envía nada a los suscriptores sin su
-  # visto bueno (centro de mando, human-in-the-loop). La vieja advertencia de
-  # "el envío no revisa el visto bueno" quedó resuelta.
   schedule:
-    # 10:00 UTC = 6:00 en Chile (invierno) — antes de la apertura de EE.UU.
-    # NOTA sobre el minuto :17 (no :00): GitHub congestiona y RETRASA las tareas
-    # agendadas en punto (todo el mundo usa :00), a veces por horas. Un minuto
-    # "raro" reduce mucho ese retraso. Aun así, en su plan gratis GitHub puede
-    # atrasar o saltar corridas bajo carga: para envío garantizado, disparar a
-    # mano desde Actions (o mover el disparador a un cron externo).
-    # 10:17 UTC ≈ 6:17 en Chile — antes de la apertura de EE.UU.
+    # 10:17 UTC ≈ 6:17 en Chile — antes de la apertura de EE.UU. El minuto :17
+    # (no :00) reduce el retraso de GitHub (todos agendan en punto).
     # Lunes a viernes: la edición DIARIA (noticias + gráficos).
     - cron: "17 10 * * 1-5"
     # Sábado: el RESUMEN DE LA SEMANA (los grandes temas con punto de vista).
     - cron: "17 10 * * 6"
-    # Domingo: el DEEP-DIVE de una empresa mediana/pequeña o un sector. En ambos
-    # casos el motor detecta el día y arma la edición sola (un único llamado LLM,
-    # sin simular el enjambre).
+    # Domingo: el DEEP-DIVE de una empresa mediana/pequeña o un sector.
     - cron: "17 10 * * 0"
-    # 20:30 UTC = 16:30 en Nueva York (tras el cierre) = ~16:30 en Chile.
-    # Lunes a viernes: la EDICIÓN DE LA TARDE — 'el cierre del mercado' (Premium):
-    # los movers reales del día investigados. Sale SOLO a los suscriptores Premium.
+    # RED DE SEGURIDAD: ~2 h después, todos los días. Si la edición de hoy ya
+    # está, es un no-op barato (idempotente); si GitHub se saltó el cron de las
+    # 10:17 o un deploy mató el ritual, este lo completa.
+    - cron: "17 12 * * *"
+    # 20:30 UTC = 16:30 en Nueva York (tras el cierre). Lunes a viernes: la
+    # EDICIÓN DE LA TARDE — 'el cierre del mercado' (Premium).
     - cron: "30 20 * * 1-5"
   workflow_dispatch:
     inputs:
@@ -50,7 +51,7 @@ on:
 jobs:
   despertar-y-preparar:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Verificar el secreto
         env:
@@ -74,22 +75,64 @@ jobs:
           echo "::error::El motor no despertó en ~5 minutos."
           exit 1
 
-      - name: Disparar el ritual (portero + 3 simulaciones + corrector)
+      - name: Disparar y verificar el ritual (auto-sanador)
         env:
           TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
-          # el cron de las 20:30 UTC (tarde) manda ?momento=tarde; los demás, la
-          # edición de la mañana. El disparo manual usa el input 'momento'.
           SCHEDULE: ${{ github.event.schedule }}
           INPUT_MOMENTO: ${{ github.event.inputs.momento }}
         run: |
+          set -u
+          BASE="https://enjambre-motor.onrender.com"
+          # el cron de las 20:30 UTC (tarde) manda ?momento=tarde; los demás, la
+          # edición de la mañana. El disparo manual usa el input 'momento'.
           MOMENTO="manana"
           if [ "$SCHEDULE" = "30 20 * * 1-5" ] || [ "$INPUT_MOMENTO" = "tarde" ]; then
             MOMENTO="tarde"
           fi
           echo "Momento del ritual: $MOMENTO"
-          respuesta=$(curl -sf -m 60 -X POST \
-            "https://enjambre-motor.onrender.com/api/pipeline?momento=$MOMENTO" \
-            -H "X-Pipeline-Token: $TOKEN")
-          echo "Respuesta del motor: $respuesta"
-          # el ritual corre en segundo plano dentro del motor: esta respuesta
-          # solo confirma que arrancó; la edición tarda ~1-4 minutos
+
+          disparar() {
+            curl -sf -m 60 -X POST "$BASE/api/pipeline?momento=$MOMENTO" \
+              -H "X-Pipeline-Token: $TOKEN" && echo
+          }
+
+          # ¿la edición de HOY (mañana) ya está lista? (pendiente de revisión o enviada)
+          edicion_lista() {
+            estado=$(curl -sf -m 20 "$BASE/api/panel/estado" -H "X-Pipeline-Token: $TOKEN" \
+              | python3 -c "import sys,json; e=json.load(sys.stdin).get('edicion_hoy'); print((e or {}).get('estado','ninguna'))" 2>/dev/null)
+            echo "  estado edición de hoy: ${estado:-error}"
+            [ "$estado" = "pendiente" ] || [ "$estado" = "enviada" ]
+          }
+
+          echo "— Disparo 1 —"
+          disparar || echo "aviso: el POST devolvió error (puede haber arrancado igual)"
+
+          # La edición de la tarde se guarda aparte y no se refleja en 'edicion_hoy':
+          # no la verificamos aquí (el POST ya la encoló).
+          if [ "$MOMENTO" = "tarde" ]; then
+            echo "Edición de tarde encolada; no se verifica contra edicion_hoy."
+            exit 0
+          fi
+
+          for intento in $(seq 1 12); do
+            sleep 45
+            if edicion_lista; then
+              echo "✅ Edición de hoy lista (intento $intento)."
+              exit 0
+            fi
+            echo "  aún no lista (intento $intento/12)…"
+          done
+
+          echo "— No quedó lista; REINTENTO el ritual una vez —"
+          disparar || echo "aviso: el POST del reintento devolvió error"
+          for intento in $(seq 1 12); do
+            sleep 45
+            if edicion_lista; then
+              echo "✅ Edición lista tras el reintento (intento $intento)."
+              exit 0
+            fi
+            echo "  aún no lista tras reintento (intento $intento/12)…"
+          done
+
+          echo "::error::El ritual no dejó edición de hoy tras dos intentos (~18 min). Revisar el log del motor en Render."
+          exit 1

@@ -14,6 +14,14 @@ const COLOR_B = '#d99a9a' // rosa — para distinguir el segundo enjambre
 const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
 
+// La LECTURA (dirección del consenso de líderes), mostrada solo cuando es fiable.
+// El % de arriba es el movimiento que simuló el enjambre (visualización), no la
+// predicción. Ver docs/hallazgo-ablacion.md.
+const lecturaDuelo = (tarjeta) => {
+  const l = tarjeta && tarjeta.lectura
+  return l ? `<div class="duelo-lectura">lectura ${esc(l.flecha)} ${esc(l.direccion)}</div>` : ''
+}
+
 function framesDe(buffer) {
   const { nAgentes, tamanoFrame, total } = medidasReplay(buffer.byteLength)
   return {
@@ -63,10 +71,10 @@ export async function abrirDuelo({ idA, idB, reducirMovimiento, alCerrar }) {
     <button class="duelo-cerrar" aria-label="cerrar">×</button>
     <div class="duelo-titulares">
       <div class="duelo-lado" style="--c:${COLOR_A}"><span>A</span><h3>${esc(datos.a.titular)}</h3>
-        <div class="duelo-dir">${esc(datos.a.tarjeta.direccion)} ${datos.a.resumen.direccion_pct}%</div></div>
+        <div class="duelo-dir">${esc(datos.a.tarjeta.direccion)} ${datos.a.resumen.direccion_pct}% <small>simulado</small></div>${lecturaDuelo(datos.a.tarjeta)}</div>
       <div class="duelo-vs">vs</div>
       <div class="duelo-lado" style="--c:${COLOR_B}"><span>B</span><h3>${esc(datos.b.titular)}</h3>
-        <div class="duelo-dir">${esc(datos.b.tarjeta.direccion)} ${datos.b.resumen.direccion_pct}%</div></div>
+        <div class="duelo-dir">${esc(datos.b.tarjeta.direccion)} ${datos.b.resumen.direccion_pct}% <small>simulado</small></div>${lecturaDuelo(datos.b.tarjeta)}</div>
     </div>
     <canvas class="duelo-escena"></canvas>
     <canvas class="duelo-precios" width="720" height="120"></canvas>

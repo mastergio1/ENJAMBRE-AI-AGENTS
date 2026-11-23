@@ -1069,6 +1069,12 @@ body.archivo-abierto .muro { display: none; }
   line-height: 1.2;
 }
 .duelo-dir { font-size: 0.85rem; color: var(--crema-suave); }
+.duelo-dir small { font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+/* la lectura del consenso (predicción honesta), solo cuando es fiable */
+.duelo-lectura {
+  margin-top: 0.25rem; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--salvia);
+}
 .duelo-vs {
   align-self: center;
   font-family: 'Cormorant Garamond', serif;

@@ -115,7 +115,10 @@ CREATE TABLE IF NOT EXISTS predicciones (
   direccion_real TEXT,
   acierto        INTEGER,            -- 1/0; NULL si neutra o abstenido
   resuelto_iso   TEXT,
-  evaluador_ver  TEXT
+  evaluador_ver  TEXT,
+  -- Fase 1 (modo sombra): la evidencia point-in-time con que se hizo la predicción
+  evidencia_hash TEXT,
+  evidencia_txt  TEXT
 );
 """
 
@@ -163,6 +166,9 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("briefs", "suscriptores", "INTEGER DEFAULT 0"),
             ("briefs", "generada_iso", "TEXT"),
             ("briefs", "enviada_iso", "TEXT"),
+            # Fase 1 (modo sombra): evidencia point-in-time por predicción
+            ("predicciones", "evidencia_hash", "TEXT"),
+            ("predicciones", "evidencia_txt", "TEXT"),
         ]:
             try:
                 conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
@@ -951,25 +957,28 @@ def registrar_prediccion(
     probabilidad: float | None = None, consenso: float | None = None,
     conviccion: str | None = None, fiable: bool = False, abstenido: bool = False,
     versiones: dict | None = None, fuentes: dict | None = None,
+    evidencia_hash: str | None = None, evidencia_txt: str | None = None,
 ) -> str:
     """Registra una predicción ANTES de conocer el resultado (inmutable).
 
     Devuelve su id. Si ya existe (mismo símbolo+as_of+horizonte+titular), NO la
     sobrescribe: la primera predicción manda (así el registro no se puede
-    "mejorar" a posteriori). Devuelve el id existente."""
+    "mejorar" a posteriori). Devuelve el id existente. `evidencia_*` guarda, en
+    modo sombra, el contexto point-in-time con que se hizo (no cambia la predicción)."""
     as_of = as_of_iso or ahora_iso()
     pid = id_prediccion(simbolo, as_of, horizonte, titular)
     conexion.execute(
         """INSERT OR IGNORE INTO predicciones
            (id, sim_id, creada_iso, titular, simbolo, mercado, as_of_iso, horizonte,
             direccion, probabilidad, consenso, conviccion, fiable, abstenido,
-            versiones_json, fuentes_json)
-           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            versiones_json, fuentes_json, evidencia_hash, evidencia_txt)
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
         (pid, sim_id, ahora_iso(), titular, simbolo, mercado, as_of, horizonte,
          direccion, probabilidad, consenso, conviccion, 1 if fiable else 0,
          1 if abstenido else 0,
          json.dumps(versiones or {}, ensure_ascii=False),
-         json.dumps(fuentes or {}, ensure_ascii=False)),
+         json.dumps(fuentes or {}, ensure_ascii=False),
+         evidencia_hash, evidencia_txt),
     )
     conexion.commit()
     return pid

@@ -38,18 +38,31 @@ def _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos,
         except Exception:
             MODELO = None
         from contenido.backtest import _mercado_de_caso
+        as_of = persistencia.ahora_iso()
     except Exception as e:
         print(f"[prediccion] no se pudo preparar el registro: {e!r}", flush=True)
         return
     for simbolo in simbolos:
         try:
+            # Fase 1 (modo sombra): construir la evidencia point-in-time con que se
+            # hace la predicción y guardarla. NO cambia la predicción del enjambre.
+            ev_hash = ev_txt = None
+            try:
+                from evidence.recoleccion import evidencia_para
+                from evidence.contrato import formatear_para_cerebro
+                ev = evidencia_para(simbolo, elegido["titular"], as_of)
+                ev_hash = ev.get("evidence_hash")
+                ev_txt = formatear_para_cerebro(ev)
+            except Exception as e:
+                print(f"[evidencia] no se pudo construir para {simbolo}: {e!r}", flush=True)
             persistencia.registrar_prediccion(
-                conexion, titular=elegido["titular"], simbolo=simbolo,
+                conexion, titular=elegido["titular"], simbolo=simbolo, as_of_iso=as_of,
                 mercado=_mercado_de_caso({"simbolos": simbolo}),
                 horizonte=2, direccion=direccion, abstenido=(direccion == "neutra"),
                 consenso=reporte.get("senal_media_ponderada"),
                 conviccion=conv.get("nivel"), fiable=bool(conv.get("fiable_direccion")),
                 fuentes=fuentes, versiones={"modelo": MODELO, "seed": seed}, sim_id=sim_id,
+                evidencia_hash=ev_hash, evidencia_txt=ev_txt,
             )
         except Exception as e:
             print(f"[prediccion] FALLÓ el registro de {simbolo} "

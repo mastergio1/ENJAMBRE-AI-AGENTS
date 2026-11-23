@@ -14,6 +14,16 @@ def con(tmp_path):
     return p.conectar(tmp_path / "test.db")
 
 
+@pytest.fixture(autouse=True)
+def _sin_red(monkeypatch):
+    """Evita que el enganche llame a Yahoo en los tests: stub de la evidencia."""
+    from evidence import recoleccion
+    monkeypatch.setattr(recoleccion, "evidencia_para",
+                        lambda simbolo, titular, as_of, **k: {
+                            "evidence_hash": f"hash-{simbolo}", "headline": titular,
+                            "facts": [], "sources": [], "evidence_version": "v1"})
+
+
 def _reporte(direccion="baja", fiable=True, nivel="fuerte", senal=-0.5):
     return {
         "direccion_titular": direccion,
@@ -48,6 +58,16 @@ def test_registra_todos_los_tickers(con):
     preds = p.listar_predicciones(con)
     assert len(preds) == 3
     assert {x["simbolo"] for x in preds} == {"SPY", "QQQ", "DIA"}
+
+
+def test_guarda_evidencia_en_modo_sombra(con):
+    # Fase 1: cada predicción guarda su evidencia point-in-time (sin cambiar la predicción)
+    elegido = {"titular": "Dato de empleo", "simbolos": "SPY", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "s", 1)
+    fila = p.listar_predicciones(con)[0]
+    assert fila["evidencia_hash"] == "hash-SPY"
+    # la predicción sigue siendo la del enjambre (la evidencia NO la cambió)
+    assert fila["direccion"] == "baja"
 
 
 def test_sin_simbolo_no_registra(con):

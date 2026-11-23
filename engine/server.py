@@ -1513,6 +1513,7 @@ def predicciones_resumen(x_pipeline_token: str = Header(default="")) -> dict:
                 for m in ("indice", "accion", "cripto", "oro", "petroleo")
             },
             "pendientes": len(persistencia.predicciones_por_resolver(conexion)),
+            "evidencia": persistencia.cobertura_evidencia(conexion),
         }
     finally:
         conexion.close()

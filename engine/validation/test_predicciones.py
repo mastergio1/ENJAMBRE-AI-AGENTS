@@ -83,6 +83,16 @@ def test_resumen_cobertura_y_acierto(con):
     assert r["resueltas"] == 3 and r["puntuables"] == 2 and r["acierto"] == 50.0
 
 
+def test_cobertura_evidencia(con):
+    p.registrar_prediccion(con, titular="a", simbolo="SPY", horizonte=2, direccion="alza",
+                           mercado="indice", evidencia_hash="h1", evidencia_txt="Titular: a")
+    p.registrar_prediccion(con, titular="b", simbolo="QQQ", horizonte=2, direccion="alza",
+                           mercado="indice")  # sin evidencia
+    cob = p.cobertura_evidencia(con)
+    assert cob["total"] == 2 and cob["con_evidencia"] == 1 and cob["cobertura_pct"] == 50.0
+    assert cob["muestra"]["evidencia_hash"] == "h1"
+
+
 def test_resumen_cuenta_mas_de_500(con):
     # P1-09: el tablero debe contar sobre el universo COMPLETO, no truncar a 500
     for i in range(501):

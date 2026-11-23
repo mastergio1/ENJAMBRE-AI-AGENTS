@@ -1046,6 +1046,22 @@ def listar_predicciones(conexion, *, resueltas: bool | None = None,
     return [dict(f) for f in filas]
 
 
+def cobertura_evidencia(conexion) -> dict:
+    """Cuántas predicciones traen evidencia point-in-time (Fase 1, modo sombra) y
+    una muestra de la más reciente. Sirve para verificar que la evidencia se está
+    recolectando en producción."""
+    total = conexion.execute("SELECT COUNT(*) FROM predicciones").fetchone()[0]
+    con_ev = conexion.execute(
+        "SELECT COUNT(*) FROM predicciones WHERE evidencia_hash IS NOT NULL").fetchone()[0]
+    fila = conexion.execute(
+        "SELECT simbolo, as_of_iso, evidencia_hash, evidencia_txt FROM predicciones "
+        "WHERE evidencia_txt IS NOT NULL ORDER BY creada_iso DESC LIMIT 1").fetchone()
+    muestra = dict(fila) if fila else None
+    return {"total": total, "con_evidencia": con_ev,
+            "cobertura_pct": round(100 * con_ev / total, 1) if total else None,
+            "muestra": muestra}
+
+
 def resumen_predicciones(conexion, mercado: str | None = None) -> dict:
     """Tablero mínimo: cobertura y acierto sobre las predicciones RESUELTAS (y no
     abstenidas, movimiento no neutro). Honesto: reporta n junto a cada cifra.

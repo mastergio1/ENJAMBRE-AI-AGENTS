@@ -40,13 +40,14 @@ def test_suscriptores_protegido_sin_secreto_en_codigo(monkeypatch):
     # sin token configurado: nadie pasa (falla cerrado)
     monkeypatch.delenv("ENJAMBRE_PIPELINE_TOKEN", raising=False)
     assert cliente.get("/api/pulso/suscriptores").status_code == 404
-    # con el token del entorno: pasa (por cabecera o por query)
+    # con el token del entorno: pasa SOLO por cabecera (auditoría v4: se quitó
+    # ?clave= para no exponer el token en la URL)
     monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto-de-prueba-123")
     r_cab = cliente.get("/api/pulso/suscriptores",
                         headers={"X-Pipeline-Token": "secreto-de-prueba-123"})
     assert r_cab.status_code == 200 and "registrados" in r_cab.json()
-    assert cliente.get("/api/pulso/suscriptores?clave=secreto-de-prueba-123").status_code == 200
-    # token equivocado: rechazado
+    # el token en la URL (?clave=) YA NO autentica, ni con el valor correcto
+    assert cliente.get("/api/pulso/suscriptores?clave=secreto-de-prueba-123").status_code == 404
     assert cliente.get("/api/pulso/suscriptores?clave=otra-cosa").status_code == 404
 
 
@@ -168,3 +169,14 @@ def test_sin_lectura_en_reporte_viejo_sin_conviccion():
     # destacadas históricas (antes de Ventana A) no traen `conviccion` → sin lectura
     rep = {"direccion_pct": 2.0, "volatilidad_pct": 1.0, "frases": []}
     assert server._resumen_tarjeta(rep)["lectura"] is None
+
+
+def test_tablero_predicciones_solo_por_cabecera(monkeypatch):
+    """Auditoría v4: /api/predicciones/resumen exige X-Pipeline-Token por CABECERA;
+    el token en la URL (?clave=) ya no autentica (no exponerlo en logs/historial)."""
+    cliente = TestClient(server.app)
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "tok-123")
+    assert cliente.get("/api/predicciones/resumen").status_code == 403
+    assert cliente.get("/api/predicciones/resumen?clave=tok-123").status_code == 403
+    r = cliente.get("/api/predicciones/resumen", headers={"X-Pipeline-Token": "tok-123"})
+    assert r.status_code == 200 and "global" in r.json()

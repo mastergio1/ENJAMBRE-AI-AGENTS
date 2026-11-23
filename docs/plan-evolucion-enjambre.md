@@ -1,5 +1,14 @@
 # Plan de evolución de El Enjambre — v3
 
+> **⚠️ SUPERSEDED por el PLAN v4 (`docs/plan-v4-implementacion.md`), 23-nov-2026.**
+> La auditoría v4 es más rigurosa y es ahora el plan RECTOR. Ya se ejecutó su lote
+> de rigor+seguridad (sin clave): A0 train-only, inferencia pareada A3-vs-A4 por
+> evento (reemplaza el atajo "multiway"), guardia anti-fuga en el holdout, caché A2
+> versionado y token fuera de la URL (se quitó `?clave=`). Pendiente de la clave y de
+> datos prospectivos: A2 real, features del ABM (H2), evidencia B-vs-D y el
+> experimento prospectivo confirmatorio (v4 Fase 07). Lo de abajo (v3) se conserva
+> como contexto histórico.
+
 *Rubicón Lab · El Enjambre · v3, 2026-11-23. Reorganiza la ejecución del plan para
 eliminar dependencias circulares, priorizar evidencia prospectiva y coordinar DOS
 agentes (Claude y Codex). Incorpora la auditoría integral del 23-11

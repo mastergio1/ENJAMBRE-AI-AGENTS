@@ -73,3 +73,16 @@ def test_embargo_purga_cercanos_al_corte():
     # el embargo quita del desarrollo los casos dentro de 3 días antes del corte
     assert con["n_desarrollo"] < sin["n_desarrollo"]
     assert con["n_holdout"] == sin["n_holdout"]  # el holdout no cambia
+
+
+def test_particionar_excluye_filas_futuras_del_desarrollo():
+    # auditoría v4: filas POSTERIORES al corte que no están en el holdout no deben
+    # entrar al desarrollo (entrenar un examen con datos más nuevos que su test = fuga)
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20)
+    nuevos = casos + [{"id": 50, "y": 1, "fecha": "2026-02-01"}]  # muy posterior
+    dev, hold = ho.particionar(nuevos, m)
+    ids_dev = {str(c["id"]) for c in dev}
+    assert "50" not in ids_dev                       # la futura NO entra al desarrollo
+    assert {str(c["id"]) for c in hold} == {"8", "9"}  # el holdout no cambia
+    assert ids_dev == {str(i) for i in range(8)}      # solo las anteriores al corte

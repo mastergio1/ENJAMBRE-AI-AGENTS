@@ -60,3 +60,36 @@ def test_a2_entra_en_la_escalera(tmp_path):
     filas[0]["a2"] = 0.9; filas[1]["a2"] = 0.9  # A2 acierta la 1ª, falla la 2ª
     res = ablacion.evaluar(filas, n_boot=200)
     assert res["A2_un_llm"]["punto"] == 50.0
+
+
+# ---- caché versionado de A2 (auditoría v4: no mezclar contratos) ----
+
+def test_version_a2_estable_y_hex():
+    v = un_llm._version_a2()
+    assert v == un_llm._version_a2() and len(v) == 16 and all(c in "0123456789abcdef" for c in v)
+
+
+def test_previo_valido_respeta_la_version():
+    v = un_llm._version_a2()
+    bueno = {"_version": v, "senales": {"T": 0.5}}
+    assert un_llm._previo_valido(bueno, v) == {"T": 0.5}
+    # versión distinta → no se reutiliza
+    assert un_llm._previo_valido({"_version": "otra", "senales": {"T": 0.5}}, v) == {}
+    # formato viejo {titular: senal} (sin _version) → no se reutiliza
+    assert un_llm._previo_valido({"T": 0.5}, v) == {}
+
+
+def test_ablacion_lee_cache_a2_versionado(tmp_path):
+    from calibration import ablacion
+    cf = tmp_path / "cf.json"
+    cf.write_text(json.dumps([{"pct_corr": 2.0, "senal": 0.5, "direccion_pct": 0.5,
+                               "simbolo": "SPY", "fecha": "2020-01-01", "anio": 2020,
+                               "mercado": "indice"}]))
+    raw = tmp_path / "raw.json"
+    raw.write_text(json.dumps({"casos": [{"titular": "t1", "reaccion_real": {
+        "fecha_base": "2020-01-01", "simbolo": "SPY"}}]}))
+    a2 = tmp_path / "a2.json"
+    a2.write_text(json.dumps({"_version": "x", "modelo": "m", "senales": {"t1": 0.8}}))
+    filas = ablacion.cargar(str(cf), ruta_raw=str(raw), ruta_a2=str(a2))
+    # cargar emparejó el titular por (fecha, símbolo) y adjuntó A2 del formato versionado
+    assert filas[0]["titular"] == "t1" and filas[0]["a2"] == 0.8

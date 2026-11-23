@@ -1516,12 +1516,12 @@ def panel_estado(x_pipeline_token: str = Header(default="")) -> dict:
 
 
 @app.get("/api/predicciones/resumen")
-def predicciones_resumen(x_pipeline_token: str = Header(default=""), clave: str = "") -> dict:
+def predicciones_resumen(x_pipeline_token: str = Header(default="")) -> dict:
     """Tablero del registro prospectivo (Fase 7-mínima): acierto y cobertura de las
     predicciones ya resueltas, global y por mercado, más la cobertura de evidencia
-    (Fase 1). Protegido por token admin: por header `X-Pipeline-Token` o por
-    `?clave=` en la URL (para abrirlo desde el navegador)."""
-    if not _token_admin_ok(x_pipeline_token or clave):
+    (Fase 1). Protegido SOLO por header `X-Pipeline-Token` — se quitó `?clave=` para
+    no exponer el token en la URL (auditoría v4); ábrelo desde la consola /panel."""
+    if not _token_admin_ok(x_pipeline_token):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     conexion = persistencia.conectar()
     try:
@@ -1605,14 +1605,14 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
 
 
 @app.get("/api/pulso/suscriptores")
-def pulso_suscriptores(clave: str = "", email: str = "",
+def pulso_suscriptores(email: str = "",
                        x_pipeline_token: str = Header(default="")):
     """Conteo de suscriptores (solo números, sin correos): registrados, activos
     (confirmados), sin confirmar (double opt-in pendiente) y bajas. Con `email`,
-    reporta el estado de ESE correo. De solo lectura; protegido con el token de
-    admin (cabecera X-Pipeline-Token, o `?clave=` por compatibilidad). Sin token
-    configurado, nadie pasa (falla cerrado). No hay secreto en el código."""
-    if not _token_admin_ok(x_pipeline_token or clave):
+    reporta el estado de ESE correo. De solo lectura; protegido SOLO con la cabecera
+    X-Pipeline-Token — se quitó `?clave=` para no exponer el token en la URL
+    (auditoría v4). Sin token configurado, nadie pasa (falla cerrado)."""
+    if not _token_admin_ok(x_pipeline_token):
         return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
     try:

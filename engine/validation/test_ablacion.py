@@ -57,3 +57,42 @@ def test_pred_de_lee_el_campo_correcto():
     assert ab.pred_de(f, "A4_abm", 1) == -0.9
     assert ab.pred_de(f, "A1_lexico", 1) == 0.2
     assert ab.pred_de(f, "A0_mayoria", -1) == -1
+
+
+# ---- A0 honesto (train-only) y gate pareado por evento (auditoría v4) ----
+
+def test_a0_no_mira_el_futuro_ni_su_propia_etiqueta():
+    # fechas crecientes: 3 suben, la 4ª baja. A0 usa solo el pasado.
+    filas = [_f(2.0, 0, 0, "A", "2020-01-01"), _f(2.0, 0, 0, "B", "2020-01-02"),
+             _f(2.0, 0, 0, "C", "2020-01-03"), _f(-2.0, 0, 0, "D", "2020-01-04")]
+    items = ab._items_a0(filas)
+    assert len(items) == 3          # el 1º se abstiene (sin historia)
+    assert [ok for ok, _ in items] == [1, 1, 0]  # +,+ aciertan; el 4º predice + y baja
+
+
+def test_a0_en_evaluar_no_usa_signo_mayoria_global():
+    # si A0 mirara TODO el set, con 2 subas vs 1 baja predeciría + y "acertaría" la
+    # baja final nunca; aquí se comprueba que usa el pasado (expanding).
+    filas = [_f(2.0, 0, 0, "A", "2020-01-01"), _f(-2.0, 0, 0, "B", "2020-01-02"),
+             _f(2.0, 0, 0, "C", "2020-01-03")]
+    items = ab._items_a0(filas)
+    # caso2: historia=+1 → predice +, real baja → falla; caso3: historia 1-1 empate → abstiene
+    assert [ok for ok, _ in items] == [0]
+
+
+def test_gate_pareado_detecta_que_abm_resta():
+    # mismo evento (misma fecha): A3 acierta, A4 invierte y falla → d = -1
+    filas = [_f(2.0, 0.6, -0.6, "SPY", "2020-03-02"),
+             _f(2.0, 0.6, -0.6, "QQQ", "2020-03-02"),
+             _f(3.0, 0.6, -0.6, "DIA", "2020-03-03")]
+    p = ab.gate_pareado(filas, n_boot=500)
+    assert p["media"] == -1.0 and p["n"] == 3 and p["n_eventos"] == 2
+    assert p["hi"] < 0 and p["excluye_cero"]  # IC excluye 0 por abajo
+
+
+def test_gate_pareado_empate_no_concluyente():
+    # A3 y A4 igual de buenos (ambos aciertan) → d = 0, IC no excluye 0
+    filas = [_f(2.0, 0.5, 0.5, "SPY", "2020-03-02"),
+             _f(-2.0, -0.5, -0.5, "QQQ", "2020-03-03")]
+    p = ab.gate_pareado(filas, n_boot=500)
+    assert p["media"] == 0.0 and not p["excluye_cero"]

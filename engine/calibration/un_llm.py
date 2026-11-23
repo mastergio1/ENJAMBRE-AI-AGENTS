@@ -17,6 +17,7 @@ Uso:
     python3 engine/calibration/un_llm.py cal.con_fecha.json cal.json [salida_a2.json]
 """
 import asyncio
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -79,16 +80,39 @@ async def senales_async(titulares, obtener, concurrencia=CONCURRENCIA, cache=Non
     return cache
 
 
+PARSER_V = "a2-parser-1"  # súbelo si cambia cómo se parsea/recorta la respuesta
+
+
+def _version_a2() -> str:
+    """Huella del contrato de A2: modelo + prompt + parser. Si cambia cualquiera, el
+    caché viejo NO se reutiliza (auditoría v4: no mezclar respuestas de contratos
+    distintos)."""
+    crudo = f"{MODELO}|{SISTEMA}|{INSTRUCCION}|{PARSER_V}"
+    return hashlib.sha256(crudo.encode("utf-8")).hexdigest()[:16]
+
+
+def _previo_valido(guardado, version) -> dict:
+    """Las señales reutilizables del caché: solo si la versión del contrato coincide.
+    Un formato viejo {titular: senal} o una versión distinta → {} (no se mezcla)."""
+    if isinstance(guardado, dict) and guardado.get("_version") == version:
+        return dict(guardado.get("senales", {}))
+    return {}
+
+
 def senales(titulares, ruta_cache):
-    """Envoltura síncrona: carga el caché, consulta lo que falte con la API real,
-    lo guarda y devuelve {titular: senal}."""
+    """Envoltura síncrona: carga el caché VERSIONADO, consulta lo que falte con la
+    API real, lo guarda y devuelve {titular: senal}. Si la versión del contrato
+    (modelo/prompt/parser) no coincide con la guardada, el caché viejo se ignora."""
     import anthropic
     ruta = Path(ruta_cache)
-    cache = json.loads(ruta.read_text()) if ruta.exists() else {}
+    version = _version_a2()
+    previo = _previo_valido(json.loads(ruta.read_text()), version) if ruta.exists() else {}
     cliente = anthropic.AsyncAnthropic()
     nuevo = asyncio.run(senales_async(
-        titulares, lambda t: _llamar_api(cliente, t), cache=cache))
-    ruta.write_text(json.dumps(nuevo, ensure_ascii=False, indent=1))
+        titulares, lambda t: _llamar_api(cliente, t), cache=previo))
+    ruta.write_text(json.dumps(
+        {"_version": version, "modelo": MODELO, "senales": nuevo},
+        ensure_ascii=False, indent=1))
     return nuevo
 
 

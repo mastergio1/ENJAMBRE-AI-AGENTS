@@ -67,3 +67,32 @@ líderes".
   medir si cambia algo.
 - El veredicto final espera **más casos prospectivos** (Fase 7): el registro limpio
   es la única forma de angostar estos intervalos.
+
+---
+
+## Actualización (auditoría v4, 23-nov-2026) — método correcto, veredicto más firme
+
+La auditoría v4 señaló, con razón, dos defectos de rigor que ya se corrigieron en
+`ablacion.py` (con tests):
+
+1. **A0 ya no mira el examen.** Antes la clase mayoritaria se calculaba sobre TODO
+   el conjunto (miraba las etiquetas que debía predecir). Ahora es *train-only*
+   (expanding window): cada caso usa solo la mayoría de los casos **anteriores**.
+   Resultado honesto en índice: **64.5 %** (casi igual que antes, porque los índices
+   suben de forma persistente) — **sigue igualando al consenso A3 (62.7 %)**.
+
+2. **Inferencia PAREADA por evento** (reemplaza el atajo "el más ancho de tres").
+   La unidad de dependencia correcta es el ANUNCIO (misma fecha), no el caso suelto.
+   Diferencia pareada d = acierto_A4 − acierto_A3, con cluster bootstrap por evento:
+
+   | Mercado | media(A4−A3) | IC 95 % | veredicto |
+   |---|---:|:---:|---|
+   | **ÍNDICE** | **−0.063** | **[−0.124, −0.007]** | **significativo: el ABM RESTA** |
+   | TODOS | −0.012 | [−0.045, 0.021] | no concluyente (cruza 0) |
+
+**Conclusión reforzada:** en índice, el IC pareado **excluye el cero** → ahora es
+defendible estadísticamente que el ABM **empeora** la dirección frente al consenso,
+no solo de forma puntual. Y como A0 honesto (64.5 %) iguala a A3 (62.7 %), la señal
+del consenso **no supera con claridad** el piso "los índices suben". El veredicto
+definitivo sigue dependiendo del experimento **prospectivo** pre-registrado (v4
+Fase 07), no de este histórico.

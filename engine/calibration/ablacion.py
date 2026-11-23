@@ -25,6 +25,7 @@ Uso:
 (el 2º argumento, el export crudo, habilita A1 trayendo el titular de cada caso)
 """
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -46,12 +47,37 @@ ESCALONES = [
 
 
 def _signo_mayoria(filas):
-    """Dirección mayoritaria entre los resultados reales direccionables (el
-    predictor constante óptimo: el piso a batir). No mira features, solo el
-    balance subas/bajas, así que es la misma dentro y fuera de muestra."""
+    """Dirección mayoritaria entre TODOS los resultados dados (atajo que SÍ mira
+    las etiquetas del conjunto). Se conserva como utilidad, pero para puntuar A0
+    NO se usa (miraría el examen): ver `_items_a0`, que solo usa el pasado."""
     dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= ZONA]
     subas = sum(1 for f in dire if f["pct_corr"] > 0)
     return 1 if subas >= (len(dire) - subas) else -1
+
+
+def _items_a0(filas, zona=ZONA):
+    """A0 HONESTO (auditoría v4): para cada caso, la clase mayoritaria de los casos
+    ESTRICTAMENTE ANTERIORES por fecha (train-only, expanding window). Nunca mira
+    la etiqueta del propio caso ni las futuras. Se abstiene mientras no haya
+    historia para decidir (empate 0-0 al inicio); esas abstenciones reducen el
+    denominador de A0 a propósito (es el precio de no hacer trampa)."""
+    dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
+    dire = sorted(dire, key=lambda f: str(f.get("fecha", "")))
+    subas = bajas = 0
+    out = []
+    for f in dire:
+        pred = 1 if subas > bajas else (-1 if bajas > subas else 0)
+        if pred != 0:
+            ok = 1 if _sg(pred) == _sg(f["pct_corr"]) else 0
+            fecha = str(f.get("fecha", ""))[:10]
+            out.append((ok, {"simbolo": f.get("simbolo"), "fecha": fecha,
+                             "anio": str(f.get("anio") or fecha[:4])}))
+        # la historia se actualiza DESPUÉS de predecir (no mira su propia etiqueta)
+        if f["pct_corr"] > 0:
+            subas += 1
+        else:
+            bajas += 1
+    return out
 
 
 def pred_de(fila, escalon, signo_mayoria):
@@ -90,6 +116,8 @@ def cargar(ruta_con_fecha, ruta_raw=None, ruta_a2=None):
                 f["lexico"] = sentimiento_lexico(tit)
     if ruta_a2:
         a2 = json.loads(Path(ruta_a2).read_text())
+        if isinstance(a2, dict) and "senales" in a2:  # caché versionado de un_llm.py
+            a2 = a2["senales"]
         for f in filas:
             if f.get("titular") in a2:
                 f["a2"] = a2[f["titular"]]
@@ -127,10 +155,11 @@ def _ci_honesto(items, **kw):
 def evaluar(filas, mercado=None, zona=ZONA, **kw):
     """Acierto e IC honesto de cada escalón (opcionalmente filtrando por mercado)."""
     sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
-    sm = _signo_mayoria(sub)
     res = {}
     for esc, _desc in ESCALONES:
-        items = _items(sub, esc, sm, zona)
+        # A0 se puntúa SOLO con el pasado (train-only); el resto son reglas fijas
+        # (su acierto es el mismo dentro y fuera de muestra), así que no filtran.
+        items = _items_a0(sub, zona) if esc == "A0_mayoria" else _items(sub, esc, None, zona)
         res[esc] = _ci_honesto(items, **kw)
     return res
 
@@ -160,6 +189,48 @@ def gate_abm(filas, mercado=None, zona=ZONA):
     }
 
 
+def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
+    """El gate CORRECTO (auditoría v4): diferencia PAREADA A4 − A3 por EVENTO.
+
+    La unidad de dependencia no es el caso suelto sino el ANUNCIO (misma fecha): 4
+    ETFs del mismo día no son 4 experimentos. Para cada caso donde AMBOS opinan,
+    d = acierto_A4 − acierto_A3 ∈ {-1,0,1}; se agrupan por fecha y se re-muestrean
+    los GRUPOS (cluster bootstrap) para el IC de la media de d. media<0 ⇒ el ABM
+    resta; IC que EXCLUYE 0 ⇒ la diferencia es significativa. Sustituye al atajo
+    'el intervalo más ancho de tres' para la comparación A3-vs-A4."""
+    sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
+    por_evento = {}
+    for f in sub:
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona:
+            continue
+        s, d4 = f.get("senal"), f.get("direccion_pct")
+        if s in (0, None) or d4 in (0, None):
+            continue
+        a3 = 1 if _sg(s) == _sg(pc) else 0
+        a4 = 1 if _sg(d4) == _sg(pc) else 0
+        por_evento.setdefault(str(f.get("fecha", ""))[:10], []).append(a4 - a3)
+    grupos = list(por_evento.values())
+    todos = [d for g in grupos for d in g]
+    if not todos:
+        return {"media": None, "lo": None, "hi": None, "n": 0, "n_eventos": 0}
+    media = sum(todos) / len(todos)
+    rng = random.Random(seed)
+    muestras = []
+    for _ in range(n_boot):
+        pool = []
+        for _ in range(len(grupos)):
+            pool.extend(rng.choice(grupos))
+        if pool:
+            muestras.append(sum(pool) / len(pool))
+    muestras.sort()
+    lo = muestras[int(0.025 * len(muestras))]
+    hi = muestras[int(0.975 * len(muestras)) - 1]
+    return {"media": round(media, 3), "lo": round(lo, 3), "hi": round(hi, 3),
+            "n": len(todos), "n_eventos": len(grupos),
+            "excluye_cero": hi < 0 or lo > 0}
+
+
 def imprimir(filas, mercados=("indice", None)):
     for m in mercados:
         etq = (m or "TODOS").upper()
@@ -174,9 +245,14 @@ def imprimir(filas, mercados=("indice", None)):
             ic = f"[{d['lo']}-{d['hi']}]({d['agrupado'][:3]})"
             print(f"{esc:14}{desc:42}{d['punto']:>9}{ic:>18}{d['n']:>6}")
         g = gate_abm(filas, mercado=m)
-        print(f"  GATE A4−A3 = {g['delta_A4_menos_A3']} pts  "
+        print(f"  GATE A4−A3 (puntual) = {g['delta_A4_menos_A3']} pts  "
               f"(ABM cambió el signo {g['abm_cambia_signo']} veces: "
               f"acertó {g['abm_acierta_al_cambiar']}, falló {g['abm_falla_al_cambiar']})")
+        p = gate_pareado(filas, mercado=m)
+        if p["media"] is not None:
+            print(f"  GATE pareado por evento: media(A4−A3) = {p['media']} "
+                  f"IC95 [{p['lo']}, {p['hi']}] · {p['n']} casos en {p['n_eventos']} eventos"
+                  f" · {'significativo' if p['excluye_cero'] else 'no concluyente (IC cruza 0)'}")
 
 
 if __name__ == "__main__":

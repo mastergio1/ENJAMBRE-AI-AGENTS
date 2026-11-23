@@ -7,6 +7,13 @@ recalcula el intervalo re-muestreando por distintas unidades de dependencia y
 reporta todas, más la sensibilidad a excluir un instrumento. Si el intervalo se
 ensancha mucho al agrupar por fecha, la independencia era menor de lo que parecía.
 
+CAVEAT (auditoría v4): esto NO es un "bootstrap multiway" con garantía de cobertura.
+Es una heurística CONSERVADORA — el más ancho de tres intervalos de UNA dimensión
+(activo, evento, año) calculados por separado. Sirve como señal de robustez (si el
+IC se ensancha mucho al cambiar la agrupación, la independencia era menor de lo que
+parecía), pero para comparar A3 vs A4 el método correcto es la diferencia PAREADA
+por evento con cluster bootstrap (`ablacion.gate_pareado`), no esto.
+
 Puro y testeable (sin red).
 """
 import random

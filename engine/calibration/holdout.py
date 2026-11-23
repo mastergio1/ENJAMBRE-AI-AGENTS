@@ -83,10 +83,22 @@ def verificar_manifiesto(manifiesto, casos, *, clave_id="id", clave_y="y"):
             "n_presentes": len(presentes)}
 
 
-def particionar(casos, manifiesto, *, clave_id="id"):
+def particionar(casos, manifiesto, *, clave_id="id", clave_fecha="fecha"):
     """Devuelve (desarrollo, holdout) usando la membresía CONGELADA del manifiesto.
-    El holdout son exactamente los ids del manifiesto; el resto es desarrollo."""
+
+    El holdout son exactamente los ids del manifiesto. El desarrollo EXCLUYE las
+    filas posteriores al corte que NO están en el holdout (llegaron después de
+    congelarlo): entrenar un examen con datos más nuevos que su propio test es fuga
+    temporal (auditoría v4). Esas filas quedan fuera de ambos (cohorte futura), no
+    en desarrollo."""
     ids_hold = set(manifiesto["holdout_ids"])
+    corte = manifiesto.get("fecha_corte")
     holdout = [c for c in casos if str(c[clave_id]) in ids_hold]
-    desarrollo = [c for c in casos if str(c[clave_id]) not in ids_hold]
+    desarrollo = []
+    for c in casos:
+        if str(c[clave_id]) in ids_hold:
+            continue
+        if corte and str(c.get(clave_fecha, ""))[:10] >= corte:
+            continue  # posterior al corte y NO en el holdout → cohorte futura, fuera
+        desarrollo.append(c)
     return desarrollo, holdout

@@ -165,6 +165,12 @@
         </div>
       </section>
       <section class="panel">
+        <div class="panel-cab"><h2 style="font-size:1rem">Predicciones (registro prospectivo)</h2></div>
+        <div class="panel-cuerpo" id="predCuerpo" style="font-size:.82rem;color:var(--mute);line-height:1.7">
+          <div class="vacio">Cargando…</div>
+        </div>
+      </section>
+      <section class="panel">
         <div class="panel-cab"><h2 style="font-size:1rem">Historial</h2></div>
         <ul class="hist" id="hist"><li style="color:var(--mute)">Cargando…</li></ul>
       </section>
@@ -220,6 +226,29 @@ function arrancar(est){
   pintarEstado(est);
   cargarEdicionHoy(est.hoy);
   cargarHistorial();
+  cargarPredicciones();
+}
+
+// ---------- registro prospectivo (tablero): acierto, cobertura, evidencia ----------
+// Reemplaza abrir /api/predicciones/resumen?clave= en el navegador (token en la
+// URL). Aquí se pide por cabecera segura, como el resto de la consola.
+async function cargarPredicciones(){
+  const d = await api("/api/predicciones/resumen");
+  const cont = $("#predCuerpo");
+  if(!d){ cont.innerHTML = '<div class="vacio">No se pudo cargar.</div>'; return; }
+  const g = d.global || {};
+  const fila = (etq,r) => {
+    if(!r || !r.puntuables){ return `<div>${esc(etq)}: <span style="color:var(--mute)">sin datos</span></div>`; }
+    return `<div>${esc(etq)}: <b>${r.acierto!=null?r.acierto+'%':'—'}</b> `+
+           `<span style="color:var(--mute)">(${r.puntuables} puntuables / ${r.resueltas} resueltas)</span></div>`;
+  };
+  let html = fila('Global', g);
+  const pm = d.por_mercado || {};
+  for(const m of ['indice','accion','cripto','oro','petroleo']){ if(pm[m] && pm[m].puntuables) html += fila(m, pm[m]); }
+  const ev = d.evidencia || {};
+  html += `<div style="margin-top:8px">Pendientes de resolver: <b>${d.pendientes!=null?d.pendientes:'—'}</b></div>`;
+  if(ev && ev.total!=null){ html += `<div>Cobertura de evidencia: <b>${ev.con_evidencia||0}/${ev.total}</b></div>`; }
+  cont.innerHTML = html;
 }
 
 // ---------- estado del sistema ----------

@@ -1499,10 +1499,12 @@ def panel_estado(x_pipeline_token: str = Header(default="")) -> dict:
 
 
 @app.get("/api/predicciones/resumen")
-def predicciones_resumen(x_pipeline_token: str = Header(default="")) -> dict:
+def predicciones_resumen(x_pipeline_token: str = Header(default=""), clave: str = "") -> dict:
     """Tablero del registro prospectivo (Fase 7-mínima): acierto y cobertura de las
-    predicciones ya resueltas, global y por mercado. Protegido por token admin."""
-    if not _token_admin_ok(x_pipeline_token):
+    predicciones ya resueltas, global y por mercado, más la cobertura de evidencia
+    (Fase 1). Protegido por token admin: por header `X-Pipeline-Token` o por
+    `?clave=` en la URL (para abrirlo desde el navegador)."""
+    if not _token_admin_ok(x_pipeline_token or clave):
         return JSONResponse({"error": "no autorizado"}, status_code=403)
     conexion = persistencia.conectar()
     try:

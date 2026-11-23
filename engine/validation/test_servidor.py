@@ -141,3 +141,30 @@ def test_flujo_completo_por_websocket():
         assert guardada["titular"].startswith("Quiebra el segundo banco")
         assert len(guardada["lideres"]) == 1150
         assert len(guardada["serie_precios"]) >= total_ticks
+
+
+# ---- Lectura honesta de la tarjeta (Opción 1: separar visual del ABM de la
+# lectura del consenso; ver docs/hallazgo-ablacion.md) ----
+
+def test_lectura_tarjeta_solo_si_fiable():
+    # fiable → la tarjeta expone la LECTURA (dirección del consenso), aunque el
+    # precio simulado (direccion_pct) vaya en otro sentido: se muestran aparte.
+    rep = {"direccion_pct": -2.5, "volatilidad_pct": 1.0,
+           "conviccion": {"fiable_direccion": True},
+           "direccion_titular": "alza", "frases": []}
+    t = server._resumen_tarjeta(rep)
+    assert t["lectura"] == {"direccion": "alza", "flecha": "▲"}
+    assert t["direccion"] == "▼"  # el movimiento simulado NO se toca
+
+
+def test_sin_lectura_cuando_no_es_fiable():
+    rep = {"direccion_pct": 3.0, "volatilidad_pct": 1.0,
+           "conviccion": {"fiable_direccion": False},
+           "direccion_titular": "alza", "frases": []}
+    assert server._resumen_tarjeta(rep)["lectura"] is None
+
+
+def test_sin_lectura_en_reporte_viejo_sin_conviccion():
+    # destacadas históricas (antes de Ventana A) no traen `conviccion` → sin lectura
+    rep = {"direccion_pct": 2.0, "volatilidad_pct": 1.0, "frases": []}
+    assert server._resumen_tarjeta(rep)["lectura"] is None

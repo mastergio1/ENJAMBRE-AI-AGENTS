@@ -305,7 +305,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
         ${mercadoHtml}
         ${convHtml}
         <div class="cifras">
-          <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
+          <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>movimiento simulado</label></div>
           <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>
           <div><span>${num(reporte.volatilidad_pct)}%</span><label>volatilidad/tick</label></div>
           ${Number.isFinite(Number(reporte.confianza))

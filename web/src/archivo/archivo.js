@@ -22,14 +22,18 @@ function tarjetaArchivo(item) {
   const clase = t.direccion === '▲' ? 'sube' : t.direccion === '▼' ? 'baja' : 'plana'
   const simbolos = (item.simbolos || '').split(',').filter(Boolean).slice(0, 4).map(esc).join(' · ')
   const pct = Number(t.direccion_pct) || 0
+  const lec = t.lectura
+    ? `<span class="lectura ${t.lectura.direccion === 'alza' ? 'sube' : 'baja'}" title="Dirección del consenso de líderes; confiable en este tipo de caso. No es consejo de inversión.">lectura ${esc(t.lectura.flecha)} ${esc(t.lectura.direccion)}</span>`
+    : ''
   return `
     <a class="arch-item" href="?sim=${idSeguro(item.id)}">
       <div class="arch-meta">${FECHA.format(new Date(item.fecha))}${simbolos ? ' · ' + simbolos : ''}
         ${item.tiene_epilogo ? '· <span class="arch-epi">¿y qué pasó?</span>' : ''}</div>
       <h3>${esc(item.titular)}</h3>
       <div class="arch-res">
-        <span class="flecha ${clase}">${esc(t.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="flecha ${clase}" title="Movimiento que simuló el enjambre (visualización).">${esc(t.direccion)} ${pct > 0 ? '+' : ''}${pct}% <small>simulado</small></span>
         <span class="agitacion">agitación ${esc(t.agitacion)}</span>
+        ${lec}
       </div>
     </a>`
 }

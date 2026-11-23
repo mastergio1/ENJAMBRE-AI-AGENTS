@@ -103,11 +103,17 @@ function plantillaTarjeta(tarjeta) {
     const r = tarjeta.resumen
     const clase = r.direccion === '▲' ? 'sube' : r.direccion === '▼' ? 'baja' : 'plana'
     const pct = Number(r.direccion_pct) || 0
+    // la lectura (dirección del consenso de líderes) se muestra aparte y SOLO
+    // cuando es fiable; el % es el movimiento que simuló el enjambre (visual)
+    const lec = r.lectura
+      ? `<span class="lectura ${r.lectura.direccion === 'alza' ? 'sube' : 'baja'}" title="Dirección del consenso de líderes; en este tipo de caso su lectura ha sido confiable. No es consejo de inversión.">lectura ${esc(r.lectura.flecha)} ${esc(r.lectura.direccion)}</span>`
+      : ''
     cuerpo = `
       <div class="resultado">
-        <span class="flecha ${clase}">${esc(r.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="flecha ${clase}" title="Movimiento que simuló el enjambre (visualización).">${esc(r.direccion)} ${pct > 0 ? '+' : ''}${pct}% <small>simulado</small></span>
         <span class="agitacion">agitación ${esc(r.agitacion)}</span>
       </div>
+      ${lec ? `<div class="resultado-lectura">${lec}</div>` : ''}
       ${r.frase ? `<p class="voz">«${esc(r.frase.frase)}» — <span>${esc(r.frase.arquetipo)}</span></p>` : ''}
       <button class="accion ver-simulacion" data-sim="${idSeguro(tarjeta.sim_id)}">Ver la simulación</button>`
   } else {

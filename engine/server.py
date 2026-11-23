@@ -716,6 +716,22 @@ def _direccion_editorial(direccion_pct: float) -> str:
     return "◆"
 
 
+def _lectura_tarjeta(resumen: dict) -> dict | None:
+    """La LECTURA direccional honesta de la tarjeta: la dirección del CONSENSO de
+    líderes (A3), que la ablación (docs/hallazgo-ablacion.md) mostró MEJOR predictor
+    que el precio simulado del ABM (A4). Se muestra SOLO cuando el historial sin
+    fuga la respalda (índice + convicción fuerte → `fiable_direccion`). El % de la
+    tarjeta es el MOVIMIENTO que simuló el enjambre (visualización), NO la predicción;
+    separarlos evita vender el ABM como predictor y sobre-afirmar ante la CMF."""
+    conv = resumen.get("conviccion") or {}
+    if not conv.get("fiable_direccion"):
+        return None
+    d = resumen.get("direccion_titular") or resumen.get("direccion_senal")
+    if d not in ("alza", "baja"):
+        return None
+    return {"direccion": d, "flecha": "▲" if d == "alza" else "▼"}
+
+
 def _resumen_tarjeta(resumen: dict) -> dict:
     """Lo que la tarjeta del muro necesita del reporte completo."""
     frases = resumen.get("frases", [])
@@ -726,6 +742,7 @@ def _resumen_tarjeta(resumen: dict) -> dict:
     return {
         "direccion_pct": resumen.get("direccion_pct"),
         "direccion": _direccion_editorial(resumen.get("direccion_pct", 0)),
+        "lectura": _lectura_tarjeta(resumen),
         "agitacion": _nivel_agitacion(resumen.get("volatilidad_pct", 0)),
         "frase": jugosa,
     }

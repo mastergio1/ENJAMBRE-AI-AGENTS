@@ -365,6 +365,31 @@ body.con-muro .marca {
 .tarjeta .flecha.sube { color: var(--salvia); }
 .tarjeta .flecha.baja { color: var(--rosa); }
 .tarjeta .flecha.plana { color: var(--teal); }
+.tarjeta .flecha small {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crema-suave);
+  font-weight: 400;
+}
+/* "lectura": la dirección del consenso de líderes, mostrada solo cuando es fiable
+   (índice + convicción fuerte). Es la predicción honesta; el % de arriba es el
+   movimiento simulado (visualización). Ver docs/hallazgo-ablacion.md. */
+.resultado-lectura { margin: 0.2rem 0 0.1rem; }
+.tarjeta .lectura, .arch-res .lectura {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.tarjeta .lectura.sube, .arch-res .lectura.sube { color: var(--salvia); }
+.tarjeta .lectura.baja, .arch-res .lectura.baja { color: var(--rosa); }
 .tarjeta .agitacion {
   font-size: 0.7rem;
   letter-spacing: 0.08em;

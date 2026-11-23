@@ -41,6 +41,15 @@ def test_registra_prediccion_de_destacada(con):
     assert json.loads(pr["fuentes_json"]) == {"api": 1, "cache": 1, "fallback": 1}
 
 
+def test_registra_todos_los_tickers(con):
+    # P0-03: una noticia con varios tickers registra UNA predicción por cada uno
+    elegido = {"titular": "CPI sorprende al alza", "simbolos": "SPY,QQQ,DIA", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "s", 1)
+    preds = p.listar_predicciones(con)
+    assert len(preds) == 3
+    assert {x["simbolo"] for x in preds} == {"SPY", "QQQ", "DIA"}
+
+
 def test_sin_simbolo_no_registra(con):
     elegido = {"titular": "Noticia sin ticker", "simbolos": "", "fuente": "alpaca"}
     pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "s", 1)

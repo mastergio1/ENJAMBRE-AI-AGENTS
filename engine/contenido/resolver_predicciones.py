@@ -13,9 +13,29 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
 from contenido import persistencia
-from calibration.remedir_sin_fuga import obtener_barras, pct_sin_fuga
+from calibration.remedir_sin_fuga import obtener_barras
 
 EVALUADOR_VER = "v1"
+
+
+def pct_resolucion(barras, as_of_fecha: str, ruedas: int):
+    """Movimiento desde la PRIMERA sesión posterior a `as_of_fecha`, `ruedas`
+    sesiones después. Devuelve el % o None si aún no hay suficientes sesiones.
+
+    Weekend/feriado-safe (auditoría v3 P0-04): no exige una barra en la fecha
+    exacta del `as_of`. Toma como entrada el cierre de la primera sesión que
+    OCURRE DESPUÉS del `as_of` (así nunca mide un cierre ya ocurrido al predecir),
+    lo que resuelve bien sábados, domingos, feriados y noticias fuera de hora."""
+    if not barras:
+        return None
+    idx = next((k for k, (dia, _) in enumerate(barras) if dia > as_of_fecha), None)
+    if idx is None or idx + ruedas >= len(barras):
+        return None
+    base = barras[idx][1]
+    final = barras[idx + ruedas][1]
+    if not base:
+        return None
+    return (final - base) / base * 100
 
 
 def resolver_pendientes(conexion, fetch=obtener_barras, zona: float = 0.3) -> dict:
@@ -30,9 +50,9 @@ def resolver_pendientes(conexion, fetch=obtener_barras, zona: float = 0.3) -> di
         if not barras:
             sin_datos += 1
             continue
-        pct = pct_sin_fuga(barras, fecha_base, pred["horizonte"])
+        pct = pct_resolucion(barras, fecha_base, pred["horizonte"])
         if pct is None:
-            aun_verdes += 1  # todavía no hay suficientes ruedas (no ha madurado)
+            aun_verdes += 1  # todavía no hay suficientes sesiones (no ha madurado)
             continue
         if persistencia.resolver_prediccion(conexion, pred["id"], pct,
                                              zona=zona, evaluador_ver=EVALUADOR_VER):

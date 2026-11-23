@@ -17,18 +17,16 @@ MAXIMO_DIARIO = 3  # presupuesto de CONTENIDO.md — no negociable
 
 
 def _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos, sim_id, seed):
-    """Registra la predicción del día ANTES de conocer el resultado (Fase 7-mínima).
+    """Registra la predicción prospectiva de CADA instrumento de la noticia ANTES
+    de conocer el resultado (Fase 7-mínima): dato inmune a contaminación.
 
-    Es el momento prospectivo: noticia REAL de hoy, resultado futuro desconocido →
-    dato inmune a contaminación y sesgo de selección. BLINDADO: si algo falla, NO
-    rompe el ritual (la predicción es secundaria al contenido del día)."""
+    Auditoría v3 P0-03: (1) registra TODOS los tickers de la noticia, no solo el
+    primero; (2) NO falla en silencio — loguea el error. El ritual nunca se cae por
+    esto (todo va protegido), pero un fallo queda VISIBLE en el log del motor."""
     try:
-        simbolos = (elegido.get("simbolos") or "").strip()
-        simbolo = next((s.strip() for s in simbolos.split(",") if s.strip()), "")
-        if not simbolo:
+        simbolos = [s.strip() for s in (elegido.get("simbolos") or "").split(",") if s.strip()]
+        if not simbolos:
             return  # sin instrumento no se puede resolver después
-        from contenido.backtest import _mercado_de_caso
-        mercado = _mercado_de_caso({"simbolos": simbolos})
         conv = reporte.get("conviccion") or {}
         direccion = reporte.get("direccion_titular", "neutra")
         fuentes: dict[str, int] = {}
@@ -39,15 +37,23 @@ def _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos,
             from brains.cerebro import MODELO
         except Exception:
             MODELO = None
-        persistencia.registrar_prediccion(
-            conexion, titular=elegido["titular"], simbolo=simbolo, mercado=mercado,
-            horizonte=2, direccion=direccion, abstenido=(direccion == "neutra"),
-            consenso=reporte.get("senal_media_ponderada"),
-            conviccion=conv.get("nivel"), fiable=bool(conv.get("fiable_direccion")),
-            fuentes=fuentes, versiones={"modelo": MODELO, "seed": seed}, sim_id=sim_id,
-        )
-    except Exception:
-        pass  # el registro prospectivo nunca debe tumbar el ritual
+        from contenido.backtest import _mercado_de_caso
+    except Exception as e:
+        print(f"[prediccion] no se pudo preparar el registro: {e!r}", flush=True)
+        return
+    for simbolo in simbolos:
+        try:
+            persistencia.registrar_prediccion(
+                conexion, titular=elegido["titular"], simbolo=simbolo,
+                mercado=_mercado_de_caso({"simbolos": simbolo}),
+                horizonte=2, direccion=direccion, abstenido=(direccion == "neutra"),
+                consenso=reporte.get("senal_media_ponderada"),
+                conviccion=conv.get("nivel"), fiable=bool(conv.get("fiable_direccion")),
+                fuentes=fuentes, versiones={"modelo": MODELO, "seed": seed}, sim_id=sim_id,
+            )
+        except Exception as e:
+            print(f"[prediccion] FALLÓ el registro de {simbolo} "
+                  f"({(elegido.get('titular') or '?')[:40]}): {e!r}", flush=True)
 
 
 def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):

@@ -43,3 +43,26 @@ def test_sin_datos_no_rompe(con):
                            direccion="alza", as_of_iso="2026-03-02T12:00:00+00:00")
     res = rp.resolver_pendientes(con, fetch=lambda s, f: None)
     assert res["resueltas"] == 0 and res["sin_datos"] == 1
+
+
+def test_pct_resolucion_toma_primera_sesion_posterior():
+    # as_of sábado: entra en la primera sesión POSTERIOR, no exige barra del sábado
+    barras = [("2026-11-20", 100.0), ("2026-11-23", 101.0),
+              ("2026-11-24", 102.0), ("2026-11-25", 103.0)]
+    pct = rp.pct_resolucion(barras, "2026-11-21", 2)  # sábado → entra el lunes (101)
+    assert pct is not None and round(pct, 2) == round((103 - 101) / 101 * 100, 2)
+
+
+def test_resuelve_aunque_as_of_sea_fin_de_semana(con):
+    # P0-04: una noticia con as_of de sábado DEBE resolverse (antes daba None eterno)
+    p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                           direccion="alza", mercado="indice",
+                           as_of_iso="2026-11-21T12:00:00+00:00")  # sábado
+
+    def barras(sim, fecha):
+        return [("2026-11-20", 100.0), ("2026-11-23", 101.0),
+                ("2026-11-24", 102.0), ("2026-11-25", 103.0)]
+
+    res = rp.resolver_pendientes(con, fetch=barras)
+    assert res["resueltas"] == 1
+    assert p.listar_predicciones(con)[0]["direccion_real"] == "alza"

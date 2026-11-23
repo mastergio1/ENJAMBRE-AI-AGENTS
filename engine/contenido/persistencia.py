@@ -996,13 +996,16 @@ def resolver_prediccion(conexion, pid: str, pct_real: float, *,
         acierto = None  # no se puntúa
     else:
         acierto = 1 if fila["direccion"] == dir_real else 0
-    conexion.execute(
+    # Actualización condicional ATÓMICA (auditoría v3 P1-10): `WHERE resuelto = 0`
+    # garantiza que si dos procesos corren a la vez, solo uno resuelve (el otro
+    # toca 0 filas → rowcount 0 → False). Antes el SELECT+UPDATE no era atómico.
+    cur = conexion.execute(
         """UPDATE predicciones SET resuelto = 1, pct_real = ?, direccion_real = ?,
-           acierto = ?, resuelto_iso = ?, evaluador_ver = ? WHERE id = ?""",
+           acierto = ?, resuelto_iso = ?, evaluador_ver = ? WHERE id = ? AND resuelto = 0""",
         (pct_real, dir_real, acierto, ahora_iso(), evaluador_ver, pid),
     )
     conexion.commit()
-    return True
+    return cur.rowcount > 0
 
 
 def predicciones_por_resolver(conexion, hasta_iso: str | None = None) -> list[dict]:
@@ -1036,13 +1039,22 @@ def listar_predicciones(conexion, *, resueltas: bool | None = None,
 
 def resumen_predicciones(conexion, mercado: str | None = None) -> dict:
     """Tablero mínimo: cobertura y acierto sobre las predicciones RESUELTAS (y no
-    abstenidas, movimiento no neutro). Honesto: reporta n junto a cada cifra."""
-    puntuables = [p for p in listar_predicciones(conexion, resueltas=True, mercado=mercado)
-                  if p["acierto"] is not None]
-    total = len(listar_predicciones(conexion, mercado=mercado))
-    resueltas = len(listar_predicciones(conexion, resueltas=True, mercado=mercado))
-    n = len(puntuables)
-    aciertos = sum(p["acierto"] for p in puntuables)
+    abstenidas, movimiento no neutro). Honesto: reporta n junto a cada cifra.
+
+    Cuenta con SQL sobre el UNIVERSO COMPLETO (auditoría v3 P1-09): usar una lista
+    truncada (LIMIT) daba denominadores falsos cuando hay muchas predicciones."""
+    filtro = " WHERE mercado = ?" if mercado else ""
+    args = (mercado,) if mercado else ()
+
+    def _uno(sql):
+        return conexion.execute(sql, args).fetchone()[0]
+
+    total = _uno(f"SELECT COUNT(*) FROM predicciones{filtro}")
+    base = f"SELECT COUNT(*) FROM predicciones{filtro}{' AND' if mercado else ' WHERE'}"
+    resueltas = _uno(f"{base} resuelto = 1")
+    # puntuables = resueltas, no abstenidas, con acierto definido (movimiento no neutro)
+    n = _uno(f"{base} resuelto = 1 AND acierto IS NOT NULL")
+    aciertos = _uno(f"{base} resuelto = 1 AND acierto = 1")
     return {
         "total": total, "resueltas": resueltas, "puntuables": n,
         "acierto": round(100 * aciertos / n, 1) if n else None,

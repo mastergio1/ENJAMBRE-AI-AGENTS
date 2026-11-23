@@ -81,3 +81,11 @@ def test_resumen_cobertura_y_acierto(con):
     p.resolver_prediccion(con, d, 0.0)    # neutra, no puntúa
     r = p.resumen_predicciones(con, "indice")
     assert r["resueltas"] == 3 and r["puntuables"] == 2 and r["acierto"] == 50.0
+
+
+def test_resumen_cuenta_mas_de_500(con):
+    # P1-09: el tablero debe contar sobre el universo COMPLETO, no truncar a 500
+    for i in range(501):
+        p.registrar_prediccion(con, titular=f"noticia-{i}", simbolo="SPY", horizonte=2,
+                               direccion="alza", mercado="indice")
+    assert p.resumen_predicciones(con, "indice")["total"] == 501

@@ -54,8 +54,8 @@ es un bloqueo ("si hay que gastar en IA, hazlo").
   Probada con un A2 falso (solo cañería); falta correrla con el A2 real.
 
 ### Pendiente
-- **M4 vs A3** (¿un LLM iguala a los 110?): `docs/runbook-experimento-a2.md`. Necesita
-  `ANTHROPIC_API_KEY` en el entorno (una sesión nueva la toma). **← próximo paso.**
+- ✅ **M4 vs A3 HECHO** (vía Plan B, endpoint en Render): **un LLM iguala al consenso
+  de 110** (índice 65.5% vs 66.4%, pareado no distinguible). → `docs/hallazgo-a2-un-llm.md`.
 - **Rotar `ENJAMBRE_PIPELINE_TOKEN`** (se expuso en el chat): Render + secreto GitHub.
 - **F05** banco cronológico de flujo (eventos por reglas ex-ante, sin sesgo de
   selección) — necesita recolección nueva.
@@ -76,7 +76,10 @@ es un bloqueo ("si hay que gastar en IA, hazlo").
    64.5%). Fuera de índice, ~azar.
 3. **El "80% con convicción" NO está establecido** (IC real [54.5–92.3] por período).
    → `docs/hallazgo-bootstrap-multiway.md`.
-4. Conclusión de producto: El Enjambre es una **visualización / focus group sintético**
+4. **Un solo LLM iguala al consenso de 110 cerebros** (A2≈A3): la diversidad no
+   compra acierto; basta 1 llamada para la dirección (las 110 son valor de producto/
+   visualización). → `docs/hallazgo-a2-un-llm.md`.
+5. Conclusión de producto: El Enjambre es una **visualización / focus group sintético**
    genuino; NO se vende como predictor. El veredicto definitivo es prospectivo.
 
 ## 5. Próximo paso inmediato (sesión nueva con la clave)

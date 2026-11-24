@@ -118,3 +118,75 @@ def imprimir(ruta_con_fecha, ruta_raw, mercados=("indice", None)):
 
 if __name__ == "__main__":
     imprimir(sys.argv[1], sys.argv[2])
+
+
+# ---------- Versión COMPLETA de H14: features ricas re-corriendo la simulación ----------
+
+def correr_rico(titular, sa, mercado, magnitud_real, seed=20260101):
+    """Corre una simulación (N completo, señales congeladas) y extrae features de
+    RIESGO/microestructura del tramo posterior a la noticia."""
+    import numpy as np
+    from agents.lider import LiderOpinion
+    from brains.mercado import perfil_de
+    from calibration.barrido_poblacion import (TICKS_CAL, TICKS_POST, TICKS_PREV,
+                                               _respuestas_congeladas)
+    from model import MercadoEnjambre
+
+    modelo = MercadoEnjambre(seed=seed, ticks_horizonte=TICKS_CAL + TICKS_POST)
+    modelo.correr(TICKS_CAL)
+    lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
+    resp = _respuestas_congeladas(lideres, sa)
+    for _ in range(TICKS_PREV):
+        modelo.step()
+    previo = modelo.historial_precios[-1]
+    modelo.aplicar_titular(titular, respuestas=resp, perfil=perfil_de(mercado or "indice"))
+    serie = [previo]
+    imbs = []
+    for _ in range(TICKS_POST):
+        modelo.step()
+        serie.append(modelo.historial_precios[-1])
+        fc = modelo.fraccion_compras(20)
+        if fc is not None:
+            imbs.append(abs(fc - 0.5))  # desequilibrio de órdenes (0 = balance)
+    rets = [(serie[i] - serie[i - 1]) / serie[i - 1] for i in range(1, len(serie)) if serie[i - 1]]
+    excur = max(abs(p - previo) for p in serie) / previo if previo else 0.0  # sobre-reacción
+    final = abs(serie[-1] - previo) / previo if previo else 0.0
+    disp = float(np.std([v.get("senal_media", 0.0) for v in sa.values()])) if sa else 0.0
+    return {
+        "vol_sim": float(np.std(rets)) if rets else 0.0,
+        "imbalance": float(np.mean(imbs)) if imbs else 0.0,
+        "overshoot": excur,
+        "reversal": max(0.0, excur - final),       # cuánto se devolvió tras el pico
+        "rango": (max(serie) - min(serie)) / previo if previo else 0.0,
+        "dispersion": disp,
+        "magnitud_real": magnitud_real,
+        "fecha": "",
+    }
+
+
+def extraer_todos(ruta_con_fecha, ruta_raw, salida, seed=20260101):
+    """Corre la sim por cada caso de índice y guarda sus features ricas (lento)."""
+    import json as _json
+
+    from calibration.barrido_poblacion import _casos_indice
+    casos = _casos_indice(ruta_con_fecha, ruta_raw)
+    filas = []
+    for i, c in enumerate(casos):
+        f = correr_rico(c["titular"], c["sa"], c["mercado"], abs(c["pct_corr"]), seed)
+        f["fecha"] = c["fecha"]
+        filas.append(f)
+        if (i + 1) % 20 == 0:
+            print(f"  {i+1}/{len(casos)}", flush=True)
+    Path(salida).write_text(_json.dumps(filas))
+    return filas
+
+
+def evaluar_rico(filas):
+    FEATS = ["vol_sim", "imbalance", "overshoot", "reversal", "rango", "dispersion"]
+    y = [f["magnitud_real"] for f in filas]
+    corr = {c: round(spearman([f[c] for f in filas], y), 3) for c in FEATS}
+    mae = {
+        "constante (media)": round(_mae_oos(filas, []), 3),
+        "+ features ricas ABM": round(_mae_oos(filas, FEATS), 3),
+    }
+    return {"n": len(filas), "spearman": corr, "mae_oos": mae}

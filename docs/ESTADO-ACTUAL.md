@@ -49,6 +49,9 @@ es un bloqueo ("si hay que gastar en IA, hazlo").
   "lectura" (consenso, solo si es fiable) en muro, archivo, panel y duelo.
 - **Ritual auto-sanador** (`.github/workflows/ritual-diario.yml`): verifica + reintenta.
 - **A2 listo para correr** (`engine/calibration/un_llm.py`) — ver §5.
+- **Comparación titular por titular A2 vs A3 lista** (`engine/calibration/a2_vs_a3.py`,
+  con tests): misma cobertura, pareado por evento, discordancias, tabla caso a caso.
+  Probada con un A2 falso (solo cañería); falta correrla con el A2 real.
 
 ### Pendiente
 - **M4 vs A3** (¿un LLM iguala a los 110?): `docs/runbook-experimento-a2.md`. Necesita
@@ -79,7 +82,12 @@ es un bloqueo ("si hay que gastar en IA, hazlo").
 ## 5. Próximo paso inmediato (sesión nueva con la clave)
 
 Pega en la sesión nueva: *"Ya cargué ANTHROPIC_API_KEY. Corre el experimento A2/M4
-siguiendo docs/runbook-experimento-a2.md, con honestidad, y guárdalo en la rama."*
+siguiendo docs/runbook-experimento-a2.md (incluido el paso 2b titular por titular),
+con honestidad, y guárdalo en la rama claude/m-d-file-6z1e63."*
+
+> **Ojo (2026-11-24):** la sesión de ese día NO tenía la clave aunque ya estaba
+> guardada en el entorno — se había abierto antes de guardarla. Hay que abrir una
+> sesión NUEVA después de guardar la clave.
 Los datos ya están en `docs/datos-investigacion/`. El runbook tiene los comandos
 exactos y cómo interpretar (A2≈A3 ⇒ la diversidad de 110 cerebros no paga).
 

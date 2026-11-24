@@ -15,6 +15,11 @@ python3.13 -c "import os;print('clave:', 'OK' if os.environ.get('ANTHROPIC_API_K
 Si dice FALTA, parar: la clave se agrega como variable de entorno del entorno de
 nube (no en Render) y la toma una sesión nueva. No inventar resultados.
 
+> **Lección (2026-11-24):** la clave puede estar guardada en el entorno y aun así
+> decir FALTA — pasa si la sesión se abrió ANTES de guardarla (las variables se
+> inyectan solo al arrancar una sesión). Solución: abrir una sesión NUEVA. No
+> buscar la clave en otros procesos ni pedirla por chat.
+
 ## 1. Correr A2 (un LLM neutral por titular, cacheado)
 
 Los datos ya están en el repo (`docs/datos-investigacion/`). Esto hace ~1 llamada
@@ -42,6 +47,22 @@ En la tabla, comparar **A2_un_llm** (M4) contra **A3_consenso**:
 - Si A3 > A2 (sin solape de IC) → la diversidad aporta; conservar el reparto.
 - Si A2 > A3 → el consenso está perdiendo señal al promediar; investigar.
 
+## 2b. Comparar titular por titular (A2 vs A3, misma cobertura)
+
+```bash
+python3.13 engine/calibration/a2_vs_a3.py \
+  docs/datos-investigacion/calibracion.con_fecha.json \
+  docs/datos-investigacion/calibracion.json \
+  docs/datos-investigacion/a2_senales.json \
+  docs/datos-investigacion/a2_vs_a3_titulares.md
+```
+
+Por mercado (índice primero) imprime: cobertura común, acierto de A2 y A3 sobre
+los MISMOS casos con IC honesto, diferencia pareada A2−A3 por evento (la prueba
+principal), discordancias (solo A2 acierta vs solo A3 acierta, McNemar indicativo),
+acuerdo de signo y correlación de señales, y una línea de veredicto. El `.md` es la
+tabla caso a caso (discordancias primero) para leer DÓNDE difieren.
+
 ## 3. Interpretar con honestidad (reglas del plan v5)
 
 - Es **exploratorio** (banco histórico de shocks, sesgado por selección; n chico). No
@@ -54,7 +75,9 @@ En la tabla, comparar **A2_un_llm** (M4) contra **A3_consenso**:
 ## 4. Guardar (en la rama `claude/m-d-file-6z1e63`, no en main)
 
 - Commitear `docs/datos-investigacion/a2_senales.json` (el caché, para repetir sin
-  costo) y un `docs/hallazgo-a2-un-llm.md` con la tabla y la interpretación honesta.
+  costo), `docs/datos-investigacion/a2_vs_a3_titulares.md` (la tabla caso a caso) y
+  un `docs/hallazgo-a2-un-llm.md` con la tabla, la comparación pareada, ejemplos de
+  discordancias y la interpretación honesta.
 - Empujar a la rama. NO desplegar (es análisis offline, no toca producción).
 - Avisar a Giorgio en simple: qué salió y qué implica para el costo de IA.
 

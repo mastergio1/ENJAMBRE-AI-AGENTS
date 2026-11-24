@@ -1787,6 +1787,67 @@ def disparar_pipeline(tareas: BackgroundTasks, momento: str = "manana",
     return {"estado": "iniciado", "momento": momento}
 
 
+# ---------- Experimento A2 (un LLM neutral) desde el motor (Plan B) ----------
+# El entorno de nube de las sesiones no siempre toma la ANTHROPIC_API_KEY; el motor
+# en Render SÍ la tiene. Este par de endpoints corre A2 (una lectura LLM neutral por
+# titular, cacheada) usando la clave del motor, para comparar M4 (un LLM) vs A3 (el
+# consenso de 110) sin depender del entorno de nube. Protegido por token admin.
+_A2_ESTADO: dict = {"estado": "ninguno"}
+
+
+def _ruta_a2() -> str:
+    from contenido import persistencia
+    base = os.path.dirname(str(os.environ.get("ENJAMBRE_DB", persistencia.RUTA_DEFECTO)))
+    return os.path.join(base, "a2_senales.json")
+
+
+def _correr_a2() -> None:
+    """Corre A2 sobre los titulares ya guardados. Idempotente: un_llm.senales cachea,
+    así que si un deploy lo mata, re-disparar continúa donde quedó. Nunca tumba el
+    servidor."""
+    global _A2_ESTADO
+    try:
+        from calibration import un_llm
+        from contenido import persistencia, respaldo
+        conexion = persistencia.conectar()
+        try:
+            casos = respaldo.exportar_casos(conexion)
+        finally:
+            conexion.close()
+        titulares = un_llm.titulares_de(casos)
+        _A2_ESTADO = {"estado": "corriendo", "n_total": len(titulares)}
+        mapa = un_llm.senales(titulares, _ruta_a2())
+        _A2_ESTADO = {"estado": "listo", "n_total": len(titulares), "n_hechos": len(mapa)}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        _A2_ESTADO = {"estado": "error", "detalle": str(e)[:300]}
+
+
+@app.post("/api/experimento/a2")
+def experimento_a2(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+    """Dispara A2 en segundo plano (minutos). Protegido. Re-disparar es seguro
+    (cacheado). Consultar el avance con GET /api/experimento/a2."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    tareas.add_task(_correr_a2)
+    return {"estado": "iniciado"}
+
+
+@app.get("/api/experimento/a2")
+def experimento_a2_estado(x_pipeline_token: str = Header(default=""), incluir: int = 0) -> dict:
+    """Estado del experimento A2; con ?incluir=1 (y estado 'listo') devuelve las
+    señales {titular: senal} para traerlas a la sesión y correr la comparación."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    r = dict(_A2_ESTADO)
+    if incluir and r.get("estado") == "listo":
+        ruta = _ruta_a2()
+        if os.path.exists(ruta):
+            r["senales"] = json.loads(open(ruta, encoding="utf-8").read())
+    return r
+
+
 @app.post("/api/corrector")
 def api_corrector(x_pipeline_token: str = Header(default="")) -> dict:
     """Corre el corrector automático a demanda (protegido).

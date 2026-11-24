@@ -180,3 +180,15 @@ def test_tablero_predicciones_solo_por_cabecera(monkeypatch):
     assert cliente.get("/api/predicciones/resumen?clave=tok-123").status_code == 403
     r = cliente.get("/api/predicciones/resumen", headers={"X-Pipeline-Token": "tok-123"})
     assert r.status_code == 200 and "global" in r.json()
+
+
+def test_experimento_a2_protegido_y_estado(monkeypatch):
+    """Plan B: los endpoints de A2 exigen token; el GET devuelve un estado."""
+    cliente = TestClient(server.app)
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "tok-a2")
+    # sin token → 403 en ambos
+    assert cliente.get("/api/experimento/a2").status_code == 403
+    assert cliente.post("/api/experimento/a2").status_code == 403
+    # con token: el GET trae un estado (ninguno/corriendo/listo/error)
+    r = cliente.get("/api/experimento/a2", headers={"X-Pipeline-Token": "tok-a2"})
+    assert r.status_code == 200 and "estado" in r.json()

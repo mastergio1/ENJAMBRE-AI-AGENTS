@@ -201,27 +201,26 @@ def gate_abm(filas, mercado=None, zona=ZONA):
     }
 
 
-def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
-    """El gate CORRECTO (auditoría v4): diferencia PAREADA A4 − A3 por EVENTO.
+def pareado(filas, esc_a, esc_b, mercado=None, zona=ZONA, n_boot=3000, seed=42):
+    """Diferencia PAREADA acierto(esc_a) − acierto(esc_b) por EVENTO (cluster bootstrap).
 
     La unidad de dependencia no es el caso suelto sino el ANUNCIO (misma fecha): 4
-    ETFs del mismo día no son 4 experimentos. Para cada caso donde AMBOS opinan,
-    d = acierto_A4 − acierto_A3 ∈ {-1,0,1}; se agrupan por fecha y se re-muestrean
-    los GRUPOS (cluster bootstrap) para el IC de la media de d. media<0 ⇒ el ABM
-    resta; IC que EXCLUYE 0 ⇒ la diferencia es significativa. Sustituye al atajo
-    'el intervalo más ancho de tres' para la comparación A3-vs-A4."""
+    ETFs del mismo día no son 4 experimentos. Solo cuenta los casos donde AMBOS
+    escalones opinan (misma cobertura: nada de comparar a coberturas distintas).
+    d = acierto_a − acierto_b ∈ {-1,0,1}; se agrupan por fecha y se re-muestrean los
+    GRUPOS para el IC de la media de d. IC que EXCLUYE 0 ⇒ diferencia significativa."""
     sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
     por_evento = {}
     for f in sub:
         pc = f.get("pct_corr")
         if pc is None or abs(pc) < zona:
             continue
-        s, d4 = f.get("senal"), f.get("direccion_pct")
-        if s in (0, None) or d4 in (0, None):
+        pa, pb = pred_de(f, esc_a, None), pred_de(f, esc_b, None)
+        if pa in (0, None) or pb in (0, None):
             continue
-        a3 = 1 if _sg(s) == _sg(pc) else 0
-        a4 = 1 if _sg(d4) == _sg(pc) else 0
-        por_evento.setdefault(str(f.get("fecha", ""))[:10], []).append(a4 - a3)
+        a = 1 if _sg(pa) == _sg(pc) else 0
+        b = 1 if _sg(pb) == _sg(pc) else 0
+        por_evento.setdefault(str(f.get("fecha", ""))[:10], []).append(a - b)
     grupos = list(por_evento.values())
     todos = [d for g in grupos for d in g]
     if not todos:
@@ -241,6 +240,14 @@ def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
     return {"media": round(media, 3), "lo": round(lo, 3), "hi": round(hi, 3),
             "n": len(todos), "n_eventos": len(grupos),
             "excluye_cero": hi < 0 or lo > 0}
+
+
+def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
+    """El gate CORRECTO (auditoría v4): diferencia PAREADA A4 − A3 por EVENTO.
+    media<0 ⇒ el ABM resta. Sustituye al atajo 'el intervalo más ancho de tres' para
+    la comparación A3-vs-A4. (Caso particular de `pareado`.)"""
+    return pareado(filas, "A4_abm", "A3_consenso", mercado=mercado, zona=zona,
+                   n_boot=n_boot, seed=seed)
 
 
 def imprimir(filas, mercados=("indice", None)):
@@ -265,6 +272,12 @@ def imprimir(filas, mercados=("indice", None)):
             print(f"  GATE pareado por evento: media(A4−A3) = {p['media']} "
                   f"IC95 [{p['lo']}, {p['hi']}] · {p['n']} casos en {p['n_eventos']} eventos"
                   f" · {'significativo' if p['excluye_cero'] else 'no concluyente (IC cruza 0)'}")
+        if any(f.get("a2") is not None for f in filas):
+            q = pareado(filas, "A2_un_llm", "A3_consenso", mercado=m)
+            if q["media"] is not None:
+                print(f"  M4 pareado por evento: media(A2−A3) = {q['media']} "
+                      f"IC95 [{q['lo']}, {q['hi']}] · {q['n']} casos en {q['n_eventos']} eventos"
+                      f" · {'significativo' if q['excluye_cero'] else 'no distinguible (IC cruza 0)'}")
 
 
 if __name__ == "__main__":

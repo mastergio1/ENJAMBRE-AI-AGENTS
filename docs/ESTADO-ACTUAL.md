@@ -105,3 +105,12 @@ exactos y cómo interpretar (A2≈A3 ⇒ la diversidad de 110 cerebros no paga).
 | `docs/hallazgo-*.md` | los hallazgos medidos |
 | `docs/resumen-sesion-2026-11-23.md` | bitácora de la sesión previa |
 | `docs/codigo-fuente-enjambre.md` | volcado del código para auditoría externa |
+
+## 7. Progreso del torneo (fases 2–6) — 2026-11-24
+
+- **Fase 2 (escala):** más agentes NO mejoran el acierto; solo dan estabilidad. `docs/hallazgo-barrido-poblacion.md`
+- **Fase 3 (diversidad):** 9 arquetipos diversos en estilo, no en información. `docs/hallazgo-diversidad-arquetipos.md`
+- **Fase 4 (riesgo, H14):** CERRADA negativa — el ABM tampoco predice la magnitud, ni con features ricas. `docs/hallazgo-riesgo-abm.md`
+- **Fase 5 (calibrado):** ventaja marginal y frágil solo en índice; abstención útil solo ahí. `docs/hallazgo-predictor-calibrado.md`
+- **Fase 6 (prospectivo):** maquinaria TERMINADA (pre-registro `docs/preregistro-fase6.md` + evaluador `evaluar_prospectivo.py`). Falta solo TIEMPO y activar el sellado diario de ÍNDICE (hoy la cohorte es de acciones). Estado: 15 selladas, 6 resueltas (sin valor, n chico).
+- **Veredicto acumulado (histórico):** 7 evidencias consistentes de que el ABM/ensemble no aporta valor predictivo sobre 1 LLM. El valor es de producto/visualización. La prueba definitiva es la Fase 6 prospectiva (necesita tiempo).

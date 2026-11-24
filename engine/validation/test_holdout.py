@@ -86,3 +86,13 @@ def test_particionar_excluye_filas_futuras_del_desarrollo():
     assert "50" not in ids_dev                       # la futura NO entra al desarrollo
     assert {str(c["id"]) for c in hold} == {"8", "9"}  # el holdout no cambia
     assert ids_dev == {str(i) for i in range(8)}      # solo las anteriores al corte
+
+
+def test_f04_particionar_respeta_el_embargo():
+    """Auditoría científica F04: el desarrollo de particionar debe coincidir con el
+    manifiesto, aplicando el MISMO embargo (antes lo ignoraba y devolvía de más)."""
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20, embargo_dias=2)
+    dev, hold = ho.particionar(casos, m)
+    assert len(dev) == m["n_desarrollo"]          # coincide con lo declarado
+    assert len(hold) == m["n_holdout"]

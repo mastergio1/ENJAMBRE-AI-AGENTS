@@ -86,19 +86,25 @@ def verificar_manifiesto(manifiesto, casos, *, clave_id="id", clave_y="y"):
 def particionar(casos, manifiesto, *, clave_id="id", clave_fecha="fecha"):
     """Devuelve (desarrollo, holdout) usando la membresía CONGELADA del manifiesto.
 
-    El holdout son exactamente los ids del manifiesto. El desarrollo EXCLUYE las
-    filas posteriores al corte que NO están en el holdout (llegaron después de
-    congelarlo): entrenar un examen con datos más nuevos que su propio test es fuga
-    temporal (auditoría v4). Esas filas quedan fuera de ambos (cohorte futura), no
-    en desarrollo."""
+    El holdout son exactamente los ids del manifiesto. El desarrollo aplica LOS MISMOS
+    filtros que `construir_manifiesto`, para que su tamaño coincida con el declarado:
+    - excluye las filas posteriores al corte que NO están en el holdout (cohorte
+      futura: entrenar un examen con datos más nuevos que su test es fuga; F04/v4);
+    - excluye las filas dentro de `embargo_dias` ANTES del corte (el embargo que el
+      manifiesto ya descontó; auditoría científica F04). Antes `particionar` ignoraba
+      el embargo y devolvía más filas de desarrollo que las declaradas."""
     ids_hold = set(manifiesto["holdout_ids"])
     corte = manifiesto.get("fecha_corte")
+    embargo = manifiesto.get("embargo_dias", 0)
     holdout = [c for c in casos if str(c[clave_id]) in ids_hold]
     desarrollo = []
     for c in casos:
         if str(c[clave_id]) in ids_hold:
             continue
-        if corte and str(c.get(clave_fecha, ""))[:10] >= corte:
-            continue  # posterior al corte y NO en el holdout → cohorte futura, fuera
+        fc = str(c.get(clave_fecha, ""))[:10]
+        if corte and fc >= corte:
+            continue  # posterior al corte y NO en el holdout → cohorte futura
+        if embargo and corte and _dias(fc, corte) <= embargo:
+            continue  # dentro del embargo previo al corte (igual que el manifiesto)
         desarrollo.append(c)
     return desarrollo, holdout

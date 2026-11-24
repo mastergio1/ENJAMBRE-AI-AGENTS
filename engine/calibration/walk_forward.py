@@ -49,21 +49,40 @@ def _senal(sa, peso_contr=1.0):
     return num / den if den else 0.0
 
 
-def cargar(ruta: str) -> list[dict]:
+def cargar(ruta: str, permitir_no_certificada: bool = False) -> list[dict]:
+    """Carga casos para el walk-forward.
+
+    ETIQUETA (auditoría científica F01): usa `pct_corr` (sin fuga) si está presente.
+    Si solo hay `pct_real` —la etiqueta histórica NO certificada, el salto con el que
+    se SELECCIONÓ el evento—, REHÚSA usarla salvo que se pida explícitamente
+    (`permitir_no_certificada=True`) y la cuenta como descartada. Antes consumía
+    `pct_real` en silencio, de modo que el calibrador podía aprender la etiqueta
+    antigua contaminada. No se sustituye un campo por otro a ciegas: pct_corr es la
+    etiqueta remedida sin fuga; pct_real es la de selección."""
     datos = json.load(open(ruta))
     casos = datos.get("casos", datos) if isinstance(datos, dict) else datos
-    out = []
+    out, descartados = [], 0
     for c in casos:
         r = c["reaccion_real"]
-        pct = r.get("pct_real")
+        pct = r.get("pct_corr")
+        certificada = pct is not None
+        if pct is None and permitir_no_certificada:
+            pct = r.get("pct_real")
         if pct is None or pct == 0:
+            if not certificada and r.get("pct_real") not in (None, 0):
+                descartados += 1  # tenía pct_real pero no una etiqueta certificada
             continue
         sa = c.get("senales_arquetipo") or {}
         if not all(a in sa for a in BASE):
             continue
         out.append({"fecha": c.get("fecha") or "", "y": 1 if pct > 0 else 0,
-                    "sa": sa, "direccion_pct": c.get("direccion_pct") or 0.0})
+                    "sa": sa, "direccion_pct": c.get("direccion_pct") or 0.0,
+                    "label_certificada": certificada})
     out.sort(key=lambda x: x["fecha"])
+    if descartados:
+        print(f"walk_forward.cargar: {descartados} casos descartados por etiqueta NO "
+              f"certificada (solo pct_real, sin pct_corr). Para incluirlos usa "
+              f"permitir_no_certificada=True (NO recomendado para certificar resultados).")
     return out
 
 

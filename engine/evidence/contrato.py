@@ -76,6 +76,17 @@ def construir_evidencia(*, event_id, activo, as_of, titular, event_timestamp=Non
         validar_fuente(f, as_of_dt)
     for e in expectativas:
         validar_expectativa(e, as_of_dt)
+    # F03 (auditoría científica): un HECHO observado no puede ser posterior al corte.
+    # El hash garantiza integridad del contenido, no su validez causal: una fecha de
+    # evento en el futuro contaminaría la predicción aun con hash válido. Un evento
+    # FUTURO programado (p. ej. el próximo FOMC) es admisible, pero como `scheduled_at`,
+    # no como `event_timestamp` de un hecho ya ocurrido.
+    if event_timestamp is not None:
+        if _parse(event_timestamp, "event_timestamp") > as_of_dt:
+            raise EvidenciaInvalida(
+                f"event_timestamp ({event_timestamp}) es posterior al as_of ({as_of}): "
+                f"un hecho observado no puede venir del futuro. Si es un evento "
+                f"programado conocido, pásalo como scheduled_at, no como event_timestamp.")
 
     ev = {
         "event_id": event_id,

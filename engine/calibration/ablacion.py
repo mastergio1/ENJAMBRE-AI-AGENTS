@@ -56,27 +56,39 @@ def _signo_mayoria(filas):
 
 
 def _items_a0(filas, zona=ZONA):
-    """A0 HONESTO (auditoría v4): para cada caso, la clase mayoritaria de los casos
-    ESTRICTAMENTE ANTERIORES por fecha (train-only, expanding window). Nunca mira
-    la etiqueta del propio caso ni las futuras. Se abstiene mientras no haya
-    historia para decidir (empate 0-0 al inicio); esas abstenciones reducen el
-    denominador de A0 a propósito (es el precio de no hacer trampa)."""
+    """A0 HONESTO con MADURACIÓN DE ETIQUETAS (auditoría científica F02).
+
+    Para cada caso, la clase mayoritaria de los eventos ESTRICTAMENTE ANTERIORES por
+    fecha. Clave: los casos del MISMO día (p. ej. 3 ETFs del mismo anuncio) NO se
+    informan entre sí — su etiqueta no está disponible hasta días después, así que se
+    predicen TODOS con la historia previa al día y la historia se actualiza recién al
+    cerrar el día. Antes (v4) la historia se actualizaba caso a caso y los ETFs del
+    mismo día se contaban como ya resueltos: fuga sutil. Se abstiene mientras no haya
+    historia madura (empate 0-0); esas abstenciones reducen el denominador a propósito."""
     dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
-    dire = sorted(dire, key=lambda f: str(f.get("fecha", "")))
-    subas = bajas = 0
+    dire = sorted(dire, key=lambda f: str(f.get("fecha", ""))[:10])
     out = []
-    for f in dire:
+    subas = bajas = 0
+    i, n = 0, len(dire)
+    while i < n:
+        dia = str(dire[i].get("fecha", ""))[:10]
+        j = i
+        # 1) PREDECIR todos los casos del día con la historia previa (madura)
         pred = 1 if subas > bajas else (-1 if bajas > subas else 0)
-        if pred != 0:
-            ok = 1 if _sg(pred) == _sg(f["pct_corr"]) else 0
-            fecha = str(f.get("fecha", ""))[:10]
-            out.append((ok, {"simbolo": f.get("simbolo"), "fecha": fecha,
-                             "anio": str(f.get("anio") or fecha[:4])}))
-        # la historia se actualiza DESPUÉS de predecir (no mira su propia etiqueta)
-        if f["pct_corr"] > 0:
-            subas += 1
-        else:
-            bajas += 1
+        while j < n and str(dire[j].get("fecha", ""))[:10] == dia:
+            f = dire[j]
+            if pred != 0:
+                ok = 1 if _sg(pred) == _sg(f["pct_corr"]) else 0
+                out.append((ok, {"simbolo": f.get("simbolo"), "fecha": dia,
+                                 "anio": str(f.get("anio") or dia[:4])}))
+            j += 1
+        # 2) CERRAR el día: recién ahora sus etiquetas entran en la historia
+        for k in range(i, j):
+            if dire[k]["pct_corr"] > 0:
+                subas += 1
+            else:
+                bajas += 1
+        i = j
     return out
 
 

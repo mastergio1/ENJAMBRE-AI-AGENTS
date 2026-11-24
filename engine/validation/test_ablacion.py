@@ -96,3 +96,12 @@ def test_gate_pareado_empate_no_concluyente():
              _f(-2.0, -0.5, -0.5, "QQQ", "2020-03-03")]
     p = ab.gate_pareado(filas, n_boot=500)
     assert p["media"] == 0.0 and not p["excluye_cero"]
+
+
+def test_f02_a0_no_usa_etiquetas_del_mismo_dia():
+    """Auditoría científica F02: 3 ETFs del MISMO día no deben informarse entre sí
+    (sus etiquetas no están disponibles hasta días después)."""
+    filas = [_f(2.0, 0, 0, "SPY", "2026-01-01"), _f(2.0, 0, 0, "QQQ", "2026-01-01"),
+             _f(2.0, 0, 0, "DIA", "2026-01-01")]
+    items = ab._items_a0(filas)
+    assert items == []  # ninguno tiene historia previa madura → todos se abstienen

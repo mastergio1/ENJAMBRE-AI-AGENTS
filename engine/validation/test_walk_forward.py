@@ -30,9 +30,11 @@ def _archivo(tmp_path, n=400, seed=5, senal_util=True):
             if a in wf.CONTRARIANS and senal_util:
                 s = -base + rng.uniform(-0.2, 0.2)
             sa[a] = {"senal_media": s, "confianza_media": 0.7, "n": 10}
+        # etiqueta CERTIFICADA (pct_corr, sin fuga) — el contrato nuevo de cargar
+        # (auditoría científica F01); pct_real queda como la etiqueta de selección
         casos.append({"fecha": _fecha(i),
-                      "reaccion_real": {"pct_real": pct}, "senales_arquetipo": sa,
-                      "direccion_pct": base * 2})
+                      "reaccion_real": {"pct_corr": pct, "pct_real": pct},
+                      "senales_arquetipo": sa, "direccion_pct": base * 2})
     ruta = tmp_path / "c.json"
     ruta.write_text(json.dumps({"casos": casos}))
     return str(ruta)
@@ -117,7 +119,7 @@ def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
     casos_raw = []
     for i in (5, 0, 3, 1, 4, 2):  # fechas deliberadamente desordenadas
         sa = {a: {"senal_media": 0.3, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
-        casos_raw.append({"fecha": _fecha(i), "reaccion_real": {"pct_real": 1.0},
+        casos_raw.append({"fecha": _fecha(i), "reaccion_real": {"pct_corr": 1.0},
                           "senales_arquetipo": sa, "direccion_pct": 0.6})
     ruta = tmp_path / "desord.json"
     ruta.write_text(json.dumps({"casos": casos_raw}))
@@ -135,3 +137,21 @@ def test_baseline_honesto_se_reporta_y_no_usa_el_futuro(tmp_path):
     assert r["brier_base"] > 0
     # con señal útil, el modelo le gana a la base honesta
     assert r["brier"] < r["brier_base"]
+
+
+def test_f01_cargar_rehusa_etiqueta_no_certificada(tmp_path):
+    """Auditoría científica F01: solo pct_real (sin pct_corr) NO se usa por defecto;
+    con pct_corr sí; el opt-in permite pct_real explícitamente."""
+    sa = {a: {"senal_media": 0.3, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
+    solo_real = tmp_path / "real.json"
+    solo_real.write_text(json.dumps({"casos": [
+        {"fecha": "2026-01-01", "reaccion_real": {"pct_real": 2.0},
+         "senales_arquetipo": sa, "direccion_pct": 0.6}]}))
+    assert wf.cargar(str(solo_real)) == []                       # rehúsa por defecto
+    assert len(wf.cargar(str(solo_real), permitir_no_certificada=True)) == 1  # opt-in
+    con_corr = tmp_path / "corr.json"
+    con_corr.write_text(json.dumps({"casos": [
+        {"fecha": "2026-01-01", "reaccion_real": {"pct_corr": -2.0, "pct_real": 2.0},
+         "senales_arquetipo": sa, "direccion_pct": 0.6}]}))
+    cs = wf.cargar(str(con_corr))
+    assert len(cs) == 1 and cs[0]["y"] == 0 and cs[0]["label_certificada"] is True

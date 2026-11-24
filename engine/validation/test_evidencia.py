@@ -94,3 +94,17 @@ def test_formatear_solo_titular_si_no_hay_contexto():
     e = ev.construir_evidencia(event_id="e", activo="SPY", as_of=AS_OF, titular="x")
     texto = ev.formatear_para_cerebro(e)
     assert texto == "Titular: x"  # brazo B: sin contexto, solo titular
+
+
+def test_f03_rechaza_event_timestamp_posterior_al_as_of():
+    """Auditoría científica F03: un hecho observado no puede ser posterior al corte."""
+    import pytest
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.construir_evidencia(event_id="e", activo="SPY", titular="x",
+                               as_of="2026-01-01T10:00:00Z",
+                               event_timestamp="2026-01-01T11:00:00Z")
+    # anterior o igual al corte: admitido
+    o = ev.construir_evidencia(event_id="e", activo="SPY", titular="x",
+                               as_of="2026-01-01T10:00:00Z",
+                               event_timestamp="2026-01-01T09:00:00Z")
+    assert o["event_timestamp"] == "2026-01-01T09:00:00Z"

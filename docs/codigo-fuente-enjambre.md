@@ -1,6 +1,6 @@
 # El Enjambre — Código fuente completo
-*Rubicón Lab · volcado completo del código fuente para revisión y auditoría externa. Generado 2026-11-17. Refleja el estado ACTUAL del repositorio (rama desplegada en producción), con todas las mejoras recientes ya incluidas.*
-*Dos partes: **(1) el motor** de simulación (`engine/` — Python/Mesa/FastAPI) y **(2) el frontend** (`web/` — Vite/Three.js). Cada archivo va con su ruta y su contenido íntegro; no se omite nada de código. Se excluyen solo: dependencias (`node_modules/`), artefactos de build (`dist/`), el lockfile autogenerado, y los datos/binarios (bases SQLite, JSON de eventos), que se entregan aparte si se piden.*
+*Rubicón Lab · volcado completo del código fuente para revisión y auditoría externa. Generado 2026-11-24. Refleja el estado ACTUAL del repositorio (rama desplegada en producción), con todas las mejoras recientes ya incluidas.*
+*Tres partes: **(1) el motor** (`engine/` — Python/Mesa/FastAPI, incluida la consola de administración, el Dockerfile y las dependencias), **(2) el frontend** (`web/` — Vite/Three.js) y **(3) la infraestructura** (workflows de GitHub Actions y `render.yaml`). Cada archivo va con su ruta y su contenido íntegro; no se omite nada de código. Se excluyen solo: dependencias (`node_modules/`), artefactos de build (`dist/`), el lockfile autogenerado, y los datos/binarios (bases SQLite, JSON de eventos), que se entregan aparte si se piden.*
 
 ---
 
@@ -14,7 +14,8 @@
 - `engine/simular.py` (42 líneas)
 - `engine/demo_titular.py` (57 líneas)
 - `engine/probar_portero.py` (27 líneas)
-- `engine/server.py` (2050 líneas)
+- `engine/server.py` (2090 líneas)
+- `engine/panel.html` (525 líneas)
 - `engine/conftest.py` (31 líneas)
 - `engine/market/__init__.py` (0 líneas)
 - `engine/market/order_book.py` (188 líneas)
@@ -31,18 +32,31 @@
 - `engine/brains/reparto.py` (81 líneas)
 - `engine/network/__init__.py` (0 líneas)
 - `engine/network/red.py` (119 líneas)
+- `engine/evidence/__init__.py` (1 líneas)
+- `engine/evidence/contrato.py` (134 líneas)
+- `engine/evidence/fuentes.py` (66 líneas)
+- `engine/evidence/recoleccion.py` (37 líneas)
 - `engine/calibration/__init__.py` (0 líneas)
+- `engine/calibration/ablacion.py` (269 líneas)
 - `engine/calibration/ablacion_arquetipos.py` (204 líneas)
+- `engine/calibration/acierto_por_arquetipo.py` (79 líneas)
+- `engine/calibration/baselines.py` (86 líneas)
 - `engine/calibration/benchmark_motor.py` (87 líneas)
-- `engine/calibration/calibrar_respaldo.py` (83 líneas)
+- `engine/calibration/calibrar_respaldo.py` (86 líneas)
+- `engine/calibration/confianza_efectiva.py` (91 líneas)
+- `engine/calibration/contaminacion_temporal.py` (113 líneas)
 - `engine/calibration/data_loader.py` (51 líneas)
 - `engine/calibration/escenarios.py` (88 líneas)
 - `engine/calibration/evaluar_por_segmento.py` (219 líneas)
+- `engine/calibration/holdout.py` (104 líneas)
+- `engine/calibration/intervalos.py` (113 líneas)
+- `engine/calibration/intervalos_multiway.py` (99 líneas)
 - `engine/calibration/optimizar_freno.py` (129 líneas)
 - `engine/calibration/optimizer.py` (155 líneas)
 - `engine/calibration/real_optimizer.py` (342 líneas)
 - `engine/calibration/recopilar_datos.py` (147 líneas)
 - `engine/calibration/remedir_sin_fuga.py` (174 líneas)
+- `engine/calibration/un_llm.py` (138 líneas)
 - `engine/calibration/validacion_base.py` (160 líneas)
 - `engine/calibration/validar_freno_hechos.py` (124 líneas)
 - `engine/calibration/verificador.py` (120 líneas)
@@ -69,11 +83,12 @@
 - `engine/contenido/limites.py` (152 líneas)
 - `engine/contenido/notificar.py` (57 líneas)
 - `engine/contenido/pagos.py` (128 líneas)
-- `engine/contenido/persistencia.py` (908 líneas)
-- `engine/contenido/pipeline.py` (480 líneas)
+- `engine/contenido/persistencia.py` (1087 líneas)
+- `engine/contenido/pipeline.py` (543 líneas)
 - `engine/contenido/portero.py` (220 líneas)
 - `engine/contenido/redaccion.py` (239 líneas)
 - `engine/contenido/redaccion_ia.py` (823 líneas)
+- `engine/contenido/resolver_predicciones.py` (74 líneas)
 - `engine/contenido/respaldo.py` (263 líneas)
 - `engine/contenido/resumen_semanal.py` (100 líneas)
 - `engine/contenido/seguridad.py` (123 líneas)
@@ -82,17 +97,22 @@
 - `engine/validation/__init__.py` (0 líneas)
 - `engine/validation/conftest.py` (16 líneas)
 - `engine/validation/hechos_estilizados.py` (36 líneas)
+- `engine/validation/test_ablacion.py` (98 líneas)
 - `engine/validation/test_ablacion_arquetipos.py` (91 líneas)
+- `engine/validation/test_acierto_por_arquetipo.py` (50 líneas)
 - `engine/validation/test_analisis_semanal.py` (229 líneas)
 - `engine/validation/test_archivo.py` (151 líneas)
 - `engine/validation/test_backtest.py` (237 líneas)
+- `engine/validation/test_baselines.py` (46 líneas)
 - `engine/validation/test_benchmark_motor.py` (39 líneas)
 - `engine/validation/test_calibracion.py` (162 líneas)
 - `engine/validation/test_calibrar_libreta.py` (57 líneas)
 - `engine/validation/test_cerebros.py` (145 líneas)
 - `engine/validation/test_cierre.py` (157 líneas)
+- `engine/validation/test_confianza_efectiva.py` (40 líneas)
 - `engine/validation/test_config_enchufado.py` (80 líneas)
 - `engine/validation/test_contacto.py` (67 líneas)
+- `engine/validation/test_contaminacion_temporal.py` (62 líneas)
 - `engine/validation/test_contenido.py` (167 líneas)
 - `engine/validation/test_correccion_sesgo.py` (102 líneas)
 - `engine/validation/test_corrector.py` (138 líneas)
@@ -104,10 +124,15 @@
 - `engine/validation/test_entrevista.py` (60 líneas)
 - `engine/validation/test_evaluar.py` (120 líneas)
 - `engine/validation/test_evaluar_por_segmento.py` (46 líneas)
+- `engine/validation/test_evidencia.py` (96 líneas)
+- `engine/validation/test_evidencia_fuentes.py` (55 líneas)
 - `engine/validation/test_freno_manada.py` (86 líneas)
 - `engine/validation/test_graficos.py` (57 líneas)
 - `engine/validation/test_guardia_polaridad.py` (38 líneas)
 - `engine/validation/test_hechos_estilizados.py` (86 líneas)
+- `engine/validation/test_holdout.py` (88 líneas)
+- `engine/validation/test_intervalos.py` (58 líneas)
+- `engine/validation/test_intervalos_multiway.py` (47 líneas)
 - `engine/validation/test_invariantes_mercado.py` (68 líneas)
 - `engine/validation/test_investigador.py` (79 líneas)
 - `engine/validation/test_laboratorio.py` (97 líneas)
@@ -119,23 +144,31 @@
 - `engine/validation/test_p2_tono.py` (88 líneas)
 - `engine/validation/test_p3_p4.py` (91 líneas)
 - `engine/validation/test_pagos.py` (144 líneas)
+- `engine/validation/test_pipeline_prediccion.py` (93 líneas)
+- `engine/validation/test_predicciones.py` (101 líneas)
 - `engine/validation/test_pulso.py` (560 líneas)
 - `engine/validation/test_red_influencia.py` (86 líneas)
 - `engine/validation/test_redaccion.py` (185 líneas)
 - `engine/validation/test_redaccion_ia.py` (120 líneas)
 - `engine/validation/test_remedir_sin_fuga.py` (88 líneas)
 - `engine/validation/test_reparto.py` (62 líneas)
+- `engine/validation/test_resolver_predicciones.py` (68 líneas)
 - `engine/validation/test_respaldo.py` (140 líneas)
 - `engine/validation/test_resumen_semanal.py` (124 líneas)
 - `engine/validation/test_seguridad.py` (341 líneas)
 - `engine/validation/test_senal_ponderada.py` (86 líneas)
-- `engine/validation/test_servidor.py` (143 líneas)
+- `engine/validation/test_servidor.py` (182 líneas)
 - `engine/validation/test_setup.py` (54 líneas)
+- `engine/validation/test_un_llm.py` (95 líneas)
 - `engine/validation/test_verificador.py` (91 líneas)
 - `engine/validation/test_walk_forward.py` (137 líneas)
+- `engine/Dockerfile` (21 líneas)
+- `engine/requirements.txt` (13 líneas)
+- `engine/requirements-dev.txt` (6 líneas)
+- `engine/pytest.ini` (11 líneas)
 - `engine/__init__.py` (0 líneas)
 
-**Subtotal motor: 127 archivos, 21197 líneas.**
+**Subtotal motor: 160 archivos, 24498 líneas.**
 
 ### Parte 2 — Frontend (`web/`)
 - `web/package.json` (21 líneas)
@@ -147,7 +180,7 @@
 - `web/pulso/index.html` (513 líneas)
 - `web/pulso/vercel.json` (20 líneas)
 - `web/src/main.js` (498 líneas)
-- `web/src/style.css` (1720 líneas)
+- `web/src/style.css` (1751 líneas)
 - `web/src/swarm/datos.js` (99 líneas)
 - `web/src/swarm/enjambre.js` (302 líneas)
 - `web/src/swarm/escenario.js` (125 líneas)
@@ -159,14 +192,26 @@
 - `web/src/ui/panel.js` (416 líneas)
 - `web/src/ui/premium.js` (165 líneas)
 - `web/src/ui/tour.js` (87 líneas)
-- `web/src/muro/muro.js` (373 líneas)
-- `web/src/archivo/archivo.js` (185 líneas)
-- `web/src/duelo/duelo.js` (270 líneas)
+- `web/src/muro/muro.js` (379 líneas)
+- `web/src/archivo/archivo.js` (189 líneas)
+- `web/src/duelo/duelo.js` (278 líneas)
 - `web/src/widget/widget.js` (148 líneas)
 
-**Subtotal frontend: 25 archivos, 5630 líneas.**
+**Subtotal frontend: 25 archivos, 5679 líneas.**
 
-**TOTAL: 152 archivos, 26827 líneas.**
+### Parte 3 — Infraestructura
+- `.github/workflows/backtest.yml` (62 líneas)
+- `.github/workflows/calibrar.yml` (123 líneas)
+- `.github/workflows/cosecha.yml` (72 líneas)
+- `.github/workflows/evaluar.yml` (134 líneas)
+- `.github/workflows/exportar-calibracion.yml` (65 líneas)
+- `.github/workflows/mantenimiento.yml` (54 líneas)
+- `.github/workflows/ritual-diario.yml` (138 líneas)
+- `render.yaml` (97 líneas)
+
+**Subtotal infraestructura: 8 archivos, 745 líneas.**
+
+**TOTAL: 193 archivos, 30922 líneas.**
 
 ---
 
@@ -2043,6 +2088,22 @@ def _direccion_editorial(direccion_pct: float) -> str:
     return "◆"
 
 
+def _lectura_tarjeta(resumen: dict) -> dict | None:
+    """La LECTURA direccional honesta de la tarjeta: la dirección del CONSENSO de
+    líderes (A3), que la ablación (docs/hallazgo-ablacion.md) mostró MEJOR predictor
+    que el precio simulado del ABM (A4). Se muestra SOLO cuando el historial sin
+    fuga la respalda (índice + convicción fuerte → `fiable_direccion`). El % de la
+    tarjeta es el MOVIMIENTO que simuló el enjambre (visualización), NO la predicción;
+    separarlos evita vender el ABM como predictor y sobre-afirmar ante la CMF."""
+    conv = resumen.get("conviccion") or {}
+    if not conv.get("fiable_direccion"):
+        return None
+    d = resumen.get("direccion_titular") or resumen.get("direccion_senal")
+    if d not in ("alza", "baja"):
+        return None
+    return {"direccion": d, "flecha": "▲" if d == "alza" else "▼"}
+
+
 def _resumen_tarjeta(resumen: dict) -> dict:
     """Lo que la tarjeta del muro necesita del reporte completo."""
     frases = resumen.get("frases", [])
@@ -2053,6 +2114,7 @@ def _resumen_tarjeta(resumen: dict) -> dict:
     return {
         "direccion_pct": resumen.get("direccion_pct"),
         "direccion": _direccion_editorial(resumen.get("direccion_pct", 0)),
+        "lectura": _lectura_tarjeta(resumen),
         "agitacion": _nivel_agitacion(resumen.get("volatilidad_pct", 0)),
         "frase": jugosa,
     }
@@ -2825,6 +2887,29 @@ def panel_estado(x_pipeline_token: str = Header(default="")) -> dict:
     }
 
 
+@app.get("/api/predicciones/resumen")
+def predicciones_resumen(x_pipeline_token: str = Header(default="")) -> dict:
+    """Tablero del registro prospectivo (Fase 7-mínima): acierto y cobertura de las
+    predicciones ya resueltas, global y por mercado, más la cobertura de evidencia
+    (Fase 1). Protegido SOLO por header `X-Pipeline-Token` — se quitó `?clave=` para
+    no exponer el token en la URL (auditoría v4); ábrelo desde la consola /panel."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)
+    conexion = persistencia.conectar()
+    try:
+        return {
+            "global": persistencia.resumen_predicciones(conexion),
+            "por_mercado": {
+                m: persistencia.resumen_predicciones(conexion, m)
+                for m in ("indice", "accion", "cripto", "oro", "petroleo")
+            },
+            "pendientes": len(persistencia.predicciones_por_resolver(conexion)),
+            "evidencia": persistencia.cobertura_evidencia(conexion),
+        }
+    finally:
+        conexion.close()
+
+
 @app.get("/api/panel/ediciones")
 def panel_ediciones(x_pipeline_token: str = Header(default=""), limite: int = 30) -> dict:
     if not _token_admin_ok(x_pipeline_token):
@@ -2892,14 +2977,14 @@ def panel_edicion(fecha: str, x_pipeline_token: str = Header(default="")) -> dic
 
 
 @app.get("/api/pulso/suscriptores")
-def pulso_suscriptores(clave: str = "", email: str = "",
+def pulso_suscriptores(email: str = "",
                        x_pipeline_token: str = Header(default="")):
     """Conteo de suscriptores (solo números, sin correos): registrados, activos
     (confirmados), sin confirmar (double opt-in pendiente) y bajas. Con `email`,
-    reporta el estado de ESE correo. De solo lectura; protegido con el token de
-    admin (cabecera X-Pipeline-Token, o `?clave=` por compatibilidad). Sin token
-    configurado, nadie pasa (falla cerrado). No hay secreto en el código."""
-    if not _token_admin_ok(x_pipeline_token or clave):
+    reporta el estado de ESE correo. De solo lectura; protegido SOLO con la cabecera
+    X-Pipeline-Token — se quitó `?clave=` para no exponer el token en la URL
+    (auditoría v4). Sin token configurado, nadie pasa (falla cerrado)."""
+    if not _token_admin_ok(x_pipeline_token):
         return Response(status_code=404)  # type: ignore[return-value]
     conexion = persistencia.conectar()
     try:
@@ -3375,6 +3460,535 @@ def api_aprobar_brief(fecha: str, x_pipeline_token: str = Header(default="")) ->
     if not ok:
         return Response(status_code=404)  # type: ignore[return-value]
     return {"estado": "aprobado", "fecha": fecha}
+```
+
+## engine/panel.html
+```html
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Centro de Mando · El Pulso</title>
+<style>
+  :root{
+    --tinta:#141019; --tinta-2:#1b1522; --tinta-3:#241c2e; --linea:#33293f;
+    --texto:#f3eee8; --mute:#a79fb0; --oro:#e3c565; --teal:#5fb3a1;
+    --verde:#4fae7e; --rojo:#d08b84; --amber:#e0a13a;
+    --serif:Georgia,'Iowan Old Style',serif; --sans:system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--tinta);color:var(--texto);font-family:var(--sans);font-size:15px;line-height:1.5;}
+  a{color:var(--teal)}
+  .oculto{display:none!important}
+  button{font-family:inherit;cursor:pointer;border:0;border-radius:8px;font-weight:600;letter-spacing:.02em;transition:.15s;}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .btn{padding:11px 18px;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+  .btn-oro{background:var(--oro);color:#20180a}
+  .btn-verde{background:var(--verde);color:#06210f}
+  .btn-fant{background:transparent;color:var(--mute);border:1px solid var(--linea)}
+  .btn-rojo{background:transparent;color:var(--rojo);border:1px solid #6d3f3a}
+  input,textarea{width:100%;background:var(--tinta-3);border:1px solid var(--linea);color:var(--texto);
+    border-radius:8px;padding:10px 12px;font-family:inherit;font-size:14px}
+  textarea{resize:vertical;min-height:80px;line-height:1.55}
+  input:focus,textarea:focus{outline:none;border-color:var(--oro)}
+  label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin:14px 0 5px}
+
+  /* login */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:var(--tinta-2);border:1px solid var(--linea);border-radius:16px;padding:36px;max-width:400px;width:100%;text-align:center}
+  .card h1{font-family:var(--serif);color:var(--oro);font-size:1.7rem;margin:0 0 4px}
+  .card .sub{color:var(--mute);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:22px}
+  .card input{text-align:center;margin-bottom:14px}
+  .card .btn{width:100%}
+  .err{color:var(--rojo);font-size:.85rem;margin-top:12px;min-height:1.1em}
+
+  /* topbar */
+  header{position:sticky;top:0;z-index:10;background:var(--tinta-2);border-bottom:1px solid var(--linea);
+    display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;flex-wrap:wrap}
+  header .marca{font-family:var(--serif);color:var(--oro);font-size:1.15rem;font-weight:600}
+  header .marca small{display:block;font-family:var(--sans);color:var(--mute);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;font-weight:400}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .pill{font-size:11px;padding:5px 10px;border-radius:999px;background:var(--tinta-3);border:1px solid var(--linea);color:var(--mute);white-space:nowrap}
+  .pill b{color:var(--texto)}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+  .dot.on{background:var(--verde)} .dot.off{background:var(--rojo)}
+
+  main{max-width:1200px;margin:0 auto;padding:22px;display:grid;grid-template-columns:1fr 340px;gap:22px}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .panel{background:var(--tinta-2);border:1px solid var(--linea);border-radius:14px;overflow:hidden}
+  .panel-cab{padding:16px 18px;border-bottom:1px solid var(--linea);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .panel-cab h2{font-family:var(--serif);font-size:1.15rem;margin:0}
+  .panel-cab .fecha{color:var(--mute);font-size:.85rem}
+  .panel-cuerpo{padding:18px}
+
+  .badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .badge.mini{font-size:10px;padding:3px 9px;letter-spacing:.04em}
+  .b-pendiente{background:rgba(224,161,58,.16);color:var(--amber)}
+  .b-aprobada{background:rgba(95,179,161,.16);color:var(--teal)}
+  .b-enviada{background:rgba(79,174,126,.18);color:var(--verde)}
+  .b-descartada{background:rgba(208,139,132,.14);color:var(--rojo)}
+  .b-none{background:var(--tinta-3);color:var(--mute)}
+
+  .acc{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+  iframe.preview{width:100%;height:640px;border:1px solid var(--linea);border-radius:10px;background:#faf8f4;display:block}
+  .vacio{text-align:center;padding:44px 20px;color:var(--mute)}
+  .vacio h3{font-family:var(--serif);color:var(--texto);margin:0 0 6px}
+
+  .hist{list-style:none;margin:0;padding:0}
+  .hist li{padding:12px 16px;border-bottom:1px solid var(--linea);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .hist li:hover{background:var(--tinta-3)}
+  .hist .f{font-weight:600;font-size:.9rem}
+  .hist .a{color:var(--mute);font-size:.78rem;margin-top:2px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hist .n{color:var(--mute);font-size:.75rem;text-align:right;white-space:nowrap}
+
+  .stat{display:flex;align-items:baseline;gap:8px;padding:6px 0}
+  .stat b{font-family:var(--serif);color:var(--oro);font-size:1.6rem}
+  .stat span{color:var(--mute);font-size:.85rem}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--tinta-3);
+    border:1px solid var(--oro);color:var(--texto);padding:13px 20px;border-radius:10px;z-index:50;
+    box-shadow:0 8px 30px rgba(0,0,0,.4);opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+  #toast.ver{opacity:1}
+  .editor label:first-child{margin-top:0}
+  .editor .hgroup{border:1px solid var(--linea);border-radius:10px;padding:12px 14px;margin-top:14px}
+  .fila2{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:end}
+
+  /* pestañas */
+  .tabs{display:flex;gap:4px}
+  .tab{padding:8px 15px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);
+    background:transparent;border:1px solid transparent;border-radius:8px}
+  .tab.activa{color:var(--oro);background:var(--tinta-3);border-color:var(--linea)}
+
+  /* estadísticas */
+  .wrap{max-width:1200px;margin:0 auto;padding:22px;display:flex;flex-direction:column;gap:22px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--tinta-2);border:1px solid var(--linea);border-radius:14px;padding:17px 18px}
+  .kpi .n{font-family:var(--serif);color:var(--oro);font-size:2rem;line-height:1}
+  .kpi .l{color:var(--mute);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-top:8px}
+  .kpi .s{color:var(--mute);font-size:.74rem;margin-top:5px;opacity:.85}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  .tabla{width:100%;border-collapse:collapse;font-size:.86rem}
+  .tabla th{text-align:left;color:var(--mute);font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;padding:8px 6px;border-bottom:1px solid var(--linea)}
+  .tabla td{padding:9px 6px;border-bottom:1px solid var(--linea)}
+  .tabla td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .barh{height:7px;background:var(--tinta-3);border-radius:6px;overflow:hidden;margin-top:6px}
+  .barh>i{display:block;height:100%;background:var(--teal);border-radius:6px}
+  .orig{display:flex;justify-content:space-between;font-size:.85rem;margin-top:12px}
+  .aviso-cfg{background:rgba(224,161,58,.08);border:1px solid rgba(224,161,58,.3);border-radius:12px;
+    padding:14px 16px;font-size:.82rem;color:var(--mute);line-height:1.6}
+  .aviso-cfg code{background:var(--tinta-3);padding:1px 6px;border-radius:5px;color:var(--oro);font-size:.9em}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login">
+  <div class="card">
+    <h1>El Pulso</h1>
+    <div class="sub">Centro de Mando</div>
+    <input id="clave" type="password" placeholder="Tu clave de administrador" autocomplete="current-password">
+    <button class="btn btn-oro" onclick="entrar()">Entrar</button>
+    <div class="err" id="loginErr"></div>
+    <p style="color:var(--mute);font-size:.72rem;margin-top:20px;line-height:1.5">
+      La clave es tu <code>ENJAMBRE_PIPELINE_TOKEN</code> del motor. Se guarda solo en este navegador.</p>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="app" class="oculto">
+  <header>
+    <div class="marca">El Pulso<small>Centro de Mando · Rubicón Lab</small></div>
+    <div class="tabs">
+      <button class="tab activa" id="tabRed" onclick="mostrarVista('red')">📝 Redacción</button>
+      <button class="tab" id="tabEst" onclick="mostrarVista('est')">📊 Estadísticas</button>
+    </div>
+    <div class="pills" id="pills"></div>
+    <button class="btn btn-fant" style="padding:7px 12px;font-size:11px" onclick="salir()">Salir</button>
+  </header>
+
+  <main id="vistaRedaccion">
+    <!-- Edición de hoy -->
+    <section class="panel">
+      <div class="panel-cab">
+        <h2>Edición de hoy</h2>
+        <span class="fecha" id="edFecha"></span>
+      </div>
+      <div class="panel-cuerpo" id="edCuerpo">
+        <div class="vacio">Cargando…</div>
+      </div>
+    </section>
+
+    <!-- Columna lateral -->
+    <aside style="display:flex;flex-direction:column;gap:22px">
+      <section class="panel">
+        <div class="panel-cab"><h2 style="font-size:1rem">Suscriptores</h2></div>
+        <div class="panel-cuerpo">
+          <div class="stat"><b id="nSusc">—</b><span>lectores activos</span></div>
+          <div id="estadoSistema" style="margin-top:10px;font-size:.82rem;color:var(--mute);line-height:1.7"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-cab"><h2 style="font-size:1rem">Predicciones (registro prospectivo)</h2></div>
+        <div class="panel-cuerpo" id="predCuerpo" style="font-size:.82rem;color:var(--mute);line-height:1.7">
+          <div class="vacio">Cargando…</div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-cab"><h2 style="font-size:1rem">Historial</h2></div>
+        <ul class="hist" id="hist"><li style="color:var(--mute)">Cargando…</li></ul>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Estadísticas -->
+  <div id="vistaEstadisticas" class="oculto">
+    <div class="wrap" id="estWrap">
+      <div class="vacio">Cargando estadísticas…</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+const LS = "pulso_admin_clave";
+let CLAVE = localStorage.getItem(LS) || "";
+let EDICION = null;            // la edición cargada actualmente
+let editando = false;
+
+const $ = s => document.querySelector(s);
+const esc = s => (s==null?"":String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("ver"); setTimeout(()=>t.classList.remove("ver"),3200); }
+
+async function api(path, method="GET", body){
+  const opt={method,headers:{"X-Pipeline-Token":CLAVE}};
+  if(body){opt.headers["Content-Type"]="application/json";opt.body=JSON.stringify(body);}
+  const r=await fetch(path,opt);
+  if(r.status===403){ salir(); throw new Error("no autorizado"); }
+  if(r.status===404) return null;
+  return r.json().catch(()=>({}));
+}
+
+// ---------- login ----------
+async function entrar(){
+  CLAVE=$("#clave").value.trim();
+  if(!CLAVE){ $("#loginErr").textContent="Escribe tu clave."; return; }
+  $("#loginErr").textContent="Verificando…";
+  try{
+    const est=await api("/api/panel/estado");
+    if(!est){ $("#loginErr").textContent="Clave incorrecta."; return; }
+    localStorage.setItem(LS,CLAVE);
+    arrancar(est);
+  }catch(e){ $("#loginErr").textContent="Clave incorrecta o motor no disponible."; }
+}
+function salir(){ localStorage.removeItem(LS); CLAVE=""; $("#app").classList.add("oculto"); $("#login").classList.remove("oculto"); $("#clave").value=""; }
+
+function arrancar(est){
+  $("#login").classList.add("oculto"); $("#app").classList.remove("oculto");
+  pintarEstado(est);
+  cargarEdicionHoy(est.hoy);
+  cargarHistorial();
+  cargarPredicciones();
+}
+
+// ---------- registro prospectivo (tablero): acierto, cobertura, evidencia ----------
+// Reemplaza abrir /api/predicciones/resumen?clave= en el navegador (token en la
+// URL). Aquí se pide por cabecera segura, como el resto de la consola.
+async function cargarPredicciones(){
+  const d = await api("/api/predicciones/resumen");
+  const cont = $("#predCuerpo");
+  if(!d){ cont.innerHTML = '<div class="vacio">No se pudo cargar.</div>'; return; }
+  const g = d.global || {};
+  const fila = (etq,r) => {
+    if(!r || !r.puntuables){ return `<div>${esc(etq)}: <span style="color:var(--mute)">sin datos</span></div>`; }
+    return `<div>${esc(etq)}: <b>${r.acierto!=null?r.acierto+'%':'—'}</b> `+
+           `<span style="color:var(--mute)">(${r.puntuables} puntuables / ${r.resueltas} resueltas)</span></div>`;
+  };
+  let html = fila('Global', g);
+  const pm = d.por_mercado || {};
+  for(const m of ['indice','accion','cripto','oro','petroleo']){ if(pm[m] && pm[m].puntuables) html += fila(m, pm[m]); }
+  const ev = d.evidencia || {};
+  html += `<div style="margin-top:8px">Pendientes de resolver: <b>${d.pendientes!=null?d.pendientes:'—'}</b></div>`;
+  if(ev && ev.total!=null){ html += `<div>Cobertura de evidencia: <b>${ev.con_evidencia||0}/${ev.total}</b></div>`; }
+  cont.innerHTML = html;
+}
+
+// ---------- estado del sistema ----------
+function pintarEstado(e){
+  $("#nSusc").textContent=e.suscriptores;
+  const dot=on=>`<span class="dot ${on?'on':'off'}"></span>`;
+  $("#pills").innerHTML=
+    `<span class="pill">${dot(e.ia_configurada)}IA</span>`+
+    `<span class="pill">${dot(e.resend_configurado)}Correo</span>`+
+    `<span class="pill">${dot(e.admin_email_configurado)}Revisión</span>`+
+    `<span class="pill"><b>${e.suscriptores}</b> suscriptores</span>`;
+  $("#estadoSistema").innerHTML=
+    `Inteligencia artificial: <b style="color:${e.ia_configurada?'var(--verde)':'var(--rojo)'}">${e.ia_configurada?'conectada':'sin clave'}</b><br>`+
+    `Envío de correos (Resend): <b style="color:${e.resend_configurado?'var(--verde)':'var(--rojo)'}">${e.resend_configurado?'activo':'sin clave'}</b><br>`+
+    `Correo de revisión: <b style="color:${e.admin_email_configurado?'var(--verde)':'var(--amber)'}">${e.admin_email_configurado?'configurado':'falta PULSO_ADMIN_EMAIL'}</b><br>`+
+    `<span style="opacity:.6">versión ${esc(e.version)}</span>`;
+}
+
+// ---------- edición de hoy ----------
+async function cargarEdicionHoy(hoy){ cargarEdicion(hoy); }
+
+async function cargarEdicion(fecha){
+  editando=false;
+  $("#edFecha").textContent=fecha;
+  const ed=await api("/api/panel/edicion/"+fecha);
+  EDICION=ed;
+  if(!ed){ pintarSinEdicion(fecha); return; }
+  pintarEdicion(ed);
+}
+
+function pintarSinEdicion(fecha){
+  $("#edCuerpo").innerHTML=
+    `<div class="vacio"><h3>No hay edición para ${esc(fecha)}</h3>`+
+    `<p>Genera la edición del día para revisarla. Toma ~1-2 minutos.</p>`+
+    `<div class="acc" style="justify-content:center"><button class="btn btn-oro" onclick="generar()">✨ Generar edición de hoy</button></div></div>`;
+}
+
+function badge(estado,mini){
+  const largo={pendiente:'Pendiente de revisión',aprobada:'Aprobada',enviada:'Enviada',descartada:'Descartada'};
+  const corto={pendiente:'Pendiente',aprobada:'Aprobada',enviada:'Enviada',descartada:'Descartada'};
+  const clase={pendiente:'b-pendiente',aprobada:'b-aprobada',enviada:'b-enviada',descartada:'b-descartada'};
+  const c=clase[estado]||'b-none';
+  const t=(mini?corto:largo)[estado]||estado||'—';
+  return `<span class="badge ${c}${mini?' mini':''}">${t}</span>`;
+}
+
+function pintarEdicion(ed){
+  const enviada=ed.estado==="enviada", descartada=ed.estado==="descartada";
+  let acc="";
+  if(!enviada && !descartada){
+    // la edición de FIN DE SEMANA (deep-dive) se revisa en la vista previa; su
+    // editor por campos es otro formato, así que aquí no se muestra "Editar".
+    const editar = ed.finde ? "" : `<button class="btn btn-fant" onclick="toggleEditor()">✏️ Editar</button>`;
+    const notaFinde = ed.finde
+      ? `<p style="color:var(--mute);font-size:.82rem;margin:10px 0 0">◆ Edición de fin de semana${ed.analisis&&ed.analisis.nombre?` · ${esc(ed.analisis.titulo||"")}: ${esc(ed.analisis.nombre)}`:""}. Revísala abajo y aprueba o descarta.</p>`
+      : "";
+    acc=`<div class="acc">`+
+      `<button class="btn btn-verde" onclick="aprobar()">✅ Aprobar y enviar</button>`+
+      editar +
+      `<button class="btn btn-rojo" onclick="descartar()">🗑 Descartar</button>`+
+      `<button class="btn btn-fant" onclick="generar()">↻ Regenerar</button></div>`+notaFinde;
+  } else if(enviada){
+    acc=`<p style="color:var(--verde);margin:14px 0">Enviada a ${ed.enviados} de ${ed.suscriptores} suscriptores.</p>`;
+  } else {
+    acc=`<p style="color:var(--rojo);margin:14px 0">Esta edición fue descartada.</p>`+
+        `<div class="acc"><button class="btn btn-fant" onclick="generar()">↻ Regenerar</button></div>`;
+  }
+  const previewSrc = ed.token ? "/pulso/preview/"+encodeURIComponent(ed.token) : "";
+  $("#edCuerpo").innerHTML =
+    `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">`+
+    `${badge(ed.estado)}<span style="color:var(--mute);font-size:.8rem">${esc(ed.asunto||"")}</span></div>`+
+    acc +
+    `<div id="editorZona"></div>`+
+    (previewSrc?`<iframe class="preview" src="${previewSrc}" title="Vista previa del correo"></iframe>`:
+      `<div class="vacio">Sin vista previa (no hay destacadas hoy).</div>`);
+}
+
+// ---------- editor (formato nuevo: historias con análisis + gráfico) ----------
+function toggleEditor(){
+  if(EDICION&&EDICION.finde){ return; }  // el finde no usa el editor por campos
+  editando=!editando;
+  const z=$("#editorZona");
+  if(!editando){ z.innerHTML=""; return; }
+  const r=(EDICION&&EDICION.redactado)||{};
+  const hs=(r.historias&&r.historias.length)?r.historias:[{}];
+  const opt=(sel)=>['semana','mes','dia','ano'].map(p=>`<option value="${p}"${(sel||'semana')===p?' selected':''}>${p}</option>`).join('');
+  let html=`<div class="editor" style="background:var(--tinta-3);border:1px solid var(--linea);border-radius:12px;padding:16px;margin:4px 0 16px">`+
+    `<label>Buenos días</label><textarea id="e_bd">${esc(r.buenos_dias||"")}</textarea>`;
+  hs.forEach((h,i)=>{
+    const g=h.grafico||{};
+    html+=`<div class="hgroup" data-h="${i}"><div style="color:var(--oro);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">Historia ${i+1}</div>`+
+      `<label>Etiqueta (categoría)</label><input class="h_kicker" value="${esc(h.kicker||"")}" placeholder="Tecnología · catalizador">`+
+      `<div class="fila2"><div><label>Emoji</label><input class="h_emoji" value="${esc(h.emoji||"")}"></div>`+
+      `<div><label>Titular</label><input class="h_tit" value="${esc(h.titular||"")}"></div></div>`+
+      `<label>Bajada</label><input class="h_dek" value="${esc(h.dek||"")}" placeholder="una línea de subtítulo">`+
+      `<label>Análisis (cuerpo)</label><textarea class="h_cuerpo" style="min-height:130px">${esc(h.cuerpo||"")}</textarea>`+
+      `<label>En una línea (cierre)</label><input class="h_bl" value="${esc(h.bottom_line||"")}">`+
+      `<div style="display:grid;grid-template-columns:1fr 1fr 96px;gap:10px;align-items:end;margin-top:4px">`+
+        `<div><label>Gráfico · ticker</label><input class="h_gt" value="${esc(g.ticker||"")}" placeholder="AAPL"></div>`+
+        `<div><label>Gráfico · nombre</label><input class="h_gn" value="${esc(g.nombre||"")}" placeholder="Apple Inc."></div>`+
+        `<div><label>Periodo</label><select class="h_gp">${opt(g.periodo)}</select></div>`+
+      `</div></div>`;
+  });
+  html+=`<div class="acc"><button class="btn btn-oro" onclick="guardarEdicion()">💾 Guardar cambios</button>`+
+        `<button class="btn btn-fant" onclick="toggleEditor()">Cancelar</button></div></div>`;
+  z.innerHTML=html;
+}
+
+async function guardarEdicion(){
+  const r=(EDICION&&EDICION.redactado)||{};
+  const historias=[...document.querySelectorAll('#editorZona .hgroup[data-h]')].map(g=>{
+    const tk=g.querySelector('.h_gt').value.trim();
+    const grafico=tk?{ticker:tk,nombre:g.querySelector('.h_gn').value.trim(),periodo:g.querySelector('.h_gp').value,moneda:'$'}:null;
+    return {kicker:g.querySelector('.h_kicker').value, emoji:g.querySelector('.h_emoji').value,
+      titular:g.querySelector('.h_tit').value, dek:g.querySelector('.h_dek').value,
+      cuerpo:g.querySelector('.h_cuerpo').value, bottom_line:g.querySelector('.h_bl').value, grafico};
+  });
+  const redactado={ ...r, buenos_dias:$("#e_bd").value, historias };
+  toast("Guardando y re-armando el correo…");
+  const res=await api("/api/panel/edicion/"+EDICION.fecha+"/editar","POST",{redactado});
+  if(res&&res.ok){
+    if(res.preview_actualizado===false){
+      // se guardó el texto pero la vista previa NO se regeneró: avisar fuerte
+      // para que no se apruebe una versión vieja sin querer (B5).
+      alert("⚠️ "+(res.motivo||"Se guardó tu texto, pero la vista previa quedó desactualizada.")+
+            "\n\nNo apruebes hasta confirmar que el correo se ve como quieres.");
+    } else {
+      toast("Cambios guardados ✓");
+    }
+    await cargarEdicion(EDICION.fecha);
+  }
+  else toast((res&&res.motivo)||"No se pudo guardar");
+}
+
+// ---------- acciones ----------
+async function aprobar(){
+  if(!confirm("¿Aprobar y ENVIAR esta edición a los suscriptores? Esta acción no se deshace."))return;
+  toast("Enviando…");
+  const res=await api("/api/panel/edicion/"+EDICION.fecha+"/aprobar","POST");
+  if(res&&res.ok) toast(res.ya_enviada?"Ya se había enviado.":("Enviada a "+res.enviados+" suscriptores 🎉"));
+  else toast((res&&res.motivo)||"No se pudo enviar");
+  cargarEdicion(EDICION.fecha); cargarHistorial();
+}
+async function descartar(){
+  if(!confirm("¿Descartar esta edición? No se enviará."))return;
+  await api("/api/panel/edicion/"+EDICION.fecha+"/descartar","POST");
+  toast("Edición descartada"); cargarEdicion(EDICION.fecha); cargarHistorial();
+}
+async function generar(){
+  if(!confirm("¿Generar la edición de hoy? Usa la IA (~1-2 min)."))return;
+  const res=await api("/api/panel/generar","POST");
+  toast((res&&res.mensaje)||"Generando…");
+  setTimeout(()=>{ refrescar(); },90000);
+}
+
+// ---------- historial ----------
+async function cargarHistorial(){
+  const d=await api("/api/panel/ediciones?limite=30");
+  const eds=(d&&d.ediciones)||[];
+  if(!eds.length){ $("#hist").innerHTML='<li style="color:var(--mute)">Aún no hay ediciones.</li>'; return; }
+  // la fecha viaja en un data-atributo escapado (no cosida dentro de un
+  // onclick): así ningún dato de la base termina interpretado como código.
+  $("#hist").innerHTML=eds.map(e=>{
+    const n = e.estado==="enviada" ? `${e.enviados}/${e.suscriptores} enviados` : "";
+    return `<li data-fecha="${esc(e.fecha)}"><div><div class="f">${esc(e.fecha)}</div>`+
+      `<div class="a">${esc(e.asunto||"—")}</div></div>`+
+      `<div style="text-align:right">${badge(e.estado,true)}<div class="n">${n}</div></div></li>`;
+  }).join("");
+  $("#hist").querySelectorAll("li[data-fecha]").forEach(li=>{
+    li.addEventListener("click",()=>cargarEdicion(li.dataset.fecha));
+  });
+}
+
+async function refrescar(){ const est=await api("/api/panel/estado"); if(est){ pintarEstado(est); cargarEdicion($("#edFecha").textContent||est.hoy); cargarHistorial(); } }
+
+// ---------- estadísticas ----------
+function mostrarVista(v){
+  const red = v==="red";
+  $("#vistaRedaccion").classList.toggle("oculto", !red);
+  $("#vistaEstadisticas").classList.toggle("oculto", red);
+  $("#tabRed").classList.toggle("activa", red);
+  $("#tabEst").classList.toggle("activa", !red);
+  if(!red) cargarEstadisticas();
+}
+
+const pct = x => (x==null ? "—" : Math.round(x*100)+"%");
+
+async function cargarEstadisticas(){
+  const d = await api("/api/panel/estadisticas?dias=30");
+  if(d) pintarEstadisticas(d);
+}
+
+function graficoCrecimiento(serie){
+  const W=680, H=170, P=22;
+  const vals = serie.map(s=>s.acumulado);
+  const n = vals.length;
+  const max = Math.max(...vals, 1), min = Math.min(...vals, 0);
+  const X = i => P + i*(W-2*P)/Math.max(1,n-1);
+  const Y = v => H-P - (v-min)*(H-2*P)/Math.max(1,(max-min));
+  const linea = vals.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+  const area = `${linea} L${X(n-1).toFixed(1)},${H-P} L${X(0).toFixed(1)},${H-P} Z`;
+  const f0=(serie[0]&&serie[0].fecha||"").slice(5), f1=(serie[n-1]&&serie[n-1].fecha||"").slice(5);
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
+    <defs><linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fb3a1" stop-opacity=".33"/>
+      <stop offset="1" stop-color="#5fb3a1" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#grad)"/>
+    <path d="${linea}" fill="none" stroke="#5fb3a1" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(n-1).toFixed(1)}" cy="${Y(vals[n-1]).toFixed(1)}" r="4" fill="#e3c565"/>
+  </svg>
+  <div style="display:flex;justify-content:space-between;color:var(--mute);font-size:.7rem;margin-top:2px"><span>${esc(f0)}</span><span>hoy</span></div>`;
+}
+
+function pintarEstadisticas(d){
+  const su=d.suscriptores, ed=d.ediciones, co=d.correo;
+  const kpi=(n,l,s)=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div>${s?`<div class="s">${s}</div>`:""}</div>`;
+  const kpis =
+    kpi(su.activos, "Suscriptores activos", `${su.pendientes} sin confirmar`)+
+    kpi(co.hay_datos?pct(co.tasa_apertura):"—", "Tasa de apertura", co.hay_datos?"promedio reciente":"aún sin datos")+
+    kpi(co.hay_datos?pct(co.tasa_clic):"—", "Tasa de clic", co.hay_datos?"promedio reciente":"aún sin datos")+
+    kpi(ed.enviadas, "Ediciones enviadas", `${ed.descartadas} descartadas`);
+
+  // tabla de aperturas por edición
+  let tablaCorreo;
+  if(co.hay_datos && co.por_edicion.length){
+    tablaCorreo = `<table class="tabla"><thead><tr><th>Edición</th><th class="num">Enviados</th><th class="num">Apertura</th><th class="num">Clic</th></tr></thead><tbody>`+
+      co.por_edicion.map(e=>`<tr><td>${esc(e.fecha)}</td><td class="num">${e.enviados}</td>`+
+        `<td class="num" style="color:var(--teal)">${pct(e.tasa_apertura)}</td>`+
+        `<td class="num">${pct(e.tasa_clic)}</td></tr>`).join("")+
+      `</tbody></table>`;
+  } else {
+    tablaCorreo = `<div class="vacio" style="padding:24px 8px">Aún no hay datos de apertura.${
+      d.webhook_configurado ? " Aparecerán cuando salga la próxima edición." : ""}</div>`;
+  }
+
+  // orígenes de suscripción
+  const maxO = Math.max(1, ...su.por_origen.map(o=>o.n));
+  const origenes = su.por_origen.length
+    ? su.por_origen.map(o=>`<div class="orig"><span>${esc(o.origen)}</span><span>${o.n}</span></div>`+
+        `<div class="barh"><i style="width:${Math.round(o.n/maxO*100)}%"></i></div>`).join("")
+    : `<div class="s" style="color:var(--mute)">Sin suscriptores aún.</div>`;
+  const confir = su.tasa_confirmacion==null ? "—" : pct(su.tasa_confirmacion);
+
+  const avisoWebhook = d.webhook_configurado ? "" :
+    `<div class="aviso-cfg">💡 <b>Para medir aperturas y clics:</b> en Resend crea un webhook que apunte a
+     <code>${location.origin}/pulso/webhook/resend</code> y guarda su secreto en la variable
+     <code>RESEND_WEBHOOK_SECRET</code> del motor. Mientras tanto, el resto de las estadísticas ya funciona.</div>`;
+
+  $("#estWrap").innerHTML =
+    `<div class="kpis">${kpis}</div>`+
+    avisoWebhook+
+    `<section class="panel"><div class="panel-cab"><h2 style="font-size:1rem">Crecimiento de suscriptores</h2>`+
+      `<span class="fecha">últimos 30 días</span></div>`+
+      `<div class="panel-cuerpo">${graficoCrecimiento(su.serie)}</div></section>`+
+    `<div class="grid2">`+
+      `<section class="panel"><div class="panel-cab"><h2 style="font-size:1rem">Aperturas por edición</h2></div>`+
+        `<div class="panel-cuerpo">${tablaCorreo}</div></section>`+
+      `<section class="panel"><div class="panel-cab"><h2 style="font-size:1rem">De dónde vienen</h2></div>`+
+        `<div class="panel-cuerpo">${origenes}`+
+          `<div class="orig" style="margin-top:20px;border-top:1px solid var(--linea);padding-top:14px"><span>Tasa de confirmación</span><span style="color:var(--teal)">${confir}</span></div>`+
+          `<div class="s">Cuántos de los que se registran confirman su correo.</div>`+
+        `</div></section>`+
+    `</div>`;
+}
+
+// ---------- init ----------
+$("#clave").addEventListener("keydown",e=>{ if(e.key==="Enter")entrar(); });
+(async function(){
+  if(CLAVE){ try{ const est=await api("/api/panel/estado"); if(est){ arrancar(est); return; } }catch(e){} }
+  $("#login").classList.remove("oculto");
+})();
+</script>
+</body>
+</html>
 ```
 
 ## engine/conftest.py
@@ -5425,9 +6039,536 @@ def _eleccion_preferencial(rng, poblacion, excluido):
             return candidato
 ```
 
+## engine/evidence/__init__.py
+```python
+"""Capa de evidencia point-in-time (Fase 1). Ver contrato.py."""
+```
+
+## engine/evidence/contrato.py
+```python
+"""Contrato de la capa de evidencia point-in-time (Fase 1).
+
+El objeto de evidencia representa LO QUE SE SABÍA en el momento del evento
+(`as_of`): hechos, expectativas previas, qué pudo estar descontado, fuentes con su
+fecha, contradicciones e incertidumbre. La regla sagrada: **nada posterior al
+`as_of` puede entrar** — si una fuente o una expectativa es más nueva que el
+`as_of`, se rechaza (eso sería ver el futuro, la fuga que arruina un backtest).
+
+Este módulo define y VALIDA el contrato; es puro (sin red). La recuperación real de
+fuentes (macro, consenso) vive en adaptadores aparte. Se usa en MODO SOMBRA:
+produce la evidencia sin alterar todavía las predicciones del enjambre.
+"""
+import hashlib
+import json
+from datetime import datetime, timezone
+
+ESQUEMA_VERSION = "v1"
+
+
+class EvidenciaInvalida(ValueError):
+    """El objeto de evidencia viola el contrato (p. ej. una fuente del futuro)."""
+
+
+def _parse(ts, campo="timestamp"):
+    """ISO-8601 → datetime con zona (UTC si viene naive). Lanza si no parsea."""
+    if not ts or not isinstance(ts, str):
+        raise EvidenciaInvalida(f"{campo} ausente o no es texto: {ts!r}")
+    try:
+        d = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except ValueError as e:
+        raise EvidenciaInvalida(f"{campo} no es ISO-8601 válido: {ts!r}") from e
+    return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+
+
+def validar_fuente(fuente, as_of):
+    """Una fuente debe tener `published_at` fiable y NO posterior al `as_of`.
+
+    `as_of` puede ser str ISO o datetime. Lanza EvidenciaInvalida si falla."""
+    as_of_dt = as_of if isinstance(as_of, datetime) else _parse(as_of, "as_of")
+    pub = _parse(fuente.get("published_at"), "fuente.published_at")
+    if pub > as_of_dt:
+        raise EvidenciaInvalida(
+            f"fuente {fuente.get('source_id','?')} publicada {pub.isoformat()} "
+            f"es POSTERIOR al as_of {as_of_dt.isoformat()} (fuga de futuro)")
+
+
+def validar_expectativa(exp, as_of):
+    """Una expectativa (consenso previo) debe traer `vintage` (cuándo se fijó), y
+    ese vintage no puede ser posterior al as_of."""
+    as_of_dt = as_of if isinstance(as_of, datetime) else _parse(as_of, "as_of")
+    vintage = _parse(exp.get("vintage"), "expectativa.vintage")
+    if vintage > as_of_dt:
+        raise EvidenciaInvalida(
+            f"expectativa con vintage {vintage.isoformat()} posterior al as_of")
+
+
+def hash_evidencia(ev: dict) -> str:
+    """Hash estable del objeto (JSON canónico, sin el propio campo de hash)."""
+    sin_hash = {k: v for k, v in ev.items() if k != "evidence_hash"}
+    crudo = json.dumps(sin_hash, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(crudo.encode("utf-8")).hexdigest()
+
+
+def construir_evidencia(*, event_id, activo, as_of, titular, event_timestamp=None,
+                        entity=None, hechos=None, expectativas=None, info_nueva=None,
+                        descontado=None, fuentes=None, contradicciones=None,
+                        incertidumbres=None, info_faltante=None, zona_horaria="UTC"):
+    """Ensambla y VALIDA un objeto de evidencia (el ensamblador de modo sombra).
+
+    Rechaza cualquier fuente o expectativa posterior al `as_of`. Devuelve el objeto
+    versionado y con su hash. No toca el enjambre ni las predicciones."""
+    as_of_dt = _parse(as_of, "as_of")
+    fuentes = fuentes or []
+    expectativas = expectativas or []
+    for f in fuentes:
+        validar_fuente(f, as_of_dt)
+    for e in expectativas:
+        validar_expectativa(e, as_of_dt)
+
+    ev = {
+        "event_id": event_id,
+        "asset": activo,
+        "entity": entity,
+        "event_timestamp": event_timestamp,
+        "as_of_timestamp": as_of_dt.isoformat(),
+        "timezone": zona_horaria,
+        "headline": titular,
+        "facts": hechos or [],
+        "expectations": expectativas,
+        "new_information": info_nueva or [],
+        "priced_in_assessment": descontado or {"value": None, "evidence": [],
+                                               "uncertainty": "high"},
+        "sources": fuentes,
+        "contradictions": contradicciones or [],
+        "uncertainties": incertidumbres or [],
+        "missing_information": info_faltante or [],
+        "evidence_version": ESQUEMA_VERSION,
+    }
+    ev["evidence_hash"] = hash_evidencia(ev)
+    return ev
+
+
+def formatear_para_cerebro(ev: dict) -> str:
+    """Convierte la evidencia en un bloque de texto conciso para el prompt del
+    cerebro (la entrada del brazo 'D' del experimento B-vs-D). Solo vuelca lo que
+    la evidencia ya trae validado; nunca inventa. El brazo 'B' usa solo el titular;
+    el 'D' usa titular + este bloque."""
+    lineas = [f"Titular: {ev.get('headline', '')}"]
+    ctx = []
+
+    def _agrega(etiqueta, items, campo="texto"):
+        vals = [str(x.get(campo, x) if isinstance(x, dict) else x) for x in (items or [])]
+        vals = [v for v in vals if v]
+        if vals:
+            ctx.append(f"{etiqueta}:\n- " + "\n- ".join(vals))
+
+    _agrega("Hechos verificados", ev.get("facts"))
+    exps = [f"{e.get('valor', '')} (fijada {e.get('vintage', '?')[:10]})"
+            for e in ev.get("expectations", []) if e.get("valor")]
+    if exps:
+        ctx.append("Expectativa previa:\n- " + "\n- ".join(exps))
+    _agrega("Información nueva", ev.get("new_information"))
+    pia = ev.get("priced_in_assessment") or {}
+    if pia.get("value") is not None:
+        ctx.append(f"¿Ya estaba descontado?: {pia.get('value')} "
+                   f"(certeza {pia.get('uncertainty', '?')})")
+    _agrega("Contradicciones", ev.get("contradictions"))
+    _agrega("Incertidumbre", ev.get("uncertainties"))
+    _agrega("Información faltante", ev.get("missing_information"))
+
+    if ctx:
+        lineas.append("\nContexto disponible a la fecha del evento:")
+        lineas.append("\n".join(ctx))
+    return "\n".join(lineas)
+```
+
+## engine/evidence/fuentes.py
+```python
+"""Adaptadores de recuperación de evidencia (Fase 1).
+
+Fuente REAL y point-in-time: el contexto de PRECIO previo a la noticia (Yahoo,
+gratis). Responde "¿cómo venía el activo ANTES del evento?" — retorno reciente,
+volatilidad y distancia al máximo. La regla sagrada se respeta por construcción:
+solo se usan barras ANTERIORES al día del `as_of` (nada del evento ni posterior).
+
+Otras fuentes (calendario macro CPI/FOMC, consenso, noticias oficiales) necesitan
+llaves que viven en Render y, en el caso macro, las construye Codex (PR #34) — se
+enchufan después con la misma interfaz, sin duplicar.
+"""
+import statistics
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import obtener_barras
+
+
+def _ret(cierres, n):
+    if len(cierres) > n and cierres[-1 - n]:
+        return (cierres[-1] / cierres[-1 - n] - 1) * 100
+    return None
+
+
+def contexto_precio(simbolo, as_of, fetch=obtener_barras):
+    """Hechos de contexto de precio DISPONIBLES antes del evento (point-in-time).
+
+    Devuelve (hechos, fuente) o (None, None) si no hay datos suficientes. `fetch`
+    es inyectable para tests. Solo usa barras con día < día del `as_of`."""
+    as_of_fecha = as_of[:10]
+    barras = fetch(simbolo, as_of_fecha)
+    if not barras:
+        return None, None
+    previas = [(d, c) for d, c in barras if d < as_of_fecha and c]  # SOLO antes del evento
+    if len(previas) < 6:
+        return None, None
+    cierres = [c for _, c in previas]
+    hechos = []
+
+    r5, r20 = _ret(cierres, 5), _ret(cierres, 20)
+    if r5 is not None:
+        hechos.append({"clave": "ret_5", "valor": round(r5, 2),
+                       "texto": f"retorno previo 5 sesiones: {r5:+.1f}%"})
+    if r20 is not None:
+        hechos.append({"clave": "ret_20", "valor": round(r20, 2),
+                       "texto": f"retorno previo 20 sesiones: {r20:+.1f}%"})
+
+    rets = [(cierres[i] / cierres[i - 1] - 1) * 100
+            for i in range(1, len(cierres)) if cierres[i - 1]]
+    if len(rets) >= 5:
+        vol = statistics.pstdev(rets[-20:])
+        hechos.append({"clave": "vol", "valor": round(vol, 3),
+                       "texto": f"volatilidad diaria reciente: {vol:.2f}%"})
+
+    ventana = cierres[-20:]
+    if ventana and max(ventana):
+        dist = (cierres[-1] / max(ventana) - 1) * 100
+        hechos.append({"clave": "dist_max20", "valor": round(dist, 2),
+                       "texto": f"a {dist:+.1f}% del máximo de 20 sesiones"})
+
+    ultima = previas[-1][0]  # día < as_of → published_at nunca es futuro
+    fuente = {"source_id": f"precio:{simbolo}",
+              "published_at": f"{ultima}T23:59:59+00:00",
+              "reliability": "alta", "supports": [h["clave"] for h in hechos]}
+    return hechos, fuente
+```
+
+## engine/evidence/recoleccion.py
+```python
+"""Recolección de evidencia (Fase 1): ensambla el objeto de evidencia a partir de
+los adaptadores de fuentes disponibles, respetando el contrato point-in-time.
+
+Hoy conecta una fuente real: el contexto de precio previo (Yahoo). Las demás
+(macro, consenso, noticias) se enchufan con la misma interfaz cuando estén sus
+llaves/datos. Se usa en MODO SOMBRA: produce y guarda la evidencia sin alterar las
+predicciones del enjambre."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from evidence import contrato
+from evidence.fuentes import contexto_precio
+
+
+def evidencia_para(simbolo, titular, as_of, *, event_id=None, mercado=None,
+                   fetch_precio=None):
+    """Construye el objeto de evidencia point-in-time para (simbolo, titular, as_of).
+
+    BLINDADO: si una fuente falla, sigue con lo que haya; nunca lanza. Devuelve el
+    objeto de evidencia validado (con su hash) — o uno mínimo (solo titular) si no
+    hubo contexto. `fetch_precio` es inyectable para tests."""
+    hechos, fuentes = [], []
+    try:
+        kw = {"fetch": fetch_precio} if fetch_precio else {}
+        h, f = contexto_precio(simbolo, as_of, **kw)
+        if h:
+            hechos.extend(h)
+        if f:
+            fuentes.append(f)
+    except Exception as e:
+        print(f"[evidencia] contexto_precio falló para {simbolo}: {e!r}", flush=True)
+
+    return contrato.construir_evidencia(
+        event_id=event_id or f"{simbolo}:{as_of[:10]}",
+        activo=simbolo, as_of=as_of, titular=titular, entity=None,
+        hechos=hechos, fuentes=fuentes)
+```
+
 ## engine/calibration/__init__.py
 ```python
 
+```
+
+## engine/calibration/ablacion.py
+```python
+"""Fase 3 — Ablación A0–A5: aislar cuánto aporta CADA capa del enjambre.
+
+La pregunta de fondo del proyecto: el enjambre de 10.150 agentes, ¿agrega poder
+PREDICTIVO sobre atajos mucho más simples, o el acierto que vemos ya está en el
+consenso de los líderes LLM (y la simulación solo lo adorna)? Esta herramienta lo
+mide sobre el dataset SIN FUGA (`pct_corr`), escalón por escalón:
+
+  A0  piso tonto     — clase mayoritaria (el predictor constante óptimo)
+  A1  léxico simple  — sentimiento de palabras del titular (sin IA, diccionario)
+  A3  consenso LLM   — señal agregada de los ~110 cerebros, SIN ABM  (campo `senal`)
+  A4  ABM completo   — lo que simuló el enjambre de 10.150 agentes (`direccion_pct`)
+
+A2 (un solo LLM leyendo el titular) y A5 (ABM + evidencia `as_of`) necesitan correr
+IA/motor y se miden aparte; aquí se dejan como escalones declarados, no calculados.
+
+El **gate** del plan: cuantificar A4 − A3. Si A4 ≤ A3, el ABM NO añade predicción
+direccional incremental (es gran producto y visualización, no un mejor predictor).
+
+Cada escalón trae su intervalo de confianza HONESTO (bootstrap multiway: el más
+ancho entre agrupar por activo, por evento y por período — §Fase 0.5). Sin red:
+solo lee números ya calculados (+ el diccionario léxico local para A1).
+
+Uso:
+    python3 engine/calibration/ablacion.py cal.json.con_fecha.json [cal.json]
+(el 2º argumento, el export crudo, habilita A1 trayendo el titular de cada caso)
+"""
+import json
+import random
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import intervalos_multiway as mw
+from calibration.remedir_sin_fuga import _sg
+
+ZONA = 0.3  # zona muerta: solo casos con movimiento real |pct_corr| ≥ 0.3%
+
+# Escalones calculables offline. pred_fn(fila) → número cuyo SIGNO es la predicción
+# (0 / None = el escalón se abstiene en ese caso).
+ESCALONES = [
+    ("A0_mayoria", "piso tonto (clase mayoritaria)"),
+    ("A1_lexico", "léxico del titular (sin IA)"),
+    ("A2_un_llm", "un solo LLM neutral (sin arquetipos ni ABM)"),
+    ("A3_consenso", "consenso LLM, sin ABM (senal)"),
+    ("A4_abm", "ABM completo 10.150 agentes (direccion_pct)"),
+]
+
+
+def _signo_mayoria(filas):
+    """Dirección mayoritaria entre TODOS los resultados dados (atajo que SÍ mira
+    las etiquetas del conjunto). Se conserva como utilidad, pero para puntuar A0
+    NO se usa (miraría el examen): ver `_items_a0`, que solo usa el pasado."""
+    dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= ZONA]
+    subas = sum(1 for f in dire if f["pct_corr"] > 0)
+    return 1 if subas >= (len(dire) - subas) else -1
+
+
+def _items_a0(filas, zona=ZONA):
+    """A0 HONESTO (auditoría v4): para cada caso, la clase mayoritaria de los casos
+    ESTRICTAMENTE ANTERIORES por fecha (train-only, expanding window). Nunca mira
+    la etiqueta del propio caso ni las futuras. Se abstiene mientras no haya
+    historia para decidir (empate 0-0 al inicio); esas abstenciones reducen el
+    denominador de A0 a propósito (es el precio de no hacer trampa)."""
+    dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
+    dire = sorted(dire, key=lambda f: str(f.get("fecha", "")))
+    subas = bajas = 0
+    out = []
+    for f in dire:
+        pred = 1 if subas > bajas else (-1 if bajas > subas else 0)
+        if pred != 0:
+            ok = 1 if _sg(pred) == _sg(f["pct_corr"]) else 0
+            fecha = str(f.get("fecha", ""))[:10]
+            out.append((ok, {"simbolo": f.get("simbolo"), "fecha": fecha,
+                             "anio": str(f.get("anio") or fecha[:4])}))
+        # la historia se actualiza DESPUÉS de predecir (no mira su propia etiqueta)
+        if f["pct_corr"] > 0:
+            subas += 1
+        else:
+            bajas += 1
+    return out
+
+
+def pred_de(fila, escalon, signo_mayoria):
+    if escalon == "A0_mayoria":
+        return signo_mayoria
+    if escalon == "A1_lexico":
+        return fila.get("lexico")
+    if escalon == "A2_un_llm":
+        return fila.get("a2")
+    if escalon == "A3_consenso":
+        return fila.get("senal")
+    if escalon == "A4_abm":
+        return fila.get("direccion_pct")
+    return None
+
+
+def cargar(ruta_con_fecha, ruta_raw=None, ruta_a2=None):
+    """Carga las filas sin fuga. Si se da el export crudo, añade `titular` y
+    `lexico` (A1) emparejando por (reaccion_real.fecha_base, ….simbolo). Si se da
+    `ruta_a2` (un {titular: senal} que produce `un_llm.py`), añade `a2` (A2)."""
+    filas = json.loads(Path(ruta_con_fecha).read_text())
+    if ruta_raw:
+        from brains.fallback import sentimiento_lexico
+        crudo = json.loads(Path(ruta_raw).read_text())
+        casos = crudo.get("casos", crudo) if isinstance(crudo, dict) else crudo
+        titular_por = {}
+        for c in casos:
+            rr = c.get("reaccion_real") or {}
+            k = (rr.get("fecha_base"), rr.get("simbolo"))
+            if k[0] and k[1]:
+                titular_por.setdefault(k, c.get("titular", ""))
+        for f in filas:
+            tit = titular_por.get((f.get("fecha"), f.get("simbolo")))
+            if tit:
+                f["titular"] = tit
+                f["lexico"] = sentimiento_lexico(tit)
+    if ruta_a2:
+        a2 = json.loads(Path(ruta_a2).read_text())
+        if isinstance(a2, dict) and "senales" in a2:  # caché versionado de un_llm.py
+            a2 = a2["senales"]
+        for f in filas:
+            if f.get("titular") in a2:
+                f["a2"] = a2[f["titular"]]
+    return filas
+
+
+def _items(filas, escalon, signo_mayoria, zona=ZONA):
+    """[(acierto, claves)] para los casos direccionables donde el escalón opina."""
+    out = []
+    for f in filas:
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona:
+            continue
+        pred = pred_de(f, escalon, signo_mayoria)
+        if pred in (0, None):
+            continue  # el escalón se abstiene
+        ok = 1 if _sg(pred) == _sg(pc) else 0
+        fecha = str(f.get("fecha", ""))[:10]
+        out.append((ok, {"simbolo": f.get("simbolo"), "fecha": fecha,
+                         "anio": str(f.get("anio") or fecha[:4])}))
+    return out
+
+
+def _ci_honesto(items, **kw):
+    """El IC 95% más ANCHO entre agrupar por activo, evento y período (el honesto)."""
+    if not items:
+        return {"punto": None, "lo": None, "hi": None, "n": 0}
+    por = {c: mw._ci_por_clave(items, c, **kw) for c in ("simbolo", "fecha", "anio")}
+    ancho = max(por.values(), key=lambda d: (d["hi"] - d["lo"]))
+    clave = next(k for k, v in por.items() if v is ancho)
+    return {"punto": ancho["punto"], "lo": ancho["lo"], "hi": ancho["hi"],
+            "n": ancho["n"], "agrupado": clave}
+
+
+def evaluar(filas, mercado=None, zona=ZONA, **kw):
+    """Acierto e IC honesto de cada escalón (opcionalmente filtrando por mercado)."""
+    sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
+    res = {}
+    for esc, _desc in ESCALONES:
+        # A0 se puntúa SOLO con el pasado (train-only); el resto son reglas fijas
+        # (su acierto es el mismo dentro y fuera de muestra), así que no filtran.
+        items = _items_a0(sub, zona) if esc == "A0_mayoria" else _items(sub, esc, None, zona)
+        res[esc] = _ci_honesto(items, **kw)
+    return res
+
+
+def gate_abm(filas, mercado=None, zona=ZONA):
+    """El gate del plan: A4 − A3. Devuelve la diferencia y cuántas veces el ABM
+    cambió el signo del consenso (y con qué resultado neto)."""
+    sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
+    sm = _signo_mayoria(sub)
+    a3 = _items(sub, "A3_consenso", sm, zona)
+    a4 = _items(sub, "A4_abm", sm, zona)
+    acc3 = 100 * sum(a for a, _ in a3) / len(a3) if a3 else None
+    acc4 = 100 * sum(a for a, _ in a4) / len(a4) if a4 else None
+    dire = [f for f in sub if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
+    cambia = [f for f in dire if _sg(f.get("senal")) != _sg(f.get("direccion_pct"))]
+    # de los que el ABM invirtió, ¿cuántos acertó el ABM vs los habría acertado A3?
+    gana_abm = sum(1 for f in cambia
+                   if _sg(f["direccion_pct"]) == _sg(f["pct_corr"]) and f["direccion_pct"])
+    return {
+        "A3": round(acc3, 1) if acc3 is not None else None,
+        "A4": round(acc4, 1) if acc4 is not None else None,
+        "delta_A4_menos_A3": (round(acc4 - acc3, 1)
+                              if acc3 is not None and acc4 is not None else None),
+        "n": len(a4), "abm_cambia_signo": len(cambia),
+        "abm_acierta_al_cambiar": gana_abm,
+        "abm_falla_al_cambiar": len(cambia) - gana_abm,
+    }
+
+
+def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
+    """El gate CORRECTO (auditoría v4): diferencia PAREADA A4 − A3 por EVENTO.
+
+    La unidad de dependencia no es el caso suelto sino el ANUNCIO (misma fecha): 4
+    ETFs del mismo día no son 4 experimentos. Para cada caso donde AMBOS opinan,
+    d = acierto_A4 − acierto_A3 ∈ {-1,0,1}; se agrupan por fecha y se re-muestrean
+    los GRUPOS (cluster bootstrap) para el IC de la media de d. media<0 ⇒ el ABM
+    resta; IC que EXCLUYE 0 ⇒ la diferencia es significativa. Sustituye al atajo
+    'el intervalo más ancho de tres' para la comparación A3-vs-A4."""
+    sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
+    por_evento = {}
+    for f in sub:
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona:
+            continue
+        s, d4 = f.get("senal"), f.get("direccion_pct")
+        if s in (0, None) or d4 in (0, None):
+            continue
+        a3 = 1 if _sg(s) == _sg(pc) else 0
+        a4 = 1 if _sg(d4) == _sg(pc) else 0
+        por_evento.setdefault(str(f.get("fecha", ""))[:10], []).append(a4 - a3)
+    grupos = list(por_evento.values())
+    todos = [d for g in grupos for d in g]
+    if not todos:
+        return {"media": None, "lo": None, "hi": None, "n": 0, "n_eventos": 0}
+    media = sum(todos) / len(todos)
+    rng = random.Random(seed)
+    muestras = []
+    for _ in range(n_boot):
+        pool = []
+        for _ in range(len(grupos)):
+            pool.extend(rng.choice(grupos))
+        if pool:
+            muestras.append(sum(pool) / len(pool))
+    muestras.sort()
+    lo = muestras[int(0.025 * len(muestras))]
+    hi = muestras[int(0.975 * len(muestras)) - 1]
+    return {"media": round(media, 3), "lo": round(lo, 3), "hi": round(hi, 3),
+            "n": len(todos), "n_eventos": len(grupos),
+            "excluye_cero": hi < 0 or lo > 0}
+
+
+def imprimir(filas, mercados=("indice", None)):
+    for m in mercados:
+        etq = (m or "TODOS").upper()
+        res = evaluar(filas, mercado=m)
+        print(f"\n=== Ablación A0–A5 · {etq} — acierto direccional (sin fuga) ===")
+        print(f"{'escalón':14}{'descripción':42}{'acierto%':>9}{'IC 95% honesto':>18}{'n':>6}")
+        for esc, desc in ESCALONES:
+            d = res[esc]
+            if d["punto"] is None:
+                print(f"{esc:14}{desc:42}{'(sin datos)':>9}")
+                continue
+            ic = f"[{d['lo']}-{d['hi']}]({d['agrupado'][:3]})"
+            print(f"{esc:14}{desc:42}{d['punto']:>9}{ic:>18}{d['n']:>6}")
+        g = gate_abm(filas, mercado=m)
+        print(f"  GATE A4−A3 (puntual) = {g['delta_A4_menos_A3']} pts  "
+              f"(ABM cambió el signo {g['abm_cambia_signo']} veces: "
+              f"acertó {g['abm_acierta_al_cambiar']}, falló {g['abm_falla_al_cambiar']})")
+        p = gate_pareado(filas, mercado=m)
+        if p["media"] is not None:
+            print(f"  GATE pareado por evento: media(A4−A3) = {p['media']} "
+                  f"IC95 [{p['lo']}, {p['hi']}] · {p['n']} casos en {p['n_eventos']} eventos"
+                  f" · {'significativo' if p['excluye_cero'] else 'no concluyente (IC cruza 0)'}")
+
+
+if __name__ == "__main__":
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    a2 = next((a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--a2=")), None)
+    if a2 is None and "--a2" in sys.argv:  # forma "--a2 ruta"
+        i = sys.argv.index("--a2")
+        a2 = sys.argv[i + 1] if i + 1 < len(sys.argv) else None
+        args = [a for a in args if a != a2]
+    if not args:
+        print(__doc__)
+        sys.exit(1)
+    raw = args[1] if len(args) > 1 else None
+    imprimir(cargar(args[0], raw, a2))
 ```
 
 ## engine/calibration/ablacion_arquetipos.py
@@ -5638,6 +6779,179 @@ if __name__ == "__main__":
     imprimir(analizar(ruta))
 ```
 
+## engine/calibration/acierto_por_arquetipo.py
+```python
+"""Fase 2 (groundwork) — Acierto direccional de CADA arquetipo, sin fuga.
+
+¿Qué voces de verdad predicen y cuáles son adorno (o estorban)? Para cada
+arquetipo mide cuántas veces la DIRECCIÓN de su señal coincidió con el movimiento
+POSTERIOR a la noticia (leak-free), sobre los casos históricos guardados. Es la
+materia prima de la "confianza histórica por arquetipo" (confianza efectiva de la
+Fase 2) y del "qué arquetipos aportan" (Fase 3).
+
+No usa IA nueva: reutiliza `senales_arquetipo` ya guardado y un mapa de resultados
+sin fuga (de `contaminacion_temporal`/`remedir_sin_fuga`). Núcleo puro y testeable.
+"""
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import _sg
+from contenido.backtest import _mercado_de_caso
+
+ARQS = ["institucional_frio", "quant_esceptico", "fomo_evangelista", "doomer",
+        "contrarian_sabio", "macro_trader", "influencer_optimista", "value_paciente",
+        "doomer_selectivo"]
+
+
+def mapa_resultados(filas):
+    """(simbolo, fecha) -> pct_corr, desde las filas re-medidas sin fuga."""
+    return {(f["simbolo"], f["fecha"]): f["pct_corr"] for f in filas
+            if f.get("simbolo") and f.get("pct_corr") is not None}
+
+
+def acierto_por_arquetipo(casos, pcmap, mercado=None, arqs=ARQS, zona=0.3, corte=0.0):
+    """Para cada arquetipo: {acierto%, n} de la dirección de su señal vs el
+    movimiento sin fuga, sobre casos direccionables (|mov| ≥ zona) donde el
+    arquetipo emitió |señal| ≥ corte (y ≠ 0). `mercado` filtra (p.ej. 'indice')."""
+    tot = {a: [0, 0] for a in arqs}
+    for c in casos:
+        rr = c.get("reaccion_real") or {}
+        sim = rr.get("simbolo") or (c.get("simbolos") or "").split(",")[0]
+        pc = pcmap.get((sim, rr.get("fecha_base")))
+        if pc is None or abs(pc) < zona:
+            continue
+        if mercado and _mercado_de_caso({"simbolos": c.get("simbolos"),
+                                         "mercado": c.get("mercado")}) != mercado:
+            continue
+        sa = c.get("senales_arquetipo") or {}
+        for a in arqs:
+            s = (sa.get(a) or {}).get("senal_media", 0)
+            if a in sa and s != 0 and abs(s) >= corte:
+                tot[a][1] += 1
+                if _sg(s) == _sg(pc):
+                    tot[a][0] += 1
+    out = {}
+    for a in arqs:
+        ok, n = tot[a]
+        out[a] = {"acierto": round(100 * ok / n, 1) if n else None, "n": n}
+    return out
+
+
+def imprimir(res_todas, res_fuerte):
+    print(f"\n{'arquetipo':22}{'acierto%':>10}{'n':>6}   {'|señal|≥0.3':>12}{'n':>6}")
+    for a in ARQS:
+        r, rf = res_todas[a], res_fuerte[a]
+        print(f"{a:22}{str(r['acierto']):>10}{r['n']:>6}   {str(rf['acierto']):>12}{rf['n']:>6}")
+
+
+def main(calibracion, sinfuga):
+    cal = json.load(open(calibracion))
+    casos = [c for c in cal.get("casos", cal) if c.get("origen") == "historico"]
+    pcmap = mapa_resultados(json.load(open(sinfuga)))
+    print(f"casos históricos: {len(casos)} | resultados sin fuga: {len(pcmap)}")
+    print("\n=== APORTE POR ARQUETIPO — ÍNDICE (acierto direccional, sin fuga) ===")
+    imprimir(acierto_por_arquetipo(casos, pcmap, "indice", corte=0.0),
+             acierto_por_arquetipo(casos, pcmap, "indice", corte=0.3))
+
+
+if __name__ == "__main__":
+    a = sys.argv[1] if len(sys.argv) > 1 else "calibracion.json"
+    b = sys.argv[2] if len(sys.argv) > 2 else "calibracion.json.con_fecha.json"
+    main(a, b)
+```
+
+## engine/calibration/baselines.py
+```python
+"""Fase 3/4 (preview) — ¿El enjambre le gana a un baseline razonable?
+
+La pregunta central de la auditoría: un 63% suelto no dice nada si un modelo tonto
+también acierta 63%. Aquí comparamos, fuera de muestra y con el mismo resultado SIN
+FUGA, la señal del enjambre contra baselines honestos:
+
+- **mayoría:** predecir siempre la dirección más común del TRAIN (el piso a batir).
+- **momentum:** predecir que el movimiento PREVIO a la noticia continúa.
+- **señal del enjambre:** la dirección de la señal ponderada de los líderes.
+- **precio simulado:** la dirección del precio que produce el ABM (separar A3 vs A4).
+
+Núcleo puro y testeable; la recolección de datos (Yahoo) vive aparte.
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import _sg
+
+
+def acc_regla(filas, pred_fn, zona=0.3):
+    """(acierto%, n_opina, n_direccionable) de una regla sobre casos con
+    movimiento |pct_corr| ≥ zona. `pred_fn(fila)` devuelve un número cuyo SIGNO es
+    la predicción (0 = la regla se abstiene en ese caso)."""
+    dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
+    usables = [f for f in dire if pred_fn(f) not in (0, None)]
+    if not usables:
+        return (None, 0, len(dire))
+    ok = sum(1 for f in usables if _sg(pred_fn(f)) == _sg(f["pct_corr"]))
+    return (round(100 * ok / len(usables), 1), len(usables), len(dire))
+
+
+def regla_mayoria(train, zona=0.3):
+    """Devuelve una regla que predice SIEMPRE la dirección mayoritaria del train
+    (el predictor constante óptimo: el piso honesto a batir)."""
+    dire = [f for f in train if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
+    subas = sum(1 for f in dire if f["pct_corr"] > 0)
+    bajas = len(dire) - subas
+    signo = 1 if subas >= bajas else -1
+    return lambda f: signo
+
+
+def regla_momentum(f):
+    """Predice que el movimiento PREVIO a la noticia continúa."""
+    return f.get("mom_prev", 0)
+
+
+def regla_senal(f):
+    return f.get("senal", 0)
+
+
+def regla_precio(f):
+    return f.get("direccion_pct", 0)
+
+
+def comparar(train, test, zona=0.3):
+    """Compara en TEST (fuera de muestra) los baselines y el enjambre."""
+    reglas = {
+        "mayoria": regla_mayoria(train, zona),
+        "momentum": regla_momentum,
+        "senal_enjambre": regla_senal,
+        "precio_simulado": regla_precio,
+    }
+    return {nombre: acc_regla(test, fn, zona) for nombre, fn in reglas.items()}
+
+
+def imprimir(res, titulo=""):
+    print(f"\n=== {titulo} — acierto fuera de muestra (sin fuga) ===")
+    print(f"{'regla':18}{'acierto%':>10}{'n_opina':>9}{'n_dir':>8}")
+    for nombre in ("mayoria", "momentum", "senal_enjambre", "precio_simulado"):
+        a, nop, ndir = res[nombre]
+        print(f"{nombre:18}{str(a):>10}{nop:>9}{ndir:>8}")
+
+
+def main(cache):
+    import json
+    filas = [f for f in json.load(open(cache)) if f.get("mercado") == "indice"]
+    filas.sort(key=lambda x: x["fecha"])
+    corte = int(len(filas) * 0.7)
+    train, test = filas[:corte], filas[corte:]
+    print(f"índice: {len(filas)} casos | train {len(train)} test {len(test)}")
+    imprimir(comparar(train, test), "ÍNDICE")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1] if len(sys.argv) > 1 else "indice_baselines.json")
+```
+
 ## engine/calibration/benchmark_motor.py
 ```python
 """Benchmark REPRODUCIBLE del motor (Fase 3, paso 1 de la auditoría).
@@ -5789,7 +7103,10 @@ def evaluar(filas, frac_prueba=0.3):
     s_te = [_prob(d) for _, d, _ in te]; y_te = [y for _, _, y in te]
     platt = cal.ajustar_calibrador(s_tr, y_tr, "platt")
     iso = cal.ajustar_calibrador(s_tr, y_tr, "isotonic")
-    base = cal.brier([cal.tasa_base(y_te)] * len(te), y_te)
+    # Baseline HONESTO (auditoría predictiva P5): la tasa base del predictor
+    # constante se estima con y_tr (lo conocido ANTES de predecir el test), no con
+    # y_te. Usar y_te dejaba que el baseline "viera" el balance de clases del test.
+    base = cal.brier([cal.tasa_base(y_tr)] * len(te), y_te)
     b_platt = cal.brier(platt.predict(s_te), y_te)
     b_iso = cal.brier(iso.predict(s_te), y_te)
     return {
@@ -5814,6 +7131,218 @@ def main(ruta):
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "datos/calibracion.json")
+```
+
+## engine/calibration/confianza_efectiva.py
+```python
+"""Fase 2 — ¿Reponderar por acierto histórico mejora la DIRECCIÓN? (resultado: no)
+
+Prueba fuera de muestra la "confianza efectiva" que proponía la auditoría: en vez
+de ponderar el consenso por la confianza que DECLARA cada LLM, ponderar por el
+acierto HISTÓRICO de cada arquetipo. Se estima el peso en TRAIN (casos viejos) y
+se evalúa en TEST (casos nuevos), comparando contra la ponderada actual y el
+promedio simple.
+
+Hallazgo (índice, 2026-11-18): las tres formas dan el MISMO acierto direccional,
+porque el SIGNO del agregado lo fija la mayoría y no se voltea al reponderar
+(0/37 casos cambian de signo, aun quitando al doomer). Para la DIRECCIÓN, el
+esquema de agregación es irrelevante; el lastre está en los insumos, no en los
+pesos. (Podría importar para la CALIBRACIÓN de probabilidad / Brier, no medido
+aquí.) Núcleo puro y testeable.
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import _sg
+
+CONTRARIANS = {"quant_esceptico", "contrarian_sabio"}
+
+
+def _dire(casos, zona=0.3):
+    return [c for c in casos if abs(c["pc"]) >= zona]
+
+
+def pesos_historicos(train, arqs, zona=0.3):
+    """Peso por arquetipo = max(0, acierto_train - 0.5): premia solo a los que
+    superan el azar en la dirección (el doomer, bajo 50%, queda en 0)."""
+    pesos = {}
+    for a in arqs:
+        ok = n = 0
+        for c in _dire(train, zona):
+            s = c["sen"].get(a, 0)
+            if s != 0:
+                n += 1
+                ok += (_sg(s) == _sg(c["pc"]))
+        acc = ok / n if n else 0.5
+        pesos[a] = max(0.0, acc - 0.5)
+    return pesos
+
+
+def _consenso(caso, pesos):
+    num = den = 0.0
+    for a, s in caso["sen"].items():
+        w = pesos.get(a, 0)
+        num += s * w
+        den += w
+    return num / den if den else 0.0
+
+
+def pond_actual(caso):
+    """La ponderada de producción: contrarians ×0.3, el resto ×1."""
+    num = den = 0.0
+    for a, s in caso["sen"].items():
+        w = 0.3 if a in CONTRARIANS else 1.0
+        num += s * w
+        den += w
+    return num / den if den else 0.0
+
+
+def flat(caso):
+    v = list(caso["sen"].values())
+    return sum(v) / len(v) if v else 0.0
+
+
+def acierto(casos, fn, zona=0.3):
+    d = _dire(casos, zona)
+    if not d:
+        return (None, 0)
+    ok = sum(1 for c in d if _sg(fn(c)) == _sg(c["pc"]))
+    return (round(100 * ok / len(d), 1), len(d))
+
+
+def comparar(train, test, arqs, zona=0.3):
+    """Compara en TEST: flat vs ponderada actual vs efectiva (peso histórico de
+    TRAIN). Devuelve acierto de cada una y en cuántos casos la efectiva cambia el
+    signo respecto de la ponderada."""
+    w = pesos_historicos(train, arqs, zona)
+    d = _dire(test, zona)
+    cambios = sum(1 for c in d if _sg(_consenso(c, w)) != _sg(pond_actual(c)))
+    return {
+        "n_test_dir": len(d),
+        "flat": acierto(test, flat, zona),
+        "ponderada_actual": acierto(test, pond_actual, zona),
+        "efectiva": acierto(test, lambda c: _consenso(c, w), zona),
+        "cambios_de_signo": cambios,
+        "pesos": {a: round(w[a], 3) for a in arqs},
+    }
+```
+
+## engine/calibration/contaminacion_temporal.py
+```python
+"""Fase 0 — Contaminación temporal por memoria del LLM.
+
+Pregunta honesta: ¿cuánto del acierto de la señal en ÍNDICE es señal real y
+cuánto es que el modelo RECUERDA el desenlace de noticias viejas (en su corte de
+conocimiento)? Las noticias RECIENTES el modelo casi no pudo memorizarlas; las
+VIEJAS sí. Si el acierto NO decae en las recientes, la señal es real. Si las
+viejas aciertan mucho más, parte era memoria.
+
+No usa IA nueva: reutiliza las señales ya guardadas (`senales_arquetipo`) y
+re-mide el resultado SIN FUGA con Yahoo (`remedir_sin_fuga`). La recolección vive
+en `recolectar_con_fecha`; el análisis (particionar por era, acierto por bloque)
+es puro y testeable sin red.
+
+Uso:
+    python3 engine/calibration/contaminacion_temporal.py ruta/al/calibracion.json
+"""
+import json
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import obtener_barras, pct_sin_fuga, _pond, _sg
+from contenido.backtest import _mercado_de_caso
+
+
+def recolectar_con_fecha(ruta, fetch=obtener_barras, pausa=0.02, cache=None):
+    """Filas históricas re-medidas SIN FUGA, conservando la fecha del titular.
+
+    Cada fila: {fecha, anio, mercado, direccion_pct, senal, pct_corr}. `fetch` es
+    aislable en tests; `cache` (ruta) evita re-consultar Yahoo si ya existe."""
+    if cache and Path(cache).exists():
+        return json.load(open(cache))
+    datos = json.load(open(ruta))
+    casos = [c for c in datos.get("casos", datos) if c.get("origen") == "historico"]
+    filas = []
+    for c in casos:
+        rr = c["reaccion_real"]
+        sim = rr.get("simbolo") or (c.get("simbolos") or "").split(",")[0]
+        fb, rue = rr.get("fecha_base"), rr.get("ruedas", 2)
+        if not sim or not fb:
+            continue
+        pc = pct_sin_fuga(fetch(sim, fb), fb, rue)
+        if pc is None:
+            continue
+        m = _mercado_de_caso({"simbolos": c.get("simbolos"), "mercado": c.get("mercado")})
+        filas.append({"fecha": fb, "anio": int(fb[:4]), "mercado": m, "simbolo": sim,
+                      "direccion_pct": c.get("direccion_pct"),
+                      "senal": _pond(c.get("senales_arquetipo") or {}),
+                      "pct_corr": pc})
+        if pausa:
+            time.sleep(pausa)
+    if cache:
+        try:
+            json.dump(filas, open(cache, "w"))
+        except OSError:
+            pass
+    return filas
+
+
+def acc_senal(filas, zona=0.3, corte_senal=0.0):
+    """(acierto%, n) de la DIRECCIÓN de la señal sin fuga, sobre casos
+    direccionables (|movimiento| ≥ zona) con |señal| ≥ corte_senal."""
+    dire = [f for f in filas if f.get("pct_corr") is not None
+            and abs(f["pct_corr"]) >= zona and abs(f["senal"]) >= corte_senal]
+    if not dire:
+        return (None, 0)
+    ok = sum(1 for f in dire if _sg(f["senal"]) == _sg(f["pct_corr"]))
+    return (round(100 * ok / len(dire), 1), len(dire))
+
+
+def particionar_por_era(filas, viejas_hasta=2023, recientes_desde=2025):
+    """Separa en viejas (año ≤ viejas_hasta), medio y recientes (≥ recientes_desde)."""
+    return {
+        "viejas": [f for f in filas if f["anio"] <= viejas_hasta],
+        "medio": [f for f in filas if viejas_hasta < f["anio"] < recientes_desde],
+        "recientes": [f for f in filas if f["anio"] >= recientes_desde],
+    }
+
+
+def resumen_contaminacion(filas, mercado=None, corte_senal=0.3):
+    """Acierto de la señal por era (viejas/medio/recientes). Si las viejas
+    aciertan MUCHO más que las recientes, hay señal de contaminación por memoria."""
+    sub = filas if mercado is None else [f for f in filas if f["mercado"] == mercado]
+    eras = particionar_por_era(sub)
+    out = {"mercado": mercado or "TODOS", "n": len(sub)}
+    for era, fs in eras.items():
+        a_all, n_all = acc_senal(fs)
+        a_str, n_str = acc_senal(fs, corte_senal=corte_senal)
+        out[era] = {"n": len(fs), "acierto_senal": a_all, "n_dir": n_all,
+                    "acierto_fuerte": a_str, "n_fuerte": n_str}
+    return out
+
+
+def imprimir(res):
+    print(f"\n=== {res['mercado']} (n={res['n']}) — acierto de la SEÑAL por era ===")
+    print(f"{'era':12}{'n':>6}{'señal %':>10}{'n_dir':>7}{'|señal|≥0.3 %':>16}{'n':>6}")
+    for era in ("viejas", "medio", "recientes"):
+        d = res[era]
+        print(f"{era:12}{d['n']:>6}{str(d['acierto_senal']):>10}{d['n_dir']:>7}"
+              f"{str(d['acierto_fuerte']):>16}{d['n_fuerte']:>6}")
+
+
+def main(ruta):
+    cache = ruta + ".con_fecha.json"
+    filas = recolectar_con_fecha(ruta, cache=cache)
+    print(f"filas históricas re-medidas sin fuga (con fecha): {len(filas)}")
+    imprimir(resumen_contaminacion(filas))              # todos los mercados
+    imprimir(resumen_contaminacion(filas, "indice"))    # donde vive la señal
+
+
+if __name__ == "__main__":
+    main(sys.argv[1] if len(sys.argv) > 1 else "calibracion.json")
 ```
 
 ## engine/calibration/data_loader.py
@@ -6184,6 +7713,334 @@ def imprimir(rep: dict) -> None:
 
 if __name__ == "__main__":
     imprimir(reporte(sys.argv[1] if len(sys.argv) > 1 else "calibracion.json"))
+```
+
+## engine/calibration/holdout.py
+```python
+"""Fase 0.4 — Holdout congelado con manifiesto y hash.
+
+El "juez" protegido: un conjunto final de evaluación que se separa por TIEMPO
+(los casos más nuevos), se CONGELA con un hash SHA-256 de su membresía y sus
+etiquetas, y nunca se usa para ajustar nada. Reglas (de la auditoría v3):
+
+- Partición temporal por evento; el holdout son los casos más recientes.
+- Añadir datos nuevos NO cambia la membresía congelada (se vuelve a verificar
+  contra el manifiesto, no se re-parte).
+- Si una etiqueta se revisa o un caso desaparece, el hash deja de coincidir →
+  salta la auditoría.
+- Embargo temporal: se purgan del desarrollo los casos demasiado cercanos al
+  corte (para no filtrar etiquetas que se solapan con el holdout).
+
+Puro y testeable (sin red).
+"""
+import hashlib
+import json
+from datetime import datetime, timezone
+
+ESQUEMA = "holdout-v1"
+
+
+class HoldoutInvalido(ValueError):
+    pass
+
+
+def _hash(pares) -> str:
+    """Hash estable de los pares (id, etiqueta) ya ordenados."""
+    crudo = json.dumps(pares, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(crudo.encode("utf-8")).hexdigest()
+
+
+def _dias(fa, fb):
+    return abs((datetime.fromisoformat(fa[:10]) - datetime.fromisoformat(fb[:10])).days)
+
+
+def construir_manifiesto(casos, *, pct_holdout=20, clave_id="id", clave_y="y",
+                         clave_fecha="fecha", embargo_dias=0):
+    """Separa el holdout (los `pct_holdout`% más recientes) y lo CONGELA.
+
+    Devuelve el manifiesto con la lista de ids del holdout y su hash. La partición
+    es temporal; los casos que comparten la fecha de corte caen enteros en el
+    holdout (no se parte un día). El embargo purga del desarrollo los casos dentro
+    de `embargo_dias` antes del corte."""
+    if not casos:
+        raise HoldoutInvalido("no hay casos")
+    ordenados = sorted(casos, key=lambda c: c[clave_fecha])
+    n_hold = max(1, round(len(ordenados) * pct_holdout / 100))
+    corte_idx = len(ordenados) - n_hold
+    fecha_corte = ordenados[corte_idx][clave_fecha][:10]
+    holdout = [c for c in ordenados if c[clave_fecha][:10] >= fecha_corte]
+    desarrollo = [c for c in ordenados if c[clave_fecha][:10] < fecha_corte]
+    if embargo_dias:
+        desarrollo = [c for c in desarrollo
+                      if _dias(c[clave_fecha], fecha_corte) > embargo_dias]
+    pares = sorted((str(c[clave_id]), c[clave_y]) for c in holdout)
+    return {
+        "esquema": ESQUEMA,
+        "creado_iso": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "pct_holdout": pct_holdout, "fecha_corte": fecha_corte,
+        "embargo_dias": embargo_dias,
+        "n_total": len(casos), "n_desarrollo": len(desarrollo), "n_holdout": len(holdout),
+        "holdout_ids": [p[0] for p in pares],
+        "hash": _hash(pares),
+    }
+
+
+def verificar_manifiesto(manifiesto, casos, *, clave_id="id", clave_y="y"):
+    """Comprueba que el holdout congelado sigue intacto en `casos`.
+
+    Devuelve {ok, hash_coincide, faltantes, revisados}. `ok` es True solo si cada
+    id del holdout sigue presente con la MISMA etiqueta (mismo hash). Detecta
+    casos que desaparecieron o cuya etiqueta se revisó."""
+    por_id = {str(c[clave_id]): c[clave_y] for c in casos}
+    ids = manifiesto["holdout_ids"]
+    faltantes = [i for i in ids if i not in por_id]
+    presentes = sorted((i, por_id[i]) for i in ids if i in por_id)
+    hash_actual = _hash(presentes)
+    coincide = (hash_actual == manifiesto["hash"]) and not faltantes
+    return {"ok": coincide, "hash_coincide": hash_actual == manifiesto["hash"],
+            "faltantes": faltantes, "n_holdout": len(ids),
+            "n_presentes": len(presentes)}
+
+
+def particionar(casos, manifiesto, *, clave_id="id", clave_fecha="fecha"):
+    """Devuelve (desarrollo, holdout) usando la membresía CONGELADA del manifiesto.
+
+    El holdout son exactamente los ids del manifiesto. El desarrollo EXCLUYE las
+    filas posteriores al corte que NO están en el holdout (llegaron después de
+    congelarlo): entrenar un examen con datos más nuevos que su propio test es fuga
+    temporal (auditoría v4). Esas filas quedan fuera de ambos (cohorte futura), no
+    en desarrollo."""
+    ids_hold = set(manifiesto["holdout_ids"])
+    corte = manifiesto.get("fecha_corte")
+    holdout = [c for c in casos if str(c[clave_id]) in ids_hold]
+    desarrollo = []
+    for c in casos:
+        if str(c[clave_id]) in ids_hold:
+            continue
+        if corte and str(c.get(clave_fecha, ""))[:10] >= corte:
+            continue  # posterior al corte y NO en el holdout → cohorte futura, fuera
+        desarrollo.append(c)
+    return desarrollo, holdout
+```
+
+## engine/calibration/intervalos.py
+```python
+"""Fase 0 — Intervalos de confianza y bancos por magnitud.
+
+Dos piezas de la Fase 0 ("la verdad estadística"):
+
+1. **Intervalos de confianza por bootstrap AGRUPADO POR ACTIVO.** Un acierto de
+   "62%" sin barra de error no dice si es señal o ruido. El bootstrap re-muestrea
+   los ACTIVOS (no los casos sueltos), porque varias noticias del mismo símbolo
+   están correlacionadas y no son observaciones independientes (lo pidió la
+   auditoría predictiva). Devuelve (punto, lo, hi).
+
+2. **Bancos por magnitud del movimiento.** El cosechador eligió días de gran
+   movimiento; esto separa el acierto por tamaño del movimiento POSTERIOR a la
+   noticia (chico/medio/grande) para ver si el acierto se infla en los extremos.
+
+Puro: opera sobre las filas re-medidas sin fuga (`contaminacion_temporal`),
+sin red ni IA. Testeable con datos sintéticos.
+"""
+import random
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import _sg
+
+
+def items_acierto(filas, por_senal=True, zona=0.3, corte_senal=0.0):
+    """[(acierto 0/1, grupo)] para casos direccionables. grupo = símbolo (para
+    el bootstrap agrupado). `por_senal`: dirección de la señal (si no, del precio)."""
+    out = []
+    for f in filas:
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona or abs(f["senal"]) < corte_senal:
+            continue
+        pred = f["senal"] if por_senal else f["direccion_pct"]
+        ok = 1 if _sg(pred) == _sg(pc) else 0
+        out.append((ok, f.get("simbolo", f.get("fecha", "?"))))
+    return out
+
+
+def bootstrap_ci(items, n_boot=3000, alpha=0.05, seed=42):
+    """IC del acierto por bootstrap AGRUPADO: re-muestrea los grupos (activos) con
+    reemplazo y junta todos sus casos. Devuelve punto, lo, hi (percentiles), n,
+    n_grupos. Si hay <2 grupos cae al bootstrap de casos (mejor que nada)."""
+    if not items:
+        return {"punto": None, "lo": None, "hi": None, "n": 0, "n_grupos": 0}
+    punto = round(100 * sum(a for a, _ in items) / len(items), 1)
+    por_grupo = {}
+    for ok, g in items:
+        por_grupo.setdefault(g, []).append(ok)
+    grupos = list(por_grupo.values())
+    rng = random.Random(seed)
+    muestras = []
+    fuente = grupos if len(grupos) >= 2 else [[x] for x, _ in items]
+    for _ in range(n_boot):
+        pool = []
+        for _ in range(len(fuente)):
+            pool.extend(rng.choice(fuente))
+        if pool:
+            muestras.append(sum(pool) / len(pool))
+    muestras.sort()
+    lo = round(100 * muestras[int((alpha / 2) * len(muestras))], 1)
+    hi = round(100 * muestras[int((1 - alpha / 2) * len(muestras)) - 1], 1)
+    return {"punto": punto, "lo": lo, "hi": hi, "n": len(items), "n_grupos": len(grupos)}
+
+
+def banco_magnitud(pct, chico=1.0, grande=3.0):
+    """Clasifica el movimiento POSTERIOR por tamaño: chico / medio / grande."""
+    a = abs(pct)
+    if a < chico:
+        return "chico"
+    if a < grande:
+        return "medio"
+    return "grande"
+
+
+def resumen_bancos(filas, por_senal=True, corte_senal=0.0, zona=0.3):
+    """Acierto con IC por banco de magnitud del movimiento posterior."""
+    bancos = {"chico": [], "medio": [], "grande": []}
+    for f in filas:
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona:
+            continue
+        bancos[banco_magnitud(pc)].append(f)
+    return {b: bootstrap_ci(items_acierto(fs, por_senal, zona, corte_senal))
+            for b, fs in bancos.items()}
+
+
+def _linea(nombre, ci):
+    p, lo, hi = ci["punto"], ci["lo"], ci["hi"]
+    rango = f"[{lo}–{hi}]" if p is not None else "—"
+    return f"{nombre:28}{str(p):>7} % {rango:>16}  (n={ci['n']}, activos={ci['n_grupos']})"
+
+
+def imprimir(filas):
+    indice = [f for f in filas if f["mercado"] == "indice"]
+    print("\n=== INTERVALOS DE CONFIANZA (95%, bootstrap agrupado por activo) ===")
+    print(_linea("TODOS — señal", bootstrap_ci(items_acierto(filas))))
+    print(_linea("ÍNDICE — señal", bootstrap_ci(items_acierto(indice))))
+    print(_linea("ÍNDICE — |señal|≥0.3", bootstrap_ci(items_acierto(indice, corte_senal=0.3))))
+    print("\n=== BANCOS POR MAGNITUD (ÍNDICE, señal) — ¿se infla en los extremos? ===")
+    for b, ci in resumen_bancos(indice).items():
+        print(_linea(f"movimiento {b}", ci))
+
+
+def main(cache):
+    import json
+    filas = json.load(open(cache))
+    print(f"filas: {len(filas)}")
+    imprimir(filas)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1] if len(sys.argv) > 1 else "calibracion.json.con_fecha.json")
+```
+
+## engine/calibration/intervalos_multiway.py
+```python
+"""Fase 0.5 — Bootstrap multiway (por evento, activo y período).
+
+El bootstrap por activo (intervalos.py) sube el peso de la dependencia entre
+noticias del mismo símbolo, pero NO la de cuatro ETFs reaccionando a la MISMA
+noticia (mismo día) ni la de bloques temporales (mismo régimen). Esta herramienta
+recalcula el intervalo re-muestreando por distintas unidades de dependencia y
+reporta todas, más la sensibilidad a excluir un instrumento. Si el intervalo se
+ensancha mucho al agrupar por fecha, la independencia era menor de lo que parecía.
+
+CAVEAT (auditoría v4): esto NO es un "bootstrap multiway" con garantía de cobertura.
+Es una heurística CONSERVADORA — el más ancho de tres intervalos de UNA dimensión
+(activo, evento, año) calculados por separado. Sirve como señal de robustez (si el
+IC se ensancha mucho al cambiar la agrupación, la independencia era menor de lo que
+parecía), pero para comparar A3 vs A4 el método correcto es la diferencia PAREADA
+por evento con cluster bootstrap (`ablacion.gate_pareado`), no esto.
+
+Puro y testeable (sin red).
+"""
+import random
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration.remedir_sin_fuga import _sg
+
+
+def items_multi(filas, por_senal=True, zona=0.3, corte_senal=0.0):
+    """[(acierto, claves)] para casos direccionables; claves = {simbolo, fecha, anio}."""
+    out = []
+    for f in filas:
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona or abs(f["senal"]) < corte_senal:
+            continue
+        pred = f["senal"] if por_senal else f.get("direccion_pct", 0)
+        ok = 1 if _sg(pred) == _sg(pc) else 0
+        fecha = str(f.get("fecha", ""))[:10]
+        out.append((ok, {"simbolo": f.get("simbolo"), "fecha": fecha,
+                         "anio": str(f.get("anio") or fecha[:4])}))
+    return out
+
+
+def _ci_por_clave(items, clave, n_boot=3000, alpha=0.05, seed=42):
+    """IC del acierto re-muestreando los CLÚSTERES definidos por `clave` (con
+    reemplazo) y juntando sus casos. Devuelve punto, lo, hi, n, n_grupos."""
+    if not items:
+        return {"punto": None, "lo": None, "hi": None, "n": 0, "n_grupos": 0}
+    punto = round(100 * sum(a for a, _ in items) / len(items), 1)
+    por_grupo = {}
+    for ok, claves in items:
+        por_grupo.setdefault(claves.get(clave), []).append(ok)
+    grupos = list(por_grupo.values())
+    rng = random.Random(seed)
+    fuente = grupos if len(grupos) >= 2 else [[x] for x, _ in items]
+    muestras = []
+    for _ in range(n_boot):
+        pool = []
+        for _ in range(len(fuente)):
+            pool.extend(rng.choice(fuente))
+        if pool:
+            muestras.append(sum(pool) / len(pool))
+    muestras.sort()
+    lo = round(100 * muestras[int((alpha / 2) * len(muestras))], 1)
+    hi = round(100 * muestras[int((1 - alpha / 2) * len(muestras)) - 1], 1)
+    return {"punto": punto, "lo": lo, "hi": hi, "n": len(items), "n_grupos": len(grupos)}
+
+
+def comparar_clusterings(filas, por_senal=True, zona=0.3, corte_senal=0.0, **kw):
+    """IC bajo distintas unidades de dependencia: por activo, por evento (fecha) y
+    por período (año). El más honesto es el más ANCHO."""
+    items = items_multi(filas, por_senal, zona, corte_senal)
+    return {clave: _ci_por_clave(items, clave, **kw)
+            for clave in ("simbolo", "fecha", "anio")}
+
+
+def sensibilidad_dejar_uno(filas, por_senal=True, zona=0.3, corte_senal=0.0):
+    """Acierto excluyendo cada instrumento, uno a la vez. Si el resultado depende
+    de un solo ETF, salta aquí."""
+    simbolos = sorted({f.get("simbolo") for f in filas if f.get("simbolo")})
+    out = {}
+    for s in simbolos:
+        sub = [f for f in filas if f.get("simbolo") != s]
+        items = items_multi(sub, por_senal, zona, corte_senal)
+        if items:
+            acc = round(100 * sum(a for a, _ in items) / len(items), 1)
+            out[f"sin {s}"] = {"acierto": acc, "n": len(items)}
+    return out
+
+
+def imprimir(filas, titulo=""):
+    print(f"\n=== {titulo} — IC 95% según la unidad de dependencia ===")
+    print(f"{'agrupado por':16}{'acierto%':>9}{'IC 95%':>16}{'n':>6}{'grupos':>8}")
+    res = comparar_clusterings(filas)
+    for clave in ("simbolo", "fecha", "anio"):
+        d = res[clave]
+        rango = f"[{d['lo']}–{d['hi']}]" if d["punto"] is not None else "—"
+        print(f"{clave:16}{str(d['punto']):>9}{rango:>16}{d['n']:>6}{d['n_grupos']:>8}")
+    print("\n  sensibilidad a excluir un instrumento:")
+    for k, v in sensibilidad_dejar_uno(filas).items():
+        print(f"    {k:14} acierto {v['acierto']}%  (n={v['n']})")
 ```
 
 ## engine/calibration/optimizar_freno.py
@@ -7151,6 +9008,148 @@ if __name__ == "__main__":
     imprimir_gating(gating_por_senal(filas))
     print("\n=== GATING solo ÍNDICE (donde hay señal real) ===")
     imprimir_gating(gating_por_senal([f for f in filas if f["mercado"] == "indice"]))
+```
+
+## engine/calibration/un_llm.py
+```python
+"""Fase 3 · A2 — un solo LLM NEUTRAL por titular (sin arquetipos ni ABM).
+
+Mide el escalón A2 de la ablación: ¿~110 cerebros con 8 personalidades le ganan a
+UNA sola lectura neutral del titular? Si A2 ≈ A3, el reparto de arquetipos no
+compra acierto direccional y es gasto evitable.
+
+Produce un JSON {titular: senal} que `ablacion.py --a2` consume. NO decide nada por
+sí solo; solo aporta el número de A2 a la escalera.
+
+Necesita la clave de Anthropic (variable de entorno `ANTHROPIC_API_KEY`); en la
+nube, el entorno la inyecta y una sesión nueva la toma. Respeta la regla cara de la
+biblia (§5): a `claude-sonnet-5` NO se le manda `temperature`/`top_p`/`top_k`.
+Cachea por titular: repetir una corrida no cuesta. La llamada a la API es
+inyectable (`obtener`) para poder testear el resto sin red.
+
+Uso:
+    python3 engine/calibration/un_llm.py cal.con_fecha.json cal.json [salida_a2.json]
+"""
+import asyncio
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from brains.cerebro import MODELO, _validar_respuesta
+
+CONCURRENCIA = 8
+MAX_TOKENS = 200
+
+# Prompt NEUTRAL: un analista sobrio, sin personalidad de arquetipo. Es el
+# contraste justo contra el enjambre (que suma 8 sesgos deliberados).
+SISTEMA = (
+    "Eres un analista de mercados financieros sobrio, neutral y sin sesgo. "
+    "Lees un titular y estimas su impacto direccional de CORTO PLAZO sobre el "
+    "instrumento o mercado al que se refiere. No das consejo de inversión; solo "
+    "estimas la reacción esperada del precio. Responde SOLO con JSON válido."
+)
+INSTRUCCION = (
+    'Responde EXACTAMENTE así, sin texto extra:\n'
+    '{"senal": <número en [-1,1], negativo=baja esperada, positivo=sube>, '
+    '"confianza": <número en [0,1]>, "frase": "<una línea en tu voz>"}'
+)
+
+
+def construir_mensajes(titular: str) -> list[dict]:
+    return [{"role": "user", "content": f"Titular: {titular}\n\n{INSTRUCCION}"}]
+
+
+async def _llamar_api(cliente, titular: str) -> str:
+    """Una llamada real a la API. Sin temperature (claude-sonnet-5 la rechaza)."""
+    resp = await asyncio.wait_for(
+        cliente.messages.create(
+            model=MODELO, max_tokens=MAX_TOKENS, system=SISTEMA,
+            messages=construir_mensajes(titular),
+        ),
+        timeout=30,
+    )
+    return resp.content[0].text
+
+
+async def senales_async(titulares, obtener, concurrencia=CONCURRENCIA, cache=None):
+    """{titular: senal} para cada titular nuevo (los de `cache` no se repiten).
+
+    `obtener(titular) -> texto` es async: la API real o un doble en tests."""
+    cache = dict(cache or {})
+    pendientes = [t for t in dict.fromkeys(titulares) if t not in cache]
+    sem = asyncio.Semaphore(concurrencia)
+
+    async def una(t):
+        async with sem:
+            try:
+                d = _validar_respuesta(await obtener(t))
+                if d is not None:
+                    cache[t] = round(max(-1.0, min(1.0, float(d["senal"]))), 4)
+            except Exception:
+                pass  # un titular que falla no cae la corrida; queda sin A2
+
+    await asyncio.gather(*(una(t) for t in pendientes))
+    return cache
+
+
+PARSER_V = "a2-parser-1"  # súbelo si cambia cómo se parsea/recorta la respuesta
+
+
+def _version_a2() -> str:
+    """Huella del contrato de A2: modelo + prompt + parser. Si cambia cualquiera, el
+    caché viejo NO se reutiliza (auditoría v4: no mezclar respuestas de contratos
+    distintos)."""
+    crudo = f"{MODELO}|{SISTEMA}|{INSTRUCCION}|{PARSER_V}"
+    return hashlib.sha256(crudo.encode("utf-8")).hexdigest()[:16]
+
+
+def _previo_valido(guardado, version) -> dict:
+    """Las señales reutilizables del caché: solo si la versión del contrato coincide.
+    Un formato viejo {titular: senal} o una versión distinta → {} (no se mezcla)."""
+    if isinstance(guardado, dict) and guardado.get("_version") == version:
+        return dict(guardado.get("senales", {}))
+    return {}
+
+
+def senales(titulares, ruta_cache):
+    """Envoltura síncrona: carga el caché VERSIONADO, consulta lo que falte con la
+    API real, lo guarda y devuelve {titular: senal}. Si la versión del contrato
+    (modelo/prompt/parser) no coincide con la guardada, el caché viejo se ignora."""
+    import anthropic
+    ruta = Path(ruta_cache)
+    version = _version_a2()
+    previo = _previo_valido(json.loads(ruta.read_text()), version) if ruta.exists() else {}
+    cliente = anthropic.AsyncAnthropic()
+    nuevo = asyncio.run(senales_async(
+        titulares, lambda t: _llamar_api(cliente, t), cache=previo))
+    ruta.write_text(json.dumps(
+        {"_version": version, "modelo": MODELO, "senales": nuevo},
+        ensure_ascii=False, indent=1))
+    return nuevo
+
+
+def titulares_de(filas) -> list[str]:
+    """Titulares únicos de las filas ya cargadas por ablacion.cargar(…, ruta_raw)."""
+    return list(dict.fromkeys(f["titular"] for f in filas if f.get("titular")))
+
+
+def main(con_fecha, raw, salida="a2_senales.json"):
+    from calibration import ablacion
+    filas = ablacion.cargar(con_fecha, raw)
+    titulares = titulares_de(filas)
+    print(f"{len(titulares)} titulares únicos → consultando A2 (1 LLM neutral)…")
+    mapa = senales(titulares, salida)
+    print(f"A2 listo: {len(mapa)} señales en {salida}")
+    print(f"Ahora: python3 engine/calibration/ablacion.py {con_fecha} {raw} --a2 {salida}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print(__doc__)
+        sys.exit(1)
+    main(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "a2_senales.json")
 ```
 
 ## engine/calibration/validacion_base.py
@@ -12171,6 +14170,38 @@ CREATE TABLE IF NOT EXISTS eventos_correo (
   ts         TEXT NOT NULL,
   UNIQUE(fecha_ed, email, tipo)
 );
+CREATE TABLE IF NOT EXISTS predicciones (
+  -- REGISTRO PROSPECTIVO (Fase 7-mínima): cada predicción se guarda ANTES de
+  -- conocer el resultado. Es INMUTABLE: los campos de la predicción nunca
+  -- cambian; solo se rellenan los de resolución, una vez, cuando llega el
+  -- resultado futuro. Datos inmunes a contaminación y sesgo de selección.
+  id             TEXT PRIMARY KEY,   -- sha256(simbolo|as_of|horizonte|titular)
+  sim_id         TEXT,               -- simulación que la originó (si aplica)
+  creada_iso     TEXT NOT NULL,      -- cuándo se registró (≈ as_of)
+  titular        TEXT NOT NULL,
+  simbolo        TEXT NOT NULL,
+  mercado        TEXT,
+  as_of_iso      TEXT NOT NULL,      -- info disponible hasta este instante
+  horizonte      INTEGER NOT NULL,   -- ruedas hasta resolver
+  direccion      TEXT NOT NULL,      -- alza/baja/neutra (lo que predijo)
+  probabilidad   REAL,               -- prob. calibrada de subida (si hay)
+  consenso       REAL,               -- señal media ponderada
+  conviccion     TEXT,               -- fuerte/moderada/debil
+  fiable         INTEGER DEFAULT 0,  -- 1 si el gating la marcó fiable
+  abstenido      INTEGER DEFAULT 0,  -- 1 si el sistema decidió no predecir
+  versiones_json TEXT,               -- {modelo, prompt, codigo, agregador, evidencia}
+  fuentes_json   TEXT,               -- {api, cache, fallback, ...} por simulación
+  -- resolución (se rellena una sola vez, después):
+  resuelto       INTEGER DEFAULT 0,
+  pct_real       REAL,               -- movimiento real sin fuga (%)
+  direccion_real TEXT,
+  acierto        INTEGER,            -- 1/0; NULL si neutra o abstenido
+  resuelto_iso   TEXT,
+  evaluador_ver  TEXT,
+  -- Fase 1 (modo sombra): la evidencia point-in-time con que se hizo la predicción
+  evidencia_hash TEXT,
+  evidencia_txt  TEXT
+);
 """
 
 
@@ -12217,6 +14248,9 @@ def conectar(ruta: str | Path | None = None) -> sqlite3.Connection:
             ("briefs", "suscriptores", "INTEGER DEFAULT 0"),
             ("briefs", "generada_iso", "TEXT"),
             ("briefs", "enviada_iso", "TEXT"),
+            # Fase 1 (modo sombra): evidencia point-in-time por predicción
+            ("predicciones", "evidencia_hash", "TEXT"),
+            ("predicciones", "evidencia_txt", "TEXT"),
         ]:
             try:
                 conexion.execute(f"ALTER TABLE {tabla} ADD COLUMN {columna} {tipo}")
@@ -12989,6 +15023,150 @@ def estadisticas(conexion, dias: int = 30, ediciones_correo: int = 14) -> dict:
             "por_edicion": correo,
         },
     }
+
+
+# ---------- registro prospectivo de predicciones (Fase 7-mínima) ----------
+
+def id_prediccion(simbolo: str, as_of_iso: str, horizonte: int, titular: str) -> str:
+    """Id estable de una predicción (una por símbolo+as_of+horizonte+titular)."""
+    crudo = f"{simbolo}|{as_of_iso}|{horizonte}|{titular}"
+    return hashlib.sha256(crudo.encode()).hexdigest()[:16]
+
+
+def registrar_prediccion(
+    conexion, *, titular: str, simbolo: str, horizonte: int, direccion: str,
+    as_of_iso: str | None = None, mercado: str | None = None, sim_id: str | None = None,
+    probabilidad: float | None = None, consenso: float | None = None,
+    conviccion: str | None = None, fiable: bool = False, abstenido: bool = False,
+    versiones: dict | None = None, fuentes: dict | None = None,
+    evidencia_hash: str | None = None, evidencia_txt: str | None = None,
+) -> str:
+    """Registra una predicción ANTES de conocer el resultado (inmutable).
+
+    Devuelve su id. Si ya existe (mismo símbolo+as_of+horizonte+titular), NO la
+    sobrescribe: la primera predicción manda (así el registro no se puede
+    "mejorar" a posteriori). Devuelve el id existente. `evidencia_*` guarda, en
+    modo sombra, el contexto point-in-time con que se hizo (no cambia la predicción)."""
+    as_of = as_of_iso or ahora_iso()
+    pid = id_prediccion(simbolo, as_of, horizonte, titular)
+    conexion.execute(
+        """INSERT OR IGNORE INTO predicciones
+           (id, sim_id, creada_iso, titular, simbolo, mercado, as_of_iso, horizonte,
+            direccion, probabilidad, consenso, conviccion, fiable, abstenido,
+            versiones_json, fuentes_json, evidencia_hash, evidencia_txt)
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+        (pid, sim_id, ahora_iso(), titular, simbolo, mercado, as_of, horizonte,
+         direccion, probabilidad, consenso, conviccion, 1 if fiable else 0,
+         1 if abstenido else 0,
+         json.dumps(versiones or {}, ensure_ascii=False),
+         json.dumps(fuentes or {}, ensure_ascii=False),
+         evidencia_hash, evidencia_txt),
+    )
+    conexion.commit()
+    return pid
+
+
+def resolver_prediccion(conexion, pid: str, pct_real: float, *,
+                        zona: float = 0.3, evaluador_ver: str = "v1") -> bool:
+    """Rellena el resultado de una predicción UNA sola vez. `pct_real` es el
+    movimiento real sin fuga (%). Calcula dirección real y acierto (NULL si el
+    movimiento es neutro —|pct|<zona— o si la predicción fue abstención).
+    Devuelve True si resolvió, False si no existía o ya estaba resuelta."""
+    fila = conexion.execute(
+        "SELECT direccion, abstenido, resuelto FROM predicciones WHERE id = ?", (pid,)
+    ).fetchone()
+    if fila is None or fila["resuelto"]:
+        return False
+    if pct_real > zona:
+        dir_real = "alza"
+    elif pct_real < -zona:
+        dir_real = "baja"
+    else:
+        dir_real = "neutra"
+    if fila["abstenido"] or dir_real == "neutra":
+        acierto = None  # no se puntúa
+    else:
+        acierto = 1 if fila["direccion"] == dir_real else 0
+    # Actualización condicional ATÓMICA (auditoría v3 P1-10): `WHERE resuelto = 0`
+    # garantiza que si dos procesos corren a la vez, solo uno resuelve (el otro
+    # toca 0 filas → rowcount 0 → False). Antes el SELECT+UPDATE no era atómico.
+    cur = conexion.execute(
+        """UPDATE predicciones SET resuelto = 1, pct_real = ?, direccion_real = ?,
+           acierto = ?, resuelto_iso = ?, evaluador_ver = ? WHERE id = ? AND resuelto = 0""",
+        (pct_real, dir_real, acierto, ahora_iso(), evaluador_ver, pid),
+    )
+    conexion.commit()
+    return cur.rowcount > 0
+
+
+def predicciones_por_resolver(conexion, hasta_iso: str | None = None) -> list[dict]:
+    """Predicciones aún sin resultado cuyo as_of ya quedó atrás (listas para
+    resolver). `hasta_iso`: solo las con as_of anterior a esa fecha (por defecto,
+    todas las no resueltas)."""
+    if hasta_iso:
+        filas = conexion.execute(
+            "SELECT * FROM predicciones WHERE resuelto = 0 AND as_of_iso <= ? ORDER BY as_of_iso",
+            (hasta_iso,)).fetchall()
+    else:
+        filas = conexion.execute(
+            "SELECT * FROM predicciones WHERE resuelto = 0 ORDER BY as_of_iso").fetchall()
+    return [dict(f) for f in filas]
+
+
+def listar_predicciones(conexion, *, resueltas: bool | None = None,
+                        mercado: str | None = None, limite: int = 500) -> list[dict]:
+    cond, args = [], []
+    if resueltas is not None:
+        cond.append("resuelto = ?"); args.append(1 if resueltas else 0)
+    if mercado:
+        cond.append("mercado = ?"); args.append(mercado)
+    where = (" WHERE " + " AND ".join(cond)) if cond else ""
+    args.append(limite)
+    filas = conexion.execute(
+        f"SELECT * FROM predicciones{where} ORDER BY creada_iso DESC LIMIT ?", args
+    ).fetchall()
+    return [dict(f) for f in filas]
+
+
+def cobertura_evidencia(conexion) -> dict:
+    """Cuántas predicciones traen evidencia point-in-time (Fase 1, modo sombra) y
+    una muestra de la más reciente. Sirve para verificar que la evidencia se está
+    recolectando en producción."""
+    total = conexion.execute("SELECT COUNT(*) FROM predicciones").fetchone()[0]
+    con_ev = conexion.execute(
+        "SELECT COUNT(*) FROM predicciones WHERE evidencia_hash IS NOT NULL").fetchone()[0]
+    fila = conexion.execute(
+        "SELECT simbolo, as_of_iso, evidencia_hash, evidencia_txt FROM predicciones "
+        "WHERE evidencia_txt IS NOT NULL ORDER BY creada_iso DESC LIMIT 1").fetchone()
+    muestra = dict(fila) if fila else None
+    return {"total": total, "con_evidencia": con_ev,
+            "cobertura_pct": round(100 * con_ev / total, 1) if total else None,
+            "muestra": muestra}
+
+
+def resumen_predicciones(conexion, mercado: str | None = None) -> dict:
+    """Tablero mínimo: cobertura y acierto sobre las predicciones RESUELTAS (y no
+    abstenidas, movimiento no neutro). Honesto: reporta n junto a cada cifra.
+
+    Cuenta con SQL sobre el UNIVERSO COMPLETO (auditoría v3 P1-09): usar una lista
+    truncada (LIMIT) daba denominadores falsos cuando hay muchas predicciones."""
+    filtro = " WHERE mercado = ?" if mercado else ""
+    args = (mercado,) if mercado else ()
+
+    def _uno(sql):
+        return conexion.execute(sql, args).fetchone()[0]
+
+    total = _uno(f"SELECT COUNT(*) FROM predicciones{filtro}")
+    base = f"SELECT COUNT(*) FROM predicciones{filtro}{' AND' if mercado else ' WHERE'}"
+    resueltas = _uno(f"{base} resuelto = 1")
+    # puntuables = resueltas, no abstenidas, con acierto definido (movimiento no neutro)
+    n = _uno(f"{base} resuelto = 1 AND acierto IS NOT NULL")
+    aciertos = _uno(f"{base} resuelto = 1 AND acierto = 1")
+    return {
+        "total": total, "resueltas": resueltas, "puntuables": n,
+        "acierto": round(100 * aciertos / n, 1) if n else None,
+        "cobertura": round(100 * n / resueltas, 1) if resueltas else None,
+    }
 ```
 
 ## engine/contenido/pipeline.py
@@ -13009,6 +15187,59 @@ from contenido import persistencia, portero
 from contenido.fuentes import alpaca
 
 MAXIMO_DIARIO = 3  # presupuesto de CONTENIDO.md — no negociable
+
+
+def _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos, sim_id, seed):
+    """Registra la predicción prospectiva de CADA instrumento de la noticia ANTES
+    de conocer el resultado (Fase 7-mínima): dato inmune a contaminación.
+
+    Auditoría v3 P0-03: (1) registra TODOS los tickers de la noticia, no solo el
+    primero; (2) NO falla en silencio — loguea el error. El ritual nunca se cae por
+    esto (todo va protegido), pero un fallo queda VISIBLE en el log del motor."""
+    try:
+        simbolos = [s.strip() for s in (elegido.get("simbolos") or "").split(",") if s.strip()]
+        if not simbolos:
+            return  # sin instrumento no se puede resolver después
+        conv = reporte.get("conviccion") or {}
+        direccion = reporte.get("direccion_titular", "neutra")
+        fuentes: dict[str, int] = {}
+        for lider in lideres_datos:
+            f = lider.get("fuente", "?")
+            fuentes[f] = fuentes.get(f, 0) + 1
+        try:
+            from brains.cerebro import MODELO
+        except Exception:
+            MODELO = None
+        from contenido.backtest import _mercado_de_caso
+        as_of = persistencia.ahora_iso()
+    except Exception as e:
+        print(f"[prediccion] no se pudo preparar el registro: {e!r}", flush=True)
+        return
+    for simbolo in simbolos:
+        try:
+            # Fase 1 (modo sombra): construir la evidencia point-in-time con que se
+            # hace la predicción y guardarla. NO cambia la predicción del enjambre.
+            ev_hash = ev_txt = None
+            try:
+                from evidence.recoleccion import evidencia_para
+                from evidence.contrato import formatear_para_cerebro
+                ev = evidencia_para(simbolo, elegido["titular"], as_of)
+                ev_hash = ev.get("evidence_hash")
+                ev_txt = formatear_para_cerebro(ev)
+            except Exception as e:
+                print(f"[evidencia] no se pudo construir para {simbolo}: {e!r}", flush=True)
+            persistencia.registrar_prediccion(
+                conexion, titular=elegido["titular"], simbolo=simbolo, as_of_iso=as_of,
+                mercado=_mercado_de_caso({"simbolos": simbolo}),
+                horizonte=2, direccion=direccion, abstenido=(direccion == "neutra"),
+                consenso=reporte.get("senal_media_ponderada"),
+                conviccion=conv.get("nivel"), fiable=bool(conv.get("fiable_direccion")),
+                fuentes=fuentes, versiones={"modelo": MODELO, "seed": seed}, sim_id=sim_id,
+                evidencia_hash=ev_hash, evidencia_txt=ev_txt,
+            )
+        except Exception as e:
+            print(f"[prediccion] FALLÓ el registro de {simbolo} "
+                  f"({(elegido.get('titular') or '?')[:40]}): {e!r}", flush=True)
 
 
 def simular_titular_completo(titular: str, seed: int, con_frames: bool = False):
@@ -13126,6 +15357,9 @@ def preparar_dia(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: int |
                 destacada=True,
             )
             persistencia.vincular_simulacion(conexion, persistencia.id_titular(elegido["titular"]), sim_id)
+            # Fase 7-mínima: registrar la predicción de hoy ANTES de conocer el
+            # resultado (prospectivo, imposible de contaminar). Blindado.
+            _registrar_prediccion_prospectiva(conexion, elegido, reporte, lideres_datos, sim_id, seed)
             publicadas.append({"sim_id": sim_id, "titular": elegido["titular"], "impacto": elegido["impacto"]})
 
         return {"origen": origen, "publicadas": publicadas, "log": resultado["log"]}
@@ -13156,6 +15390,13 @@ def ritual_matutino(conexion=None, maximo: int = MAXIMO_DIARIO, semilla_base: in
     propia = conexion is None
     conexion = conexion or persistencia.conectar()
     try:
+        # Fase 7-mínima: resolver las predicciones que ya maduraron (mide el
+        # resultado real SIN FUGA con Yahoo). Blindado: nunca tumba el ritual.
+        try:
+            from contenido import resolver_predicciones
+            resolver_predicciones.resolver_pendientes(conexion)
+        except Exception:
+            pass
         # ¿qué día es? (hora local del lector). El fin de semana El Pulso cambia
         # de marcha: SÁBADO = resumen de la semana; DOMINGO = deep-dive de una
         # mid/small-cap o sector. `cuando` se puede inyectar (tests).
@@ -14769,6 +17010,84 @@ def redactar_resumen(resumen: dict, cuando: dict | None = None) -> dict | None:
         return None
 ```
 
+## engine/contenido/resolver_predicciones.py
+```python
+"""Resolvedor del registro prospectivo (Fase 7-mínima).
+
+Para cada predicción aún sin resultado, intenta medir el movimiento REAL sin fuga
+(desde el cierre posterior al `as_of` hacia adelante `horizonte` ruedas, con Yahoo)
+y la resuelve. Si todavía no hay suficientes ruedas (la predicción no ha madurado),
+la deja pendiente. Pensado para correr como job periódico (cron/Action).
+
+Uso:
+    python3 engine/contenido/resolver_predicciones.py
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from contenido import persistencia
+from calibration.remedir_sin_fuga import obtener_barras
+
+EVALUADOR_VER = "v1"
+
+
+def pct_resolucion(barras, as_of_fecha: str, ruedas: int):
+    """Movimiento desde la PRIMERA sesión posterior a `as_of_fecha`, `ruedas`
+    sesiones después. Devuelve el % o None si aún no hay suficientes sesiones.
+
+    Weekend/feriado-safe (auditoría v3 P0-04): no exige una barra en la fecha
+    exacta del `as_of`. Toma como entrada el cierre de la primera sesión que
+    OCURRE DESPUÉS del `as_of` (así nunca mide un cierre ya ocurrido al predecir),
+    lo que resuelve bien sábados, domingos, feriados y noticias fuera de hora."""
+    if not barras:
+        return None
+    idx = next((k for k, (dia, _) in enumerate(barras) if dia > as_of_fecha), None)
+    if idx is None or idx + ruedas >= len(barras):
+        return None
+    base = barras[idx][1]
+    final = barras[idx + ruedas][1]
+    if not base:
+        return None
+    return (final - base) / base * 100
+
+
+def resolver_pendientes(conexion, fetch=obtener_barras, zona: float = 0.3) -> dict:
+    """Resuelve las predicciones maduras. Devuelve {resueltas, pendientes, sin_datos}.
+
+    `fetch(simbolo, fecha) -> [(fecha_iso, cierre)]` es inyectable para tests."""
+    pendientes = persistencia.predicciones_por_resolver(conexion)
+    resueltas = sin_datos = aun_verdes = 0
+    for pred in pendientes:
+        fecha_base = pred["as_of_iso"][:10]  # YYYY-MM-DD
+        barras = fetch(pred["simbolo"], fecha_base)
+        if not barras:
+            sin_datos += 1
+            continue
+        pct = pct_resolucion(barras, fecha_base, pred["horizonte"])
+        if pct is None:
+            aun_verdes += 1  # todavía no hay suficientes sesiones (no ha madurado)
+            continue
+        if persistencia.resolver_prediccion(conexion, pred["id"], pct,
+                                             zona=zona, evaluador_ver=EVALUADOR_VER):
+            resueltas += 1
+    return {"resueltas": resueltas, "sin_datos": sin_datos, "aun_verdes": aun_verdes,
+            "total_pendientes": len(pendientes)}
+
+
+def main():
+    conexion = persistencia.conectar()
+    res = resolver_pendientes(conexion)
+    print(f"resueltas: {res['resueltas']} | aún verdes: {res['aun_verdes']} | "
+          f"sin datos: {res['sin_datos']} | total pendientes: {res['total_pendientes']}")
+    print("tablero:", persistencia.resumen_predicciones(conexion))
+    print("tablero índice:", persistencia.resumen_predicciones(conexion, "indice"))
+
+
+if __name__ == "__main__":
+    main()
+```
+
 ## engine/contenido/respaldo.py
 ```python
 """Respaldo de la calibración a GitHub — la caja fuerte fuera de Render.
@@ -15551,6 +17870,108 @@ def asimetria_panico(retornos) -> float:
     return float(peores.mean() / mejores.mean())
 ```
 
+## engine/validation/test_ablacion.py
+```python
+"""Tests de la ablación A0–A5 (Fase 3). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import ablacion as ab
+
+
+def _f(pct, senal, direccion, simbolo="SPY", fecha="2020-01-01", lexico=None):
+    d = {"pct_corr": pct, "senal": senal, "direccion_pct": direccion,
+         "simbolo": simbolo, "fecha": fecha, "anio": int(fecha[:4]), "mercado": "indice"}
+    if lexico is not None:
+        d["lexico"] = lexico
+    return d
+
+
+def test_signo_mayoria_sigue_a_las_subas():
+    filas = [_f(2.0, 0, 0), _f(3.0, 0, 0), _f(-1.0, 0, 0)]  # 2 subas, 1 baja
+    assert ab._signo_mayoria(filas) == 1
+
+
+def test_items_descarta_zona_muerta_y_abstenciones():
+    filas = [_f(0.1, 0.5, 0.5),      # |pct|<0.3 → fuera
+             _f(2.0, 0.0, 0.5),       # A3 se abstiene (senal=0)
+             _f(2.0, 0.5, 0.5)]       # cuenta
+    assert len(ab._items(filas, "A3_consenso", 1)) == 1
+    assert len(ab._items(filas, "A4_abm", 1)) == 2  # A4 opina en los dos >zona
+
+
+def test_gate_detecta_que_el_abm_empeora():
+    # consenso (A3) acierta siempre; el ABM (A4) invierte el signo y falla
+    filas = [_f(2.0, 0.6, -0.6), _f(3.0, 0.7, -0.7), _f(2.5, 0.5, -0.5)]
+    g = ab.gate_abm(filas)
+    assert g["A3"] == 100.0 and g["A4"] == 0.0
+    assert g["delta_A4_menos_A3"] == -100.0
+    assert g["abm_cambia_signo"] == 3 and g["abm_acierta_al_cambiar"] == 0
+
+
+def test_gate_cuenta_aciertos_del_abm_al_cambiar():
+    # A3 falla (dice baja), el ABM corrige a subida y acierta
+    filas = [_f(2.0, -0.4, 0.6), _f(3.0, -0.3, 0.7)]
+    g = ab.gate_abm(filas)
+    assert g["A3"] == 0.0 and g["A4"] == 100.0
+    assert g["abm_cambia_signo"] == 2 and g["abm_acierta_al_cambiar"] == 2
+
+
+def test_evaluar_trae_todos_los_escalones():
+    filas = [_f(2.0, 0.5, 0.5, lexico=0.3), _f(-2.0, -0.5, -0.5, lexico=-0.3)]
+    res = ab.evaluar(filas, n_boot=200)
+    assert set(res) == {"A0_mayoria", "A1_lexico", "A2_un_llm", "A3_consenso", "A4_abm"}
+    assert res["A3_consenso"]["punto"] == 100.0  # consenso perfecto en el juguete
+
+
+def test_pred_de_lee_el_campo_correcto():
+    f = _f(2.0, 0.5, -0.9, lexico=0.2)
+    assert ab.pred_de(f, "A3_consenso", 1) == 0.5
+    assert ab.pred_de(f, "A4_abm", 1) == -0.9
+    assert ab.pred_de(f, "A1_lexico", 1) == 0.2
+    assert ab.pred_de(f, "A0_mayoria", -1) == -1
+
+
+# ---- A0 honesto (train-only) y gate pareado por evento (auditoría v4) ----
+
+def test_a0_no_mira_el_futuro_ni_su_propia_etiqueta():
+    # fechas crecientes: 3 suben, la 4ª baja. A0 usa solo el pasado.
+    filas = [_f(2.0, 0, 0, "A", "2020-01-01"), _f(2.0, 0, 0, "B", "2020-01-02"),
+             _f(2.0, 0, 0, "C", "2020-01-03"), _f(-2.0, 0, 0, "D", "2020-01-04")]
+    items = ab._items_a0(filas)
+    assert len(items) == 3          # el 1º se abstiene (sin historia)
+    assert [ok for ok, _ in items] == [1, 1, 0]  # +,+ aciertan; el 4º predice + y baja
+
+
+def test_a0_en_evaluar_no_usa_signo_mayoria_global():
+    # si A0 mirara TODO el set, con 2 subas vs 1 baja predeciría + y "acertaría" la
+    # baja final nunca; aquí se comprueba que usa el pasado (expanding).
+    filas = [_f(2.0, 0, 0, "A", "2020-01-01"), _f(-2.0, 0, 0, "B", "2020-01-02"),
+             _f(2.0, 0, 0, "C", "2020-01-03")]
+    items = ab._items_a0(filas)
+    # caso2: historia=+1 → predice +, real baja → falla; caso3: historia 1-1 empate → abstiene
+    assert [ok for ok, _ in items] == [0]
+
+
+def test_gate_pareado_detecta_que_abm_resta():
+    # mismo evento (misma fecha): A3 acierta, A4 invierte y falla → d = -1
+    filas = [_f(2.0, 0.6, -0.6, "SPY", "2020-03-02"),
+             _f(2.0, 0.6, -0.6, "QQQ", "2020-03-02"),
+             _f(3.0, 0.6, -0.6, "DIA", "2020-03-03")]
+    p = ab.gate_pareado(filas, n_boot=500)
+    assert p["media"] == -1.0 and p["n"] == 3 and p["n_eventos"] == 2
+    assert p["hi"] < 0 and p["excluye_cero"]  # IC excluye 0 por abajo
+
+
+def test_gate_pareado_empate_no_concluyente():
+    # A3 y A4 igual de buenos (ambos aciertan) → d = 0, IC no excluye 0
+    filas = [_f(2.0, 0.5, 0.5, "SPY", "2020-03-02"),
+             _f(-2.0, -0.5, -0.5, "QQQ", "2020-03-03")]
+    p = ab.gate_pareado(filas, n_boot=500)
+    assert p["media"] == 0.0 and not p["excluye_cero"]
+```
+
 ## engine/validation/test_ablacion_arquetipos.py
 ```python
 """Tests de la herramienta de ablación por arquetipo (con casos sintéticos)."""
@@ -15644,6 +18065,60 @@ def test_acierto_direccional_medio_punto_en_cero():
     assert ab.acierto_direccional([0.0], [1]) == 50.0
     assert ab.acierto_direccional([0.5], [1]) == 100.0
     assert ab.acierto_direccional([-0.5], [1]) == 0.0
+```
+
+## engine/validation/test_acierto_por_arquetipo.py
+```python
+"""Tests del acierto direccional por arquetipo (Fase 2 groundwork). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import acierto_por_arquetipo as apa
+
+
+def _caso(simbolo, fecha, senales, mercado="indice"):
+    return {"origen": "historico", "simbolos": simbolo, "mercado": mercado,
+            "senales_arquetipo": {a: {"senal_media": s, "n": 1} for a, s in senales.items()},
+            "reaccion_real": {"simbolo": simbolo, "fecha_base": fecha}}
+
+
+def test_mapa_resultados():
+    filas = [{"simbolo": "^GSPC", "fecha": "2020-01-01", "pct_corr": 2.0},
+             {"simbolo": "^GSPC", "fecha": "2020-02-01", "pct_corr": None}]  # se omite
+    m = apa.mapa_resultados(filas)
+    assert m == {("^GSPC", "2020-01-01"): 2.0}
+
+
+def test_arquetipo_que_acierta_y_otro_que_falla():
+    # dos casos de índice; "bueno" siempre acierta, "malo" siempre falla
+    casos = [_caso("^GSPC", "2020-01-01", {"macro_trader": 0.5, "doomer": -0.5}),
+             _caso("^GSPC", "2020-02-01", {"macro_trader": -0.5, "doomer": -0.5})]
+    pcmap = {("^GSPC", "2020-01-01"): 2.0,   # subió
+             ("^GSPC", "2020-02-01"): -2.0}  # bajó
+    res = apa.acierto_por_arquetipo(casos, pcmap, "indice",
+                                    arqs=["macro_trader", "doomer"])
+    assert res["macro_trader"]["acierto"] == 100.0 and res["macro_trader"]["n"] == 2
+    assert res["doomer"]["acierto"] == 50.0 and res["doomer"]["n"] == 2  # acierta solo la baja
+
+
+def test_filtra_por_zona_y_corte_y_cero():
+    casos = [_caso("^GSPC", "2020-01-01", {"macro_trader": 0.1, "value_paciente": 0.0})]
+    pcmap = {("^GSPC", "2020-01-01"): 2.0}
+    # corte 0.3 excluye la señal 0.1; la señal 0.0 nunca cuenta
+    res = apa.acierto_por_arquetipo(casos, pcmap, "indice",
+                                    arqs=["macro_trader", "value_paciente"], corte=0.3)
+    assert res["macro_trader"]["n"] == 0 and res["value_paciente"]["n"] == 0
+    res2 = apa.acierto_por_arquetipo(casos, pcmap, "indice", arqs=["macro_trader"], corte=0.0)
+    assert res2["macro_trader"]["n"] == 1
+
+
+def test_mercado_no_directionable_se_omite():
+    # movimiento por debajo de zona → no cuenta
+    casos = [_caso("^GSPC", "2020-01-01", {"macro_trader": 0.5})]
+    pcmap = {("^GSPC", "2020-01-01"): 0.1}
+    res = apa.acierto_por_arquetipo(casos, pcmap, "indice", arqs=["macro_trader"])
+    assert res["macro_trader"]["n"] == 0
 ```
 
 ## engine/validation/test_analisis_semanal.py
@@ -16275,6 +18750,56 @@ def test_endpoints_del_backtest_exigen_token(monkeypatch):
     assert "_lista_pendiente" not in avance.json()
 ```
 
+## engine/validation/test_baselines.py
+```python
+"""Tests de los baselines (Fase 3/4). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import baselines as bl
+
+
+def _f(pct, senal=0.0, mom=0.0, precio=0.0, fecha="2020-01-01"):
+    return {"fecha": fecha, "pct_corr": pct, "senal": senal, "mom_prev": mom,
+            "direccion_pct": precio}
+
+
+def test_acc_regla_cuenta_y_filtra_zona():
+    filas = [_f(2.0, senal=0.5), _f(-2.0, senal=-0.5), _f(0.1, senal=0.5)]  # el 3º no es direccionable
+    a, nop, ndir = bl.acc_regla(filas, bl.regla_senal)
+    assert ndir == 2 and nop == 2 and a == 100.0
+
+
+def test_regla_se_abstiene_cuando_pred_cero():
+    filas = [_f(2.0, senal=0.0), _f(2.0, senal=0.5)]  # la 1ª: la señal no opina
+    a, nop, ndir = bl.acc_regla(filas, bl.regla_senal)
+    assert ndir == 2 and nop == 1 and a == 100.0
+
+
+def test_regla_mayoria_toma_el_signo_dominante_del_train():
+    train = [_f(2.0), _f(2.0), _f(-2.0)]  # mayoría sube
+    regla = bl.regla_mayoria(train)
+    assert regla(_f(0)) == 1
+    train2 = [_f(-2.0), _f(-2.0), _f(2.0)]  # mayoría baja
+    assert bl.regla_mayoria(train2)(_f(0)) == -1
+
+
+def test_momentum_predice_continuacion():
+    # mom_prev positivo → predice subida; el caso subió → acierta
+    filas = [_f(2.0, mom=1.5), _f(-2.0, mom=-1.5)]
+    a, nop, _ = bl.acc_regla(filas, bl.regla_momentum)
+    assert nop == 2 and a == 100.0
+
+
+def test_comparar_devuelve_las_cuatro_reglas():
+    train = [_f(2.0, senal=0.5, mom=1.0, precio=1.0)] * 3
+    test = [_f(2.0, senal=0.5, mom=1.0, precio=1.0)]
+    res = bl.comparar(train, test)
+    assert set(res) == {"mayoria", "momentum", "senal_enjambre", "precio_simulado"}
+    assert res["senal_enjambre"][0] == 100.0  # señal positiva, subió
+```
+
 ## engine/validation/test_benchmark_motor.py
 ```python
 """El benchmark del motor (Fase 3): mide sin cambiar el comportamiento y es
@@ -16855,6 +19380,50 @@ def test_cierre_sale_solo_a_premium(monkeypatch):
     assert enviados == ["pago@lector.cl"]         # el gratuito NO recibe la tarde
 ```
 
+## engine/validation/test_confianza_efectiva.py
+```python
+"""Tests de la confianza efectiva (Fase 2). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import confianza_efectiva as ce
+
+
+def _c(pc, sen):
+    return {"pc": pc, "sen": sen}
+
+
+def test_pesos_premian_al_que_acierta_y_anulan_al_que_falla():
+    # "bueno" siempre acierta; "malo" siempre falla
+    train = [_c(2.0, {"bueno": 0.5, "malo": -0.5}),
+             _c(-2.0, {"bueno": -0.5, "malo": -0.5})]
+    w = ce.pesos_historicos(train, ["bueno", "malo"])
+    assert w["bueno"] > 0 and w["malo"] == 0.0  # malo bajo 50% → peso 0
+
+
+def test_pond_actual_baja_contrarians():
+    # un contrarian en contra no debe dominar
+    c = _c(2.0, {"macro_trader": 0.6, "quant_esceptico": -0.6})
+    assert ce.pond_actual(c) > 0  # el no-contrarian pesa más
+
+
+def test_acierto_cuenta_direccion():
+    casos = [_c(2.0, {"a": 0.5}), _c(-2.0, {"a": 0.5})]  # acierta 1, falla 1
+    acc, n = ce.acierto(casos, lambda c: c["sen"]["a"])
+    assert n == 2 and acc == 50.0
+
+
+def test_comparar_devuelve_las_tres_y_cambios_de_signo():
+    train = [_c(2.0, {"macro_trader": 0.5, "doomer": -0.5}),
+             _c(2.0, {"macro_trader": 0.5, "doomer": -0.5})]
+    test = [_c(2.0, {"macro_trader": 0.5, "doomer": -0.5})]
+    r = ce.comparar(train, test, ["macro_trader", "doomer"])
+    assert r["n_test_dir"] == 1
+    assert r["ponderada_actual"][0] is not None and r["efectiva"][0] is not None
+    assert r["cambios_de_signo"] >= 0
+```
+
 ## engine/validation/test_config_enchufado.py
 ```python
 """Guardián anti "perilla muerta": toda perilla del config debe leerla el código.
@@ -17008,6 +19577,72 @@ def test_seccion_organizaciones_es_cmf_limpia():
     seccion = muro[inicio:inicio + 1200]
     assert vocabulario.es_publicable(seccion)
     assert "educativa" in seccion  # el posicionamiento educativo, explícito
+```
+
+## engine/validation/test_contaminacion_temporal.py
+```python
+"""Tests del experimento de contaminación temporal (Fase 0). Puro, sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import contaminacion_temporal as ct
+
+
+def _fila(anio, senal, pct, mercado="indice"):
+    return {"fecha": f"{anio}-06-01", "anio": anio, "mercado": mercado,
+            "direccion_pct": pct, "senal": senal, "pct_corr": pct}
+
+
+def test_acc_senal_cuenta_bien_la_direccion():
+    # 3 aciertos (mismo signo) y 1 fallo → 75%
+    filas = [_fila(2020, 0.5, 2.0), _fila(2020, -0.5, -2.0),
+             _fila(2020, 0.5, 1.0), _fila(2020, 0.5, -1.0)]
+    acc, n = ct.acc_senal(filas)
+    assert n == 4 and acc == 75.0
+
+
+def test_acc_senal_filtra_por_zona_y_corte():
+    filas = [_fila(2020, 0.4, 2.0),    # cuenta (|pct|≥0.3, |señal|≥0.3)
+             _fila(2020, 0.1, 2.0),    # |señal|<0.3 → fuera con corte 0.3
+             _fila(2020, 0.4, 0.1)]    # |pct|<0.3 → no direccionable
+    assert ct.acc_senal(filas, corte_senal=0.3)[1] == 1
+    assert ct.acc_senal(filas, corte_senal=0.0)[1] == 2  # el de |pct|<0.3 sigue fuera
+
+
+def test_particionar_por_era():
+    filas = [_fila(2019, 0.5, 1), _fila(2024, 0.5, 1), _fila(2026, 0.5, 1)]
+    eras = ct.particionar_por_era(filas)
+    assert len(eras["viejas"]) == 1 and len(eras["medio"]) == 1 and len(eras["recientes"]) == 1
+
+
+def test_resumen_detecta_contaminacion_sintetica():
+    # viejas: todas aciertan (memoria perfecta); recientes: azar (50%)
+    viejas = [_fila(2019, 0.5, 2.0) for _ in range(10)]          # 100% acierto
+    recientes = ([_fila(2026, 0.5, 2.0) for _ in range(5)] +      # aciertan
+                 [_fila(2026, 0.5, -2.0) for _ in range(5)])      # fallan → 50%
+    res = ct.resumen_contaminacion(viejas + recientes, "indice")
+    assert res["viejas"]["acierto_senal"] == 100.0
+    assert res["recientes"]["acierto_senal"] == 50.0
+
+
+def test_recolectar_con_fecha_usa_fetch_inyectado(tmp_path):
+    # un caso histórico de índice; fetch mockeado devuelve barras que suben
+    caso = {"origen": "historico", "simbolos": "^GSPC", "mercado": "indice",
+            "direccion_pct": 1.0, "senales_arquetipo": {"macro_trader": {"senal_media": 0.5, "n": 1}},
+            "reaccion_real": {"simbolo": "^GSPC", "fecha_base": "2020-03-02", "ruedas": 2}}
+    ruta = tmp_path / "cal.json"
+    ruta.write_text('{"casos": [%s]}' % __import__("json").dumps(caso))
+
+    def fake_fetch(sim, fb):
+        # barras: día base y dos ruedas después subiendo
+        return [("2020-03-02", 100.0), ("2020-03-03", 101.0),
+                ("2020-03-04", 102.0), ("2020-03-05", 103.0)]
+
+    filas = ct.recolectar_con_fecha(str(ruta), fetch=fake_fetch, pausa=0)
+    assert len(filas) == 1
+    assert filas[0]["anio"] == 2020 and filas[0]["mercado"] == "indice"
+    assert filas[0]["pct_corr"] > 0  # subió después del titular
 ```
 
 ## engine/validation/test_contenido.py
@@ -18100,6 +20735,165 @@ def test_corr_robusta_a_constantes():
     assert ev._corr([1, 2, 3], [1, 2, 3]) == 1.0
 ```
 
+## engine/validation/test_evidencia.py
+```python
+"""Tests del contrato de evidencia point-in-time (Fase 1). Sin red."""
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from evidence import contrato as ev
+
+
+AS_OF = "2026-09-11T08:30:00+00:00"
+
+
+def _fuente(pub, sid="s1"):
+    return {"source_id": sid, "published_at": pub, "reliability": "alta"}
+
+
+def test_fuente_del_futuro_rechazada():
+    # publicada DESPUÉS del as_of → fuga de futuro
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.validar_fuente(_fuente("2026-09-12T10:00:00+00:00"), AS_OF)
+
+
+def test_fuente_valida_pasa():
+    ev.validar_fuente(_fuente("2026-09-10T10:00:00+00:00"), AS_OF)  # no lanza
+
+
+def test_fuente_sin_timestamp_rechazada():
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.validar_fuente({"source_id": "s", "reliability": "alta"}, AS_OF)
+
+
+def test_expectativa_sin_vintage_rechazada():
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.validar_expectativa({"valor": "CPI 3.1%"}, AS_OF)
+
+
+def test_expectativa_del_futuro_rechazada():
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.validar_expectativa({"valor": "x", "vintage": "2026-09-20T00:00:00+00:00"}, AS_OF)
+
+
+def test_construir_rechaza_fuente_futura():
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.construir_evidencia(event_id="e1", activo="SPY", as_of=AS_OF,
+                               titular="CPI sorprende",
+                               fuentes=[_fuente("2026-09-12T00:00:00+00:00")])
+
+
+def test_construir_valido_tiene_todos_los_campos():
+    e = ev.construir_evidencia(
+        event_id="e1", activo="SPY", as_of=AS_OF, titular="CPI del mes",
+        hechos=[{"texto": "CPI 3.2% vs 3.1% esperado"}],
+        expectativas=[{"valor": "3.1%", "vintage": "2026-09-10T00:00:00+00:00"}],
+        fuentes=[_fuente("2026-09-11T08:30:00+00:00")])
+    for campo in ("event_id", "asset", "as_of_timestamp", "headline", "facts",
+                  "expectations", "sources", "evidence_version", "evidence_hash"):
+        assert campo in e
+    assert e["evidence_version"] == "v1"
+
+
+def test_hash_estable_y_sensible():
+    base = dict(event_id="e1", activo="SPY", as_of=AS_OF, titular="CPI")
+    a = ev.construir_evidencia(**base)
+    b = ev.construir_evidencia(**base)
+    assert a["evidence_hash"] == b["evidence_hash"]  # mismo input → mismo hash
+    c = ev.construir_evidencia(**{**base, "titular": "otra noticia"})
+    assert c["evidence_hash"] != a["evidence_hash"]  # input distinto → hash distinto
+    # el hash no depende de sí mismo
+    assert ev.hash_evidencia(a) == a["evidence_hash"]
+
+
+def test_as_of_naive_se_asume_utc():
+    # as_of sin zona no debe romper; se asume UTC
+    e = ev.construir_evidencia(event_id="e", activo="SPY",
+                               as_of="2026-09-11T08:30:00", titular="x")
+    assert e["as_of_timestamp"].endswith("+00:00")
+
+
+def test_formatear_para_cerebro_incluye_contexto():
+    e = ev.construir_evidencia(
+        event_id="e1", activo="SPY", as_of=AS_OF, titular="CPI del mes",
+        hechos=[{"texto": "CPI 3.2% vs 3.1% esperado"}],
+        expectativas=[{"valor": "3.1%", "vintage": "2026-09-10T00:00:00+00:00"}],
+        info_faltante=[{"texto": "falta la guía futura"}])
+    texto = ev.formatear_para_cerebro(e)
+    assert "Titular: CPI del mes" in texto
+    assert "CPI 3.2% vs 3.1% esperado" in texto
+    assert "3.1%" in texto and "2026-09-10" in texto
+    assert "falta la guía futura" in texto
+
+
+def test_formatear_solo_titular_si_no_hay_contexto():
+    e = ev.construir_evidencia(event_id="e", activo="SPY", as_of=AS_OF, titular="x")
+    texto = ev.formatear_para_cerebro(e)
+    assert texto == "Titular: x"  # brazo B: sin contexto, solo titular
+```
+
+## engine/validation/test_evidencia_fuentes.py
+```python
+"""Tests de los adaptadores de evidencia (Fase 1). Sin red (fetch mockeado)."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from evidence import fuentes, recoleccion, contrato
+
+
+def _barras_subiendo(dias=30, inicio=100.0, paso=1.0):
+    # genera barras diarias hasta 2026-09-10 (antes de un as_of 2026-09-11)
+    from datetime import date, timedelta
+    base = date(2026, 9, 10)
+    out = []
+    for i in range(dias):
+        d = base - timedelta(days=dias - 1 - i)
+        out.append((d.isoformat(), inicio + paso * i))
+    return out
+
+
+AS_OF = "2026-09-11T08:30:00+00:00"
+
+
+def test_contexto_precio_solo_usa_barras_previas():
+    # incluye una barra DEL día del as_of y una POSTERIOR; deben ignorarse
+    barras = _barras_subiendo() + [("2026-09-11", 999.0), ("2026-09-12", 1000.0)]
+    hechos, fuente = fuentes.contexto_precio("SPY", AS_OF, fetch=lambda s, f: barras)
+    assert hechos and fuente
+    # la fuente no puede ser del día del evento ni posterior
+    assert fuente["published_at"][:10] < "2026-09-11"
+    # con tendencia alcista, el retorno previo de 5 sesiones es positivo
+    ret5 = next(h for h in hechos if h["clave"] == "ret_5")
+    assert ret5["valor"] > 0
+
+
+def test_contexto_precio_sin_datos():
+    assert fuentes.contexto_precio("SPY", AS_OF, fetch=lambda s, f: None) == (None, None)
+    assert fuentes.contexto_precio("SPY", AS_OF, fetch=lambda s, f: [("2026-09-01", 100.0)]) == (None, None)
+
+
+def test_evidencia_para_es_valida_y_point_in_time():
+    barras = _barras_subiendo()
+    e = recoleccion.evidencia_para("SPY", "CPI sorprende", AS_OF,
+                                   fetch_precio=lambda s, f: barras)
+    # pasa el contrato (ninguna fuente del futuro) y trae el contexto
+    assert e["evidence_version"] == "v1" and e["evidence_hash"]
+    assert e["sources"] and e["facts"]
+    texto = contrato.formatear_para_cerebro(e)
+    assert "retorno previo" in texto
+
+
+def test_evidencia_para_blindada_sin_datos():
+    # sin barras: evidencia mínima (solo titular), sin romper
+    e = recoleccion.evidencia_para("SPY", "x", AS_OF, fetch_precio=lambda s, f: None)
+    assert e["facts"] == [] and e["sources"] == []
+    assert contrato.formatear_para_cerebro(e) == "Titular: x"
+```
+
 ## engine/validation/test_freno_manada.py
 ```python
 """
@@ -18381,6 +21175,211 @@ def test_5_respuesta_a_shock(seed):
     assert precio_minimo < precio_previo * 0.95, "debe caer con fuerza (> 5%)"
     assert precio_final > precio_minimo, "debe rebotar desde el mínimo"
     assert precio_final < precio_previo * 0.995, "el rebote es parcial, no total"
+```
+
+## engine/validation/test_holdout.py
+```python
+"""Tests del holdout congelado (Fase 0.4). Sin red."""
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import holdout as ho
+
+
+def _casos(n=10):
+    # ids 0..n-1, fechas crecientes, etiqueta alterna
+    return [{"id": i, "y": i % 2, "fecha": f"2026-01-{i+1:02d}"} for i in range(n)]
+
+
+def test_construir_separa_los_mas_recientes():
+    m = ho.construir_manifiesto(_casos(10), pct_holdout=20)
+    assert m["n_holdout"] == 2 and m["n_desarrollo"] == 8
+    assert m["holdout_ids"] == ["8", "9"]  # los 2 más recientes
+    assert m["esquema"] == "holdout-v1" and len(m["hash"]) == 64
+
+
+def test_no_parte_un_dia_entre_train_y_test():
+    # dos casos comparten la fecha de corte → ambos van al holdout
+    casos = _casos(8) + [{"id": 99, "y": 1, "fecha": "2026-01-07"}]  # mismo día que id 6
+    m = ho.construir_manifiesto(casos, pct_holdout=25)
+    # el corte cae en 2026-01-07; los dos casos de ese día quedan en el holdout
+    ids = set(m["holdout_ids"])
+    assert "6" in ids and "99" in ids
+
+
+def test_verificar_ok_si_intacto():
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20)
+    r = ho.verificar_manifiesto(m, casos)
+    assert r["ok"] and r["hash_coincide"] and r["faltantes"] == []
+
+
+def test_verificar_detecta_etiqueta_revisada():
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20)
+    # alguien "revisa" la etiqueta de un caso del holdout (id 8)
+    for c in casos:
+        if c["id"] == 8:
+            c["y"] = 1 - c["y"]
+    r = ho.verificar_manifiesto(m, casos)
+    assert not r["ok"] and not r["hash_coincide"]
+
+
+def test_verificar_detecta_caso_faltante():
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20)
+    casos = [c for c in casos if c["id"] != 9]  # se borró un caso del holdout
+    r = ho.verificar_manifiesto(m, casos)
+    assert not r["ok"] and r["faltantes"] == ["9"]
+
+
+def test_anadir_datos_no_cambia_membresia():
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20)
+    # llegan casos nuevos MÁS recientes; el manifiesto NO se recalcula
+    nuevos = casos + [{"id": 50, "y": 1, "fecha": "2026-02-01"}]
+    r = ho.verificar_manifiesto(m, nuevos)
+    assert r["ok"]  # el holdout congelado (ids 8,9) sigue intacto
+    dev, hold = ho.particionar(nuevos, m)
+    assert {str(c["id"]) for c in hold} == {"8", "9"}  # el nuevo NO entra al holdout
+
+
+def test_embargo_purga_cercanos_al_corte():
+    casos = _casos(10)
+    sin = ho.construir_manifiesto(casos, pct_holdout=20, embargo_dias=0)
+    con = ho.construir_manifiesto(casos, pct_holdout=20, embargo_dias=3)
+    # el embargo quita del desarrollo los casos dentro de 3 días antes del corte
+    assert con["n_desarrollo"] < sin["n_desarrollo"]
+    assert con["n_holdout"] == sin["n_holdout"]  # el holdout no cambia
+
+
+def test_particionar_excluye_filas_futuras_del_desarrollo():
+    # auditoría v4: filas POSTERIORES al corte que no están en el holdout no deben
+    # entrar al desarrollo (entrenar un examen con datos más nuevos que su test = fuga)
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20)
+    nuevos = casos + [{"id": 50, "y": 1, "fecha": "2026-02-01"}]  # muy posterior
+    dev, hold = ho.particionar(nuevos, m)
+    ids_dev = {str(c["id"]) for c in dev}
+    assert "50" not in ids_dev                       # la futura NO entra al desarrollo
+    assert {str(c["id"]) for c in hold} == {"8", "9"}  # el holdout no cambia
+    assert ids_dev == {str(i) for i in range(8)}      # solo las anteriores al corte
+```
+
+## engine/validation/test_intervalos.py
+```python
+"""Tests de intervalos de confianza y bancos por magnitud (Fase 0). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import intervalos as iv
+
+
+def _fila(senal, pct, simbolo="^GSPC", mercado="indice"):
+    return {"fecha": "2020-06-01", "anio": 2020, "mercado": mercado, "simbolo": simbolo,
+            "direccion_pct": pct, "senal": senal, "pct_corr": pct}
+
+
+def test_items_acierto_marca_direccion_y_grupo():
+    filas = [_fila(0.5, 2.0, "A"), _fila(0.5, -2.0, "B")]  # 1 acierto, 1 fallo
+    items = iv.items_acierto(filas)
+    assert sorted(items) == [(0, "B"), (1, "A")]
+
+
+def test_items_acierto_filtra_zona_y_corte():
+    filas = [_fila(0.4, 2.0), _fila(0.1, 2.0), _fila(0.4, 0.1)]
+    assert len(iv.items_acierto(filas, corte_senal=0.3)) == 1  # solo el fuerte y direccionable
+    assert len(iv.items_acierto(filas, corte_senal=0.0)) == 2  # el de |pct|<0.3 queda fuera
+
+
+def test_bootstrap_ci_todo_acierto_da_100():
+    items = [(1, f"s{i}") for i in range(20)]
+    ci = iv.bootstrap_ci(items, n_boot=500)
+    assert ci["punto"] == 100.0 and ci["lo"] == 100.0 and ci["hi"] == 100.0
+    assert ci["n"] == 20 and ci["n_grupos"] == 20
+
+
+def test_bootstrap_ci_mitad_mitad_cubre_50():
+    items = [(1, f"a{i}") for i in range(50)] + [(0, f"b{i}") for i in range(50)]
+    ci = iv.bootstrap_ci(items, n_boot=1000)
+    assert ci["punto"] == 50.0
+    assert ci["lo"] < 50.0 < ci["hi"]  # el IC cubre el 50%
+
+
+def test_bootstrap_ci_muestra_chica_da_intervalo_ancho():
+    # 3 casos, todos aciertan: punto 100 pero el IC NO debe ser estrecho de confianza
+    # (con n=3 el bootstrap agrupado sigue dando 100 si todos acthe mismo grupo-caso).
+    items = [(1, "a"), (1, "b"), (1, "c")]
+    ci = iv.bootstrap_ci(items, n_boot=500)
+    assert ci["n"] == 3 and ci["punto"] == 100.0
+
+
+def test_banco_magnitud():
+    assert iv.banco_magnitud(0.5) == "chico"
+    assert iv.banco_magnitud(2.0) == "medio"
+    assert iv.banco_magnitud(5.0) == "grande"
+
+
+def test_resumen_bancos_separa_por_tamano():
+    filas = [_fila(0.5, 0.5), _fila(0.5, 2.0), _fila(0.5, 5.0)]  # chico/medio/grande
+    # con zona 0.3, el de 0.5 es direccionable; reparte 1 por banco
+    res = iv.resumen_bancos(filas)
+    assert res["chico"]["n"] == 1 and res["medio"]["n"] == 1 and res["grande"]["n"] == 1
+```
+
+## engine/validation/test_intervalos_multiway.py
+```python
+"""Tests del bootstrap multiway (Fase 0.5). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import intervalos_multiway as mw
+
+
+def _f(pct, senal, simbolo="SPY", fecha="2020-01-01"):
+    return {"pct_corr": pct, "senal": senal, "simbolo": simbolo, "fecha": fecha,
+            "anio": int(fecha[:4])}
+
+
+def test_items_multi_trae_las_tres_claves():
+    items = mw.items_multi([_f(2.0, 0.5, "SPY", "2020-03-02")])
+    assert len(items) == 1
+    ok, claves = items[0]
+    assert ok == 1 and claves == {"simbolo": "SPY", "fecha": "2020-03-02", "anio": "2020"}
+
+
+def test_ci_todo_acierto_da_100():
+    items = [(1, {"simbolo": f"s{i}", "fecha": f"2020-01-{i+1:02d}", "anio": "2020"})
+             for i in range(10)]
+    ci = mw._ci_por_clave(items, "simbolo", n_boot=300)
+    assert ci["punto"] == 100.0 and ci["lo"] == 100.0 and ci["n_grupos"] == 10
+
+
+def test_agrupar_por_fecha_reduce_los_grupos():
+    # 4 casos el MISMO día → 1 solo grupo por fecha, pero 4 por símbolo
+    filas = [_f(2.0, 0.5, s, "2020-03-02") for s in ("SPY", "QQQ", "DIA", "IWM")]
+    res = mw.comparar_clusterings(filas, n_boot=200)
+    assert res["simbolo"]["n_grupos"] == 4
+    assert res["fecha"]["n_grupos"] == 1  # el mismo evento no son 4 experimentos
+
+
+def test_sensibilidad_dejar_uno():
+    filas = [_f(2.0, 0.5, "SPY"), _f(-2.0, 0.5, "QQQ")]  # SPY acierta, QQQ falla
+    s = mw.sensibilidad_dejar_uno(filas)
+    assert s["sin QQQ"]["acierto"] == 100.0  # sin el que falla, 100%
+    assert s["sin SPY"]["acierto"] == 0.0     # sin el que acierta, 0%
+
+
+def test_ci_mitad_mitad_cubre_50():
+    items = ([(1, {"simbolo": f"a{i}", "fecha": f"d{i}", "anio": "2020"}) for i in range(40)]
+             + [(0, {"simbolo": f"b{i}", "fecha": f"e{i}", "anio": "2020"}) for i in range(40)])
+    ci = mw._ci_por_clave(items, "simbolo", n_boot=800)
+    assert ci["punto"] == 50.0 and ci["lo"] < 50.0 < ci["hi"]
 ```
 
 ## engine/validation/test_invariantes_mercado.py
@@ -19608,6 +22607,208 @@ def test_enlace_magico_desbloqueo_y_verificar():
     assert cliente.get("/api/pulso/premium", params={"email": "vip@lector.cl"}).status_code == 404
 ```
 
+## engine/validation/test_pipeline_prediccion.py
+```python
+"""Test del enganche prospectivo en el ritual (Fase 7-mínima). Sin red ni IA."""
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from contenido import persistencia as p
+from contenido import pipeline
+
+
+@pytest.fixture
+def con(tmp_path):
+    return p.conectar(tmp_path / "test.db")
+
+
+@pytest.fixture(autouse=True)
+def _sin_red(monkeypatch):
+    """Evita que el enganche llame a Yahoo en los tests: stub de la evidencia."""
+    from evidence import recoleccion
+    monkeypatch.setattr(recoleccion, "evidencia_para",
+                        lambda simbolo, titular, as_of, **k: {
+                            "evidence_hash": f"hash-{simbolo}", "headline": titular,
+                            "facts": [], "sources": [], "evidence_version": "v1"})
+
+
+def _reporte(direccion="baja", fiable=True, nivel="fuerte", senal=-0.5):
+    return {
+        "direccion_titular": direccion,
+        "senal_media_ponderada": senal,
+        "conviccion": {"nivel": nivel, "fiable_direccion": fiable, "nota": ""},
+    }
+
+
+def _lideres():
+    return [{"arquetipo": "macro_trader", "fuente": "api"},
+            {"arquetipo": "doomer", "fuente": "cache"},
+            {"arquetipo": "fomo_evangelista", "fuente": "fallback"}]
+
+
+def test_registra_prediccion_de_destacada(con):
+    elegido = {"titular": "La Fed sube tasas por sorpresa", "simbolos": "SPY", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "sim123", 42)
+    preds = p.listar_predicciones(con)
+    assert len(preds) == 1
+    pr = preds[0]
+    assert pr["simbolo"] == "SPY" and pr["mercado"] == "indice"
+    assert pr["direccion"] == "baja" and pr["fiable"] == 1 and pr["conviccion"] == "fuerte"
+    assert pr["sim_id"] == "sim123"
+    import json
+    assert json.loads(pr["fuentes_json"]) == {"api": 1, "cache": 1, "fallback": 1}
+
+
+def test_registra_todos_los_tickers(con):
+    # P0-03: una noticia con varios tickers registra UNA predicción por cada uno
+    elegido = {"titular": "CPI sorprende al alza", "simbolos": "SPY,QQQ,DIA", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "s", 1)
+    preds = p.listar_predicciones(con)
+    assert len(preds) == 3
+    assert {x["simbolo"] for x in preds} == {"SPY", "QQQ", "DIA"}
+
+
+def test_guarda_evidencia_en_modo_sombra(con):
+    # Fase 1: cada predicción guarda su evidencia point-in-time (sin cambiar la predicción)
+    elegido = {"titular": "Dato de empleo", "simbolos": "SPY", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "s", 1)
+    fila = p.listar_predicciones(con)[0]
+    assert fila["evidencia_hash"] == "hash-SPY"
+    # la predicción sigue siendo la del enjambre (la evidencia NO la cambió)
+    assert fila["direccion"] == "baja"
+
+
+def test_sin_simbolo_no_registra(con):
+    elegido = {"titular": "Noticia sin ticker", "simbolos": "", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, _reporte(), _lideres(), "s", 1)
+    assert p.listar_predicciones(con) == []
+
+
+def test_neutra_marca_abstencion(con):
+    elegido = {"titular": "Noticia ambigua", "simbolos": "QQQ", "fuente": "alpaca"}
+    pipeline._registrar_prediccion_prospectiva(
+        con, elegido, _reporte(direccion="neutra", fiable=False, nivel="debil", senal=0.0),
+        _lideres(), "s", 1)
+    pr = p.listar_predicciones(con)[0]
+    assert pr["abstenido"] == 1
+
+
+def test_blindado_ante_reporte_malo(con):
+    # un reporte corrupto NO debe lanzar excepción (el ritual no se cae)
+    elegido = {"titular": "x", "simbolos": "SPY"}
+    pipeline._registrar_prediccion_prospectiva(con, elegido, None, None, "s", 1)
+    # no se registró, pero tampoco explotó
+    assert p.listar_predicciones(con) == []
+```
+
+## engine/validation/test_predicciones.py
+```python
+"""Tests del registro prospectivo de predicciones (Fase 7-mínima). Sin red."""
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from contenido import persistencia as p
+
+
+@pytest.fixture
+def con(tmp_path):
+    return p.conectar(tmp_path / "test.db")
+
+
+def test_registrar_y_resolver_acierto(con):
+    pid = p.registrar_prediccion(con, titular="Fed sube tasas", simbolo="SPY",
+                                 horizonte=2, direccion="baja", mercado="indice")
+    assert p.resolver_prediccion(con, pid, -1.8) is True
+    fila = p.listar_predicciones(con)[0]
+    assert fila["direccion_real"] == "baja" and fila["acierto"] == 1
+
+
+def test_resolver_fallo(con):
+    pid = p.registrar_prediccion(con, titular="x", simbolo="QQQ", horizonte=2,
+                                 direccion="alza", mercado="indice")
+    p.resolver_prediccion(con, pid, -2.0)  # predijo alza, bajó → fallo
+    assert p.listar_predicciones(con)[0]["acierto"] == 0
+
+
+def test_movimiento_neutro_no_puntua(con):
+    pid = p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                                 direccion="alza", mercado="indice")
+    p.resolver_prediccion(con, pid, 0.1)  # |0.1| < zona 0.3 → neutro
+    fila = p.listar_predicciones(con)[0]
+    assert fila["direccion_real"] == "neutra" and fila["acierto"] is None
+
+
+def test_abstencion_no_puntua(con):
+    pid = p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                                 direccion="neutra", abstenido=True, mercado="indice")
+    p.resolver_prediccion(con, pid, 2.0)
+    assert p.listar_predicciones(con)[0]["acierto"] is None
+
+
+def test_inmutabilidad_registro(con):
+    # registrar dos veces la MISMA predicción no la sobrescribe
+    pid1 = p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                                  direccion="alza", as_of_iso="2026-01-01T00:00:00+00:00")
+    pid2 = p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                                  direccion="baja", as_of_iso="2026-01-01T00:00:00+00:00")
+    assert pid1 == pid2
+    assert p.listar_predicciones(con)[0]["direccion"] == "alza"  # la primera manda
+
+
+def test_doble_resolucion_rechazada(con):
+    pid = p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                                 direccion="alza", mercado="indice")
+    assert p.resolver_prediccion(con, pid, 2.0) is True
+    assert p.resolver_prediccion(con, pid, -9.0) is False  # ya resuelta, no cambia
+    assert p.listar_predicciones(con)[0]["pct_real"] == 2.0
+
+
+def test_por_resolver_filtra_resueltas(con):
+    pid = p.registrar_prediccion(con, titular="a", simbolo="SPY", horizonte=2,
+                                 direccion="alza", mercado="indice")
+    p.registrar_prediccion(con, titular="b", simbolo="QQQ", horizonte=2,
+                           direccion="baja", mercado="indice")
+    assert len(p.predicciones_por_resolver(con)) == 2
+    p.resolver_prediccion(con, pid, 1.0)
+    assert len(p.predicciones_por_resolver(con)) == 1
+
+
+def test_resumen_cobertura_y_acierto(con):
+    # 2 puntuables (1 acierto, 1 fallo), 1 neutra (no puntúa)
+    a = p.registrar_prediccion(con, titular="a", simbolo="SPY", horizonte=2, direccion="alza", mercado="indice")
+    b = p.registrar_prediccion(con, titular="b", simbolo="QQQ", horizonte=2, direccion="baja", mercado="indice")
+    d = p.registrar_prediccion(con, titular="d", simbolo="DIA", horizonte=2, direccion="alza", mercado="indice")
+    p.resolver_prediccion(con, a, 2.0)    # acierto
+    p.resolver_prediccion(con, b, 2.0)    # fallo (predijo baja)
+    p.resolver_prediccion(con, d, 0.0)    # neutra, no puntúa
+    r = p.resumen_predicciones(con, "indice")
+    assert r["resueltas"] == 3 and r["puntuables"] == 2 and r["acierto"] == 50.0
+
+
+def test_cobertura_evidencia(con):
+    p.registrar_prediccion(con, titular="a", simbolo="SPY", horizonte=2, direccion="alza",
+                           mercado="indice", evidencia_hash="h1", evidencia_txt="Titular: a")
+    p.registrar_prediccion(con, titular="b", simbolo="QQQ", horizonte=2, direccion="alza",
+                           mercado="indice")  # sin evidencia
+    cob = p.cobertura_evidencia(con)
+    assert cob["total"] == 2 and cob["con_evidencia"] == 1 and cob["cobertura_pct"] == 50.0
+    assert cob["muestra"]["evidencia_hash"] == "h1"
+
+
+def test_resumen_cuenta_mas_de_500(con):
+    # P1-09: el tablero debe contar sobre el universo COMPLETO, no truncar a 500
+    for i in range(501):
+        p.registrar_prediccion(con, titular=f"noticia-{i}", simbolo="SPY", horizonte=2,
+                               direccion="alza", mercado="indice")
+    assert p.resumen_predicciones(con, "indice")["total"] == 501
+```
+
 ## engine/validation/test_pulso.py
 ```python
 """Tests de la Etapa 8: El Pulso — captura, boletín, double opt-in, ritual."""
@@ -20733,6 +23934,78 @@ def test_pocos_lideres_es_uno_a_uno_como_antes():
     assert sorted(asignacion) == list(range(100))
 ```
 
+## engine/validation/test_resolver_predicciones.py
+```python
+"""Tests del resolvedor de predicciones (Fase 7-mínima). Sin red (fetch mockeado)."""
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from contenido import persistencia as p
+from contenido import resolver_predicciones as rp
+
+
+@pytest.fixture
+def con(tmp_path):
+    return p.conectar(tmp_path / "test.db")
+
+
+def _barras_suben(sim, fecha):
+    return [("2026-03-02", 100.0), ("2026-03-03", 101.0),
+            ("2026-03-04", 103.0), ("2026-03-05", 104.0)]
+
+
+def test_resuelve_las_maduras(con):
+    p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                           direccion="alza", mercado="indice",
+                           as_of_iso="2026-03-02T12:00:00+00:00")
+    res = rp.resolver_pendientes(con, fetch=_barras_suben)
+    assert res["resueltas"] == 1
+    fila = p.listar_predicciones(con)[0]
+    assert fila["direccion_real"] == "alza" and fila["acierto"] == 1
+
+
+def test_no_madura_queda_pendiente(con):
+    p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=5,  # pide 5 ruedas
+                           direccion="alza", mercado="indice",
+                           as_of_iso="2026-03-02T12:00:00+00:00")
+    # solo hay 4 barras → no alcanza para 5 ruedas → aún verde, no resuelta
+    res = rp.resolver_pendientes(con, fetch=_barras_suben)
+    assert res["resueltas"] == 0 and res["aun_verdes"] == 1
+
+
+def test_sin_datos_no_rompe(con):
+    p.registrar_prediccion(con, titular="x", simbolo="ZZZ", horizonte=2,
+                           direccion="alza", as_of_iso="2026-03-02T12:00:00+00:00")
+    res = rp.resolver_pendientes(con, fetch=lambda s, f: None)
+    assert res["resueltas"] == 0 and res["sin_datos"] == 1
+
+
+def test_pct_resolucion_toma_primera_sesion_posterior():
+    # as_of sábado: entra en la primera sesión POSTERIOR, no exige barra del sábado
+    barras = [("2026-11-20", 100.0), ("2026-11-23", 101.0),
+              ("2026-11-24", 102.0), ("2026-11-25", 103.0)]
+    pct = rp.pct_resolucion(barras, "2026-11-21", 2)  # sábado → entra el lunes (101)
+    assert pct is not None and round(pct, 2) == round((103 - 101) / 101 * 100, 2)
+
+
+def test_resuelve_aunque_as_of_sea_fin_de_semana(con):
+    # P0-04: una noticia con as_of de sábado DEBE resolverse (antes daba None eterno)
+    p.registrar_prediccion(con, titular="x", simbolo="SPY", horizonte=2,
+                           direccion="alza", mercado="indice",
+                           as_of_iso="2026-11-21T12:00:00+00:00")  # sábado
+
+    def barras(sim, fecha):
+        return [("2026-11-20", 100.0), ("2026-11-23", 101.0),
+                ("2026-11-24", 102.0), ("2026-11-25", 103.0)]
+
+    res = rp.resolver_pendientes(con, fetch=barras)
+    assert res["resueltas"] == 1
+    assert p.listar_predicciones(con)[0]["direccion_real"] == "alza"
+```
+
 ## engine/validation/test_respaldo.py
 ```python
 """Tests del respaldo de calibración a GitHub (contenido/respaldo.py).
@@ -21484,13 +24757,14 @@ def test_suscriptores_protegido_sin_secreto_en_codigo(monkeypatch):
     # sin token configurado: nadie pasa (falla cerrado)
     monkeypatch.delenv("ENJAMBRE_PIPELINE_TOKEN", raising=False)
     assert cliente.get("/api/pulso/suscriptores").status_code == 404
-    # con el token del entorno: pasa (por cabecera o por query)
+    # con el token del entorno: pasa SOLO por cabecera (auditoría v4: se quitó
+    # ?clave= para no exponer el token en la URL)
     monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "secreto-de-prueba-123")
     r_cab = cliente.get("/api/pulso/suscriptores",
                         headers={"X-Pipeline-Token": "secreto-de-prueba-123"})
     assert r_cab.status_code == 200 and "registrados" in r_cab.json()
-    assert cliente.get("/api/pulso/suscriptores?clave=secreto-de-prueba-123").status_code == 200
-    # token equivocado: rechazado
+    # el token en la URL (?clave=) YA NO autentica, ni con el valor correcto
+    assert cliente.get("/api/pulso/suscriptores?clave=secreto-de-prueba-123").status_code == 404
     assert cliente.get("/api/pulso/suscriptores?clave=otra-cosa").status_code == 404
 
 
@@ -21585,6 +24859,44 @@ def test_flujo_completo_por_websocket():
         assert guardada["titular"].startswith("Quiebra el segundo banco")
         assert len(guardada["lideres"]) == 1150
         assert len(guardada["serie_precios"]) >= total_ticks
+
+
+# ---- Lectura honesta de la tarjeta (Opción 1: separar visual del ABM de la
+# lectura del consenso; ver docs/hallazgo-ablacion.md) ----
+
+def test_lectura_tarjeta_solo_si_fiable():
+    # fiable → la tarjeta expone la LECTURA (dirección del consenso), aunque el
+    # precio simulado (direccion_pct) vaya en otro sentido: se muestran aparte.
+    rep = {"direccion_pct": -2.5, "volatilidad_pct": 1.0,
+           "conviccion": {"fiable_direccion": True},
+           "direccion_titular": "alza", "frases": []}
+    t = server._resumen_tarjeta(rep)
+    assert t["lectura"] == {"direccion": "alza", "flecha": "▲"}
+    assert t["direccion"] == "▼"  # el movimiento simulado NO se toca
+
+
+def test_sin_lectura_cuando_no_es_fiable():
+    rep = {"direccion_pct": 3.0, "volatilidad_pct": 1.0,
+           "conviccion": {"fiable_direccion": False},
+           "direccion_titular": "alza", "frases": []}
+    assert server._resumen_tarjeta(rep)["lectura"] is None
+
+
+def test_sin_lectura_en_reporte_viejo_sin_conviccion():
+    # destacadas históricas (antes de Ventana A) no traen `conviccion` → sin lectura
+    rep = {"direccion_pct": 2.0, "volatilidad_pct": 1.0, "frases": []}
+    assert server._resumen_tarjeta(rep)["lectura"] is None
+
+
+def test_tablero_predicciones_solo_por_cabecera(monkeypatch):
+    """Auditoría v4: /api/predicciones/resumen exige X-Pipeline-Token por CABECERA;
+    el token en la URL (?clave=) ya no autentica (no exponerlo en logs/historial)."""
+    cliente = TestClient(server.app)
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "tok-123")
+    assert cliente.get("/api/predicciones/resumen").status_code == 403
+    assert cliente.get("/api/predicciones/resumen?clave=tok-123").status_code == 403
+    r = cliente.get("/api/predicciones/resumen", headers={"X-Pipeline-Token": "tok-123"})
+    assert r.status_code == 200 and "global" in r.json()
 ```
 
 ## engine/validation/test_setup.py
@@ -21643,6 +24955,105 @@ def test_el_servidor_responde_salud():
     respuesta = cliente.get("/salud")
     assert respuesta.status_code == 200
     assert respuesta.json()["estado"] == "ok"
+```
+
+## engine/validation/test_un_llm.py
+```python
+"""Tests de A2 (un LLM neutral). Sin red: la llamada a la API va inyectada."""
+import asyncio
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import un_llm
+
+
+def _correr(titulares, respuestas, cache=None):
+    async def obtener(t):
+        return respuestas[t]
+    return asyncio.run(un_llm.senales_async(titulares, obtener, cache=cache))
+
+
+def test_parsea_y_recorta_la_senal():
+    r = {"T1": '{"senal": 0.7, "confianza": 0.8, "frase": "sube"}',
+         "T2": '{"senal": 2.5, "confianza": 0.9, "frase": "tope"}'}  # fuera de rango
+    out = _correr(["T1", "T2"], r)
+    assert out["T1"] == 0.7
+    assert out["T2"] == 1.0  # recortada a [-1,1]
+
+
+def test_no_repite_lo_cacheado():
+    llamados = []
+    async def obtener(t):
+        llamados.append(t)
+        return '{"senal": -0.3, "confianza": 0.5, "frase": "x"}'
+    out = asyncio.run(un_llm.senales_async(
+        ["A", "B"], obtener, cache={"A": 0.9}))
+    assert out["A"] == 0.9 and out["B"] == -0.3
+    assert llamados == ["B"]  # A no se volvió a consultar
+
+
+def test_titular_que_falla_no_cae_la_corrida():
+    r = {"OK": '{"senal": 0.4, "confianza": 0.6, "frase": "ok"}',
+         "MAL": "esto no es json"}
+    out = _correr(["OK", "MAL"], r)
+    assert out["OK"] == 0.4 and "MAL" not in out  # el malo se omite, el bueno queda
+
+
+def test_titulares_unicos_en_orden():
+    filas = [{"titular": "X"}, {"titular": "Y"}, {"titular": "X"}, {"sin": 1}]
+    assert un_llm.titulares_de(filas) == ["X", "Y"]
+
+
+def test_a2_entra_en_la_escalera(tmp_path):
+    from calibration import ablacion
+    cf = tmp_path / "cf.json"
+    cf.write_text(json.dumps([
+        {"pct_corr": 2.0, "senal": 0.5, "direccion_pct": 0.5, "simbolo": "SPY",
+         "fecha": "2020-01-01", "anio": 2020, "mercado": "indice"},
+        {"pct_corr": -2.0, "senal": -0.5, "direccion_pct": -0.5, "simbolo": "QQQ",
+         "fecha": "2020-01-02", "anio": 2020, "mercado": "indice"},
+    ]))
+    # a2 se adjunta por titular; sin raw, inyectamos titular a mano
+    filas = ablacion.cargar(str(cf))
+    filas[0]["titular"] = "t1"; filas[1]["titular"] = "t2"
+    filas[0]["a2"] = 0.9; filas[1]["a2"] = 0.9  # A2 acierta la 1ª, falla la 2ª
+    res = ablacion.evaluar(filas, n_boot=200)
+    assert res["A2_un_llm"]["punto"] == 50.0
+
+
+# ---- caché versionado de A2 (auditoría v4: no mezclar contratos) ----
+
+def test_version_a2_estable_y_hex():
+    v = un_llm._version_a2()
+    assert v == un_llm._version_a2() and len(v) == 16 and all(c in "0123456789abcdef" for c in v)
+
+
+def test_previo_valido_respeta_la_version():
+    v = un_llm._version_a2()
+    bueno = {"_version": v, "senales": {"T": 0.5}}
+    assert un_llm._previo_valido(bueno, v) == {"T": 0.5}
+    # versión distinta → no se reutiliza
+    assert un_llm._previo_valido({"_version": "otra", "senales": {"T": 0.5}}, v) == {}
+    # formato viejo {titular: senal} (sin _version) → no se reutiliza
+    assert un_llm._previo_valido({"T": 0.5}, v) == {}
+
+
+def test_ablacion_lee_cache_a2_versionado(tmp_path):
+    from calibration import ablacion
+    cf = tmp_path / "cf.json"
+    cf.write_text(json.dumps([{"pct_corr": 2.0, "senal": 0.5, "direccion_pct": 0.5,
+                               "simbolo": "SPY", "fecha": "2020-01-01", "anio": 2020,
+                               "mercado": "indice"}]))
+    raw = tmp_path / "raw.json"
+    raw.write_text(json.dumps({"casos": [{"titular": "t1", "reaccion_real": {
+        "fecha_base": "2020-01-01", "simbolo": "SPY"}}]}))
+    a2 = tmp_path / "a2.json"
+    a2.write_text(json.dumps({"_version": "x", "modelo": "m", "senales": {"t1": 0.8}}))
+    filas = ablacion.cargar(str(cf), ruta_raw=str(raw), ruta_a2=str(a2))
+    # cargar emparejó el titular por (fecha, símbolo) y adjuntó A2 del formato versionado
+    assert filas[0]["titular"] == "t1" and filas[0]["a2"] == 0.8
 ```
 
 ## engine/validation/test_verificador.py
@@ -21879,6 +25290,73 @@ def test_baseline_honesto_se_reporta_y_no_usa_el_futuro(tmp_path):
     assert r["brier_base"] > 0
     # con señal útil, el modelo le gana a la base honesta
     assert r["brier"] < r["brier_base"]
+```
+
+## engine/Dockerfile
+```dockerfile
+# Motor de El Enjambre — imagen para Render/Railway/Fly
+FROM python:3.11-slim
+
+# Usuario no-root (defensa en profundidad: el proceso web nunca corre como root).
+RUN useradd --create-home --uid 10001 enjambre
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# La base (SQLite) y la caché de cerebros viven bajo /app: el usuario no-root
+# debe poder escribir. Si en Render montas un disco persistente en /app/datos,
+# asegúrate de que sea escribible por el uid 10001 (ver docs/despliegue.md).
+RUN mkdir -p /app/datos /app/brains/cache && chown -R enjambre:enjambre /app
+USER enjambre
+
+# Render inyecta $PORT; 8000 como valor por defecto local
+ENV PORT=8000
+CMD uvicorn server:app --host 0.0.0.0 --port $PORT
+```
+
+## engine/requirements.txt
+```text
+# Motor de El Enjambre — Python 3.11+
+# Versiones FIJAS (==) para builds reproducibles: la imagen de producción
+# instala exactamente el conjunto probado, no "la última" impredecible.
+# Actualizar aquí a conciencia tras correr los tests.
+mesa==3.3.1              # framework de simulación basada en agentes
+fastapi==0.139.0         # servidor API
+uvicorn[standard]==0.51.0  # servidor ASGI (incluye soporte WebSocket)
+websockets==16.0         # transmisión de ticks al frontend
+anthropic==0.116.0       # cerebros LLM (líderes de opinión)
+numpy==2.4.6             # cálculo numérico
+scipy==1.17.1            # estadísticas para tests de hechos estilizados
+networkx==3.6.1          # red de influencia (grafo Barabási-Albert)
+Pillow==12.3.0           # imagen del "momento dramático" (correo + Open Graph)
+```
+
+## engine/requirements-dev.txt
+```text
+# Dependencias solo de desarrollo y tests (NO van en la imagen de producción).
+# Instalar en local/CI con: pip install -r requirements-dev.txt
+-r requirements.txt
+
+pytest==9.1.1
+httpx==0.28.1            # cliente para probar la API
+```
+
+## engine/pytest.ini
+```ini
+[pytest]
+# Dos tandas de pruebas (mejora C7 de docs/mejoras-propuestas.md):
+#   - rápida (~1 min), a cada rato mientras se trabaja:
+#         pytest -m "not lento"
+#   - completa (varios min), antes de cada despliegue y en CI:
+#         pytest
+# Las "lento" son las que levantan el mercado completo (10.000 agentes, 150
+# latidos): la única forma honesta de comprobar los hechos estilizados, pero
+# caras. El marcado lo pone conftest.py por nombre de archivo (un solo lugar).
+markers =
+    lento: prueba que levanta simulaciones de mercado completas (excluir con -m "not lento")
 ```
 
 ## engine/__init__.py
@@ -23513,6 +26991,31 @@ body.con-muro .marca {
 .tarjeta .flecha.sube { color: var(--salvia); }
 .tarjeta .flecha.baja { color: var(--rosa); }
 .tarjeta .flecha.plana { color: var(--teal); }
+.tarjeta .flecha small {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crema-suave);
+  font-weight: 400;
+}
+/* "lectura": la dirección del consenso de líderes, mostrada solo cuando es fiable
+   (índice + convicción fuerte). Es la predicción honesta; el % de arriba es el
+   movimiento simulado (visualización). Ver docs/hallazgo-ablacion.md. */
+.resultado-lectura { margin: 0.2rem 0 0.1rem; }
+.tarjeta .lectura, .arch-res .lectura {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.tarjeta .lectura.sube, .arch-res .lectura.sube { color: var(--salvia); }
+.tarjeta .lectura.baja, .arch-res .lectura.baja { color: var(--rosa); }
 .tarjeta .agitacion {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -24192,6 +27695,12 @@ body.archivo-abierto .muro { display: none; }
   line-height: 1.2;
 }
 .duelo-dir { font-size: 0.85rem; color: var(--crema-suave); }
+.duelo-dir small { font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+/* la lectura del consenso (predicción honesta), solo cuando es fiable */
+.duelo-lectura {
+  margin-top: 0.25rem; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--salvia);
+}
 .duelo-vs {
   align-self: center;
   font-family: 'Cormorant Garamond', serif;
@@ -26258,7 +29767,7 @@ export function crearPanel(alEnviarTitular, alObservatorio, acciones = {}) {
         ${mercadoHtml}
         ${convHtml}
         <div class="cifras">
-          <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>dirección</label></div>
+          <div><span>${num(reporte.direccion_pct) > 0 ? '+' : ''}${num(reporte.direccion_pct)}%</span><label>movimiento simulado</label></div>
           <div><span>${num(reporte.minimo_pct)}%</span><label>mínimo</label></div>
           <div><span>${num(reporte.volatilidad_pct)}%</span><label>volatilidad/tick</label></div>
           ${Number.isFinite(Number(reporte.confianza))
@@ -26736,11 +30245,17 @@ function plantillaTarjeta(tarjeta) {
     const r = tarjeta.resumen
     const clase = r.direccion === '▲' ? 'sube' : r.direccion === '▼' ? 'baja' : 'plana'
     const pct = Number(r.direccion_pct) || 0
+    // la lectura (dirección del consenso de líderes) se muestra aparte y SOLO
+    // cuando es fiable; el % es el movimiento que simuló el enjambre (visual)
+    const lec = r.lectura
+      ? `<span class="lectura ${r.lectura.direccion === 'alza' ? 'sube' : 'baja'}" title="Dirección del consenso de líderes; en este tipo de caso su lectura ha sido confiable. No es consejo de inversión.">lectura ${esc(r.lectura.flecha)} ${esc(r.lectura.direccion)}</span>`
+      : ''
     cuerpo = `
       <div class="resultado">
-        <span class="flecha ${clase}">${esc(r.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="flecha ${clase}" title="Movimiento que simuló el enjambre (visualización).">${esc(r.direccion)} ${pct > 0 ? '+' : ''}${pct}% <small>simulado</small></span>
         <span class="agitacion">agitación ${esc(r.agitacion)}</span>
       </div>
+      ${lec ? `<div class="resultado-lectura">${lec}</div>` : ''}
       ${r.frase ? `<p class="voz">«${esc(r.frase.frase)}» — <span>${esc(r.frase.arquetipo)}</span></p>` : ''}
       <button class="accion ver-simulacion" data-sim="${idSeguro(tarjeta.sim_id)}">Ver la simulación</button>`
   } else {
@@ -27032,14 +30547,18 @@ function tarjetaArchivo(item) {
   const clase = t.direccion === '▲' ? 'sube' : t.direccion === '▼' ? 'baja' : 'plana'
   const simbolos = (item.simbolos || '').split(',').filter(Boolean).slice(0, 4).map(esc).join(' · ')
   const pct = Number(t.direccion_pct) || 0
+  const lec = t.lectura
+    ? `<span class="lectura ${t.lectura.direccion === 'alza' ? 'sube' : 'baja'}" title="Dirección del consenso de líderes; confiable en este tipo de caso. No es consejo de inversión.">lectura ${esc(t.lectura.flecha)} ${esc(t.lectura.direccion)}</span>`
+    : ''
   return `
     <a class="arch-item" href="?sim=${idSeguro(item.id)}">
       <div class="arch-meta">${FECHA.format(new Date(item.fecha))}${simbolos ? ' · ' + simbolos : ''}
         ${item.tiene_epilogo ? '· <span class="arch-epi">¿y qué pasó?</span>' : ''}</div>
       <h3>${esc(item.titular)}</h3>
       <div class="arch-res">
-        <span class="flecha ${clase}">${esc(t.direccion)} ${pct > 0 ? '+' : ''}${pct}%</span>
+        <span class="flecha ${clase}" title="Movimiento que simuló el enjambre (visualización).">${esc(t.direccion)} ${pct > 0 ? '+' : ''}${pct}% <small>simulado</small></span>
         <span class="agitacion">agitación ${esc(t.agitacion)}</span>
+        ${lec}
       </div>
     </a>`
 }
@@ -27213,6 +30732,14 @@ const COLOR_B = '#d99a9a' // rosa — para distinguir el segundo enjambre
 const CARACTERES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => CARACTERES[c])
 
+// La LECTURA (dirección del consenso de líderes), mostrada solo cuando es fiable.
+// El % de arriba es el movimiento que simuló el enjambre (visualización), no la
+// predicción. Ver docs/hallazgo-ablacion.md.
+const lecturaDuelo = (tarjeta) => {
+  const l = tarjeta && tarjeta.lectura
+  return l ? `<div class="duelo-lectura">lectura ${esc(l.flecha)} ${esc(l.direccion)}</div>` : ''
+}
+
 function framesDe(buffer) {
   const { nAgentes, tamanoFrame, total } = medidasReplay(buffer.byteLength)
   return {
@@ -27262,10 +30789,10 @@ export async function abrirDuelo({ idA, idB, reducirMovimiento, alCerrar }) {
     <button class="duelo-cerrar" aria-label="cerrar">×</button>
     <div class="duelo-titulares">
       <div class="duelo-lado" style="--c:${COLOR_A}"><span>A</span><h3>${esc(datos.a.titular)}</h3>
-        <div class="duelo-dir">${esc(datos.a.tarjeta.direccion)} ${datos.a.resumen.direccion_pct}%</div></div>
+        <div class="duelo-dir">${esc(datos.a.tarjeta.direccion)} ${datos.a.resumen.direccion_pct}% <small>simulado</small></div>${lecturaDuelo(datos.a.tarjeta)}</div>
       <div class="duelo-vs">vs</div>
       <div class="duelo-lado" style="--c:${COLOR_B}"><span>B</span><h3>${esc(datos.b.titular)}</h3>
-        <div class="duelo-dir">${esc(datos.b.tarjeta.direccion)} ${datos.b.resumen.direccion_pct}%</div></div>
+        <div class="duelo-dir">${esc(datos.b.tarjeta.direccion)} ${datos.b.resumen.direccion_pct}% <small>simulado</small></div>${lecturaDuelo(datos.b.tarjeta)}</div>
     </div>
     <canvas class="duelo-escena"></canvas>
     <canvas class="duelo-precios" width="720" height="120"></canvas>
@@ -27619,5 +31146,787 @@ function render(sim, buffer) {
 }
 
 iniciar()
+```
+
+
+---
+
+# PARTE 3 — INFRAESTRUCTURA (CI/CD y despliegue)
+
+## .github/workflows/backtest.yml
+```yaml
+# El backtest histórico — una tanda por botón, para cuidar el presupuesto.
+#
+# Cada corrida procesa una tanda de exámenes históricos (por defecto 5):
+# el enjambre simula noticias del pasado y se compara con cuánto se movió
+# el símbolo de verdad en esos días. Costo aprox.: cada simulación son
+# ~100 llamadas LLM. Se dispara SOLO a mano (pestaña Actions → Run
+# workflow, también desde la app móvil de GitHub). Sin agenda automática.
+
+name: Backtest histórico (tanda)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tanda:
+        description: "Cuántos exámenes rendir en esta tanda (máx 20)"
+        required: false
+        default: "5"
+      mercado:
+        description: "Mercado a rendir (oro/cripto/petroleo/indice/accion; vacío = todos)"
+        required: false
+        default: ""
+
+jobs:
+  rendir-tanda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Rendir la tanda
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          TANDA: ${{ github.event.inputs.tanda || '5' }}
+          MERCADO: ${{ github.event.inputs.mercado }}
+        run: |
+          respuesta=$(curl -sf -m 60 -X POST \
+            "https://enjambre-motor.onrender.com/api/backtest?tanda=$TANDA&mercado=$MERCADO" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "Respuesta del motor: $respuesta"
+          echo "La tanda corre en segundo plano (~1 minuto por examen)."
+          echo "El avance se ve con GET /api/backtest y los casos quedan en"
+          echo "la rama respaldo-datos (datos/calibracion.json)."
+```
+
+## .github/workflows/calibrar.yml
+```yaml
+# Calibración completa y balanceada — rinde el banco de exámenes solo.
+#
+# Recorre los mercados (oro, cripto, petróleo, índices y acciones) y rinde
+# tandas hasta llegar al cupo de cada uno. Las acciones son mayoría, así que
+# tienen un tope (presupuesto). Cada tanda corre en segundo plano en el motor
+# (~1 min por examen); este workflow espera a que termine antes de disparar la
+# siguiente, para no rendir dos veces el mismo examen. Se detiene solo cuando
+# no queda saldo de IA (los exámenes dejan de avanzar) o cuando termina.
+#
+# Se dispara a mano (Actions → Run workflow). Una sola corrida basta.
+
+name: Calibrar el enjambre (render completo)
+
+on:
+  workflow_dispatch:
+    inputs:
+      cupo:
+        description: "Exámenes EXACTOS por mercado (oro, cripto, petróleo, índices, acciones)"
+        required: false
+        default: "100"
+      tanda:
+        description: "Exámenes por tanda (máx 40)"
+        required: false
+        default: "40"
+      reiniciar:
+        description: "Borrar la calibración local antes de rendir (para re-validar diales nuevos)"
+        required: false
+        default: "false"
+      mercados:
+        description: "Mercados a calibrar (separados por espacio). Foco actual: SP500 + acciones + cripto"
+        required: false
+        default: "indice cripto accion"
+
+jobs:
+  calibrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          [ -z "$TOKEN" ] && { echo "::error::Falta ENJAMBRE_PIPELINE_TOKEN."; exit 1; } || true
+
+      - name: Despertar el motor
+        run: |
+          for i in $(seq 1 20); do
+            curl -sf -m 20 https://enjambre-motor.onrender.com/salud >/dev/null && exit 0
+            echo "despertando… ($i/20)"; sleep 15
+          done
+          echo "::error::el motor no despertó"; exit 1
+
+      - name: Rendir la calibración por mercado
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          TANDA: ${{ github.event.inputs.tanda || '40' }}
+          CUPO: ${{ github.event.inputs.cupo || '100' }}
+          REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
+          MERCADOS: ${{ github.event.inputs.mercados || 'indice cripto accion' }}
+        run: |
+          set -u
+          BASE="https://enjambre-motor.onrender.com/api/backtest"
+          H="X-Pipeline-Token: $TOKEN"
+
+          # opcional: borrar la calibración local (disco persistente) para
+          # re-validar sobre diales nuevos desde cero
+          if [ "$REINICIAR" = "true" ]; then
+            echo "Reiniciando la calibración local…"
+            curl -sf -m 60 -X POST "$BASE/reiniciar" -H "$H" && echo "  base local reiniciada"
+          fi
+
+          # hechos rendidos de un mercado (via GET)
+          hechos() {
+            curl -sf -m 30 "$BASE?mercado=$1" -H "$H" \
+              | python3 -c "import sys,json;print(json.load(sys.stdin).get('hechos',0))" 2>/dev/null || echo 0
+          }
+          pendientes() {
+            curl -sf -m 30 "$BASE?mercado=$1" -H "$H" \
+              | python3 -c "import sys,json;print(json.load(sys.stdin).get('pendientes',0))" 2>/dev/null || echo 0
+          }
+
+          for MERCADO in $MERCADOS; do
+            CAP="$CUPO"   # exactamente $CUPO exámenes por mercado
+            echo "════════ Mercado: $MERCADO (cupo $CAP) ════════"
+            while true; do
+              HECHOS=$(hechos "$MERCADO"); PEND=$(pendientes "$MERCADO")
+              echo "  $MERCADO: $HECHOS rendidos, $PEND pendientes"
+              [ "$PEND" -le 0 ] && { echo "  ✔ $MERCADO completo"; break; }
+              [ "$HECHOS" -ge "$CAP" ] && { echo "  ✔ $MERCADO llegó al cupo ($CAP)"; break; }
+
+              # esta tanda rinde el mínimo entre el tamaño, lo pendiente y lo
+              # que falta para el cupo (así no se pasa de $CAP exactos)
+              ESTA_TANDA=$TANDA
+              [ "$PEND" -lt "$ESTA_TANDA" ] && ESTA_TANDA=$PEND
+              FALTAN=$((CAP - HECHOS))
+              [ "$FALTAN" -lt "$ESTA_TANDA" ] && ESTA_TANDA=$FALTAN
+              TARGET=$((HECHOS + ESTA_TANDA))
+
+              curl -sf -m 60 -X POST "$BASE?tanda=$ESTA_TANDA&mercado=$MERCADO" -H "$H" >/dev/null \
+                || { echo "  POST falló, reintento en 30s"; sleep 30; continue; }
+
+              # esperar a que la tanda de fondo complete su cupo, o se estanque
+              QUIETO=0; ULTIMO=$HECHOS
+              for _ in $(seq 1 70); do   # hasta ~35 min por tanda
+                sleep 30
+                AHORA=$(hechos "$MERCADO")
+                [ "$AHORA" -ge "$TARGET" ] && break
+                if [ "$AHORA" -eq "$ULTIMO" ]; then QUIETO=$((QUIETO+1)); else QUIETO=0; fi
+                ULTIMO=$AHORA
+                [ "$QUIETO" -ge 6 ] && break   # 3 min sin cambio: la tanda ya terminó/paró
+              done
+
+              AHORA=$(hechos "$MERCADO")
+              if [ "$AHORA" -le "$HECHOS" ]; then
+                echo "  ⚠ sin avance (¿sin saldo de IA?). Deteniendo la calibración."
+                break 2
+              fi
+            done
+          done
+          echo "════════ Calibración terminada ════════"
+          for M in $MERCADOS; do
+            echo "  $M: $(hechos $M) rendidos"
+          done
+```
+
+## .github/workflows/cosecha.yml
+```yaml
+# El cosechador — llena el banco de exámenes con noticias REALES.
+#
+# Busca los días de mayor movimiento de cada símbolo (Yahoo) y les pega el
+# titular real de ese día (Benzinga/Alpaca). Solo suma eventos que tengan
+# noticia real: nunca inventa. Los eventos nuevos quedan en la rama
+# respaldo-datos (datos/cosecha.json) y las tandas de backtest los rinden
+# después. Se dispara a mano (Actions → Run workflow, o app móvil).
+
+name: Cosechar exámenes (noticias reales)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mercados:
+        description: "Mercados a cosechar, separados por coma (vacío = todos). Ej: oro,cripto"
+        required: false
+        default: ""
+      desde:
+        description: "Fecha inicial (AAAA-MM-DD)"
+        required: false
+        default: "2016-01-01"
+      tope:
+        description: "Máx. eventos por símbolo (1-20)"
+        required: false
+        default: "8"
+      reemplazar:
+        description: "Purgar la cosecha anterior y reescribir limpia (true/false)"
+        required: false
+        default: "false"
+
+jobs:
+  cosechar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Cosechar
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          MERCADOS: ${{ github.event.inputs.mercados }}
+          DESDE: ${{ github.event.inputs.desde || '2016-01-01' }}
+          TOPE: ${{ github.event.inputs.tope || '8' }}
+          REEMPLAZAR: ${{ github.event.inputs.reemplazar || 'false' }}
+        run: |
+          respuesta=$(curl -sf -m 60 -X POST \
+            "https://enjambre-motor.onrender.com/api/cosechar?mercados=$MERCADOS&desde=$DESDE&tope=$TOPE&reemplazar=$REEMPLAZAR" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "Respuesta del motor: $respuesta"
+          echo "La cosecha corre en segundo plano. Los eventos nuevos quedan en"
+          echo "la rama respaldo-datos (datos/cosecha.json) y las tandas de"
+          echo "backtest los rinden después."
+```
+
+## .github/workflows/evaluar.yml
+```yaml
+# Evaluación del enjambre — mide el acierto SIN re-respaldar.
+#
+# Re-simula los exámenes ya rendidos bajo el código/entorno actual y reporta el
+# acierto por categoría. Sirve para medir P2 (peso de los arquetipos
+# invertidores en el tono). La PRIMERA corrida con la caché fría gasta LLM
+# (~$0.12/examen) y la calienta; las siguientes con otro `peso` son casi
+# gratis. Tolerante: si el motor tarda (caché fría), no falla — el resultado se
+# guarda en Render y este workflow lo muestra (vuelve a correrlo si hizo falta).
+# Se dispara SOLO a mano (Actions → Run workflow).
+
+name: Evaluar acierto (P2)
+
+on:
+  workflow_dispatch:
+    inputs:
+      peso:
+        description: "Peso de los invertidores en el tono (0=P2 pleno, 1=actual, -1=el de Render)"
+        required: false
+        default: "-1"
+      umbral:
+        description: "Umbral de corrección de sesgo — Plan A (0=off/base, 0.3=corrección activa, -1=el de Render)"
+        required: false
+        default: "-1"
+      doomer:
+        description: "Peso de la voz doomer pura — Intervención 1 (0=off/base, 0.2=activa, -1=el de Render)"
+        required: false
+        default: "-1"
+      mercado:
+        description: "Mercado a evaluar (cripto/indice/oro/petroleo/accion; vacío = todos)"
+        required: false
+        default: ""
+      tamano:
+        description: "Nuevos por tanda (0 = tanda máxima segura ~40). RESUMIBLE: repite para avanzar"
+        required: false
+        default: "0"
+      reiniciar:
+        description: "Borrar el progreso de ese (mercado, peso) y empezar de cero (true/false)"
+        required: false
+        default: "false"
+      local:
+        description: "Leer los casos de la BASE LOCAL en vez del respaldo remoto (útil si el respaldo está caído) (true/false)"
+        required: false
+        default: "false"
+      refrescar:
+        description: "Ignorar la caché de cerebros y llamar FRESCO a la IA (mide cambios de prompt; GASTA LLM) (true/false)"
+        required: false
+        default: "false"
+
+jobs:
+  evaluar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Marca de tiempo previa
+        id: previa
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          antes=$(curl -s -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+            -H "X-Pipeline-Token: $TOKEN" | grep -o '"fecha":"[^"]*"' | head -1 || true)
+          echo "antes=$antes" >> "$GITHUB_OUTPUT"
+          echo "Última evaluación previa: ${antes:-ninguna}"
+
+      - name: Disparar la evaluación
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          PESO: ${{ github.event.inputs.peso || '-1' }}
+          UMBRAL: ${{ github.event.inputs.umbral || '-1' }}
+          DOOMER: ${{ github.event.inputs.doomer || '-1' }}
+          MERCADO: ${{ github.event.inputs.mercado }}
+          TAMANO: ${{ github.event.inputs.tamano || '0' }}
+          REINICIAR: ${{ github.event.inputs.reiniciar || 'false' }}
+          REFRESCAR: ${{ github.event.inputs.refrescar || 'false' }}
+          LOCAL: ${{ github.event.inputs.local || 'false' }}
+        run: |
+          respuesta=$(curl -s -m 60 -X POST \
+            "https://enjambre-motor.onrender.com/api/evaluar?peso=$PESO&umbral=$UMBRAL&doomer=$DOOMER&mercado=$MERCADO&tamano=$TAMANO&reiniciar=$REINICIAR&refrescar=$REFRESCAR&local=$LOCAL" \
+            -H "X-Pipeline-Token: $TOKEN" || true)
+          echo "Motor: ${respuesta:-sin respuesta (reintentará en el sondeo)}"
+
+      - name: Esperar y mostrar el resultado
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          ANTES: ${{ steps.previa.outputs.antes }}
+        run: |
+          echo "Esperando el resultado (la 1ª pasada con caché fría tarda; luego es rápido)…"
+          resultado=""
+          for intento in $(seq 1 40); do
+            sleep 30
+            # -s (no -f): un hipo del motor NO aborta el workflow
+            actual=$(curl -s -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+              -H "X-Pipeline-Token: $TOKEN" || true)
+            fecha=$(echo "$actual" | grep -o '"fecha":"[^"]*"' | head -1 || true)
+            if [ -n "$fecha" ] && [ "$fecha" != "$ANTES" ]; then
+              resultado="$actual"
+              break
+            fi
+            echo "  aún corriendo… (chequeo $intento/40)"
+          done
+          echo "==================== RESULTADO ===================="
+          if [ -n "$resultado" ]; then
+            echo "$resultado" | python3 -m json.tool 2>/dev/null || echo "$resultado"
+          else
+            echo "La evaluación aún no terminó dentro del tiempo del workflow (caché fría)."
+            echo "El motor SIGUE calculando y guardará el resultado. Vuelve a correr este"
+            echo "workflow en unos minutos (con la caché caliente termina en ~1 min)."
+            echo "--- último resultado guardado hasta ahora ---"
+            curl -s -m 30 https://enjambre-motor.onrender.com/api/evaluar \
+              -H "X-Pipeline-Token: $TOKEN" | python3 -m json.tool 2>/dev/null || true
+          fi
+          echo "=================================================="
+          # nunca fallamos por un hipo de red / caché fría: el resultado vive en el motor
+```
+
+## .github/workflows/exportar-calibracion.yml
+```yaml
+# Export de la libreta de calibración — canal propio, independiente del respaldo.
+#
+# Descarga del motor TODOS los casos de calibración (destacadas + backtest) con
+# el resumen de señales por arquetipo (`senales_arquetipo`) y lo sube como
+# ARTEFACTO descargable de la corrida. Sirve para analizar la calibración POR
+# ARQUETIPO sin depender del respaldo a la rama respaldo-datos (cuyo token puede
+# expirar). Se dispara SOLO a mano (Actions → Run workflow). No gasta LLM: solo
+# lee la base ya calculada.
+
+name: Export calibración (artefacto)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  exportar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub."
+            exit 1
+          fi
+
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Descargar la libreta
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          mkdir -p export
+          codigo=$(curl -s -m 120 -o export/calibracion.json -w "%{http_code}" \
+            "https://enjambre-motor.onrender.com/api/calibracion/export" \
+            -H "X-Pipeline-Token: $TOKEN")
+          echo "HTTP $codigo"
+          if [ "$codigo" != "200" ]; then
+            echo "::error::El motor respondió $codigo. Contenido:"
+            cat export/calibracion.json || true
+            exit 1
+          fi
+          n=$(python3 -c "import json,sys; d=json.load(open('export/calibracion.json')); print(d.get('n', len(d.get('casos', []))))")
+          echo "Casos exportados: $n"
+          echo "resumen=$n" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Subir el artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: calibracion-casos
+          path: export/calibracion.json
+          retention-days: 7
+```
+
+## .github/workflows/mantenimiento.yml
+```yaml
+# Tareas de mantenimiento puntuales de El Pulso (se disparan a mano).
+# Usa el mismo secreto ENJAMBRE_PIPELINE_TOKEN que el ritual. Se corre desde
+# Actions → "Mantenimiento" → Run workflow, eligiendo la acción.
+
+name: Mantenimiento
+
+on:
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: "Qué tarea correr"
+        required: true
+        default: "activar-pendientes"
+        type: choice
+        options:
+          - activar-pendientes
+          - diagnostico
+
+jobs:
+  mantenimiento:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Despertar el motor
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "Motor despierto (intento $intento)."; exit 0
+            fi
+            echo "Despertando… ($intento/20)"; sleep 15
+          done
+          echo "::error::El motor no despertó."; exit 1
+
+      - name: Correr la acción
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          ACCION: ${{ github.event.inputs.accion }}
+        run: |
+          if [ "$ACCION" = "activar-pendientes" ]; then
+            respuesta=$(curl -sf -m 30 -X POST \
+              https://enjambre-motor.onrender.com/api/pulso/activar-pendientes \
+              -H "X-Pipeline-Token: $TOKEN")
+            echo "Respuesta: $respuesta"
+          elif [ "$ACCION" = "diagnostico" ]; then
+            # Estado del motor: edición de hoy (estado/enviados), si Resend y el
+            # correo de admin están configurados, y la versión desplegada. Sin
+            # datos personales. Para ver por qué no llegó un correo.
+            respuesta=$(curl -sf -m 30 \
+              https://enjambre-motor.onrender.com/api/panel/estado \
+              -H "X-Pipeline-Token: $TOKEN")
+            echo "Estado del motor: $respuesta"
+          else
+            echo "::error::Acción desconocida: $ACCION"; exit 1
+          fi
+```
+
+## .github/workflows/ritual-diario.yml
+```yaml
+# El despertador del ritual — llena el muro cada madrugada sin manos.
+#
+# Todas las madrugadas, este robot:
+#   1. despierta el motor de Render (el plan free lo duerme), y
+#   2. dispara POST /api/pipeline: recolectar titulares → el portero elige
+#      las 3 del día → se simulan con IA → el muro amanece lleno.
+#   3. VERIFICA que la edición de hoy quedó lista y, si no, REINTENTA.
+#
+# Auto-sanador (23-nov-2026): antes el ritual podía quedar a medias si un deploy
+# de Render reiniciaba el proceso web (el ritual corre como tarea en segundo plano
+# del motor) o si GitHub se saltaba el cron. Ahora el job no termina hasta
+# confirmar la edición del día contra /api/panel/estado, y reintenta una vez; un
+# segundo cron de RED DE SEGURIDAD (~2 h después) repite el intento. Como el ritual
+# es IDEMPOTENTE (si el día ya está preparado, no gasta de nuevo), repetirlo es
+# seguro. Para un disparo 100% garantizado pese a GitHub, usar además un cron
+# EXTERNO (p. ej. cron-job.org) que haga el mismo POST: el endpoint lo soporta.
+#
+# Requisito ÚNICO: el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub
+# (Settings → Secrets and variables → Actions), con el MISMO valor que la
+# variable de entorno del servicio enjambre-motor en Render.
+#
+# También se puede disparar a mano: pestaña Actions → este workflow →
+# "Run workflow" (funciona desde la app de GitHub en el teléfono).
+
+name: El ritual del día
+
+on:
+  schedule:
+    # 10:17 UTC ≈ 6:17 en Chile — antes de la apertura de EE.UU. El minuto :17
+    # (no :00) reduce el retraso de GitHub (todos agendan en punto).
+    # Lunes a viernes: la edición DIARIA (noticias + gráficos).
+    - cron: "17 10 * * 1-5"
+    # Sábado: el RESUMEN DE LA SEMANA (los grandes temas con punto de vista).
+    - cron: "17 10 * * 6"
+    # Domingo: el DEEP-DIVE de una empresa mediana/pequeña o un sector.
+    - cron: "17 10 * * 0"
+    # RED DE SEGURIDAD: ~2 h después, todos los días. Si la edición de hoy ya
+    # está, es un no-op barato (idempotente); si GitHub se saltó el cron de las
+    # 10:17 o un deploy mató el ritual, este lo completa.
+    - cron: "17 12 * * *"
+    # 20:30 UTC = 16:30 en Nueva York (tras el cierre). Lunes a viernes: la
+    # EDICIÓN DE LA TARDE — 'el cierre del mercado' (Premium).
+    - cron: "30 20 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      momento:
+        description: "manana (edición del día) o tarde (el cierre, Premium)"
+        required: false
+        default: "manana"
+
+jobs:
+  despertar-y-preparar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Verificar el secreto
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ENJAMBRE_PIPELINE_TOKEN en GitHub (Settings → Secrets and variables → Actions). Copia el valor desde el Environment del servicio enjambre-motor en Render."
+            exit 1
+          fi
+
+      - name: Despertar el motor (el plan free duerme; ~50 s de bostezo)
+        run: |
+          for intento in $(seq 1 20); do
+            if curl -sf -m 20 https://enjambre-motor.onrender.com/salud > /dev/null; then
+              echo "El motor está despierto (intento $intento)."
+              exit 0
+            fi
+            echo "Despertando… (intento $intento/20)"
+            sleep 15
+          done
+          echo "::error::El motor no despertó en ~5 minutos."
+          exit 1
+
+      - name: Disparar y verificar el ritual (auto-sanador)
+        env:
+          TOKEN: ${{ secrets.ENJAMBRE_PIPELINE_TOKEN }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_MOMENTO: ${{ github.event.inputs.momento }}
+        run: |
+          set -u
+          BASE="https://enjambre-motor.onrender.com"
+          # el cron de las 20:30 UTC (tarde) manda ?momento=tarde; los demás, la
+          # edición de la mañana. El disparo manual usa el input 'momento'.
+          MOMENTO="manana"
+          if [ "$SCHEDULE" = "30 20 * * 1-5" ] || [ "$INPUT_MOMENTO" = "tarde" ]; then
+            MOMENTO="tarde"
+          fi
+          echo "Momento del ritual: $MOMENTO"
+
+          disparar() {
+            curl -sf -m 60 -X POST "$BASE/api/pipeline?momento=$MOMENTO" \
+              -H "X-Pipeline-Token: $TOKEN" && echo
+          }
+
+          # ¿la edición de HOY (mañana) ya está lista? (pendiente de revisión o enviada)
+          edicion_lista() {
+            estado=$(curl -sf -m 20 "$BASE/api/panel/estado" -H "X-Pipeline-Token: $TOKEN" \
+              | python3 -c "import sys,json; e=json.load(sys.stdin).get('edicion_hoy'); print((e or {}).get('estado','ninguna'))" 2>/dev/null)
+            echo "  estado edición de hoy: ${estado:-error}"
+            [ "$estado" = "pendiente" ] || [ "$estado" = "enviada" ]
+          }
+
+          echo "— Disparo 1 —"
+          disparar || echo "aviso: el POST devolvió error (puede haber arrancado igual)"
+
+          # La edición de la tarde se guarda aparte y no se refleja en 'edicion_hoy':
+          # no la verificamos aquí (el POST ya la encoló).
+          if [ "$MOMENTO" = "tarde" ]; then
+            echo "Edición de tarde encolada; no se verifica contra edicion_hoy."
+            exit 0
+          fi
+
+          for intento in $(seq 1 12); do
+            sleep 45
+            if edicion_lista; then
+              echo "✅ Edición de hoy lista (intento $intento)."
+              exit 0
+            fi
+            echo "  aún no lista (intento $intento/12)…"
+          done
+
+          echo "— No quedó lista; REINTENTO el ritual una vez —"
+          disparar || echo "aviso: el POST del reintento devolvió error"
+          for intento in $(seq 1 12); do
+            sleep 45
+            if edicion_lista; then
+              echo "✅ Edición lista tras el reintento (intento $intento)."
+              exit 0
+            fi
+            echo "  aún no lista tras reintento (intento $intento/12)…"
+          done
+
+          echo "::error::El ritual no dejó edición de hoy tras dos intentos (~18 min). Revisar el log del motor en Render."
+          exit 1
+```
+
+## render.yaml
+```yaml
+# Blueprint de Render para el motor de El Enjambre.
+# En render.com: New → Blueprint → apuntar a este repositorio.
+services:
+  - type: web
+    name: enjambre-motor
+    runtime: docker
+    rootDir: engine
+    dockerfilePath: ./Dockerfile
+    plan: starter          # $7/mes: no se duerme + 0.5 CPU (5x vs free) + disco
+    healthCheckPath: /salud
+    # disco persistente: la base (muro, replays, calibración) sobrevive a los
+    # redeploys en vez de regenerarse cada vez. Montado donde vive ENJAMBRE_DB.
+    disk:
+      name: enjambre-datos
+      mountPath: /app/datos
+      sizeGB: 1
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false # se pega a mano en el panel (nunca al repo)
+      - key: ALPACA_API_KEY_ID
+        sync: false
+      - key: ALPACA_API_SECRET_KEY
+        sync: false
+      # 🔒 TOPES DE PRODUCCIÓN (freemium, 19-ago-2026): la muralla de la
+      # billetera. Global = 30 simulaciones NUEVAS al día como máximo (manda
+      # sobre gratis y Premium por igual) ≈ $3,60/día ≈ $108/mes en el peor
+      # caso. Gratis = 1/día por IP; Premium = 40/mes por correo. Cada
+      # simulación ≈ 100 llamadas LLM. Ajustar aquí según el presupuesto.
+      - key: ENJAMBRE_MAX_SIM_DIA
+        value: "30"
+      - key: ENJAMBRE_SIM_DIA_GRATIS
+        value: "1"
+      - key: ENJAMBRE_SIM_MES_PREMIUM
+        value: "40"
+      # orígenes permitidos por CORS: el dominio de Vercel de producción.
+      # Reemplazar por el dominio real; las *.vercel.app ya están permitidas.
+      - key: ENJAMBRE_ORIGENES
+        value: "https://enjambre-ai-agents.vercel.app"
+      # la base vive en el disco PERSISTENTE montado arriba (/app/datos):
+      # sobrevive a los redeploys (plan Starter). El pipeline la puebla.
+      - key: ENJAMBRE_DB
+        value: "/app/datos/enjambre.db"
+      # El Pulso (Etapa 8) — se pegan a mano cuando el dominio esté verificado:
+      - key: RESEND_API_KEY
+        sync: false
+      # correo de Giorgio: recibe el aviso de REVISIÓN de cada edición (con los
+      # botones Aprobar/Descartar) y habilita el pill "Revisión" del panel.
+      # Funciona aun sin dominio verificado (modo prueba de Resend).
+      - key: PULSO_ADMIN_EMAIL
+        sync: false
+      # secreto del webhook de Resend (aperturas/clics del panel de estadísticas).
+      # En Resend: Webhooks → crear uno a {API_URL}/pulso/webhook/resend, copiar
+      # su "Signing Secret" (empieza con whsec_) y pegarlo aquí. Sin esto, el
+      # panel muestra el resto de estadísticas y omite aperturas (falla cerrado).
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
+      # La Redacción — capa de datos de mercado (Barchart) para el análisis:
+      - key: BARCHART_API_KEY
+        sync: false
+      # Remitente de El Pulso. Dominio propio VERIFICADO en Resend
+      # (diarioelpulso.com, 14-ago-2026): ya se puede enviar a cualquier
+      # suscriptor, no solo al dueño de la cuenta. El local ("hola") puede ser
+      # cualquiera sin buzón real; para recibir respuestas habría que añadir un
+      # reply-to o un buzón después.
+      - key: PULSO_REMITENTE
+        value: "El Pulso <hola@diarioelpulso.com>"
+      - key: ENJAMBRE_WEB_URL
+        value: "https://enjambre-ai-agents.vercel.app"
+      - key: ENJAMBRE_API_URL
+        value: "https://enjambre-motor.onrender.com"
+      # aviso a Giorgio por Telegram (opcional):
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      # token que autoriza al cron a disparar el ritual (mismo valor en ambos)
+      - key: ENJAMBRE_PIPELINE_TOKEN
+        generateValue: true
+      # 🔒 PRUEBAS PRIVADAS: mientras esta clave esté puesta, SOLO quien la
+      # traiga (?acceso=CLAVE en la URL) puede soltar titulares al enjambre
+      # (que gastan IA). El muro, el archivo y los replays siguen abiertos.
+      # Para abrir al público: borrar esta variable. Se pega a mano.
+      - key: ENJAMBRE_ACCESO
+        sync: false
+      # respaldo de la calibración a GitHub (rama respaldo-datos, nunca main):
+      # token fine-grained con permiso Contents (RW) SOLO sobre este repo.
+      # El disco free de Render es efímero; sin este token, los casos del
+      # corrector se pierden en cada redeploy.
+      - key: GITHUB_RESPALDO_TOKEN
+        sync: false
+
+# ─────────────────────────────────────────────────────────────────────────
+# El cron del correo diario (El Pulso) se agrega DESPUÉS, cuando esté lista
+# la cuenta de Resend. Requiere pegar en el cron el mismo ENJAMBRE_PIPELINE_TOKEN
+# que Render genera en el servicio web. Bloque de referencia en docs/despliegue.md
+# (sección "El cron enjambre-pulso"). Se omite ahora para un primer deploy simple.
+# ─────────────────────────────────────────────────────────────────────────
 ```
 

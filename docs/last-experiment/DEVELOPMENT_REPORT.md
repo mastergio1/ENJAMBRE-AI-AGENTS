@@ -92,6 +92,28 @@ proveedor PIT aprobado), no se usó el banco de shocks como evidencia, no se toc
 producción, no se crearon nuevas hipótesis ni se movieron los gates. Todo eso espera la
 decisión del fundador.
 
+## 6.bis Arranque sobre datos REALES de SPY (2021–2024)
+
+Tras "empieza a correr", se trajo la serie **real** de SPY diario ajustado (Yahoo
+Finance vía Firecrawl/Alexandria, 1.005 barras 2021-01-04 → 2024-12-31) y se construyó
+el **panel cuantitativo real** (`docs/last-experiment/dev_panel_spy_quant.json`, 942
+eventos, horizonte 2 sesiones). Hallazgos reales (sin LLM todavía):
+
+- **Calendario validado contra la realidad:** las 1.005 fechas de trading de Yahoo
+  coinciden **exactamente** con las que nuestro calendario NYSE marca como sesión (0
+  discrepancias). El `calendar.py` es correcto sobre datos reales.
+- **Tasa base real:** SPY **sube en 2 sesiones el 58,2%** de las veces (64% en el tramo
+  de test). "El mercado sube" es un rival fuerte, como esperábamos.
+- **El cuantitativo solo-precio NO aporta:** P1 (precio/volatilidad) da **Brier 0,2368
+  vs 0,2374 de P0** y **64% de acierto direccional = la tasa base**. En SPY a 2 sesiones,
+  el precio por sí solo no predice la dirección mejor que "sube". Resultado real y
+  coherente con mercados eficientes.
+
+Esto es la base cuantitativa real del torneo, ya montada y medida. **Lo que falta para
+correr P2–P5 sobre datos reales** (no se puede inventar): la **clave Anthropic** (esta
+sesión no la tiene) y un **feed de titulares PIT** por sesión, además de la aprobación y
+el presupuesto. Sin eso, P2/P3/P4/P5 no tienen señal de IA que medir.
+
 ## 7. Veredicto previo (contexto, no resultado)
 
 Toda la evidencia histórica (7 análisis) apunta a que el ABM no aporta ventaja sobre una

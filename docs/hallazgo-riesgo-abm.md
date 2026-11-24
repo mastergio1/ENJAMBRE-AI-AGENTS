@@ -42,12 +42,31 @@ son < 0.2: no es un predictor de riesgo usable.
 2. Es la 6ª evidencia consistente: el ABM, con lo que hoy produce, no aporta valor
    predictivo medible — ni en dirección ni en magnitud.
 
-## Qué NO cierra (la versión completa de H14)
+## Segundo pase — features RICAS de microestructura (re-corriendo sims). H14 CERRADA.
 
-Este pase usa solo las **salidas escalares** del ABM (volatilidad y magnitud simuladas,
-dispersión del consenso). Las features **ricas de microestructura** que propone la
-auditoría —order-flow imbalance, índice de manada, forma de la trayectoria, expected
-shortfall virtual, velocidad del consenso— **no están en los datos**: requieren
-**re-correr simulaciones exportándolas** (factible por el motor, como el barrido de
-población). Es el experimento pendiente para cerrar H14. El primer pase no es
-alentador, pero esas features aún no se han probado.
+Se re-corrieron las 142 simulaciones de índice extrayendo la microestructura del tramo
+posterior a la noticia. Correlación de rango (Spearman) con la magnitud real:
+
+| Feature rica del ABM | Spearman |
+|---|---:|
+| volatilidad simulada | +0.024 |
+| desequilibrio de órdenes | −0.039 |
+| sobre-reacción (overshoot) | −0.079 |
+| reversión | −0.003 |
+| rango | −0.023 |
+| dispersión del consenso | −0.003 |
+
+**Todas ≈ 0.** Y al predecir la magnitud fuera de muestra, añadir las features ricas
+EMPEORA: MAE 1.241 vs 1.172 del baseline trivial (la media).
+
+**H14 cerrada en NEGATIVO:** ni las salidas escalares ni las features ricas de
+microestructura del ABM predicen cuánto se mueve el mercado. El enjambre **tampoco
+predice el riesgo**.
+
+## Veredicto de la Fase 4
+
+La hipótesis que podía rescatar al ABM (predecir riesgo/volatilidad aunque no la
+dirección) **no se sostiene**. Es la 6ª evidencia consistente: el motor de agentes no
+aporta valor predictivo medible — ni dirección ni magnitud. Su valor es de **producto
+y visualización**. Caveat de siempre: exploratorio (banco histórico, 1 semilla, n=142);
+el veredicto último es prospectivo, pero la señal (su ausencia) es clara y repetida.

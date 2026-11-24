@@ -1,0 +1,36 @@
+# THE LAST EXPERIMENT — sellado/resolución diaria.
+#
+# DESACTIVADO POR DEFECTO. No se ejecuta hasta que Giorgio apruebe la activación
+# (ver docs/last-experiment/RUNBOOK.md). Mientras `workflow_dispatch` sea el único
+# disparador, GitHub no lo corre solo. NO añadir `schedule:` ni secretos hasta la
+# aprobación, el presupuesto congelado y un proveedor de precios PIT validado.
+#
+# Un workflow atrasado NO genera un pronóstico pasado: la guardia de calendario/horario
+# NYSE dentro del CLI rechaza sesiones fuera de ventana. Preferir un scheduler durable
+# si se exige puntualidad del cutoff/deadline (GitHub Actions puede retrasarse).
+name: last-experiment (DESACTIVADO)
+
+on:
+  workflow_dispatch:
+    inputs:
+      etapa:
+        description: "seal | resolve (requiere aprobación del fundador)"
+        required: true
+        default: "seal"
+
+# Sin `schedule:` a propósito. Activar solo tras aprobación explícita.
+
+permissions:
+  contents: read
+
+jobs:
+  guardia:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recordatorio de bloqueo
+        run: |
+          echo "Este workflow está DESACTIVADO por diseño."
+          echo "La activación requiere aprobación del fundador, presupuesto congelado y"
+          echo "un proveedor de precios point-in-time aprobado. Ver docs/last-experiment/RUNBOOK.md."
+          echo "No se ejecuta el sellado automáticamente."
+          exit 1

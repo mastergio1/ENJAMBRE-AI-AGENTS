@@ -1,0 +1,81 @@
+{
+  "experiment_id": "LAST-EXPERIMENT-SPY-2D",
+  "symbol": "SPY",
+  "protocolo_version": "le-1",
+  "horizonte_sesiones": 2,
+  "cutoff_min_antes_cierre": 30,
+  "deadline_min_despues_cutoff": 10,
+  "ventana_meses": 6,
+  "t0": null,
+  "t1": null,
+  "min_sesiones": 100,
+  "min_cobertura": 0.9,
+  "delta_min": 0.005,
+  "presupuesto_usd": 300.0,
+  "capital_real_usd": 0.0,
+  "b_star": null,
+  "bootstrap": {
+    "block_sessions": 5,
+    "resamples": 10000,
+    "seed": 20261124,
+    "block_sensitivity": 10
+  },
+  "economia": {
+    "capital": 10000.0,
+    "umbral_largo": 0.55,
+    "umbral_corto": 0.45,
+    "coste_base_bps": 5.0,
+    "coste_estres_bps": 10.0,
+    "max_tramo_frac": 0.5,
+    "max_bruto": 1.0,
+    "variante": "long_short",
+    "tolerancia_drawdown_pp": 2.0
+  },
+  "modelos": {
+    "l2_grid": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "desempate_C": "menor",
+    "prob_empate": 0.5
+  },
+  "abm": {
+    "seeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "config_agentes": "config/agentes.json",
+    "features": [
+      "ret_final_mediano",
+      "dispersion_ret_final",
+      "vol_sim_mediana",
+      "desequilibrio_agresor",
+      "max_drawdown_sim",
+      "rango_sim"
+    ],
+    "confianza_lider": 0.5
+  },
+  "noticias": {
+    "max_titulares": 5,
+    "categorias": [
+      "CPI",
+      "PCE",
+      "empleo",
+      "FOMC",
+      "PIB",
+      "ventas",
+      "PMI"
+    ],
+    "token_sin_evento": "NO_MACRO_EVENT"
+  },
+  "hash_datos": null,
+  "hash_codigo": null,
+  "hash_prompts": null,
+  "hash_artefactos": null,
+  "hash_calendario": null,
+  "code_commit": null,
+  "_nota": "Ejemplo NO congelado. T0/B*/hashes se completan en freeze tras aprobacion. capital_real_usd=0 SIEMPRE.",
+  "dev_panel": "docs/last-experiment/dev_panel.json (pendiente: construir panel PIT historico de SPY)"
+}

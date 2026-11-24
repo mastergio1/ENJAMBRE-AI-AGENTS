@@ -28,3 +28,15 @@ def test_feature_informativa_baja_el_mae(tmp_path):
     r = ra.evaluar(str(pcf), str(praw))
     assert r["spearman"]["vol_abm"] > 0.8          # la vol simulada rankea la magnitud
     assert r["mae_oos"]["+ features ABM"] < r["mae_oos"]["constante (media)"]
+
+
+def test_spearman_constante_devuelve_none():
+    # Fix F12: una variable constante NO debe producir correlación espuria.
+    assert ra.spearman([1, 1, 1, 1], [1, 2, 3, 4]) is None
+    assert ra.spearman([1, 2, 3, 4], [5, 5, 5, 5]) is None
+
+
+def test_spearman_empates_rango_medio():
+    # Con empates, usa rangos medios (scipy), no argsort arbitrario.
+    r = ra.spearman([1, 1, 2, 2, 3], [1, 1, 2, 2, 3])
+    assert r is not None and r > 0.9

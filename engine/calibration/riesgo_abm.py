@@ -60,15 +60,21 @@ def armar(ruta_con_fecha, ruta_raw, mercado="indice"):
 
 
 def spearman(x, y):
-    """Correlación de rango (sin scipy): Pearson sobre los rangos."""
+    """Correlación de rango de Spearman (rangos medios en empates, vía scipy).
+
+    Fix F12 (auditoría): el doble `argsort` anterior asignaba rangos arbitrarios a los
+    empates (una constante [1,1,1,1] recibía rangos [0,1,2,3], escapando al chequeo de
+    varianza y produciendo correlación espuria). Ahora usa `scipy.stats.spearmanr`
+    (rangos medios correctos) y devuelve `None` si alguna variable es constante.
+    """
     x, y = np.asarray(x, float), np.asarray(y, float)
     if len(x) < 3:
-        return 0.0
-    rx = np.argsort(np.argsort(x)).astype(float)
-    ry = np.argsort(np.argsort(y)).astype(float)
-    if rx.std() == 0 or ry.std() == 0:
-        return 0.0
-    return float(np.corrcoef(rx, ry)[0, 1])
+        return None
+    if np.unique(x).size < 2 or np.unique(y).size < 2:
+        return None  # variable constante: correlación indefinida
+    from scipy.stats import spearmanr
+    rho, _ = spearmanr(x, y)
+    return None if np.isnan(rho) else float(rho)
 
 
 def _mae_oos(filas, feats, frac_train=0.7):
@@ -94,8 +100,10 @@ def _mae_oos(filas, feats, frac_train=0.7):
 def evaluar(ruta_con_fecha, ruta_raw, mercado="indice"):
     filas = armar(ruta_con_fecha, ruta_raw, mercado)
     y = [f["magnitud_real"] for f in filas]
-    corr = {c: round(spearman([f[c] for f in filas], y), 3)
-            for c in ("vol_abm", "dir_abm_abs", "dispersion", "consenso_abs")}
+    def _r(c):
+        v = spearman([f[c] for f in filas], y)
+        return round(v, 3) if v is not None else None
+    corr = {c: _r(c) for c in ("vol_abm", "dir_abm_abs", "dispersion", "consenso_abs")}
     mae = {
         "constante (media)": round(_mae_oos(filas, []), 3),
         "solo |consenso|": round(_mae_oos(filas, ["consenso_abs"]), 3),
@@ -110,7 +118,7 @@ def imprimir(ruta_con_fecha, ruta_raw, mercados=("indice", None)):
         print(f"\n=== Riesgo (magnitud) · {(m or 'TODOS').upper()} ({r['n']} casos) ===")
         print("  correlación de rango (Spearman) con la magnitud REAL:")
         for c, v in r["spearman"].items():
-            print(f"    {c:16} {v:+.3f}")
+            print(f"    {c:16} {'  n/d (constante)' if v is None else f'{v:+.3f}'}")
         print("  MAE fuera de muestra al predecir la magnitud (menor = mejor):")
         for c, v in r["mae_oos"].items():
             print(f"    {c:20} {v}")
@@ -184,7 +192,11 @@ def extraer_todos(ruta_con_fecha, ruta_raw, salida, seed=20260101):
 def evaluar_rico(filas):
     FEATS = ["vol_sim", "imbalance", "overshoot", "reversal", "rango", "dispersion"]
     y = [f["magnitud_real"] for f in filas]
-    corr = {c: round(spearman([f[c] for f in filas], y), 3) for c in FEATS}
+
+    def _r(c):
+        v = spearman([f[c] for f in filas], y)
+        return round(v, 3) if v is not None else None
+    corr = {c: _r(c) for c in FEATS}
     mae = {
         "constante (media)": round(_mae_oos(filas, []), 3),
         "+ features ricas ABM": round(_mae_oos(filas, FEATS), 3),

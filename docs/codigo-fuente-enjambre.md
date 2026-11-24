@@ -14,7 +14,7 @@
 - `engine/simular.py` (42 líneas)
 - `engine/demo_titular.py` (57 líneas)
 - `engine/probar_portero.py` (27 líneas)
-- `engine/server.py` (2090 líneas)
+- `engine/server.py` (2151 líneas)
 - `engine/panel.html` (525 líneas)
 - `engine/conftest.py` (31 líneas)
 - `engine/market/__init__.py` (0 líneas)
@@ -33,34 +33,41 @@
 - `engine/network/__init__.py` (0 líneas)
 - `engine/network/red.py` (119 líneas)
 - `engine/evidence/__init__.py` (1 líneas)
-- `engine/evidence/contrato.py` (134 líneas)
+- `engine/evidence/contrato.py` (145 líneas)
 - `engine/evidence/fuentes.py` (66 líneas)
 - `engine/evidence/recoleccion.py` (37 líneas)
 - `engine/calibration/__init__.py` (0 líneas)
-- `engine/calibration/ablacion.py` (269 líneas)
+- `engine/calibration/a2_vs_a3.py` (181 líneas)
+- `engine/calibration/ablacion.py` (294 líneas)
 - `engine/calibration/ablacion_arquetipos.py` (204 líneas)
 - `engine/calibration/acierto_por_arquetipo.py` (79 líneas)
+- `engine/calibration/barrido_poblacion.py` (143 líneas)
 - `engine/calibration/baselines.py` (86 líneas)
 - `engine/calibration/benchmark_motor.py` (87 líneas)
 - `engine/calibration/calibrar_respaldo.py` (86 líneas)
 - `engine/calibration/confianza_efectiva.py` (91 líneas)
 - `engine/calibration/contaminacion_temporal.py` (113 líneas)
+- `engine/calibration/correlacion_cerebros.py` (91 líneas)
 - `engine/calibration/data_loader.py` (51 líneas)
 - `engine/calibration/escenarios.py` (88 líneas)
 - `engine/calibration/evaluar_por_segmento.py` (219 líneas)
-- `engine/calibration/holdout.py` (104 líneas)
+- `engine/calibration/evaluar_prospectivo.py` (120 líneas)
+- `engine/calibration/holdout.py` (110 líneas)
 - `engine/calibration/intervalos.py` (113 líneas)
 - `engine/calibration/intervalos_multiway.py` (99 líneas)
+- `engine/calibration/metamodelo.py` (149 líneas)
 - `engine/calibration/optimizar_freno.py` (129 líneas)
 - `engine/calibration/optimizer.py` (155 líneas)
+- `engine/calibration/predictor_calibrado.py` (111 líneas)
 - `engine/calibration/real_optimizer.py` (342 líneas)
 - `engine/calibration/recopilar_datos.py` (147 líneas)
 - `engine/calibration/remedir_sin_fuga.py` (174 líneas)
+- `engine/calibration/riesgo_abm.py` (192 líneas)
 - `engine/calibration/un_llm.py` (138 líneas)
 - `engine/calibration/validacion_base.py` (160 líneas)
 - `engine/calibration/validar_freno_hechos.py` (124 líneas)
 - `engine/calibration/verificador.py` (120 líneas)
-- `engine/calibration/walk_forward.py` (246 líneas)
+- `engine/calibration/walk_forward.py` (265 líneas)
 - `engine/contenido/__init__.py` (0 líneas)
 - `engine/contenido/analisis_semanal.py` (220 líneas)
 - `engine/contenido/backtest.py` (518 líneas)
@@ -97,12 +104,14 @@
 - `engine/validation/__init__.py` (0 líneas)
 - `engine/validation/conftest.py` (16 líneas)
 - `engine/validation/hechos_estilizados.py` (36 líneas)
-- `engine/validation/test_ablacion.py` (98 líneas)
+- `engine/validation/test_a2_vs_a3.py` (74 líneas)
+- `engine/validation/test_ablacion.py` (107 líneas)
 - `engine/validation/test_ablacion_arquetipos.py` (91 líneas)
 - `engine/validation/test_acierto_por_arquetipo.py` (50 líneas)
 - `engine/validation/test_analisis_semanal.py` (229 líneas)
 - `engine/validation/test_archivo.py` (151 líneas)
 - `engine/validation/test_backtest.py` (237 líneas)
+- `engine/validation/test_barrido_poblacion.py` (30 líneas)
 - `engine/validation/test_baselines.py` (46 líneas)
 - `engine/validation/test_benchmark_motor.py` (39 líneas)
 - `engine/validation/test_calibracion.py` (162 líneas)
@@ -116,6 +125,7 @@
 - `engine/validation/test_contenido.py` (167 líneas)
 - `engine/validation/test_correccion_sesgo.py` (102 líneas)
 - `engine/validation/test_corrector.py` (138 líneas)
+- `engine/validation/test_correlacion_cerebros.py` (28 líneas)
 - `engine/validation/test_cosechador.py` (113 líneas)
 - `engine/validation/test_cuota_atomica.py` (76 líneas)
 - `engine/validation/test_doomer.py` (86 líneas)
@@ -124,13 +134,14 @@
 - `engine/validation/test_entrevista.py` (60 líneas)
 - `engine/validation/test_evaluar.py` (120 líneas)
 - `engine/validation/test_evaluar_por_segmento.py` (46 líneas)
-- `engine/validation/test_evidencia.py` (96 líneas)
+- `engine/validation/test_evaluar_prospectivo.py` (41 líneas)
+- `engine/validation/test_evidencia.py` (110 líneas)
 - `engine/validation/test_evidencia_fuentes.py` (55 líneas)
 - `engine/validation/test_freno_manada.py` (86 líneas)
 - `engine/validation/test_graficos.py` (57 líneas)
 - `engine/validation/test_guardia_polaridad.py` (38 líneas)
 - `engine/validation/test_hechos_estilizados.py` (86 líneas)
-- `engine/validation/test_holdout.py` (88 líneas)
+- `engine/validation/test_holdout.py` (98 líneas)
 - `engine/validation/test_intervalos.py` (58 líneas)
 - `engine/validation/test_intervalos_multiway.py` (47 líneas)
 - `engine/validation/test_invariantes_mercado.py` (68 líneas)
@@ -139,6 +150,7 @@
 - `engine/validation/test_lexico_cobertura.py` (129 líneas)
 - `engine/validation/test_memoria_secuencias.py` (42 líneas)
 - `engine/validation/test_mercado.py` (101 líneas)
+- `engine/validation/test_metamodelo.py` (59 líneas)
 - `engine/validation/test_muro.py` (219 líneas)
 - `engine/validation/test_observatorio.py` (123 líneas)
 - `engine/validation/test_p2_tono.py` (88 líneas)
@@ -146,6 +158,7 @@
 - `engine/validation/test_pagos.py` (144 líneas)
 - `engine/validation/test_pipeline_prediccion.py` (93 líneas)
 - `engine/validation/test_predicciones.py` (101 líneas)
+- `engine/validation/test_predictor_calibrado.py` (27 líneas)
 - `engine/validation/test_pulso.py` (560 líneas)
 - `engine/validation/test_red_influencia.py` (86 líneas)
 - `engine/validation/test_redaccion.py` (185 líneas)
@@ -155,20 +168,21 @@
 - `engine/validation/test_resolver_predicciones.py` (68 líneas)
 - `engine/validation/test_respaldo.py` (140 líneas)
 - `engine/validation/test_resumen_semanal.py` (124 líneas)
+- `engine/validation/test_riesgo_abm.py` (30 líneas)
 - `engine/validation/test_seguridad.py` (341 líneas)
 - `engine/validation/test_senal_ponderada.py` (86 líneas)
-- `engine/validation/test_servidor.py` (182 líneas)
+- `engine/validation/test_servidor.py` (194 líneas)
 - `engine/validation/test_setup.py` (54 líneas)
 - `engine/validation/test_un_llm.py` (95 líneas)
 - `engine/validation/test_verificador.py` (91 líneas)
-- `engine/validation/test_walk_forward.py` (137 líneas)
+- `engine/validation/test_walk_forward.py` (157 líneas)
 - `engine/Dockerfile` (21 líneas)
 - `engine/requirements.txt` (13 líneas)
 - `engine/requirements-dev.txt` (6 líneas)
 - `engine/pytest.ini` (11 líneas)
 - `engine/__init__.py` (0 líneas)
 
-**Subtotal motor: 160 archivos, 24498 líneas.**
+**Subtotal motor: 174 archivos, 25961 líneas.**
 
 ### Parte 2 — Frontend (`web/`)
 - `web/package.json` (21 líneas)
@@ -211,7 +225,7 @@
 
 **Subtotal infraestructura: 8 archivos, 745 líneas.**
 
-**TOTAL: 193 archivos, 30922 líneas.**
+**TOTAL: 207 archivos, 32385 líneas.**
 
 ---
 
@@ -3157,6 +3171,67 @@ def disparar_pipeline(tareas: BackgroundTasks, momento: str = "manana",
     momento = "tarde" if momento == "tarde" else "manana"
     tareas.add_task(_correr_ritual, momento)
     return {"estado": "iniciado", "momento": momento}
+
+
+# ---------- Experimento A2 (un LLM neutral) desde el motor (Plan B) ----------
+# El entorno de nube de las sesiones no siempre toma la ANTHROPIC_API_KEY; el motor
+# en Render SÍ la tiene. Este par de endpoints corre A2 (una lectura LLM neutral por
+# titular, cacheada) usando la clave del motor, para comparar M4 (un LLM) vs A3 (el
+# consenso de 110) sin depender del entorno de nube. Protegido por token admin.
+_A2_ESTADO: dict = {"estado": "ninguno"}
+
+
+def _ruta_a2() -> str:
+    from contenido import persistencia
+    base = os.path.dirname(str(os.environ.get("ENJAMBRE_DB", persistencia.RUTA_DEFECTO)))
+    return os.path.join(base, "a2_senales.json")
+
+
+def _correr_a2() -> None:
+    """Corre A2 sobre los titulares ya guardados. Idempotente: un_llm.senales cachea,
+    así que si un deploy lo mata, re-disparar continúa donde quedó. Nunca tumba el
+    servidor."""
+    global _A2_ESTADO
+    try:
+        from calibration import un_llm
+        from contenido import persistencia, respaldo
+        conexion = persistencia.conectar()
+        try:
+            casos = respaldo.exportar_casos(conexion)
+        finally:
+            conexion.close()
+        titulares = un_llm.titulares_de(casos)
+        _A2_ESTADO = {"estado": "corriendo", "n_total": len(titulares)}
+        mapa = un_llm.senales(titulares, _ruta_a2())
+        _A2_ESTADO = {"estado": "listo", "n_total": len(titulares), "n_hechos": len(mapa)}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        _A2_ESTADO = {"estado": "error", "detalle": str(e)[:300]}
+
+
+@app.post("/api/experimento/a2")
+def experimento_a2(tareas: BackgroundTasks, x_pipeline_token: str = Header(default="")) -> dict:
+    """Dispara A2 en segundo plano (minutos). Protegido. Re-disparar es seguro
+    (cacheado). Consultar el avance con GET /api/experimento/a2."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    tareas.add_task(_correr_a2)
+    return {"estado": "iniciado"}
+
+
+@app.get("/api/experimento/a2")
+def experimento_a2_estado(x_pipeline_token: str = Header(default=""), incluir: int = 0) -> dict:
+    """Estado del experimento A2; con ?incluir=1 (y estado 'listo') devuelve las
+    señales {titular: senal} para traerlas a la sesión y correr la comparación."""
+    if not _token_admin_ok(x_pipeline_token):
+        return JSONResponse({"error": "no autorizado"}, status_code=403)  # type: ignore[return-value]
+    r = dict(_A2_ESTADO)
+    if incluir and r.get("estado") == "listo":
+        ruta = _ruta_a2()
+        if os.path.exists(ruta):
+            r["senales"] = json.loads(open(ruta, encoding="utf-8").read())
+    return r
 
 
 @app.post("/api/corrector")
@@ -6124,6 +6199,17 @@ def construir_evidencia(*, event_id, activo, as_of, titular, event_timestamp=Non
         validar_fuente(f, as_of_dt)
     for e in expectativas:
         validar_expectativa(e, as_of_dt)
+    # F03 (auditoría científica): un HECHO observado no puede ser posterior al corte.
+    # El hash garantiza integridad del contenido, no su validez causal: una fecha de
+    # evento en el futuro contaminaría la predicción aun con hash válido. Un evento
+    # FUTURO programado (p. ej. el próximo FOMC) es admisible, pero como `scheduled_at`,
+    # no como `event_timestamp` de un hecho ya ocurrido.
+    if event_timestamp is not None:
+        if _parse(event_timestamp, "event_timestamp") > as_of_dt:
+            raise EvidenciaInvalida(
+                f"event_timestamp ({event_timestamp}) es posterior al as_of ({as_of}): "
+                f"un hecho observado no puede venir del futuro. Si es un evento "
+                f"programado conocido, pásalo como scheduled_at, no como event_timestamp.")
 
     ev = {
         "event_id": event_id,
@@ -6298,6 +6384,191 @@ def evidencia_para(simbolo, titular, as_of, *, event_id=None, mercado=None,
 
 ```
 
+## engine/calibration/a2_vs_a3.py
+```python
+"""M4 vs A3 — comparación TITULAR POR TITULAR entre un LLM neutral (A2) y el consenso
+de ~110 cerebros (A3).
+
+La tabla de `ablacion.py` da un acierto global por escalón, cada uno sobre SU propia
+cobertura. Aquí se mira el mismo examen para los dos, caso a caso:
+
+  1. Cobertura COMÚN: solo casos direccionables (|pct_corr| ≥ ZONA) donde AMBOS opinan.
+     Se informa cuántos casos pierde cada uno (no comparar a coberturas distintas).
+  2. Acierto de A2 y A3 sobre esa misma cobertura, con su IC honesto (multiway).
+  3. Diferencia PAREADA A2−A3 por evento (cluster bootstrap: la unidad es el anuncio).
+  4. Discordancias: en cuántos casos acierta solo A2 vs solo A3 (McNemar exacto, solo
+     indicativo porque asume independencia; manda el bootstrap por evento).
+  5. Acuerdo de signo y correlación entre las dos señales.
+  6. Tabla por titular (markdown) con las dos señales, lo que pasó y quién acertó.
+
+Es EXPLORATORIO (banco histórico sesgado por selección, n chico): no da veredicto
+definitivo. Si el IC pareado cruza 0, el veredicto honesto es "no distinguible".
+
+Uso:
+    python3 engine/calibration/a2_vs_a3.py cal.con_fecha.json cal.json a2_senales.json [tabla.md]
+"""
+import math
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import ablacion
+from calibration.remedir_sin_fuga import _sg
+
+ZONA = ablacion.ZONA
+
+
+def _opina(x):
+    return x not in (0, None)
+
+
+def cobertura(filas, mercado=None, zona=ZONA):
+    """Cuántos casos direccionables hay y en cuántos opina cada escalón / ambos."""
+    sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
+    dire = [f for f in sub if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
+    return {
+        "direccionables": len(dire),
+        "con_a2": sum(1 for f in dire if _opina(f.get("a2"))),
+        "con_a3": sum(1 for f in dire if _opina(f.get("senal"))),
+        "ambos": sum(1 for f in dire if _opina(f.get("a2")) and _opina(f.get("senal"))),
+    }
+
+
+def pares(filas, mercado=None, zona=ZONA):
+    """Filas de la cobertura común, con el acierto de cada uno ya calculado."""
+    out = []
+    for f in filas:
+        if mercado is not None and f.get("mercado") != mercado:
+            continue
+        pc = f.get("pct_corr")
+        if pc is None or abs(pc) < zona:
+            continue
+        a2, a3 = f.get("a2"), f.get("senal")
+        if not (_opina(a2) and _opina(a3)):
+            continue
+        out.append({**f, "ok_a2": int(_sg(a2) == _sg(pc)), "ok_a3": int(_sg(a3) == _sg(pc))})
+    return out
+
+
+def mcnemar_exacto(b, c):
+    """p bilateral exacto de McNemar (binomial con p=0.5 sobre las discordancias)."""
+    n = b + c
+    if n == 0:
+        return 1.0
+    k = min(b, c)
+    cola = sum(math.comb(n, i) for i in range(k + 1)) / 2 ** n
+    return min(1.0, 2 * cola)
+
+
+def _pearson(xs, ys):
+    n = len(xs)
+    if n < 3:
+        return None
+    mx, my = sum(xs) / n, sum(ys) / n
+    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    sx = math.sqrt(sum((x - mx) ** 2 for x in xs))
+    sy = math.sqrt(sum((y - my) ** 2 for y in ys))
+    return round(sxy / (sx * sy), 3) if sx and sy else None
+
+
+def comparar(filas, mercado=None, zona=ZONA, **kw):
+    """Todo lo de M4 vs A3 sobre la cobertura común de un mercado (o de todos)."""
+    ps = pares(filas, mercado, zona)
+    items = lambda clave: [(p[clave], {"simbolo": p.get("simbolo"),
+                                       "fecha": str(p.get("fecha", ""))[:10],
+                                       "anio": str(p.get("anio") or str(p.get("fecha", ""))[:4])})
+                           for p in ps]
+    solo_a2 = sum(1 for p in ps if p["ok_a2"] and not p["ok_a3"])
+    solo_a3 = sum(1 for p in ps if p["ok_a3"] and not p["ok_a2"])
+    return {
+        "cobertura": cobertura(filas, mercado, zona),
+        "A2": ablacion._ci_honesto(items("ok_a2"), **kw),
+        "A3": ablacion._ci_honesto(items("ok_a3"), **kw),
+        "pareado": ablacion.pareado(filas, "A2_un_llm", "A3_consenso",
+                                    mercado=mercado, zona=zona),
+        "ambos_aciertan": sum(1 for p in ps if p["ok_a2"] and p["ok_a3"]),
+        "ambos_fallan": sum(1 for p in ps if not p["ok_a2"] and not p["ok_a3"]),
+        "solo_a2": solo_a2, "solo_a3": solo_a3,
+        "mcnemar_p": round(mcnemar_exacto(solo_a2, solo_a3), 4),
+        "acuerdo_signo": (round(100 * sum(1 for p in ps if _sg(p["a2"]) == _sg(p["senal"]))
+                                / len(ps), 1) if ps else None),
+        "correlacion": _pearson([p["a2"] for p in ps], [p["senal"] for p in ps]),
+    }
+
+
+def veredicto(res):
+    """Lectura honesta en una línea (reglas del plan v5)."""
+    p = res["pareado"]
+    if p["media"] is None:
+        return "sin datos comunes"
+    if not p["excluye_cero"]:
+        return "no distinguible con estos datos (el IC pareado cruza 0)"
+    return ("A2 > A3: el consenso pierde señal al promediar — investigar"
+            if p["media"] > 0 else "A3 > A2: la diversidad de cerebros aporta")
+
+
+def _estado(p):
+    if p["ok_a2"] and p["ok_a3"]:
+        return "ambos ✓"
+    if p["ok_a2"]:
+        return "solo A2 ✓"
+    if p["ok_a3"]:
+        return "solo A3 ✓"
+    return "ambos ✗"
+
+
+def tabla_titulares(filas, zona=ZONA):
+    """Markdown: una fila por (titular, activo) de la cobertura común, ordenada por
+    mercado y fecha. Las discordancias primero dentro de cada mercado."""
+    ps = pares(filas, None, zona)
+    orden = {"solo A2 ✓": 0, "solo A3 ✓": 1, "ambos ✗": 2, "ambos ✓": 3}
+    ps.sort(key=lambda p: (str(p.get("mercado")), orden[_estado(p)], str(p.get("fecha"))))
+    lineas = ["| mercado | fecha | activo | titular | A3 (consenso) | A2 (1 LLM) | real % | quién acierta |",
+              "|---|---|---|---|---:|---:|---:|---|"]
+    for p in ps:
+        tit = (p.get("titular") or "").replace("|", "/")
+        if len(tit) > 110:
+            tit = tit[:107] + "…"
+        lineas.append(
+            f"| {p.get('mercado')} | {str(p.get('fecha'))[:10]} | {p.get('simbolo')} | {tit} "
+            f"| {p['senal']:+.2f} | {p['a2']:+.2f} | {p['pct_corr']:+.2f} | {_estado(p)} |")
+    return "\n".join(lineas)
+
+
+def imprimir(filas, mercados=("indice", None, "accion", "cripto", "oro", "petroleo")):
+    for m in mercados:
+        r = comparar(filas, mercado=m)
+        c = r["cobertura"]
+        if not c["ambos"]:
+            continue
+        print(f"\n=== M4 (A2, 1 LLM) vs A3 (consenso) · {(m or 'TODOS').upper()} ===")
+        print(f"  cobertura: {c['direccionables']} direccionables · A2 opina {c['con_a2']} · "
+              f"A3 opina {c['con_a3']} · ambos {c['ambos']}")
+        for k in ("A2", "A3"):
+            d = r[k]
+            print(f"  {k}: {d['punto']}%  IC95 honesto [{d['lo']}-{d['hi']}] "
+                  f"({d['agrupado']}) · n={d['n']}")
+        p = r["pareado"]
+        print(f"  pareado A2−A3 por evento: {p['media']}  IC95 [{p['lo']}, {p['hi']}] · "
+              f"{p['n']} casos en {p['n_eventos']} eventos")
+        print(f"  discordancias: solo A2 acierta {r['solo_a2']} · solo A3 acierta {r['solo_a3']} "
+              f"(McNemar p={r['mcnemar_p']}, indicativo) · ambos ✓ {r['ambos_aciertan']} · "
+              f"ambos ✗ {r['ambos_fallan']}")
+        print(f"  acuerdo de signo {r['acuerdo_signo']}% · correlación de señales {r['correlacion']}")
+        print(f"  → {veredicto(r)}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 4:
+        print(__doc__)
+        sys.exit(1)
+    filas = ablacion.cargar(sys.argv[1], sys.argv[2], sys.argv[3])
+    imprimir(filas)
+    if len(sys.argv) > 4:
+        Path(sys.argv[4]).write_text(tabla_titulares(filas) + "\n")
+        print(f"\nTabla titular por titular → {sys.argv[4]}")
+```
+
 ## engine/calibration/ablacion.py
 ```python
 """Fase 3 — Ablación A0–A5: aislar cuánto aporta CADA capa del enjambre.
@@ -6358,27 +6629,39 @@ def _signo_mayoria(filas):
 
 
 def _items_a0(filas, zona=ZONA):
-    """A0 HONESTO (auditoría v4): para cada caso, la clase mayoritaria de los casos
-    ESTRICTAMENTE ANTERIORES por fecha (train-only, expanding window). Nunca mira
-    la etiqueta del propio caso ni las futuras. Se abstiene mientras no haya
-    historia para decidir (empate 0-0 al inicio); esas abstenciones reducen el
-    denominador de A0 a propósito (es el precio de no hacer trampa)."""
+    """A0 HONESTO con MADURACIÓN DE ETIQUETAS (auditoría científica F02).
+
+    Para cada caso, la clase mayoritaria de los eventos ESTRICTAMENTE ANTERIORES por
+    fecha. Clave: los casos del MISMO día (p. ej. 3 ETFs del mismo anuncio) NO se
+    informan entre sí — su etiqueta no está disponible hasta días después, así que se
+    predicen TODOS con la historia previa al día y la historia se actualiza recién al
+    cerrar el día. Antes (v4) la historia se actualizaba caso a caso y los ETFs del
+    mismo día se contaban como ya resueltos: fuga sutil. Se abstiene mientras no haya
+    historia madura (empate 0-0); esas abstenciones reducen el denominador a propósito."""
     dire = [f for f in filas if f.get("pct_corr") is not None and abs(f["pct_corr"]) >= zona]
-    dire = sorted(dire, key=lambda f: str(f.get("fecha", "")))
-    subas = bajas = 0
+    dire = sorted(dire, key=lambda f: str(f.get("fecha", ""))[:10])
     out = []
-    for f in dire:
+    subas = bajas = 0
+    i, n = 0, len(dire)
+    while i < n:
+        dia = str(dire[i].get("fecha", ""))[:10]
+        j = i
+        # 1) PREDECIR todos los casos del día con la historia previa (madura)
         pred = 1 if subas > bajas else (-1 if bajas > subas else 0)
-        if pred != 0:
-            ok = 1 if _sg(pred) == _sg(f["pct_corr"]) else 0
-            fecha = str(f.get("fecha", ""))[:10]
-            out.append((ok, {"simbolo": f.get("simbolo"), "fecha": fecha,
-                             "anio": str(f.get("anio") or fecha[:4])}))
-        # la historia se actualiza DESPUÉS de predecir (no mira su propia etiqueta)
-        if f["pct_corr"] > 0:
-            subas += 1
-        else:
-            bajas += 1
+        while j < n and str(dire[j].get("fecha", ""))[:10] == dia:
+            f = dire[j]
+            if pred != 0:
+                ok = 1 if _sg(pred) == _sg(f["pct_corr"]) else 0
+                out.append((ok, {"simbolo": f.get("simbolo"), "fecha": dia,
+                                 "anio": str(f.get("anio") or dia[:4])}))
+            j += 1
+        # 2) CERRAR el día: recién ahora sus etiquetas entran en la historia
+        for k in range(i, j):
+            if dire[k]["pct_corr"] > 0:
+                subas += 1
+            else:
+                bajas += 1
+        i = j
     return out
 
 
@@ -6491,27 +6774,26 @@ def gate_abm(filas, mercado=None, zona=ZONA):
     }
 
 
-def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
-    """El gate CORRECTO (auditoría v4): diferencia PAREADA A4 − A3 por EVENTO.
+def pareado(filas, esc_a, esc_b, mercado=None, zona=ZONA, n_boot=3000, seed=42):
+    """Diferencia PAREADA acierto(esc_a) − acierto(esc_b) por EVENTO (cluster bootstrap).
 
     La unidad de dependencia no es el caso suelto sino el ANUNCIO (misma fecha): 4
-    ETFs del mismo día no son 4 experimentos. Para cada caso donde AMBOS opinan,
-    d = acierto_A4 − acierto_A3 ∈ {-1,0,1}; se agrupan por fecha y se re-muestrean
-    los GRUPOS (cluster bootstrap) para el IC de la media de d. media<0 ⇒ el ABM
-    resta; IC que EXCLUYE 0 ⇒ la diferencia es significativa. Sustituye al atajo
-    'el intervalo más ancho de tres' para la comparación A3-vs-A4."""
+    ETFs del mismo día no son 4 experimentos. Solo cuenta los casos donde AMBOS
+    escalones opinan (misma cobertura: nada de comparar a coberturas distintas).
+    d = acierto_a − acierto_b ∈ {-1,0,1}; se agrupan por fecha y se re-muestrean los
+    GRUPOS para el IC de la media de d. IC que EXCLUYE 0 ⇒ diferencia significativa."""
     sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
     por_evento = {}
     for f in sub:
         pc = f.get("pct_corr")
         if pc is None or abs(pc) < zona:
             continue
-        s, d4 = f.get("senal"), f.get("direccion_pct")
-        if s in (0, None) or d4 in (0, None):
+        pa, pb = pred_de(f, esc_a, None), pred_de(f, esc_b, None)
+        if pa in (0, None) or pb in (0, None):
             continue
-        a3 = 1 if _sg(s) == _sg(pc) else 0
-        a4 = 1 if _sg(d4) == _sg(pc) else 0
-        por_evento.setdefault(str(f.get("fecha", ""))[:10], []).append(a4 - a3)
+        a = 1 if _sg(pa) == _sg(pc) else 0
+        b = 1 if _sg(pb) == _sg(pc) else 0
+        por_evento.setdefault(str(f.get("fecha", ""))[:10], []).append(a - b)
     grupos = list(por_evento.values())
     todos = [d for g in grupos for d in g]
     if not todos:
@@ -6531,6 +6813,14 @@ def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
     return {"media": round(media, 3), "lo": round(lo, 3), "hi": round(hi, 3),
             "n": len(todos), "n_eventos": len(grupos),
             "excluye_cero": hi < 0 or lo > 0}
+
+
+def gate_pareado(filas, mercado=None, zona=ZONA, n_boot=3000, seed=42):
+    """El gate CORRECTO (auditoría v4): diferencia PAREADA A4 − A3 por EVENTO.
+    media<0 ⇒ el ABM resta. Sustituye al atajo 'el intervalo más ancho de tres' para
+    la comparación A3-vs-A4. (Caso particular de `pareado`.)"""
+    return pareado(filas, "A4_abm", "A3_consenso", mercado=mercado, zona=zona,
+                   n_boot=n_boot, seed=seed)
 
 
 def imprimir(filas, mercados=("indice", None)):
@@ -6555,6 +6845,12 @@ def imprimir(filas, mercados=("indice", None)):
             print(f"  GATE pareado por evento: media(A4−A3) = {p['media']} "
                   f"IC95 [{p['lo']}, {p['hi']}] · {p['n']} casos en {p['n_eventos']} eventos"
                   f" · {'significativo' if p['excluye_cero'] else 'no concluyente (IC cruza 0)'}")
+        if any(f.get("a2") is not None for f in filas):
+            q = pareado(filas, "A2_un_llm", "A3_consenso", mercado=m)
+            if q["media"] is not None:
+                print(f"  M4 pareado por evento: media(A2−A3) = {q['media']} "
+                      f"IC95 [{q['lo']}, {q['hi']}] · {q['n']} casos en {q['n_eventos']} eventos"
+                      f" · {'significativo' if q['excluye_cero'] else 'no distinguible (IC cruza 0)'}")
 
 
 if __name__ == "__main__":
@@ -6860,6 +7156,153 @@ if __name__ == "__main__":
     a = sys.argv[1] if len(sys.argv) > 1 else "calibracion.json"
     b = sys.argv[2] if len(sys.argv) > 2 else "calibracion.json.con_fecha.json"
     main(a, b)
+```
+
+## engine/calibration/barrido_poblacion.py
+```python
+"""Fase 2 — Barrido de población: ¿el TAMAÑO del enjambre cambia la predicción?
+
+Controla lo que pide la auditoría: escala las cantidades por un `factor` (mismas
+proporciones) y ajusta el capital por agente ×1/factor, de modo que el **capital
+agregado por tipo se mantiene constante** (si no, cambiar N alteraría liquidez y
+profundidad a la vez). Corre el ABM con **señales de líder CONGELADAS** (las medias
+por arquetipo del caso, sin IA) y mide el acierto direccional por N, más el tiempo.
+
+Si todos los N dan el mismo acierto (y todos por debajo del consenso A3), el tamaño
+no aporta predicción: el enjambre grande es decisión de PRODUCTO/visual, no de alpha.
+Exploratorio (banco histórico). Sin IA ni red.
+
+Uso: python3 engine/calibration/barrido_poblacion.py cal.con_fecha.json cal.json [factores]
+"""
+import json
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+
+TICKS_CAL, TICKS_PREV, TICKS_POST = 60, 10, 140  # = server.TICKS_*
+ZONA = 0.3
+
+
+def escalar_config(config: dict, factor: float, min_cantidad: int = 1) -> dict:
+    """Cantidades ×factor; capital_relativo ×1/factor (capital agregado constante).
+    Esenciales (market maker) con mínimo `min_cantidad`. Puro y testeable."""
+    c = json.loads(json.dumps(config))  # copia profunda
+    def cant(n):
+        return max(min_cantidad, int(round(n * factor)))
+    total = 0
+    for tipo in c["tipos"]:
+        if "capital_relativo" in tipo:
+            tipo["capital_relativo"] = tipo["capital_relativo"] / factor
+        if tipo.get("id") == "lider_opinion":
+            for arq in tipo.get("arquetipos", []):
+                arq["cantidad"] = cant(arq["cantidad"])
+                total += arq["cantidad"]
+        elif "cantidad" in tipo:
+            tipo["cantidad"] = cant(tipo["cantidad"])
+            total += tipo["cantidad"]
+    c["total_agentes"] = total
+    return c
+
+
+def _respuestas_congeladas(lideres, senales_arquetipo):
+    """Una respuesta por líder (en su orden), con la media de su arquetipo. fuente
+    'cache' para que el motor la trate como IA real (no como respaldo léxico)."""
+    out = []
+    for lid in lideres:
+        a = senales_arquetipo.get(lid.arquetipo) or {}
+        out.append({"senal": float(a.get("senal_media", 0.0)),
+                    "confianza": float(a.get("confianza_media", 0.5)),
+                    "frase": "", "fuente": "cache"})
+    return out
+
+
+def direccion_una(config_escalado, titular, senales_arquetipo, mercado, seed):
+    """Corre una simulación con población escalada y señales congeladas; devuelve el
+    % de movimiento tras la noticia (réplica del flujo de producción)."""
+    from agents.lider import LiderOpinion
+    from brains.mercado import perfil_de
+    from model import MercadoEnjambre
+
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        json.dump(config_escalado, f)
+        ruta = f.name
+    modelo = MercadoEnjambre(seed=seed, ticks_horizonte=TICKS_CAL + TICKS_POST,
+                             ruta_config=Path(ruta))
+    modelo.correr(TICKS_CAL)
+    lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
+    respuestas = _respuestas_congeladas(lideres, senales_arquetipo)
+    for _ in range(TICKS_PREV):
+        modelo.step()
+    previo = modelo.historial_precios[-1]
+    modelo.aplicar_titular(titular, respuestas=respuestas, perfil=perfil_de(mercado or "indice"))
+    for _ in range(TICKS_POST):
+        modelo.step()
+    final = modelo.historial_precios[-1]
+    return 100.0 * (final - previo) / previo if previo else 0.0
+
+
+def _casos_indice(ruta_con_fecha, ruta_raw):
+    """Filas direccionables de índice con su senales_arquetipo y titular."""
+    cf = json.loads(Path(ruta_con_fecha).read_text())
+    crudo = json.loads(Path(ruta_raw).read_text())
+    casos = crudo.get("casos", crudo) if isinstance(crudo, dict) else crudo
+    idx = {}
+    for c in casos:
+        rr = c.get("reaccion_real") or {}
+        idx[(rr.get("fecha_base"), rr.get("simbolo"))] = c
+    out = []
+    for r in cf:
+        if r.get("mercado") != "indice":
+            continue
+        pc = r.get("pct_corr")
+        if pc is None or abs(pc) < ZONA:
+            continue
+        c = idx.get((r.get("fecha"), r.get("simbolo")))
+        if not c or not c.get("senales_arquetipo"):
+            continue
+        out.append({"titular": c["titular"], "sa": c["senales_arquetipo"],
+                    "mercado": r.get("mercado"), "pct_corr": pc, "fecha": r.get("fecha")})
+    return out
+
+
+def _sg(x):
+    return 1 if x > 0 else (-1 if x < 0 else 0)
+
+
+def barrido(ruta_con_fecha, ruta_raw, factores=(1.0, 0.25, 0.1, 0.05), seed=20260101, limite=None):
+    import os
+    base_cfg = json.loads((Path(__file__).resolve().parent.parent / "config" / "agentes.json").read_text())
+    casos = _casos_indice(ruta_con_fecha, ruta_raw)
+    if limite:
+        casos = casos[:limite]
+    res = {}
+    for factor in factores:
+        cfg = escalar_config(base_cfg, factor)
+        n_ag = cfg["total_agentes"]
+        ok = n = 0
+        t0 = time.time()
+        for c in casos:
+            d = direccion_una(cfg, c["titular"], c["sa"], c["mercado"], seed)
+            if abs(d) < 0.01:
+                continue  # el enjambre no se movió → se abstiene
+            n += 1
+            ok += 1 if _sg(d) == _sg(c["pct_corr"]) else 0
+        dur = time.time() - t0
+        acc = round(100 * ok / n, 1) if n else None
+        res[factor] = {"agentes": n_ag, "acierto": acc, "n": n,
+                       "seg_por_caso": round(dur / max(1, len(casos)), 2)}
+        print(f"factor {factor:>5} · {n_ag:>6} agentes · acierto {acc}% (n={n}) · "
+              f"{res[factor]['seg_por_caso']}s/caso", flush=True)
+    return res
+
+
+if __name__ == "__main__":
+    cf, raw = sys.argv[1], sys.argv[2]
+    fac = [float(x) for x in sys.argv[3].split(",")] if len(sys.argv) > 3 else (1.0, 0.25, 0.1, 0.05)
+    barrido(cf, raw, factores=fac)
 ```
 
 ## engine/calibration/baselines.py
@@ -7345,6 +7788,101 @@ if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "calibracion.json")
 ```
 
+## engine/calibration/correlacion_cerebros.py
+```python
+"""Fase 3 — ¿Cuánta diversidad REAL hay entre los arquetipos?
+
+La auditoría (§7.3): el valor de un ensemble depende de la CORRELACIÓN de los errores
+de sus miembros. Si todos leen el mismo titular con el mismo modelo, sus errores están
+correlacionados y el "número efectivo de opiniones independientes" es mucho menor que
+el número de voces:  N_efectivo = N / (1 + (N-1)·ρ).
+
+Aquí se mide ρ real sobre el histórico: para cada arquetipo, su error e = señal − y
+(y = +1/−1 según el resultado), y la correlación media entre arquetipos. Explica el
+hallazgo A2≈A3: si ρ es alto, 9 arquetipos ≈ pocas opiniones efectivas, y promediarlos
+(el consenso) no supera a una sola voz.
+
+Sin IA ni red. numpy para las correlaciones.
+"""
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+
+ZONA = 0.3
+
+
+def armar(ruta_con_fecha, ruta_raw, mercado="indice"):
+    """[(senales_por_arquetipo, y_signed)] para casos direccionables del mercado."""
+    cf = json.loads(Path(ruta_con_fecha).read_text())
+    crudo = json.loads(Path(ruta_raw).read_text())
+    casos = crudo.get("casos", crudo) if isinstance(crudo, dict) else crudo
+    idx = {}
+    for c in casos:
+        rr = c.get("reaccion_real") or {}
+        idx[(rr.get("fecha_base"), rr.get("simbolo"))] = c
+    out = []
+    for r in cf:
+        if mercado and r.get("mercado") != mercado:
+            continue
+        pc = r.get("pct_corr")
+        if pc is None or abs(pc) < ZONA:
+            continue
+        c = idx.get((r.get("fecha"), r.get("simbolo")))
+        sa = c.get("senales_arquetipo") if c else None
+        if not sa:
+            continue
+        senales = {k: float(v.get("senal_media", 0.0)) for k, v in sa.items()}
+        out.append((senales, 1.0 if pc > 0 else -1.0))
+    return out
+
+
+def matriz_correlacion(casos):
+    """Correlación de las SEÑALES entre arquetipos (redundancia de información).
+
+    IMPORTANTE (honestidad): se correlacionan las señales entre sí, NO el error
+    `señal − y`. Medir el error infla la correlación de forma artificial, porque
+    todas las voces comparten el mismo `y` (el resultado), y eso las hace parecer
+    más de acuerdo de lo que su información realmente implica. La correlación de
+    señales mide lo que importa: ¿las voces aportan información DISTINTA, o repiten
+    la misma lectura? Devuelve nombres, matriz, ρ media (fuera de la diagonal) y
+    N efectivo = N / (1 + (N-1)·ρ)."""
+    arqs = sorted({a for sen, _ in casos for a in sen})
+    S = np.array([[sen.get(a, 0.0) for a in arqs] for sen, _ in casos])  # [casos, arq]
+    # correlación entre columnas (arquetipos); columnas constantes → 0
+    C = np.corrcoef(S, rowvar=False)
+    C = np.nan_to_num(C)
+    n = len(arqs)
+    fuera = C[~np.eye(n, dtype=bool)]
+    rho = float(fuera.mean()) if fuera.size else 0.0
+    n_ef = n / (1 + (n - 1) * rho) if (1 + (n - 1) * rho) > 0 else float(n)
+    return {"arquetipos": arqs, "matriz": C, "rho_media": round(rho, 3),
+            "n_arquetipos": n, "n_efectivo": round(n_ef, 2), "n_casos": len(casos)}
+
+
+def imprimir(ruta_con_fecha, ruta_raw, mercados=("indice", None)):
+    for m in mercados:
+        casos = armar(ruta_con_fecha, ruta_raw, mercado=m)
+        if len(casos) < 5:
+            print(f"\n=== {(m or 'TODOS').upper()}: muestra insuficiente ===")
+            continue
+        r = matriz_correlacion(casos)
+        print(f"\n=== Diversidad de arquetipos · {(m or 'TODOS').upper()} "
+              f"({r['n_casos']} casos) ===")
+        print(f"  correlación media de errores ρ = {r['rho_media']}")
+        print(f"  arquetipos: {r['n_arquetipos']}  →  opiniones EFECTIVAS: "
+              f"{r['n_efectivo']}")
+        print(f"  (ρ bajo ⇒ las señales SON diversas; pero diversas en ESTILO sobre la "
+              f"misma noticia: su promedio recupera la lectura central = la de 1 LLM)")
+
+
+if __name__ == "__main__":
+    imprimir(sys.argv[1], sys.argv[2])
+```
+
 ## engine/calibration/data_loader.py
 ```python
 """Descarga el benchmark real (SPY) para la calibración offline.
@@ -7715,6 +8253,130 @@ if __name__ == "__main__":
     imprimir(reporte(sys.argv[1] if len(sys.argv) > 1 else "calibracion.json"))
 ```
 
+## engine/calibration/evaluar_prospectivo.py
+```python
+"""Fase 6 — Evaluador del experimento prospectivo (sellado → resuelto sin fuga).
+
+Consume los registros YA RESUELTOS del registro prospectivo (tabla `predicciones`) y
+calcula, según el pre-registro (`docs/preregistro-fase6.md`): acierto direccional con
+cobertura, acierto "solo fiables" (gating), Brier calibrado vs tasa base, y el IC
+pareado por evento (cluster bootstrap). No mira el histórico sesgado: solo predicciones
+hechas ANTES de conocer el desenlace. Sin IA.
+
+Cada registro: {mercado, direccion('alza'|'baja'|'neutra'), probabilidad|None,
+pct_real(resuelto), fiable(0/1), abstenido(0/1), fecha}. Para alimentarlo en vivo,
+exportar las filas resueltas de `predicciones` a una lista de dicts.
+"""
+import json
+import random
+import sys
+from pathlib import Path
+
+
+def _sg(x):
+    return 1 if x > 0 else (-1 if x < 0 else 0)
+
+
+def _dir_sign(d):
+    return {"alza": 1, "baja": -1}.get(d, 0)
+
+
+def _puntuables(registros, solo_fiables=False, zona=0.0):
+    """Resueltas, no abstenidas, con dirección y movimiento real no neutro."""
+    out = []
+    for r in registros:
+        pc = r.get("pct_real")
+        if pc is None or abs(pc) < zona:
+            continue
+        if r.get("abstenido"):
+            continue
+        pred = _dir_sign(r.get("direccion"))
+        if pred == 0:
+            continue
+        if solo_fiables and not r.get("fiable"):
+            continue
+        out.append({**r, "ok": 1 if pred == _sg(pc) else 0,
+                    "y": 1.0 if pc > 0 else 0.0})
+    return out
+
+
+def _ci_evento(items, n_boot=3000, seed=42):
+    """IC 95% del acierto re-muestreando EVENTOS (misma fecha = mismo anuncio)."""
+    if not items:
+        return {"punto": None, "lo": None, "hi": None}
+    por = {}
+    for it in items:
+        por.setdefault(str(it.get("fecha", ""))[:10], []).append(it["ok"])
+    grupos = list(por.values())
+    punto = round(100 * sum(it["ok"] for it in items) / len(items), 1)
+    rng = random.Random(seed)
+    muestras = []
+    for _ in range(n_boot):
+        pool = []
+        for _ in range(len(grupos)):
+            pool.extend(rng.choice(grupos))
+        if pool:
+            muestras.append(sum(pool) / len(pool))
+    muestras.sort()
+    lo = round(100 * muestras[int(0.025 * len(muestras))], 1)
+    hi = round(100 * muestras[int(0.975 * len(muestras)) - 1], 1)
+    return {"punto": punto, "lo": lo, "hi": hi, "n": len(items), "n_eventos": len(grupos)}
+
+
+def _brier(items):
+    """Brier de la probabilidad calibrada vs tasa base (solo items con probabilidad)."""
+    con_p = [it for it in items if it.get("probabilidad") is not None]
+    if not con_p:
+        return None
+    y = [it["y"] for it in con_p]
+    p = [float(it["probabilidad"]) for it in con_p]
+    base = sum(y) / len(y)
+    bm = sum((pi - yi) ** 2 for pi, yi in zip(p, y)) / len(y)
+    bb = sum((base - yi) ** 2 for yi in y) / len(y)
+    return {"brier": round(bm, 4), "brier_base": round(bb, 4),
+            "skill": round(1 - bm / bb, 3) if bb else None, "n": len(con_p)}
+
+
+def evaluar(registros, mercado=None):
+    sub = [r for r in registros if mercado is None or r.get("mercado") == mercado]
+    resueltas = [r for r in sub if r.get("pct_real") is not None]
+    todos = _puntuables(sub)
+    fiables = _puntuables(sub, solo_fiables=True)
+    cobertura = round(100 * len(todos) / len(resueltas), 1) if resueltas else None
+    return {
+        "n_total": len(sub), "n_resueltas": len(resueltas),
+        "cobertura_pct": cobertura,
+        "acierto_todos": _ci_evento(todos),
+        "acierto_fiables": _ci_evento(fiables),
+        "brier": _brier(todos),
+    }
+
+
+def imprimir(registros, mercados=("indice", "accion", None)):
+    for m in mercados:
+        r = evaluar(registros, m)
+        etq = (m or "TODOS").upper()
+        print(f"\n=== Prospectivo · {etq} ===")
+        print(f"  resueltas: {r['n_resueltas']}  ·  cobertura: {r['cobertura_pct']}%")
+        a = r["acierto_todos"]
+        if a["punto"] is not None:
+            print(f"  acierto (todos):   {a['punto']}%  IC95 [{a['lo']}, {a['hi']}]  "
+                  f"(n={a['n']}, {a['n_eventos']} eventos)")
+        f = r["acierto_fiables"]
+        if f["punto"] is not None:
+            print(f"  acierto (fiables): {f['punto']}%  IC95 [{f['lo']}, {f['hi']}]  (n={f['n']})")
+        if r["brier"]:
+            print(f"  Brier {r['brier']['brier']} vs base {r['brier']['brier_base']} "
+                  f"(skill {r['brier']['skill']})")
+        if (a["n"] if a["punto"] is not None else 0) < 100:
+            print("  ⚠️ muestra INSUFICIENTE para veredicto (pre-registro: ≥100 eventos).")
+
+
+if __name__ == "__main__":
+    registros = json.loads(Path(sys.argv[1]).read_text())
+    imprimir(registros)
+```
+
 ## engine/calibration/holdout.py
 ```python
 """Fase 0.4 — Holdout congelado con manifiesto y hash.
@@ -7805,20 +8467,26 @@ def verificar_manifiesto(manifiesto, casos, *, clave_id="id", clave_y="y"):
 def particionar(casos, manifiesto, *, clave_id="id", clave_fecha="fecha"):
     """Devuelve (desarrollo, holdout) usando la membresía CONGELADA del manifiesto.
 
-    El holdout son exactamente los ids del manifiesto. El desarrollo EXCLUYE las
-    filas posteriores al corte que NO están en el holdout (llegaron después de
-    congelarlo): entrenar un examen con datos más nuevos que su propio test es fuga
-    temporal (auditoría v4). Esas filas quedan fuera de ambos (cohorte futura), no
-    en desarrollo."""
+    El holdout son exactamente los ids del manifiesto. El desarrollo aplica LOS MISMOS
+    filtros que `construir_manifiesto`, para que su tamaño coincida con el declarado:
+    - excluye las filas posteriores al corte que NO están en el holdout (cohorte
+      futura: entrenar un examen con datos más nuevos que su test es fuga; F04/v4);
+    - excluye las filas dentro de `embargo_dias` ANTES del corte (el embargo que el
+      manifiesto ya descontó; auditoría científica F04). Antes `particionar` ignoraba
+      el embargo y devolvía más filas de desarrollo que las declaradas."""
     ids_hold = set(manifiesto["holdout_ids"])
     corte = manifiesto.get("fecha_corte")
+    embargo = manifiesto.get("embargo_dias", 0)
     holdout = [c for c in casos if str(c[clave_id]) in ids_hold]
     desarrollo = []
     for c in casos:
         if str(c[clave_id]) in ids_hold:
             continue
-        if corte and str(c.get(clave_fecha, ""))[:10] >= corte:
-            continue  # posterior al corte y NO en el holdout → cohorte futura, fuera
+        fc = str(c.get(clave_fecha, ""))[:10]
+        if corte and fc >= corte:
+            continue  # posterior al corte y NO en el holdout → cohorte futura
+        if embargo and corte and _dias(fc, corte) <= embargo:
+            continue  # dentro del embargo previo al corte (igual que el manifiesto)
         desarrollo.append(c)
     return desarrollo, holdout
 ```
@@ -8041,6 +8709,159 @@ def imprimir(filas, titulo=""):
     print("\n  sensibilidad a excluir un instrumento:")
     for k, v in sensibilidad_dejar_uno(filas).items():
         print(f"    {k:14} acierto {v['acierto']}%  (n={v['n']})")
+```
+
+## engine/calibration/metamodelo.py
+```python
+"""Fase 1/5 — Metamodelo M13 vs M13-null (la comparación PRIMARIA del plan v5).
+
+Pregunta: ¿las features del ABM (dirección y volatilidad simuladas) reducen la
+pérdida predictiva (Brier) sobre EXACTAMENTE la misma información SIN el ABM (solo el
+consenso de líderes)? Es el test de valor incremental del motor de agentes.
+
+- **M13**      = logística(consenso, direccion_pct_ABM, volatilidad_pct_ABM)
+- **M13-null** = logística(consenso)              ← mismo pipeline, sin features ABM
+
+Honestidad (auditoría científica):
+- Partición TEMPORAL: se ajusta con el pasado (70%) y se evalúa en el futuro (30%).
+- Estandarización y ajuste SOLO con train (sin mirar el test).
+- Diferencia PAREADA por evento (misma fecha) con cluster bootstrap → IC honesto.
+- Este resultado es EXPLORATORIO: corre sobre el banco histórico de shocks (sesgado
+  por selección). El veredicto definitivo es prospectivo. d>0 ⇒ el ABM ayuda; que el
+  IC excluya 0 ⇒ diferencia significativa dentro de esta muestra.
+
+Sin red ni IA: usa números ya calculados. Logística L2 propia (numpy), sin sklearn.
+"""
+import json
+import random
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+
+ZONA = 0.3
+FEAT_CON = ["senal", "direccion_pct", "volatilidad_pct"]
+FEAT_SIN = ["senal"]
+
+
+def armar_filas(ruta_con_fecha, ruta_raw):
+    """Une con_fecha (senal, direccion_pct, pct_corr, fecha, mercado) con el export
+    crudo (volatilidad_pct) por (fecha_base, simbolo). Etiqueta y=1 si pct_corr>0.
+    Solo casos direccionables (|pct_corr|>=ZONA)."""
+    cf = json.loads(Path(ruta_con_fecha).read_text())
+    crudo = json.loads(Path(ruta_raw).read_text())
+    casos = crudo.get("casos", crudo) if isinstance(crudo, dict) else crudo
+    vol_por = {}
+    for c in casos:
+        rr = c.get("reaccion_real") or {}
+        k = (rr.get("fecha_base"), rr.get("simbolo"))
+        if k[0] and k[1]:
+            vol_por.setdefault(k, c.get("volatilidad_pct"))
+    filas = []
+    for r in cf:
+        pc = r.get("pct_corr")
+        if pc is None or abs(pc) < ZONA:
+            continue
+        vol = vol_por.get((r.get("fecha"), r.get("simbolo")))
+        if vol is None:
+            continue
+        filas.append({"senal": float(r.get("senal") or 0.0),
+                      "direccion_pct": float(r.get("direccion_pct") or 0.0),
+                      "volatilidad_pct": float(vol),
+                      "y": 1.0 if pc > 0 else 0.0,
+                      "fecha": str(r.get("fecha", ""))[:10],
+                      "mercado": r.get("mercado")})
+    return filas
+
+
+def _entrenar(X, y, l2=1.0, pasos=3000, lr=0.2):
+    """Logística con regularización L2 por descenso de gradiente. X estandarizada."""
+    n, d = X.shape
+    w = np.zeros(d)
+    b = 0.0
+    for _ in range(pasos):
+        p = 1.0 / (1.0 + np.exp(-(X @ w + b)))
+        g = p - y
+        w -= lr * (X.T @ g / n + l2 * w / n)
+        b -= lr * g.mean()
+    return w, b
+
+
+def _ajustar_y_predecir(tr, te, feats, l2):
+    Xtr = np.array([[f[c] for c in feats] for f in tr], float)
+    Xte = np.array([[f[c] for c in feats] for f in te], float)
+    ytr = np.array([f["y"] for f in tr], float)
+    mu, sd = Xtr.mean(0), Xtr.std(0) + 1e-9  # estandarización SOLO con train
+    w, b = _entrenar((Xtr - mu) / sd, ytr, l2)
+    return 1.0 / (1.0 + np.exp(-(((Xte - mu) / sd) @ w + b)))
+
+
+def evaluar(filas, mercado=None, l2=1.0, frac_train=0.7, n_boot=3000, seed=42):
+    """Brier de M13 y M13-null fuera de muestra + diferencia pareada por evento."""
+    sub = [f for f in filas if mercado is None or f.get("mercado") == mercado]
+    sub = sorted(sub, key=lambda f: f["fecha"])
+    k = int(len(sub) * frac_train)
+    tr, te = sub[:k], sub[k:]
+    if len(tr) < 10 or len(te) < 5:
+        return {"n_train": len(tr), "n_test": len(te), "suficiente": False}
+    yte = np.array([f["y"] for f in te], float)
+    p_con = _ajustar_y_predecir(tr, te, FEAT_CON, l2)
+    p_sin = _ajustar_y_predecir(tr, te, FEAT_SIN, l2)
+    brier_con = float(((p_con - yte) ** 2).mean())
+    brier_sin = float(((p_sin - yte) ** 2).mean())
+    # d_i = (p_sinABM - y)^2 - (p_conABM - y)^2 ; media>0 favorece al ABM
+    d = (p_sin - yte) ** 2 - (p_con - yte) ** 2
+    por_evento = {}
+    for fila, di in zip(te, d):
+        por_evento.setdefault(fila["fecha"], []).append(float(di))
+    grupos = list(por_evento.values())
+    rng = random.Random(seed)
+    muestras = []
+    for _ in range(n_boot):
+        pool = []
+        for _ in range(len(grupos)):
+            pool.extend(rng.choice(grupos))
+        if pool:
+            muestras.append(sum(pool) / len(pool))
+    muestras.sort()
+    lo = muestras[int(0.025 * len(muestras))]
+    hi = muestras[int(0.975 * len(muestras)) - 1]
+    return {
+        "suficiente": True, "n_train": len(tr), "n_test": len(te),
+        "n_eventos_test": len(grupos),
+        "brier_M13": round(brier_con, 4), "brier_M13_null": round(brier_sin, 4),
+        "media_d": round(float(d.mean()), 4),
+        "ic95": [round(lo, 4), round(hi, 4)],
+        "abm_ayuda": bool(d.mean() > 0),
+        "significativo": bool(hi < 0 or lo > 0),
+    }
+
+
+def imprimir(filas, mercados=("indice", None)):
+    for m in mercados:
+        r = evaluar(filas, mercado=m)
+        etq = (m or "TODOS").upper()
+        print(f"\n=== M13 vs M13-null · {etq} (EXPLORATORIO, banco histórico) ===")
+        if not r.get("suficiente"):
+            print(f"  muestra insuficiente (train={r['n_train']}, test={r['n_test']})")
+            continue
+        print(f"  Brier M13 (con ABM)  = {r['brier_M13']}   (menor es mejor)")
+        print(f"  Brier M13-null (sin) = {r['brier_M13_null']}")
+        print(f"  media(d)=Brier_null−Brier_con = {r['media_d']}  IC95 {r['ic95']}  "
+              f"({r['n_test']} casos / {r['n_eventos_test']} eventos)")
+        if r["significativo"]:
+            print(f"  → {'el ABM AYUDA' if r['abm_ayuda'] else 'el ABM RESTA'} (IC excluye 0)")
+        else:
+            print("  → no concluyente (IC cruza 0): el ABM no muestra valor incremental claro")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print(__doc__)
+        sys.exit(1)
+    imprimir(armar_filas(sys.argv[1], sys.argv[2]))
 ```
 
 ## engine/calibration/optimizar_freno.py
@@ -8333,6 +9154,121 @@ if __name__ == "__main__":
         from calibration import data_loader
         data_loader.download_spy_benchmark()
     run_calibration()
+```
+
+## engine/calibration/predictor_calibrado.py
+```python
+"""Fase 5 — Predictor calibrado + abstención (curva riesgo-cobertura).
+
+Hasta ahora medimos ACIERTO de dirección. Un producto serio necesita además:
+  1. una PROBABILIDAD calibrada (no solo "sube/baja"): si dice 70%, que acierte ~70%.
+  2. una política de ABSTENCIÓN: actuar solo cuando hay convicción, y REPORTAR la
+     cobertura (no se puede comparar un modelo que opina en el 100% con otro que opina
+     en el 20% sin igualar cobertura).
+
+Toma la mejor señal disponible (el consenso A3, campo `senal`), la calibra con Platt
+(logística de 1 variable) ENTRENANDO SOLO con el pasado, y evalúa fuera de muestra:
+Brier, calibración (ECE) y la curva riesgo-cobertura (acierto si solo tomamos el X%
+más confiado). Exploratorio (banco histórico). Sin IA.
+"""
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+
+ZONA = 0.3
+
+
+def armar(ruta_con_fecha, mercado="indice", campo="senal"):
+    cf = json.loads(Path(ruta_con_fecha).read_text())
+    filas = []
+    for r in cf:
+        if mercado and r.get("mercado") != mercado:
+            continue
+        pc = r.get("pct_corr")
+        s = r.get(campo)
+        if pc is None or abs(pc) < ZONA or s is None:
+            continue
+        filas.append({"x": float(s), "y": 1.0 if pc > 0 else 0.0, "fecha": str(r.get("fecha", ""))[:10]})
+    return sorted(filas, key=lambda f: f["fecha"])
+
+
+def _platt(x, y, pasos=4000, lr=0.3, l2=0.01):
+    """Logística 1-D (a·x + b) → prob. Ajuste por gradiente. x estandarizado fuera."""
+    a = b = 0.0
+    n = len(x)
+    for _ in range(pasos):
+        p = 1.0 / (1.0 + np.exp(-(a * x + b)))
+        g = p - y
+        a -= lr * (float(np.mean(g * x)) + l2 * a)
+        b -= lr * float(np.mean(g))
+    return a, b
+
+
+def _ece(p, y, bins=10):
+    """Error de calibración esperado: |prob predicha − frecuencia real| por tramo."""
+    e = 0.0
+    for i in range(bins):
+        lo, hi = i / bins, (i + 1) / bins
+        m = (p >= lo) & (p < hi) if i < bins - 1 else (p >= lo) & (p <= hi)
+        if m.sum() == 0:
+            continue
+        e += (m.sum() / len(p)) * abs(p[m].mean() - y[m].mean())
+    return float(e)
+
+
+def evaluar(ruta_con_fecha, mercado="indice", campo="senal", frac_train=0.7):
+    filas = armar(ruta_con_fecha, mercado, campo)
+    if len(filas) < 20:
+        return {"suficiente": False, "n": len(filas)}
+    k = int(len(filas) * frac_train)
+    tr, te = filas[:k], filas[k:]
+    xtr = np.array([f["x"] for f in tr]); ytr = np.array([f["y"] for f in tr])
+    xte = np.array([f["x"] for f in te]); yte = np.array([f["y"] for f in te])
+    mu, sd = xtr.mean(), xtr.std() + 1e-9
+    a, b = _platt((xtr - mu) / sd, ytr)
+    pte = 1.0 / (1.0 + np.exp(-(a * (xte - mu) / sd + b)))
+    brier = float(np.mean((pte - yte) ** 2))
+    base = ytr.mean()                      # tasa base del train
+    brier_base = float(np.mean((base - yte) ** 2))
+    # curva riesgo-cobertura: ordenar por confianza |p-0.5| y acierto acumulado
+    conf = np.abs(pte - 0.5)
+    orden = np.argsort(-conf)
+    acierto = (np.round(pte) == yte).astype(float)[orden]
+    cob = {}
+    for frac in (1.0, 0.75, 0.5, 0.25):
+        m = max(1, int(len(te) * frac))
+        cob[f"{int(frac*100)}%"] = round(100 * acierto[:m].mean(), 1)
+    return {
+        "suficiente": True, "n": len(filas), "n_test": len(te),
+        "brier": round(brier, 4), "brier_base": round(brier_base, 4),
+        "brier_skill": round(1 - brier / brier_base, 3) if brier_base else None,
+        "ece": round(_ece(pte, yte), 3),
+        "acierto_por_cobertura": cob,
+    }
+
+
+def imprimir(ruta_con_fecha, mercados=("indice", None), campo="senal"):
+    for m in mercados:
+        r = evaluar(ruta_con_fecha, m, campo)
+        etq = (m or "TODOS").upper()
+        if not r.get("suficiente"):
+            print(f"\n=== {etq}: muestra insuficiente (n={r['n']}) ===")
+            continue
+        print(f"\n=== Predictor calibrado · {etq} (test n={r['n_test']}) ===")
+        print(f"  Brier {r['brier']} vs base {r['brier_base']}  →  skill {r['brier_skill']} "
+              f"(>0 mejor que la tasa base; menor Brier = mejor)")
+        print(f"  ECE (error de calibración) {r['ece']}  (0 = perfecto)")
+        print(f"  acierto por cobertura (abstención): " +
+              " · ".join(f"{k}:{v}%" for k, v in r["acierto_por_cobertura"].items()))
+
+
+if __name__ == "__main__":
+    campo = sys.argv[2] if len(sys.argv) > 2 else "senal"
+    imprimir(sys.argv[1], campo=campo)
 ```
 
 ## engine/calibration/real_optimizer.py
@@ -9010,6 +9946,202 @@ if __name__ == "__main__":
     imprimir_gating(gating_por_senal([f for f in filas if f["mercado"] == "indice"]))
 ```
 
+## engine/calibration/riesgo_abm.py
+```python
+"""Fase 4 — ¿El enjambre predice el RIESGO (magnitud del movimiento), no la dirección?
+
+La hipótesis que podría rescatar al ABM (auditoría H14): aunque no acierte HACIA DÓNDE
+se mueve el mercado, quizá anticipa CUÁNTO se mueve (volatilidad/fragilidad). Un buen
+predictor de riesgo es un producto legítimo de gestión, aun sin alpha direccional.
+
+Primer pase, SIN re-correr simulaciones: usa lo que el dataset ya tiene:
+  - `volatilidad_pct`  : la volatilidad que SIMULÓ el enjambre.
+  - `|direccion_pct|`  : la magnitud que simuló.
+  - dispersión del consenso: desviación estándar de las señales por arquetipo
+    (desacuerdo entre las voces → fragilidad esperada).
+  - `|consenso|`       : fuerza de la señal (baseline).
+Objetivo: `|pct_corr|` (cuánto se movió DE VERDAD el mercado, sin fuga).
+
+Mide: (1) correlación de rango (Spearman) de cada feature con la magnitud real;
+(2) fuera de muestra, ¿añadir las features del ABM reduce el error (MAE) al predecir
+la magnitud, sobre un baseline que solo usa |consenso|? Exploratorio. Sin IA.
+"""
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+
+ZONA = 0.3
+
+
+def armar(ruta_con_fecha, ruta_raw, mercado="indice"):
+    cf = json.loads(Path(ruta_con_fecha).read_text())
+    crudo = json.loads(Path(ruta_raw).read_text())
+    casos = crudo.get("casos", crudo) if isinstance(crudo, dict) else crudo
+    idx = {}
+    for c in casos:
+        rr = c.get("reaccion_real") or {}
+        idx[(rr.get("fecha_base"), rr.get("simbolo"))] = c
+    filas = []
+    for r in cf:
+        if mercado and r.get("mercado") != mercado:
+            continue
+        pc = r.get("pct_corr")
+        if pc is None:
+            continue
+        c = idx.get((r.get("fecha"), r.get("simbolo")))
+        if not c:
+            continue
+        sa = c.get("senales_arquetipo") or {}
+        señales = [float(v.get("senal_media", 0.0)) for v in sa.values()]
+        dispersion = float(np.std(señales)) if señales else 0.0
+        filas.append({
+            "vol_abm": float(c.get("volatilidad_pct") or 0.0),
+            "dir_abm_abs": abs(float(c.get("direccion_pct") or 0.0)),
+            "dispersion": dispersion,
+            "consenso_abs": abs(float(r.get("senal") or 0.0)),
+            "magnitud_real": abs(float(pc)),
+            "fecha": str(r.get("fecha", ""))[:10],
+        })
+    return filas
+
+
+def spearman(x, y):
+    """Correlación de rango (sin scipy): Pearson sobre los rangos."""
+    x, y = np.asarray(x, float), np.asarray(y, float)
+    if len(x) < 3:
+        return 0.0
+    rx = np.argsort(np.argsort(x)).astype(float)
+    ry = np.argsort(np.argsort(y)).astype(float)
+    if rx.std() == 0 or ry.std() == 0:
+        return 0.0
+    return float(np.corrcoef(rx, ry)[0, 1])
+
+
+def _mae_oos(filas, feats, frac_train=0.7):
+    """MAE fuera de muestra al predecir la magnitud real con regresión lineal sobre
+    `feats` (ajuste y estandarización solo con train). feats=[] → predice la media."""
+    filas = sorted(filas, key=lambda f: f["fecha"])
+    k = int(len(filas) * frac_train)
+    tr, te = filas[:k], filas[k:]
+    ytr = np.array([f["magnitud_real"] for f in tr])
+    yte = np.array([f["magnitud_real"] for f in te])
+    if not feats:
+        return float(np.abs(yte - ytr.mean()).mean())
+    Xtr = np.array([[f[c] for c in feats] for f in tr], float)
+    Xte = np.array([[f[c] for c in feats] for f in te], float)
+    mu, sd = Xtr.mean(0), Xtr.std(0) + 1e-9
+    Xtr = np.column_stack([np.ones(len(tr)), (Xtr - mu) / sd])
+    Xte = np.column_stack([np.ones(len(te)), (Xte - mu) / sd])
+    w, *_ = np.linalg.lstsq(Xtr, ytr, rcond=None)
+    pred = Xte @ w
+    return float(np.abs(yte - pred).mean())
+
+
+def evaluar(ruta_con_fecha, ruta_raw, mercado="indice"):
+    filas = armar(ruta_con_fecha, ruta_raw, mercado)
+    y = [f["magnitud_real"] for f in filas]
+    corr = {c: round(spearman([f[c] for f in filas], y), 3)
+            for c in ("vol_abm", "dir_abm_abs", "dispersion", "consenso_abs")}
+    mae = {
+        "constante (media)": round(_mae_oos(filas, []), 3),
+        "solo |consenso|": round(_mae_oos(filas, ["consenso_abs"]), 3),
+        "+ features ABM": round(_mae_oos(filas, ["consenso_abs", "vol_abm", "dir_abm_abs", "dispersion"]), 3),
+    }
+    return {"n": len(filas), "spearman": corr, "mae_oos": mae}
+
+
+def imprimir(ruta_con_fecha, ruta_raw, mercados=("indice", None)):
+    for m in mercados:
+        r = evaluar(ruta_con_fecha, ruta_raw, m)
+        print(f"\n=== Riesgo (magnitud) · {(m or 'TODOS').upper()} ({r['n']} casos) ===")
+        print("  correlación de rango (Spearman) con la magnitud REAL:")
+        for c, v in r["spearman"].items():
+            print(f"    {c:16} {v:+.3f}")
+        print("  MAE fuera de muestra al predecir la magnitud (menor = mejor):")
+        for c, v in r["mae_oos"].items():
+            print(f"    {c:20} {v}")
+
+
+if __name__ == "__main__":
+    imprimir(sys.argv[1], sys.argv[2])
+
+
+# ---------- Versión COMPLETA de H14: features ricas re-corriendo la simulación ----------
+
+def correr_rico(titular, sa, mercado, magnitud_real, seed=20260101):
+    """Corre una simulación (N completo, señales congeladas) y extrae features de
+    RIESGO/microestructura del tramo posterior a la noticia."""
+    import numpy as np
+    from agents.lider import LiderOpinion
+    from brains.mercado import perfil_de
+    from calibration.barrido_poblacion import (TICKS_CAL, TICKS_POST, TICKS_PREV,
+                                               _respuestas_congeladas)
+    from model import MercadoEnjambre
+
+    modelo = MercadoEnjambre(seed=seed, ticks_horizonte=TICKS_CAL + TICKS_POST)
+    modelo.correr(TICKS_CAL)
+    lideres = [a for a in modelo.agentes_ordenados if isinstance(a, LiderOpinion)]
+    resp = _respuestas_congeladas(lideres, sa)
+    for _ in range(TICKS_PREV):
+        modelo.step()
+    previo = modelo.historial_precios[-1]
+    modelo.aplicar_titular(titular, respuestas=resp, perfil=perfil_de(mercado or "indice"))
+    serie = [previo]
+    imbs = []
+    for _ in range(TICKS_POST):
+        modelo.step()
+        serie.append(modelo.historial_precios[-1])
+        fc = modelo.fraccion_compras(20)
+        if fc is not None:
+            imbs.append(abs(fc - 0.5))  # desequilibrio de órdenes (0 = balance)
+    rets = [(serie[i] - serie[i - 1]) / serie[i - 1] for i in range(1, len(serie)) if serie[i - 1]]
+    excur = max(abs(p - previo) for p in serie) / previo if previo else 0.0  # sobre-reacción
+    final = abs(serie[-1] - previo) / previo if previo else 0.0
+    disp = float(np.std([v.get("senal_media", 0.0) for v in sa.values()])) if sa else 0.0
+    return {
+        "vol_sim": float(np.std(rets)) if rets else 0.0,
+        "imbalance": float(np.mean(imbs)) if imbs else 0.0,
+        "overshoot": excur,
+        "reversal": max(0.0, excur - final),       # cuánto se devolvió tras el pico
+        "rango": (max(serie) - min(serie)) / previo if previo else 0.0,
+        "dispersion": disp,
+        "magnitud_real": magnitud_real,
+        "fecha": "",
+    }
+
+
+def extraer_todos(ruta_con_fecha, ruta_raw, salida, seed=20260101):
+    """Corre la sim por cada caso de índice y guarda sus features ricas (lento)."""
+    import json as _json
+
+    from calibration.barrido_poblacion import _casos_indice
+    casos = _casos_indice(ruta_con_fecha, ruta_raw)
+    filas = []
+    for i, c in enumerate(casos):
+        f = correr_rico(c["titular"], c["sa"], c["mercado"], abs(c["pct_corr"]), seed)
+        f["fecha"] = c["fecha"]
+        filas.append(f)
+        if (i + 1) % 20 == 0:
+            print(f"  {i+1}/{len(casos)}", flush=True)
+    Path(salida).write_text(_json.dumps(filas))
+    return filas
+
+
+def evaluar_rico(filas):
+    FEATS = ["vol_sim", "imbalance", "overshoot", "reversal", "rango", "dispersion"]
+    y = [f["magnitud_real"] for f in filas]
+    corr = {c: round(spearman([f[c] for f in filas], y), 3) for c in FEATS}
+    mae = {
+        "constante (media)": round(_mae_oos(filas, []), 3),
+        "+ features ricas ABM": round(_mae_oos(filas, FEATS), 3),
+    }
+    return {"n": len(filas), "spearman": corr, "mae_oos": mae}
+```
+
 ## engine/calibration/un_llm.py
 ```python
 """Fase 3 · A2 — un solo LLM NEUTRAL por titular (sin arquetipos ni ABM).
@@ -9621,21 +10753,40 @@ def _senal(sa, peso_contr=1.0):
     return num / den if den else 0.0
 
 
-def cargar(ruta: str) -> list[dict]:
+def cargar(ruta: str, permitir_no_certificada: bool = False) -> list[dict]:
+    """Carga casos para el walk-forward.
+
+    ETIQUETA (auditoría científica F01): usa `pct_corr` (sin fuga) si está presente.
+    Si solo hay `pct_real` —la etiqueta histórica NO certificada, el salto con el que
+    se SELECCIONÓ el evento—, REHÚSA usarla salvo que se pida explícitamente
+    (`permitir_no_certificada=True`) y la cuenta como descartada. Antes consumía
+    `pct_real` en silencio, de modo que el calibrador podía aprender la etiqueta
+    antigua contaminada. No se sustituye un campo por otro a ciegas: pct_corr es la
+    etiqueta remedida sin fuga; pct_real es la de selección."""
     datos = json.load(open(ruta))
     casos = datos.get("casos", datos) if isinstance(datos, dict) else datos
-    out = []
+    out, descartados = [], 0
     for c in casos:
         r = c["reaccion_real"]
-        pct = r.get("pct_real")
+        pct = r.get("pct_corr")
+        certificada = pct is not None
+        if pct is None and permitir_no_certificada:
+            pct = r.get("pct_real")
         if pct is None or pct == 0:
+            if not certificada and r.get("pct_real") not in (None, 0):
+                descartados += 1  # tenía pct_real pero no una etiqueta certificada
             continue
         sa = c.get("senales_arquetipo") or {}
         if not all(a in sa for a in BASE):
             continue
         out.append({"fecha": c.get("fecha") or "", "y": 1 if pct > 0 else 0,
-                    "sa": sa, "direccion_pct": c.get("direccion_pct") or 0.0})
+                    "sa": sa, "direccion_pct": c.get("direccion_pct") or 0.0,
+                    "label_certificada": certificada})
     out.sort(key=lambda x: x["fecha"])
+    if descartados:
+        print(f"walk_forward.cargar: {descartados} casos descartados por etiqueta NO "
+              f"certificada (solo pct_real, sin pct_corr). Para incluirlos usa "
+              f"permitir_no_certificada=True (NO recomendado para certificar resultados).")
     return out
 
 
@@ -17870,6 +19021,84 @@ def asimetria_panico(retornos) -> float:
     return float(peores.mean() / mejores.mean())
 ```
 
+## engine/validation/test_a2_vs_a3.py
+```python
+"""Tests de la comparación M4 (A2) vs A3, titular por titular. Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import a2_vs_a3 as m
+from calibration import ablacion
+
+
+def _f(fecha, a2, a3, pc, mercado="indice", sim="SPY", tit=None):
+    return {"fecha": fecha, "anio": int(fecha[:4]), "mercado": mercado, "simbolo": sim,
+            "a2": a2, "senal": a3, "pct_corr": pc, "titular": tit or f"T {fecha} {sim}",
+            "direccion_pct": 0.0}
+
+
+def test_cobertura_comun_excluye_abstenciones_y_zona_muerta():
+    filas = [_f("2025-01-01", 0.5, 0.4, 1.0),
+             _f("2025-01-02", None, 0.4, 1.0),   # A2 sin dato
+             _f("2025-01-03", 0.5, 0.0, 1.0),    # A3 se abstiene
+             _f("2025-01-04", 0.5, 0.4, 0.1)]    # zona muerta
+    c = m.cobertura(filas)
+    assert c == {"direccionables": 3, "con_a2": 2, "con_a3": 2, "ambos": 1}
+    assert len(m.pares(filas)) == 1
+
+
+def test_discordancias_y_mcnemar():
+    filas = [_f("2025-01-01", 0.5, -0.4, 1.0),   # solo A2
+             _f("2025-01-02", 0.5, -0.4, 1.0),   # solo A2
+             _f("2025-01-03", -0.5, 0.4, 1.0),   # solo A3
+             _f("2025-01-04", 0.5, 0.4, 1.0),    # ambos ✓
+             _f("2025-01-05", 0.5, 0.4, -1.0)]   # ambos ✗
+    r = m.comparar(filas)
+    assert (r["solo_a2"], r["solo_a3"], r["ambos_aciertan"], r["ambos_fallan"]) == (2, 1, 1, 1)
+    assert r["acuerdo_signo"] == 40.0
+    assert m.mcnemar_exacto(2, 1) == 1.0
+    assert m.mcnemar_exacto(0, 10) < 0.01
+
+
+def test_empate_es_no_distinguible():
+    filas = [_f(f"2025-01-{d:02d}", 0.5, 0.5, 1.0 if d % 2 else -1.0) for d in range(1, 21)]
+    r = m.comparar(filas)
+    assert r["pareado"]["media"] == 0
+    assert "no distinguible" in m.veredicto(r)
+
+
+def test_a2_claramente_mejor_lo_detecta():
+    filas = [_f(f"2025-{mo:02d}-{d:02d}", 0.5, -0.5, 1.0)
+             for mo in range(1, 4) for d in range(1, 21)]
+    r = m.comparar(filas)
+    assert r["pareado"]["media"] == 1.0 and r["pareado"]["excluye_cero"]
+    assert m.veredicto(r).startswith("A2 > A3")
+
+
+def test_pareado_agrupa_por_evento():
+    # 4 ETFs del mismo día cuentan como UN evento
+    filas = [_f("2025-01-01", 0.5, -0.5, 1.0, sim=s) for s in ("SPY", "QQQ", "DIA", "IWM")]
+    p = ablacion.pareado(filas, "A2_un_llm", "A3_consenso")
+    assert p["n"] == 4 and p["n_eventos"] == 1
+
+
+def test_gate_pareado_sigue_igual_tras_generalizar():
+    filas = [{**_f(f"2025-01-{d:02d}", None, 0.5, 1.0), "direccion_pct": -1.0}
+             for d in range(1, 11)]
+    g = ablacion.gate_pareado(filas)
+    assert g["media"] == -1.0 and g["n_eventos"] == 10 and g["excluye_cero"]
+
+
+def test_tabla_titulares_pone_discordancias_primero_y_escapa_barras():
+    filas = [_f("2025-01-01", 0.5, 0.4, 1.0, tit="ambos aciertan"),
+             _f("2025-01-02", 0.5, -0.4, 1.0, tit="A2 gana | con barra")]
+    t = m.tabla_titulares(filas).splitlines()
+    assert len(t) == 4
+    assert "solo A2 ✓" in t[2] and "A2 gana / con barra" in t[2]
+    assert "ambos ✓" in t[3]
+```
+
 ## engine/validation/test_ablacion.py
 ```python
 """Tests de la ablación A0–A5 (Fase 3). Sin red."""
@@ -17970,6 +19199,15 @@ def test_gate_pareado_empate_no_concluyente():
              _f(-2.0, -0.5, -0.5, "QQQ", "2020-03-03")]
     p = ab.gate_pareado(filas, n_boot=500)
     assert p["media"] == 0.0 and not p["excluye_cero"]
+
+
+def test_f02_a0_no_usa_etiquetas_del_mismo_dia():
+    """Auditoría científica F02: 3 ETFs del MISMO día no deben informarse entre sí
+    (sus etiquetas no están disponibles hasta días después)."""
+    filas = [_f(2.0, 0, 0, "SPY", "2026-01-01"), _f(2.0, 0, 0, "QQQ", "2026-01-01"),
+             _f(2.0, 0, 0, "DIA", "2026-01-01")]
+    items = ab._items_a0(filas)
+    assert items == []  # ninguno tiene historia previa madura → todos se abstienen
 ```
 
 ## engine/validation/test_ablacion_arquetipos.py
@@ -18748,6 +19986,40 @@ def test_endpoints_del_backtest_exigen_token(monkeypatch):
     assert avance.json()["hechos"] == 0
     assert avance.json()["pendientes"] == avance.json()["total"]
     assert "_lista_pendiente" not in avance.json()
+```
+
+## engine/validation/test_barrido_poblacion.py
+```python
+"""Tests del barrido de población (Fase 2). Sin red."""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from calibration import barrido_poblacion as bp
+
+
+def test_escalar_mantiene_capital_agregado_y_escala_cantidad():
+    cfg = {"tipos": [
+        {"id": "noise", "cantidad": 1000, "capital_relativo": 1},
+        {"id": "market_maker", "cantidad": 9, "capital_relativo": 100},
+        {"id": "lider_opinion", "capital_relativo": 5,
+         "arquetipos": [{"id": "a", "cantidad": 100}, {"id": "b", "cantidad": 50}]},
+    ]}
+    e = bp.escalar_config(cfg, 0.1)
+    noise = next(t for t in e["tipos"] if t["id"] == "noise")
+    assert noise["cantidad"] == 100                  # 1000 × 0.1
+    assert noise["capital_relativo"] == 1 / 0.1      # capital agregado constante
+    assert noise["cantidad"] * noise["capital_relativo"] == 1000 * 1  # invariante
+    mm = next(t for t in e["tipos"] if t["id"] == "market_maker")
+    assert mm["cantidad"] >= 1                        # esencial: mínimo 1
+    lid = next(t for t in e["tipos"] if t["id"] == "lider_opinion")
+    assert [a["cantidad"] for a in lid["arquetipos"]] == [10, 5]
+    assert e["total_agentes"] == 100 + 1 + 10 + 5
+
+
+def test_escalar_factor_1_no_cambia_cantidades():
+    cfg = {"tipos": [{"id": "x", "cantidad": 370, "capital_relativo": 50}]}
+    e = bp.escalar_config(cfg, 1.0)
+    assert e["tipos"][0]["cantidad"] == 370 and e["tipos"][0]["capital_relativo"] == 50
 ```
 
 ## engine/validation/test_baselines.py
@@ -20064,6 +21336,38 @@ def test_endpoints_del_corrector_exigen_token(monkeypatch):
     assert libreta.json()["casos"] == 0
 ```
 
+## engine/validation/test_correlacion_cerebros.py
+```python
+"""Tests de la diversidad de arquetipos (Fase 3). Sin red."""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from calibration import correlacion_cerebros as cc
+
+
+def test_voces_identicas_dan_una_sola_efectiva():
+    # 3 arquetipos con señal IDÉNTICA → ρ=1 → N efectivo = 1
+    casos = [({"a": 0.5, "b": 0.5, "c": 0.5}, 1.0),
+             ({"a": -0.3, "b": -0.3, "c": -0.3}, -1.0),
+             ({"a": 0.8, "b": 0.8, "c": 0.8}, 1.0),
+             ({"a": -0.6, "b": -0.6, "c": -0.6}, -1.0)]
+    r = cc.matriz_correlacion(casos)
+    assert r["n_arquetipos"] == 3 and abs(r["rho_media"] - 1.0) < 1e-6
+    assert abs(r["n_efectivo"] - 1.0) < 1e-6
+
+
+def test_voces_independientes_dan_mas_efectivas():
+    import random
+    rng = random.Random(0)
+    casos = []
+    for _ in range(60):
+        y = rng.choice([1.0, -1.0])
+        casos.append(({"a": rng.uniform(-1, 1), "b": rng.uniform(-1, 1),
+                       "c": rng.uniform(-1, 1)}, y))
+    r = cc.matriz_correlacion(casos)
+    assert r["n_efectivo"] > 2.0  # errores poco correlacionados → más de 2 efectivas
+```
+
 ## engine/validation/test_cosechador.py
 ```python
 """Tests del cosechador (contenido/cosechador.py).
@@ -20735,6 +22039,51 @@ def test_corr_robusta_a_constantes():
     assert ev._corr([1, 2, 3], [1, 2, 3]) == 1.0
 ```
 
+## engine/validation/test_evaluar_prospectivo.py
+```python
+"""Tests del evaluador prospectivo (Fase 6). Sin red."""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from calibration import evaluar_prospectivo as ep
+
+
+def _r(mercado, direccion, pct_real, fecha, fiable=0, abstenido=0, prob=None):
+    return {"mercado": mercado, "direccion": direccion, "pct_real": pct_real,
+            "fecha": fecha, "fiable": fiable, "abstenido": abstenido, "probabilidad": prob}
+
+
+def test_puntuables_excluye_abstenidas_y_no_resueltas():
+    regs = [_r("indice", "alza", 2.0, "2026-01-01"),
+            _r("indice", "baja", -1.0, "2026-01-02", abstenido=1),   # abstenida
+            _r("indice", "neutra", 1.0, "2026-01-03"),               # sin dirección
+            _r("indice", "alza", None, "2026-01-04")]                # sin resolver
+    assert len(ep._puntuables(regs)) == 1
+
+
+def test_acierto_y_cobertura():
+    regs = [_r("indice", "alza", 2.0, "2026-01-01"),     # acierta
+            _r("indice", "baja", -1.0, "2026-01-02"),     # acierta
+            _r("indice", "alza", -1.0, "2026-01-03"),     # falla
+            _r("indice", "alza", 1.0, "2026-01-04", abstenido=1)]  # abstenida
+    r = ep.evaluar(regs, "indice")
+    assert r["n_resueltas"] == 4 and r["cobertura_pct"] == 75.0
+    assert r["acierto_todos"]["punto"] == 66.7  # 2 de 3
+
+
+def test_solo_fiables():
+    regs = [_r("indice", "alza", 2.0, "2026-01-01", fiable=1),
+            _r("indice", "baja", 1.0, "2026-01-02", fiable=0)]  # no fiable, falla
+    assert ep.evaluar(regs, "indice")["acierto_fiables"]["punto"] == 100.0
+
+
+def test_brier_skill():
+    regs = [_r("indice", "alza", 2.0, "2026-01-01", prob=0.9),
+            _r("indice", "baja", -2.0, "2026-01-02", prob=0.1)]
+    b = ep.evaluar(regs, "indice")["brier"]
+    assert b["skill"] > 0  # probabilidades bien puestas baten la tasa base
+```
+
 ## engine/validation/test_evidencia.py
 ```python
 """Tests del contrato de evidencia point-in-time (Fase 1). Sin red."""
@@ -20833,6 +22182,20 @@ def test_formatear_solo_titular_si_no_hay_contexto():
     e = ev.construir_evidencia(event_id="e", activo="SPY", as_of=AS_OF, titular="x")
     texto = ev.formatear_para_cerebro(e)
     assert texto == "Titular: x"  # brazo B: sin contexto, solo titular
+
+
+def test_f03_rechaza_event_timestamp_posterior_al_as_of():
+    """Auditoría científica F03: un hecho observado no puede ser posterior al corte."""
+    import pytest
+    with pytest.raises(ev.EvidenciaInvalida):
+        ev.construir_evidencia(event_id="e", activo="SPY", titular="x",
+                               as_of="2026-01-01T10:00:00Z",
+                               event_timestamp="2026-01-01T11:00:00Z")
+    # anterior o igual al corte: admitido
+    o = ev.construir_evidencia(event_id="e", activo="SPY", titular="x",
+                               as_of="2026-01-01T10:00:00Z",
+                               event_timestamp="2026-01-01T09:00:00Z")
+    assert o["event_timestamp"] == "2026-01-01T09:00:00Z"
 ```
 
 ## engine/validation/test_evidencia_fuentes.py
@@ -21267,6 +22630,16 @@ def test_particionar_excluye_filas_futuras_del_desarrollo():
     assert "50" not in ids_dev                       # la futura NO entra al desarrollo
     assert {str(c["id"]) for c in hold} == {"8", "9"}  # el holdout no cambia
     assert ids_dev == {str(i) for i in range(8)}      # solo las anteriores al corte
+
+
+def test_f04_particionar_respeta_el_embargo():
+    """Auditoría científica F04: el desarrollo de particionar debe coincidir con el
+    manifiesto, aplicando el MISMO embargo (antes lo ignoraba y devolvía de más)."""
+    casos = _casos(10)
+    m = ho.construir_manifiesto(casos, pct_holdout=20, embargo_dias=2)
+    dev, hold = ho.particionar(casos, m)
+    assert len(dev) == m["n_desarrollo"]          # coincide con lo declarado
+    assert len(hold) == m["n_holdout"]
 ```
 
 ## engine/validation/test_intervalos.py
@@ -21920,6 +23293,69 @@ def test_aplicar_titular_acepta_y_guarda_el_perfil():
                   for _ in modelo._lideres]
     modelo.aplicar_titular("Oil jumps on supply fears", respuestas=respuestas, perfil=perfil)
     assert modelo.perfil["tipo"] == "petroleo"
+```
+
+## engine/validation/test_metamodelo.py
+```python
+"""Tests del metamodelo M13 vs M13-null (Fase 1/5). Sin red."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # engine/
+from calibration import metamodelo as mm
+
+
+def _fila(senal, direccion, vol, y, fecha):
+    return {"senal": senal, "direccion_pct": direccion, "volatilidad_pct": vol,
+            "y": float(y), "fecha": fecha, "mercado": "indice"}
+
+
+def test_logistica_aprende_separacion_simple():
+    import numpy as np
+    # dos clases separables por una feature
+    X = np.array([[-2.0], [-1.5], [-1.0], [1.0], [1.5], [2.0]])
+    y = np.array([0, 0, 0, 1, 1, 1], float)
+    w, b = mm._entrenar(X, y, l2=0.01, pasos=4000, lr=0.3)
+    p = 1 / (1 + np.exp(-(X @ w + b)))
+    assert (p[:3] < 0.5).all() and (p[3:] > 0.5).all()
+
+
+def test_evaluar_muestra_insuficiente():
+    filas = [_fila(0.5, 0.5, 1.0, 1, "2020-01-0%d" % i) for i in range(1, 6)]
+    r = mm.evaluar(filas)
+    assert r["suficiente"] is False
+
+
+def test_abm_feature_informativa_ayuda():
+    # direccion_pct predice perfecto la etiqueta; senal es ruido. M13 (con ABM) debe
+    # tener MENOR Brier que M13-null (solo senal) → media_d > 0.
+    import random
+    rng = random.Random(0)
+    filas = []
+    for i in range(80):
+        y = i % 2
+        filas.append(_fila(senal=rng.uniform(-1, 1),          # ruido
+                           direccion=(1.0 if y else -1.0),     # informativa
+                           vol=rng.uniform(0.5, 2.0), y=y,
+                           fecha="2020-%02d-%02d" % (1 + i // 28, 1 + i % 28)))
+    r = mm.evaluar(filas, n_boot=400)
+    assert r["suficiente"] and r["brier_M13"] < r["brier_M13_null"]
+    assert r["media_d"] > 0
+
+
+def test_abm_feature_ruido_no_ayuda_claramente():
+    # direccion y vol son RUIDO puro; no deben mejorar de forma significativa.
+    import random
+    rng = random.Random(1)
+    filas = []
+    for i in range(80):
+        y = i % 2
+        filas.append(_fila(senal=(0.6 if y else -0.6) + rng.uniform(-0.2, 0.2),
+                           direccion=rng.uniform(-3, 3), vol=rng.uniform(0.5, 2),
+                           y=y, fecha="2020-%02d-%02d" % (1 + i // 28, 1 + i % 28)))
+    r = mm.evaluar(filas, n_boot=400)
+    # el ABM (ruido) no debe salir significativamente a favor
+    assert not (r["significativo"] and r["abm_ayuda"])
 ```
 
 ## engine/validation/test_muro.py
@@ -22807,6 +24243,37 @@ def test_resumen_cuenta_mas_de_500(con):
         p.registrar_prediccion(con, titular=f"noticia-{i}", simbolo="SPY", horizonte=2,
                                direccion="alza", mercado="indice")
     assert p.resumen_predicciones(con, "indice")["total"] == 501
+```
+
+## engine/validation/test_predictor_calibrado.py
+```python
+"""Tests del predictor calibrado (Fase 5). Sin red."""
+import sys
+from pathlib import Path
+import numpy as np
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from calibration import predictor_calibrado as pc
+
+
+def test_platt_aprende_direccion():
+    x = np.array([-2.,-1.,-0.5,0.5,1.,2.]); y = np.array([0,0,0,1,1,1.])
+    a, b = pc._platt(x, y)
+    p = 1/(1+np.exp(-(a*x+b)))
+    assert (p[:3] < 0.5).all() and (p[3:] > 0.5).all()
+
+
+def test_ece_cero_si_calibrado_perfecto():
+    # prob = frecuencia real en cada grupo
+    p = np.array([0.1]*10 + [0.9]*10)
+    y = np.array([0]*9 + [1] + [1]*9 + [0])  # 10% y 90%
+    assert pc._ece(p, y, bins=10) < 0.05
+
+
+def test_evaluar_insuficiente(tmp_path):
+    import json
+    f = tmp_path/"cf.json"; f.write_text(json.dumps([
+        {"mercado":"indice","pct_corr":2.0,"senal":0.5,"fecha":"2020-01-01"}]))
+    assert pc.evaluar(str(f))["suficiente"] is False
 ```
 
 ## engine/validation/test_pulso.py
@@ -24278,6 +25745,40 @@ def test_asunto_resumen():
     assert "semana" in boletin.asunto_resumen().lower()
 ```
 
+## engine/validation/test_riesgo_abm.py
+```python
+"""Tests de la predicción de riesgo del ABM (Fase 4). Sin red."""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from calibration import riesgo_abm as ra
+
+
+def test_spearman_monotono():
+    assert ra.spearman([1, 2, 3, 4], [10, 20, 30, 40]) > 0.99
+    assert ra.spearman([1, 2, 3, 4], [40, 30, 20, 10]) < -0.99
+
+
+def test_feature_informativa_baja_el_mae(tmp_path):
+    # construye filas donde vol_abm predice casi perfecto la magnitud real
+    import json, numpy as np, random
+    rng = random.Random(0)
+    cf, raw = [], []
+    for i in range(60):
+        mag = rng.uniform(0.5, 5.0)
+        fecha = "2020-%02d-%02d" % (1 + i // 28, 1 + i % 28)
+        cf.append({"fecha": fecha, "simbolo": "SPY", "mercado": "indice",
+                   "pct_corr": mag, "senal": rng.uniform(-1, 1), "direccion_pct": 0.0})
+        raw.append({"reaccion_real": {"fecha_base": fecha, "simbolo": "SPY"},
+                    "volatilidad_pct": mag + rng.uniform(-0.2, 0.2),  # informativa
+                    "direccion_pct": 0.0, "senales_arquetipo": {"a": {"senal_media": 0.1}}})
+    pcf = tmp_path / "cf.json"; pcf.write_text(json.dumps(cf))
+    praw = tmp_path / "raw.json"; praw.write_text(json.dumps({"casos": raw}))
+    r = ra.evaluar(str(pcf), str(praw))
+    assert r["spearman"]["vol_abm"] > 0.8          # la vol simulada rankea la magnitud
+    assert r["mae_oos"]["+ features ABM"] < r["mae_oos"]["constante (media)"]
+```
+
 ## engine/validation/test_seguridad.py
 ```python
 """Tests del blindaje (Fase 1 + 2): identidad, rate-limit, cabeceras,
@@ -24897,6 +26398,18 @@ def test_tablero_predicciones_solo_por_cabecera(monkeypatch):
     assert cliente.get("/api/predicciones/resumen?clave=tok-123").status_code == 403
     r = cliente.get("/api/predicciones/resumen", headers={"X-Pipeline-Token": "tok-123"})
     assert r.status_code == 200 and "global" in r.json()
+
+
+def test_experimento_a2_protegido_y_estado(monkeypatch):
+    """Plan B: los endpoints de A2 exigen token; el GET devuelve un estado."""
+    cliente = TestClient(server.app)
+    monkeypatch.setenv("ENJAMBRE_PIPELINE_TOKEN", "tok-a2")
+    # sin token → 403 en ambos
+    assert cliente.get("/api/experimento/a2").status_code == 403
+    assert cliente.post("/api/experimento/a2").status_code == 403
+    # con token: el GET trae un estado (ninguno/corriendo/listo/error)
+    r = cliente.get("/api/experimento/a2", headers={"X-Pipeline-Token": "tok-a2"})
+    assert r.status_code == 200 and "estado" in r.json()
 ```
 
 ## engine/validation/test_setup.py
@@ -25185,9 +26698,11 @@ def _archivo(tmp_path, n=400, seed=5, senal_util=True):
             if a in wf.CONTRARIANS and senal_util:
                 s = -base + rng.uniform(-0.2, 0.2)
             sa[a] = {"senal_media": s, "confianza_media": 0.7, "n": 10}
+        # etiqueta CERTIFICADA (pct_corr, sin fuga) — el contrato nuevo de cargar
+        # (auditoría científica F01); pct_real queda como la etiqueta de selección
         casos.append({"fecha": _fecha(i),
-                      "reaccion_real": {"pct_real": pct}, "senales_arquetipo": sa,
-                      "direccion_pct": base * 2})
+                      "reaccion_real": {"pct_corr": pct, "pct_real": pct},
+                      "senales_arquetipo": sa, "direccion_pct": base * 2})
     ruta = tmp_path / "c.json"
     ruta.write_text(json.dumps({"casos": casos}))
     return str(ruta)
@@ -25272,7 +26787,7 @@ def test_cargar_ordena_cronologicamente_aunque_entren_desordenados(tmp_path):
     casos_raw = []
     for i in (5, 0, 3, 1, 4, 2):  # fechas deliberadamente desordenadas
         sa = {a: {"senal_media": 0.3, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
-        casos_raw.append({"fecha": _fecha(i), "reaccion_real": {"pct_real": 1.0},
+        casos_raw.append({"fecha": _fecha(i), "reaccion_real": {"pct_corr": 1.0},
                           "senales_arquetipo": sa, "direccion_pct": 0.6})
     ruta = tmp_path / "desord.json"
     ruta.write_text(json.dumps({"casos": casos_raw}))
@@ -25290,6 +26805,24 @@ def test_baseline_honesto_se_reporta_y_no_usa_el_futuro(tmp_path):
     assert r["brier_base"] > 0
     # con señal útil, el modelo le gana a la base honesta
     assert r["brier"] < r["brier_base"]
+
+
+def test_f01_cargar_rehusa_etiqueta_no_certificada(tmp_path):
+    """Auditoría científica F01: solo pct_real (sin pct_corr) NO se usa por defecto;
+    con pct_corr sí; el opt-in permite pct_real explícitamente."""
+    sa = {a: {"senal_media": 0.3, "confianza_media": 0.7, "n": 10} for a in wf.BASE}
+    solo_real = tmp_path / "real.json"
+    solo_real.write_text(json.dumps({"casos": [
+        {"fecha": "2026-01-01", "reaccion_real": {"pct_real": 2.0},
+         "senales_arquetipo": sa, "direccion_pct": 0.6}]}))
+    assert wf.cargar(str(solo_real)) == []                       # rehúsa por defecto
+    assert len(wf.cargar(str(solo_real), permitir_no_certificada=True)) == 1  # opt-in
+    con_corr = tmp_path / "corr.json"
+    con_corr.write_text(json.dumps({"casos": [
+        {"fecha": "2026-01-01", "reaccion_real": {"pct_corr": -2.0, "pct_real": 2.0},
+         "senales_arquetipo": sa, "direccion_pct": 0.6}]}))
+    cs = wf.cargar(str(con_corr))
+    assert len(cs) == 1 and cs[0]["y"] == 0 and cs[0]["label_certificada"] is True
 ```
 
 ## engine/Dockerfile

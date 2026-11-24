@@ -3,6 +3,10 @@
 > **Lee este archivo completo antes de escribir cualquier línea de código.**
 > Es la biblia del proyecto. Si una decisión técnica contradice algo escrito aquí, pregunta antes de proceder.
 
+> **▶ ESTADO ACTUAL / CONTINUIDAD:** antes de empezar, lee **`docs/ESTADO-ACTUAL.md`**
+> — dónde vamos, cómo trabajamos en esta etapa (investigación científica), qué está
+> hecho y qué sigue. El plan rector es `docs/plan-maestro-v5.md`.
+
 ---
 
 ## 1. VISIÓN
